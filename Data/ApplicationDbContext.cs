@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using aes.Models;
 
 namespace aes.Data
 {
@@ -12,5 +13,6 @@ namespace aes.Data
             : base(options)
         {
         }
+        public DbSet<aes.Models.Stan> Stan { get; set; }
     }
 }
