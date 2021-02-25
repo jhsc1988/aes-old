@@ -183,3 +183,25 @@ th {
     font-family: 'Ubuntu-Regular';
     src: url('../fonts/Ubuntu-Regular.ttf') format('truetype');
 }
+.dropdown-toggle {
+    padding: 8px;
+    display: table-cell;
+}
+.dropdown-toggle:hover {
+    background: #e5e5e5;
+    color: #212529;
+    transition: 0.5s cubic-bezier(.33,.66,.66,1) !important;
+}
+.navbar-light .navbar-nav .nav-link {
+    font-size: 0.8rem;
+}
+.odd:hover{
+        background: #e5e5e5;
+    color: #212529;
+    transition: 0.5s cubic-bezier(.33,.66,.66,1) !important;
+}
+.even:hover {
+    background: #e5e5e5;
+    color: #212529;
+    transition: 0.5s cubic-bezier(.33,.66,.66,1) !important;
+}
