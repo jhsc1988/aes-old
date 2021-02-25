@@ -14,5 +14,6 @@ namespace aes.Data
         {
         }
         public DbSet<aes.Models.Stan> Stan { get; set; }
+        public DbSet<aes.Models.Ods> Ods { get; set; }
     }
 }
