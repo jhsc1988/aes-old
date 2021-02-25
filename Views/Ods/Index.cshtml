@@ -4,14 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h4>HEP - ODS - obračunska mjerna mjesta</h4>
 
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novo</a>
 </p>
-<table class="table">
+<hr />
+<table class="table" id="OdsTable">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Stan.StanId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Stan)
             </th>
@@ -28,26 +33,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stan.Adresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Omm)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Napomena)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stan.StanId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stan.Adresa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Omm)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Napomena)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VrijemeUnosa)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<script>
+    $(document).ready(function () {
+        $('#OdsTable').DataTable({
+            "order": [[1, 'asc']],
+            "bLengthChange": false
+        });
+    });
+</script>

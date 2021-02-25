@@ -4,12 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h4>Stanovi - pregled</h4>
 
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novi</a>
 </p>
-<table class="table">
+<hr />
+<table class="table" id="indexTable">
     <thead>
         <tr>
             <th>
@@ -17,9 +19,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SifraObjekta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vrsta)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Adresa)
@@ -48,78 +47,63 @@
             <th>
                 @Html.DisplayNameFor(model => model.Vlasništvo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DioNekretnine)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sektor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VrijemeUnosa)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StanId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SifraObjekta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vrsta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Adresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Kat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BrojSTana)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Naselje)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Četvrt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Površina)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusKorištenja)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Korisnik)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vlasništvo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DioNekretnine)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sektor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StanId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SifraObjekta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adresa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Kat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BrojSTana)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Naselje)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Četvrt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Površina)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusKorištenja)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Korisnik)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vlasništvo)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+@section scripts{
+
+}
+<script>
+    $(document).ready(function () {
+        $('#indexTable').DataTable({
+            "order": [[2, 'asc']],
+            "bLengthChange": false
+        });
+    });
+</script>

@@ -48,6 +48,9 @@ namespace aes.Controllers
         // GET: Ods/Create
         public IActionResult Create()
         {
+            ViewBag.ocontext = _context.Ods.ToList();
+            ViewBag.scontext = _context.Stan.ToList();
+
             ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa");
             return View();
         }
@@ -61,6 +64,7 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
+                ods.VrijemeUnosa = DateTime.Now;
                 _context.Add(ods);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -155,6 +159,23 @@ namespace aes.Controllers
         private bool OdsExists(int id)
         {
             return _context.Ods.Any(e => e.Id == id);
+        }
+
+        // validation
+        [HttpGet]
+        public async Task<IActionResult>OmmValidation(int omm)
+        {
+            if (omm < 10000000 || omm > 99999999)
+            {
+                return Json($"Broj obračunskog mjernog mjesta nije ispravan");
+            }
+
+            var db = await _context.Ods.FirstOrDefaultAsync(x => x.Omm == omm);
+            if (db != null)
+            {
+                return Json($"Obračunsko mjerno mjesto {omm} već postoji.");
+            }
+            return Json(true);
         }
     }
 }
