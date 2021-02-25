@@ -1,0 +1,53 @@
+﻿@model IEnumerable<aes.Models.ElektraKupac>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UgovorniRacun)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ods)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Napomena)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VrijemeUnosa)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UgovorniRacun)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ods.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Napomena)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

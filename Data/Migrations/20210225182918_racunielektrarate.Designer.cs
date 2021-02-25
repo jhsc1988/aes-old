@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aes.Data;
 
 namespace aes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210225182918_racunielektrarate")]
+    partial class racunielektrarate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -530,52 +532,6 @@ namespace aes.Data.Migrations
                     b.ToTable("RacunElektraRate");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunHolding", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BrojRacuna")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime>("DatumIzdavanja")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DatumPotvrde")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DopisId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Iznos")
-                        .HasColumnType("float");
-
-                    b.Property<string>("KlasaPlacanja")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("RedniBroj")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StanId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("VrijemeUnosa")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DopisId");
-
-                    b.HasIndex("StanId");
-
-                    b.ToTable("RacunHolding");
-                });
-
             modelBuilder.Entity("aes.Models.RacunOdsIzvrsenjaUsluge", b =>
                 {
                     b.Property<int>("Id")
@@ -852,25 +808,6 @@ namespace aes.Data.Migrations
                     b.Navigation("Dopis");
 
                     b.Navigation("ElektraKupac");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunHolding", b =>
-                {
-                    b.HasOne("aes.Models.Dopis", "Dopis")
-                        .WithMany()
-                        .HasForeignKey("DopisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("aes.Models.Stan", "Stan")
-                        .WithMany()
-                        .HasForeignKey("StanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dopis");
-
-                    b.Navigation("Stan");
                 });
 
             modelBuilder.Entity("aes.Models.RacunOdsIzvrsenjaUsluge", b =>
