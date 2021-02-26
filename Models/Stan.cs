@@ -47,7 +47,7 @@ namespace aes.Models
         public double? Površina { get; set; }
 
         [MaxLength(32)]
-        [Display(Name = "Status korištenja")]
+        [Display(Name = "Status")]
         public string? StatusKorištenja { get; set; }
 
         [MaxLength(255)]
