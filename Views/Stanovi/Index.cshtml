@@ -11,84 +11,21 @@
     <a asp-action="Create">Dodaj novi</a>
 </p>
 <hr />
-<table class="display compact" id="indexTable">
+<table class="display nowrap" id="indexTable" style="width:100%">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StanId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SifraObjekta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Adresa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Kat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BrojSTana)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Četvrt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Površina)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Korisnik)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StatusKorištenja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vlasništvo)
-            </th>
-            <th></th>
+            <th>StanId</th>
+            <th>SifraObjekta</th>
+            <th>Adresa</th>
+            <th>Kat</th>
+            <th>BrojSTana</th>
+            <th>Četvrt</th>
+            <th>Površina</th>
+            <th>Korisnik</th>
+            <th>StatusKorištenja</th>
+            <th>Vlasništvo</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StanId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SifraObjekta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Adresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Kat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BrojSTana)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Četvrt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Površina)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Korisnik)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusKorištenja)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vlasništvo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-        }
-    </tbody>
 </table>
 @section scripts{
 
@@ -96,8 +33,48 @@
 <script>
     $(document).ready(function () {
         $('#indexTable').DataTable({
+            "ajax": {
+                "url": "/Stanovi/GetList",
+                "type": "POST",
+                "datatype": "json"
+                
+            },
+            "columns": [
+                { "data": "id", "name": "StanID" },
+                { "data": "sifraObjekta", "name": "SifraObjekta" },
+                { "data": "adresa", "name": "Adresa" },
+                { "data": "kat", "name": "Kat" },
+                { "data": "brojSTana", "name": "BrojSTana" },
+                { "data": "\u010Detvrt", "name": "Četvrt" },
+                { "data": "povr\u0161ina", "name": "Površina" },
+                { "data": "korisnik", "name": "Korisnik" },
+                { "data": "statusKori\u0161tenja", "name": "StatusKorištenja" },
+                { "data": "vlasni\u0161tvo", "name": "Vlasništvo" },
+            ],
+            "paging":true,
+            "serverSide":true,
             "order": [[2, 'asc']],
-            "bLengthChange": false
+            "bLengthChange": false,
+            "processing": true,
+            "language": {
+                "processing":"tražim..."
+            },
+            "scrollX": true,
+            "scrollY": true,
+            "columnDefs": [
+                {
+                 "targets": 2,
+                 "render": $.fn.dataTable.render.ellipsis(30),
+                },
+                {
+                 "targets": 7,
+                 "render": $.fn.dataTable.render.ellipsis(20)
+                },
+                {
+                    "targets": 5,
+                    "render": $.fn.dataTable.render.ellipsis(20)
+                }
+            ]
         });
     });
 </script>
