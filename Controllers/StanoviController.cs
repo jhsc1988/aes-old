@@ -9,7 +9,6 @@ using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
 
-
 namespace aes.Controllers
 {
     public class StanoviController : Controller
@@ -152,6 +151,7 @@ namespace aes.Controllers
             return _context.Stan.Any(e => e.Id == id);
         }
 
+        // ajax server-side processing
         [HttpPost]
         public IActionResult GetList()
         {
@@ -177,15 +177,11 @@ namespace aes.Controllers
                     || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))
                     || (x.BrojSTana != null && x.BrojSTana.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Naselje != null && x.Naselje.ToLower().Contains(searchValue.ToLower()))
                     || (x.Četvrt != null && x.Četvrt.ToLower().Contains(searchValue.ToLower()))
                     || x.Površina.ToString().Contains(searchValue.ToLower())
                     || (x.StatusKorištenja != null && x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))
-                    || (x.DioNekretnine != null && x.DioNekretnine.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Sektor != null && x.Sektor.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Status != null && x.Status.ToLower().Contains(searchValue.ToLower()))).ToList<Stan>();
+                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToList<Stan>();
             }
             int totalRowsAfterFiltering = StanList.Count;
 
@@ -194,10 +190,8 @@ namespace aes.Controllers
 
             // paging
             StanList = StanList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Stan>();
-            JsonResult result = new JsonResult(null);
-            var v = StanList;
-            result = this.Json(new { data = StanList , draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering});
-            return result;
+
+            return Json(new{ data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
     }
 }

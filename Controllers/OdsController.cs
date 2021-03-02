@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using aes.Data;
+using aes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using aes.Data;
-using aes.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
@@ -24,6 +25,8 @@ namespace aes.Controllers
         {
             var applicationDbContext = _context.Ods.Include(o => o.Stan);
             return View(await applicationDbContext.ToListAsync());
+
+
         }
 
         // GET: Ods/Details/5
@@ -163,7 +166,7 @@ namespace aes.Controllers
 
         // validation
         [HttpGet]
-        public async Task<IActionResult>OmmValidation(int omm)
+        public async Task<IActionResult> OmmValidation(int omm)
         {
             if (omm < 10000000 || omm > 99999999)
             {
@@ -176,6 +179,56 @@ namespace aes.Controllers
                 return Json($"Obračunsko mjerno mjesto {omm} već postoji.");
             }
             return Json(true);
+        }
+
+        // ajax server-side processing
+        [HttpPost]
+        public IActionResult GetList()
+        {
+            // Server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            List<Ods> OdsList = new List<Ods>();
+            OdsList = _context.Ods.ToList<Ods>();
+
+
+            foreach (Ods ods in OdsList)
+            {
+                ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == ods.StanId); // kod mene je ods.StanId -> Stan.Id
+            }
+
+            // filter
+            int totalRows = OdsList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                OdsList = OdsList.
+                    Where(
+                    x => x.Omm.ToString().Contains(searchValue.ToLower())
+                    || x.Stan.StanId.ToString().Contains(searchValue.ToLower())
+                    || x.Stan.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    || (x.Stan.Adresa != null && x.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Stan.Kat != null && x.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Stan.BrojSTana != null && x.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Stan.Četvrt != null && x.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
+                    || x.Stan.Površina.ToString().Contains(searchValue.ToLower())
+                    || (x.Stan.StatusKorištenja != null && x.Stan.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Stan.Korisnik != null && x.Stan.Korisnik.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Stan.Vlasništvo != null && x.Stan.Vlasništvo.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<Ods>();
+            }
+            int totalRowsAfterFiltering = OdsList.Count;
+
+            // sorting
+            OdsList = OdsList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            OdsList = OdsList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Ods>();
+
+            return Json(new { data = OdsList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
     }
 }
