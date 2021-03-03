@@ -172,7 +172,7 @@ namespace aes.Controllers
             {
                 StanList = StanList.
                     Where(
-                    x => x.Id.ToString().Contains(searchValue.ToLower())
+                    x => x.StanId.ToString().Contains(searchValue.ToLower())
                     || x.SifraObjekta.ToString().Contains(searchValue.ToLower())
                     || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))

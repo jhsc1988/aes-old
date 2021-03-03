@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Controllers
 {
@@ -155,6 +156,46 @@ namespace aes.Controllers
         private bool OdsKupacExists(int id)
         {
             return _context.OdsKupac.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        public IActionResult GetList()
+        {
+            // Server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            List<OdsKupac> OdsKupacList = new List<OdsKupac>();
+            OdsKupacList = _context.OdsKupac.ToList<OdsKupac>();
+
+
+            foreach (OdsKupac odsKupac in OdsKupacList)
+            {
+                odsKupac.Ods = _context.Ods.FirstOrDefault(o => o.Omm == odsKupac.Ods.Omm); // kod mene je ods.StanId -> Stan.Id
+            }
+
+            // filter
+            int totalRows = OdsKupacList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                OdsKupacList = OdsKupacList.
+                    Where(
+                    x => x.SifraKupca.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<OdsKupac>();
+            }
+            int totalRowsAfterFiltering = OdsKupacList.Count;
+
+            // sorting
+            OdsKupacList = OdsKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            OdsKupacList = OdsKupacList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<OdsKupac>();
+
+            return Json(new { data = OdsKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
     }
 }
