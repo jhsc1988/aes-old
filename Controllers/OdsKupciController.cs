@@ -158,10 +158,11 @@ namespace aes.Controllers
             return _context.OdsKupac.Any(e => e.Id == id);
         }
 
+        // ajax server-side processing
         [HttpPost]
         public IActionResult GetList()
         {
-            // Server side parameters
+            // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
             var length = Request.Form["length"].FirstOrDefault();
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
@@ -171,7 +172,7 @@ namespace aes.Controllers
             List<OdsKupac> OdsKupacList = new List<OdsKupac>();
             OdsKupacList = _context.OdsKupac.ToList<OdsKupac>();
 
-
+            // need for JSON
             foreach (OdsKupac odsKupac in OdsKupacList)
             {
                 odsKupac.Ods = _context.Ods.FirstOrDefault(o => o.Omm == odsKupac.Ods.Omm); // kod mene je ods.StanId -> Stan.Id

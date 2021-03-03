@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Controllers
 {
@@ -155,6 +156,47 @@ namespace aes.Controllers
         private bool ElektraKupacExists(int id)
         {
             return _context.ElektraKupac.Any(e => e.Id == id);
+        }
+
+        // ajax server-side processing
+        [HttpPost]
+        public IActionResult GetList()
+        {
+            // server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
+            ElektraKupacList = _context.ElektraKupac.ToList<ElektraKupac>();
+
+            // need for json
+            foreach (ElektraKupac elektraKupac in ElektraKupacList)
+            {
+                elektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Omm == elektraKupac.Ods.Omm);
+            }
+
+            // filter
+            int totalRows = ElektraKupacList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                ElektraKupacList = ElektraKupacList.
+                    Where(
+                    x => x.UgovorniRacun.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<ElektraKupac>();
+            }
+            int totalRowsAfterFiltering = ElektraKupacList.Count;
+
+            // sorting
+            ElektraKupacList = ElektraKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            ElektraKupacList = ElektraKupacList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<ElektraKupac>();
+
+            return Json(new { data = ElektraKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
     }
 }

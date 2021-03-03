@@ -9,45 +9,51 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="display nowrap" id="ElektraKupacTable" style="width:100%">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UgovorniRacun)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ods)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Napomena)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VrijemeUnosa)
-            </th>
-            <th></th>
+            <th>Ugovorni račun</th>
+            <th>Omm</th>
+            <th>Napomena</th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UgovorniRacun)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ods.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Napomena)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
 </table>
+<script>
+    $(document).ready(function () {
+        $('#ElektraKupacTable').DataTable({
+            "ajax": {
+                "url": "/ElektraKupci/GetList",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "UgovorniRacun", "name": "UgovorniRacun" },
+                { "data": "Ods.Omm", "name": "Ods.Omm" },
+                { "data": "napomena", "name": "Napomena" }
+            ],
+            "paging": true,
+            "serverSide": true,
+            "order": [[1, 'asc']],
+            "bLengthChange": false,
+            //"processing": true,
+            "language": {
+                "processing": "tražim..."
+            },
+            "scrollX": true,
+            "columnDefs": [
+                {
+                    "targets": 0, // Ugovorni račun
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                },
+                {
+                    "targets": 1, // Omm
+                    "render": $.fn.dataTable.render.ellipsis(5),
+                },
+                {
+                    "targets": 2, // Napomena
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                }
+            ]
+        });
+    });
+</script>
