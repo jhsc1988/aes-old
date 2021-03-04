@@ -21,7 +21,7 @@
     $(document).ready(function () {
         $('#_StanTable').DataTable({
             "ajax": {
-                "url": "/Stanovi/GetList",
+                "url": "/Stanovi/GetListFiltered", // filtirana lista - lista stanova za koje ne postoje mjerna mjesta
                 "type": "POST",
                 "datatype": "json"
             },

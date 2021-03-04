@@ -152,6 +152,7 @@ namespace aes.Controllers
         }
 
         // ajax server-side processing
+        // filtirana lista - lista stanova za koje ne postoje mjerna mjesta
         [HttpPost]
         public IActionResult GetList()
         {
@@ -192,6 +193,47 @@ namespace aes.Controllers
             StanList = StanList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Stan>();
 
             return Json(new{ data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+        }
+
+        public IActionResult GetListFiltered()
+        {
+            // Server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+
+            List<Stan> StanList = new List<Stan>();
+            StanList = _context.Stan.Where(p => !_context.Ods.Any(o => o.StanId == p.Id)).ToList<Stan>();
+
+            // filter
+            int totalRows = StanList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                StanList = StanList.
+                    Where(
+                    x => x.StanId.ToString().Contains(searchValue.ToLower())
+                    || x.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))
+                    || (x.BrojSTana != null && x.BrojSTana.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Četvrt != null && x.Četvrt.ToLower().Contains(searchValue.ToLower()))
+                    || x.Površina.ToString().Contains(searchValue.ToLower())
+                    || (x.StatusKorištenja != null && x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToList<Stan>();
+            }
+            int totalRowsAfterFiltering = StanList.Count;
+
+            // sorting
+            StanList = StanList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            StanList = StanList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Stan>();
+
+            return Json(new { data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
     }
 }
