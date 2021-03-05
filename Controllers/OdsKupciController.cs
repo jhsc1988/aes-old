@@ -159,7 +159,6 @@ namespace aes.Controllers
             return _context.OdsKupac.Any(e => e.Id == id);
         }
 
-
         // validation
         [HttpGet]
         public async Task<IActionResult> SifraKupcaValidation(int sifraKupca)
@@ -174,16 +173,17 @@ namespace aes.Controllers
             var db = await _context.OdsKupac.FirstOrDefaultAsync(x => x.SifraKupca == sifraKupca);
             if (db != null)
             {
-                return Json($"Obračunsko mjerno mjesto {sifraKupca} već postoji.");
+                return Json($"Šifra kupca {sifraKupca} već postoji."); // TODO: isti kupac se teoretski moze pojaviti na drugom omm
             }
             return Json(true);
         }
 
-
-
-        // ajax server-side processing
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu ODS kupaca u JSON obliku za server side processing</returns>
         [HttpPost]
-        public IActionResult GetList()
+        public async Task<IActionResult> GetList()
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -192,22 +192,22 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
+            // async/await - imam overhead (povećavam latency), ali proširujem scalability
             List<OdsKupac> OdsKupacList = new List<OdsKupac>();
-            OdsKupacList = _context.OdsKupac.ToList<OdsKupac>();
+            OdsKupacList = await _context.OdsKupac.ToListAsync<OdsKupac>();
 
-            // need for JSON
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (OdsKupac odsKupac in OdsKupacList)
             {
-                odsKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == odsKupac.OdsId); // kod mene je odsKupac.OdsId -> Ods.Id (primarni ključ)
-                odsKupac.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == odsKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
+                odsKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == odsKupac.OdsId); // kod mene je odsKupac.OdsId -> Ods.Id (primarni ključ)
+                odsKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == odsKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
             }
 
             // filter
             int totalRows = OdsKupacList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                OdsKupacList = OdsKupacList.
+                OdsKupacList = await OdsKupacList.
                     Where(
                     x => x.SifraKupca.ToString().Contains(searchValue.ToLower())
                     || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
@@ -218,10 +218,11 @@ namespace aes.Controllers
                     || (x.Ods.Stan.BrojSTana != null && x.Ods.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.Četvrt != null && x.Ods.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
                     || x.Ods.Stan.Površina.ToString().Contains(searchValue.ToLower())
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<OdsKupac>();
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<OdsKupac>();
             }
             int totalRowsAfterFiltering = OdsKupacList.Count;
 
+            // trebam System.Linq.Dynamic.Core;
             // sorting
             OdsKupacList = OdsKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 
