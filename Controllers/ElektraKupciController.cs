@@ -232,5 +232,22 @@ namespace aes.Controllers
 
             return Json(new { data = ElektraKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
+
+        // TODO: delete for production  !!!!
+        // Area 51 - testing facility
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON() { 
+        
+            List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
+            ElektraKupacList = await _context.ElektraKupac.ToListAsync<ElektraKupac>();
+
+            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
+            foreach (ElektraKupac elektraKupac in ElektraKupacList)
+            {
+                elektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == elektraKupac.OdsId);
+                elektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == elektraKupac.Ods.StanId);
+            }
+            return Json(ElektraKupacList);
+        }
     }
 }

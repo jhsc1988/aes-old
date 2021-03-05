@@ -250,5 +250,16 @@ namespace aes.Controllers
 
             return Json(new { data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
+
+        // TODO: delete for production  !!!!
+        // Area 51 - testing facility
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON()
+        {
+
+            List<Stan> StanList = new List<Stan>();
+            StanList = await _context.Stan.ToListAsync<Stan>();
+            return Json(StanList);
+        }
     }
 }

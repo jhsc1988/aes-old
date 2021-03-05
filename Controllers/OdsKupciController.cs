@@ -240,5 +240,23 @@ namespace aes.Controllers
 
             return Json(new { data = OdsKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
+
+        // TODO: delete for production  !!!!
+        // Area 51 - testing facility
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON()
+        {
+
+            List<OdsKupac> OdsKupacList = new List<OdsKupac>();
+            OdsKupacList = await _context.OdsKupac.ToListAsync<OdsKupac>();
+
+            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
+            foreach (OdsKupac odsKupac in OdsKupacList)
+            {
+                odsKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == odsKupac.OdsId);
+                odsKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == odsKupac.Ods.StanId);
+            }
+            return Json(OdsKupacList);
+        }
     }
 }
