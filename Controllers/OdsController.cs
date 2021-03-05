@@ -175,7 +175,6 @@ namespace aes.Controllers
             {
                 return Json($"Broj obračunskog mjernog mjesta nije ispravan");
             }
-
             var db = await _context.Ods.FirstOrDefaultAsync(x => x.Omm == omm);
             if (db != null)
             {
@@ -189,7 +188,7 @@ namespace aes.Controllers
         /// </summary>
         /// <returns>Vraća listu obračunskih mjernih mjesta za HEP - ODS u JSON obliku za server side processing</returns>
         [HttpPost]
-        public IActionResult GetList()
+        public async Task<IActionResult> GetList()
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -198,20 +197,20 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
+            // async/await - imam overhead (povećavam latency), ali proširujem scalability
             List<Ods> OdsList = new List<Ods>();
-            OdsList = _context.Ods.ToList<Ods>();
-
+            OdsList = await _context.Ods.ToListAsync<Ods>();
 
             foreach (Ods ods in OdsList)
             {
-                ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == ods.StanId); // kod mene je ods.StanId -> Stan.Id (primarni ključ)
+                ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == ods.StanId); // kod mene je ods.StanId -> Stan.Id (primarni ključ)
             }
 
             // filter
             int totalRows = OdsList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                OdsList = OdsList.
+                OdsList = await OdsList.
                     Where(
                     x => x.Omm.ToString().Contains(searchValue.ToLower())
                     || x.Stan.StanId.ToString().Contains(searchValue.ToLower())
@@ -224,7 +223,7 @@ namespace aes.Controllers
                     || (x.Stan.StatusKorištenja != null && x.Stan.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.Korisnik != null && x.Stan.Korisnik.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.Vlasništvo != null && x.Stan.Vlasništvo.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<Ods>();
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<Ods>();
             }
             int totalRowsAfterFiltering = OdsList.Count;
 
