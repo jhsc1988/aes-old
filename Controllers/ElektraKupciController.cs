@@ -62,11 +62,12 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
+                elektraKupac.VrijemeUnosa = DateTime.Now;
                 _context.Add(elektraKupac);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id", elektraKupac.OdsId);
+            // ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id", elektraKupac.OdsId);
             return View(elektraKupac);
         }
 
@@ -158,9 +159,32 @@ namespace aes.Controllers
             return _context.ElektraKupac.Any(e => e.Id == id);
         }
 
-        // ajax server-side processing
+        // validation
+        [HttpGet]
+        public async Task<IActionResult> UgovorniRacunValidation(long ugovorniRacun)
+        {
+            if (ugovorniRacun < 1000000000 || ugovorniRacun > 9999999999)
+            {
+                return Json($"Ugovorni račun nije ispravan");
+            }
+
+            // TODO: dodati uvjet za omm - vjerojatno mi treba i unique constraint
+            // vidjeti i kod ostalih controllera
+            var db = await _context.ElektraKupac.FirstOrDefaultAsync(x => x.UgovorniRacun == ugovorniRacun);
+            if (db != null)
+            {
+                return Json($"Ugovorni račun {ugovorniRacun} već postoji."); // TODO: isti kupac se teoretski moze pojaviti na drugom omm
+                // treba staviti nekakav alert da već postoji
+            }
+            return Json(true);
+        }
+
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu kupaca Elektre u JSON obliku za server side processing</returns>
         [HttpPost]
-        public IActionResult GetList()
+        public async Task<IActionResult> GetList()
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -169,27 +193,37 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
+            // async/await - imam overhead (povećavam latency), ali proširujem scalability
             List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
-            ElektraKupacList = _context.ElektraKupac.ToList<ElektraKupac>();
+            ElektraKupacList = await _context.ElektraKupac.ToListAsync<ElektraKupac>();
 
-            // need for json
+            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (ElektraKupac elektraKupac in ElektraKupacList)
             {
-                elektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Omm == elektraKupac.Ods.Omm);
+                elektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == elektraKupac.OdsId); // kod mene je elektraKupac.OdsId -> Ods.Id (primarni ključ)
+                elektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == elektraKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
             }
 
             // filter
             int totalRows = ElektraKupacList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                ElektraKupacList = ElektraKupacList.
+                ElektraKupacList = await ElektraKupacList.
                     Where(
                     x => x.UgovorniRacun.ToString().Contains(searchValue.ToLower())
                     || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<ElektraKupac>();
+                    || x.Ods.Stan.StanId.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    || (x.Ods.Stan.Adresa != null && x.Ods.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Ods.Stan.Kat != null && x.Ods.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Ods.Stan.BrojSTana != null && x.Ods.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Ods.Stan.Četvrt != null && x.Ods.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
+                    || x.Ods.Stan.Površina.ToString().Contains(searchValue.ToLower())
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<ElektraKupac>();
             }
             int totalRowsAfterFiltering = ElektraKupacList.Count;
 
+            // trebam System.Linq.Dynamic.Core;
             // sorting
             ElektraKupacList = ElektraKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 

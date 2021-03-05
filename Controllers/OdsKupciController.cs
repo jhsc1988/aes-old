@@ -21,10 +21,19 @@ namespace aes.Controllers
         }
 
         // GET: OdsKupci
-        public async Task<IActionResult> Index()
+
+        // unnecessary overhead
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.OdsKupac.Include(o => o.Ods);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
+
+        public IActionResult Index()
         {
             var applicationDbContext = _context.OdsKupac.Include(o => o.Ods);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: OdsKupci/Details/5

@@ -1,39 +1,80 @@
-﻿@model IEnumerable<aes.Models.ElektraKupac>
+﻿@*@model IEnumerable<aes.Models.ElektraKupac>
+        // overhead
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
+<h4>Pregled kupaca - HEP - Elektra</h4>
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novog</a>
 </p>
+<hr />
 <table class="display nowrap" id="ElektraKupacTable" style="width:100%">
     <thead>
         <tr>
             <th>Ugovorni račun</th>
-            <th>Omm</th>
-            <th>Napomena</th>
+            <th>Mjerno mjesto</th>
+            <th>Stan ID</th>
+            <th>Šifra objekta</th>
+            <th>Adresa</th>
+            <th>Kat</th>
+            <th>Broj stana</th>
+            <th>Četvrt</th>
+            <th>Površina</th>
+            <th>Napomena(kupac)</th>
         </tr>
     </thead>
 </table>
+
 <script>
     $(document).ready(function () {
         $('#ElektraKupacTable').DataTable({
             "ajax": {
-                "url": "/ElektraKupci/GetList",
+                "url": "/ElektraKupci/GetList", // TODO: treba mi ovo u MOM kontroleru, tikvan
                 "type": "POST",
                 "datatype": "json"
             },
+            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
+            // koristi se kao selector (nije posve jasna dokumentacija)
             "columns": [
-                { "data": "UgovorniRacun", "name": "UgovorniRacun" },
-                { "data": "Ods.Omm", "name": "Ods.Omm" },
+                {
+                    "data": null, "name": "ugovorniRacun",
+                    "render": function (data, type, row, meta) {
+                        return '<a href="ElektraKupci/Details/' + data.id + '">' + data.ugovorniRacun + '</a>';
+                    }
+                },
+                {
+                    "data": null, "name": "Ods.Omm",
+                    "render": function (data, type, row, meta) {
+                        return '<a href="Ods/Details/' + data.ods.id + '">' + data.ods.omm + '</a>';
+                    }
+                },
+                {
+                    "data": null, "name": "ods.stan.stanId",
+                    "render": function (data, type, row, meta) {
+                        return '<a href="Stanovi/Details/' + data.ods.stan.id + '">' + data.ods.stan.stanId + '</a>';
+                    }
+                },
+                {
+                    "data": null, "name": "ods.stan.sifraObjekta",
+                    "render": function (data, type, row, meta) {
+                        return '<a href="Stanovi/Details/' + data.ods.stan.id + '">' + data.ods.stan.sifraObjekta + '</a>';
+                    }
+                },
+                { "data": "ods.stan.adresa", "name": "ods.stan.adresa" },
+                { "data": "ods.stan.kat", "name": "ods.stan.kat" },
+                { "data": "ods.stan.brojSTana", "name": "ods.stan.brojSTana" },
+                { "data": "ods.stan.\u010Detvrt", "name": "ods.stan.Četvrt" },
+                {
+                    "data": "ods.stan.povr\u0161ina", "name": "ods.stan.Površina",
+                    "render": $.fn.dataTable.render.number('.', ',', 2, '')
+                },
                 { "data": "napomena", "name": "Napomena" }
             ],
             "paging": true,
             "serverSide": true,
-            "order": [[1, 'asc']],
+            "order": [[4, 'asc']],
             "bLengthChange": false,
             //"processing": true,
             "language": {
@@ -47,11 +88,39 @@
                 },
                 {
                     "targets": 1, // Omm
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                },
+                {
+                    "targets": 2, // Stan ID
                     "render": $.fn.dataTable.render.ellipsis(5),
                 },
                 {
-                    "targets": 2, // Napomena
+                    "targets": 3, // Šifra objekta
                     "render": $.fn.dataTable.render.ellipsis(8),
+                },
+                {
+                    "targets": 4, // Adresa
+                    "render": $.fn.dataTable.render.ellipsis(34),
+                },
+                {
+                    "targets": 5, // Kat
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 6, // Broj stana
+                    "render": $.fn.dataTable.render.ellipsis(12),
+                },
+                {
+                    "targets": 7, // Četvrt
+                    "render": $.fn.dataTable.render.ellipsis(20),
+                },
+                {
+                    "targets": 8, // Površina
+                    "render": $.fn.dataTable.render.ellipsis(6),
+                },
+                {
+                    "targets": 9, // Napomena
+                    "render": $.fn.dataTable.render.ellipsis(40)
                 }
             ]
         });

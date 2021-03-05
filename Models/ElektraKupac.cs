@@ -12,8 +12,8 @@ namespace aes.Models
         public int Id { get; set; }
 
         [Required]
-        [Remote(action: "UgovorniRacun", controller: "ElektraKupac")]
-        public int UgovorniRacun { get; set; }
+        [Remote(action: "UgovorniRacunValidation", controller: "ElektraKupci")]
+        public long UgovorniRacun { get; set; }
         
         public Ods Ods { get; set; }
         

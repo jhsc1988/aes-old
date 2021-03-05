@@ -4,32 +4,37 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>ElektraKupac</h4>
+<h4>Pregled kupaca - HEP - Elektra</h4>
+<hr />
+<div>
+    <partial name="_Ods" />
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="UgovorniRacun" class="control-label"></label>
-                <input asp-for="UgovorniRacun" class="form-control" />
+                <label hidden asp-for="OdsId" class="control-label"></label>
+                <input type="hidden" asp-for="OdsId" id="OId" readonly class="form-control" />
+                <span asp-validation-for="OdsId" class="text-danger"></span>
+
+                <br />
+
+                <label class="control-label" hidden></label>
+                <input id="OMM" readonly class="form-control" placeholder="OMM" />
+
+                <br />
+
+                <label hidden asp-for="UgovorniRacun" class="control-label"></label>
+                <input asp-for="UgovorniRacun" class="form-control" placeholder="Ugovorni račun" />
                 <span asp-validation-for="UgovorniRacun" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OdsId" class="control-label"></label>
-                <select asp-for="OdsId" class ="form-control" asp-items="ViewBag.OdsId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Napomena" class="control-label"></label>
-                <input asp-for="Napomena" class="form-control" />
+
+                <br />
+
+                <label hidden asp-for="Napomena" class="control-label"></label>
+                <input asp-for="Napomena" class="form-control" placeholder="Napomena" />
                 <span asp-validation-for="Napomena" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VrijemeUnosa" class="control-label"></label>
-                <input asp-for="VrijemeUnosa" class="form-control" />
-                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
