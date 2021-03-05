@@ -1,4 +1,4 @@
-﻿@model IEnumerable<aes.Models.Stan>
+﻿@*@model IEnumerable<aes.Models.Stan>*@
 
 <table class="display nowrap" id="_StanTable" style="width:100%">
     <thead>
@@ -44,7 +44,7 @@
                 { "data": "\u010Detvrt", "name": "Četvrt" },
                 {
                     "data": "povr\u0161ina", "name": "Površina",
-                    render: $.fn.dataTable.render.number('.', ',', 2, '')
+                    "render": $.fn.dataTable.render.number('.', ',', 2, '')
                 },
                 { "data": "korisnik", "name": "Korisnik" },
                 { "data": "statusKori\u0161tenja", "name": "StatusKorištenja" },

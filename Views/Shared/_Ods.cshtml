@@ -1,15 +1,5 @@
-﻿@*@model IEnumerable<aes.Models.Ods>
-    // overhead
-    @{
-        ViewData["Title"] = "Index";
-    }*@
+﻿@*@model IEnumerable<aes.Models.Ods>*@
 
-<h4>HEP - ODS - obračunska mjerna mjesta</h4>
-<hr />
-<p>
-    <a asp-action="Create">Dodaj novo</a>
-</p>
-<hr />
 <table class="display nowrap" id="OdsTable" style="width:100%">
     <thead>
         <tr>
@@ -22,7 +12,7 @@
             <th>Četvrt</th>
             <th>Površina</th>
             <th>Napomena</th>
-
+            <th>Akcija</th>
         </tr>
     </thead>
 </table>
@@ -39,19 +29,19 @@
                 {
                     "data": null, "name": "Omm",
                     "render": function (data, type, row, meta) {
-                        return '<a href="Ods/Details/' + data.id + '">' + data.omm + '</a>';
+                        return '<a href="@Url.Action("Details", "Ods")' + "/" + data.id + '">' + data.omm + '</a>';
                     }
                 },
                 {
                     "data": null, "name": "StanId",
                     "render": function (data, type, row, meta) {
-                        return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
+                        return '<a href="@Url.Action("Details", "Stanovi")' + "/" + data.stan.id + '">' + data.stan.stanId + '</a>';
                     }
                 },
                 {
                     "data": null, "name": "Stan.SifraObjekta",
                     "render": function (data, type, row, meta) {
-                        return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
+                        return '<a href="@Url.Action("Details", "Stanovi")' + "/" + data.stan.id + '">' + data.stan.sifraObjekta+ '</a>';
                     }
                 },
                 { "data": "stan.adresa", "name": "stan.adresa" },
@@ -110,9 +100,25 @@
                 {
                     "targets": 8, // Napomena
                     "render": $.fn.dataTable.render.ellipsis(40),
+                },
+                {
+                    "targets": 9,
+                    "data": null,
+                    "render":
+                        function (data, type, row, meta) {
+                            var oid = data.id;
+                            var odsid = data.omm;
+                            return '<a href="#" onclick="getData(\'' + oid + '\', \'' + odsid + '\')">dodaj kupca</a>'
+                            //return '<button onclick ="getData(\'' + oid + '\', \'' + odsid + '\')" class="btn btn-outline-dark">dodaj omm</button>';
+                        }
                 }
-
             ]
         });
     });
+
+    function getData(id, stanid) {
+        $('#OId').val(id);
+        $('#OMM').val(stanid);
+    };
 </script>
+

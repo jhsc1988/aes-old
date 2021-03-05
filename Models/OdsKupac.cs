@@ -12,7 +12,7 @@ namespace aes.Models
         public int Id { get; set; }
 
         [Required]
-        [Remote(action: "SifraKupca", controller: "OdsKupac")]
+        [Remote(action: "SifraKupcaValidation", controller: "OdsKupci")]
         public int SifraKupca { get; set; }
 
         public Ods Ods { get; set; }

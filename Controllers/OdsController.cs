@@ -75,7 +75,7 @@ namespace aes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa", ods.StanId);
+            //ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa", ods.StanId);
             return View(ods);
         }
 
@@ -191,7 +191,7 @@ namespace aes.Controllers
         [HttpPost]
         public IActionResult GetList()
         {
-            // Server side parameters
+            // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
             var length = Request.Form["length"].FirstOrDefault();
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
@@ -204,7 +204,7 @@ namespace aes.Controllers
 
             foreach (Ods ods in OdsList)
             {
-                ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == ods.StanId); // kod mene je ods.StanId -> Stan.Id
+                ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == ods.StanId); // kod mene je ods.StanId -> Stan.Id (primarni ključ)
             }
 
             // filter

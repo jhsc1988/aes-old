@@ -49,7 +49,7 @@ namespace aes.Controllers
         // GET: OdsKupci/Create
         public IActionResult Create()
         {
-            ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id");
+            //ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id");
             return View();
         }
 
@@ -62,11 +62,12 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
+                odsKupac.VrijemeUnosa = DateTime.Now;
                 _context.Add(odsKupac);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id", odsKupac.OdsId);
+            //ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id", odsKupac.OdsId);
             return View(odsKupac);
         }
 
@@ -158,6 +159,28 @@ namespace aes.Controllers
             return _context.OdsKupac.Any(e => e.Id == id);
         }
 
+
+        // validation
+        [HttpGet]
+        public async Task<IActionResult> SifraKupcaValidation(int sifraKupca)
+        {
+            if (sifraKupca < 10000000 || sifraKupca > 99999999)
+            {
+                return Json($"Šifra kupca nije ispravna");
+            }
+
+            // TODO: dodati uvjet za omm - vjerojatno mi treba i unique constraint
+            // vidjeti i kod ostalih controllera
+            var db = await _context.OdsKupac.FirstOrDefaultAsync(x => x.SifraKupca == sifraKupca);
+            if (db != null)
+            {
+                return Json($"Obračunsko mjerno mjesto {sifraKupca} već postoji.");
+            }
+            return Json(true);
+        }
+
+
+
         // ajax server-side processing
         [HttpPost]
         public IActionResult GetList()
@@ -173,9 +196,11 @@ namespace aes.Controllers
             OdsKupacList = _context.OdsKupac.ToList<OdsKupac>();
 
             // need for JSON
+            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (OdsKupac odsKupac in OdsKupacList)
             {
-                odsKupac.Ods = _context.Ods.FirstOrDefault(o => o.Omm == odsKupac.Ods.Omm); // kod mene je ods.StanId -> Stan.Id
+                odsKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == odsKupac.OdsId); // kod mene je odsKupac.OdsId -> Ods.Id (primarni ključ)
+                odsKupac.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == odsKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
             }
 
             // filter
@@ -186,6 +211,13 @@ namespace aes.Controllers
                     Where(
                     x => x.SifraKupca.ToString().Contains(searchValue.ToLower())
                     || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Stan.StanId.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    || (x.Ods.Stan.Adresa != null && x.Ods.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Ods.Stan.Kat != null && x.Ods.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Ods.Stan.BrojSTana != null && x.Ods.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
+                    || (x.Ods.Stan.Četvrt != null && x.Ods.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
+                    || x.Ods.Stan.Površina.ToString().Contains(searchValue.ToLower())
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToList<OdsKupac>();
             }
             int totalRowsAfterFiltering = OdsKupacList.Count;
