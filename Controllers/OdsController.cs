@@ -181,7 +181,10 @@ namespace aes.Controllers
             return Json(true);
         }
 
-        // ajax server-side processing
+        /// <summary>
+        /// Server side processing - učitavanje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu obračunskih mjernih mjesta za HEP - ODS u JSON obliku za server side processing</returns>
         [HttpPost]
         public IActionResult GetList()
         {

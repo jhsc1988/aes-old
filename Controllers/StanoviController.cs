@@ -151,8 +151,11 @@ namespace aes.Controllers
             return _context.Stan.Any(e => e.Id == id);
         }
 
-        // ajax server-side processing
-        // filtirana lista - lista stanova za koje ne postoje mjerna mjesta
+
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu stanova u JSON obliku za server side processing</returns>
         [HttpPost]
         public IActionResult GetList()
         {
@@ -195,6 +198,10 @@ namespace aes.Controllers
             return Json(new{ data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća filtriranu listu stanova (za koje ne postoje omm HEP-ODS-a) u JSON obliku za server side processing</returns>
         public IActionResult GetListFiltered()
         {
             // Server side parameters
