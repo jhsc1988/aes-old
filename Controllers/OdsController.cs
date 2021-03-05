@@ -21,12 +21,18 @@ namespace aes.Controllers
         }
 
         // GET: Ods
-        public async Task<IActionResult> Index()
+
+        // unnecessary overhead
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.Ods.Include(o => o.Stan);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
+
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.Ods.Include(o => o.Stan);
-            return View(await applicationDbContext.ToListAsync());
-
-
+            return View();
         }
 
         // GET: Ods/Details/5
@@ -51,10 +57,7 @@ namespace aes.Controllers
         // GET: Ods/Create
         public IActionResult Create()
         {
-            ViewBag.ocontext = _context.Ods.ToList();
-            ViewBag.scontext = _context.Stan.ToList();
-
-            ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa");
+            // ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa");
             return View();
         }
 
@@ -182,7 +185,7 @@ namespace aes.Controllers
         }
 
         /// <summary>
-        /// Server side processing - učitavanje, paging, sortiranje podataka iz baze
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
         /// <returns>Vraća listu obračunskih mjernih mjesta za HEP - ODS u JSON obliku za server side processing</returns>
         [HttpPost]

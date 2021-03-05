@@ -1,8 +1,8 @@
-﻿@model IEnumerable<aes.Models.Ods>
-
-@{
-    ViewData["Title"] = "Index";
-}
+﻿@*@model IEnumerable<aes.Models.Ods>
+    // overhead
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
 <h4>HEP - ODS - obračunska mjerna mjesta</h4>
 
@@ -23,7 +23,7 @@
             <th>Četvrt</th>
             <th>Površina</th>
             <th>Napomena</th>
-      
+
         </tr>
     </thead>
 </table>
@@ -44,9 +44,9 @@
                     }
                 },
                 {
-                    "data": null, "name":"StanId",
+                    "data": null, "name": "StanId",
                     "render": function (data, type, row, meta) {
-                        return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId+'</a>';
+                        return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
                     }
                 },
                 {
@@ -55,11 +55,11 @@
                         return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
                     }
                 },
-                { "data": "stan.adresa", "name": "stan.adresa"},
-                { "data": "stan.kat", "name": "stan.kat"},
-                { "data": "stan.brojSTana", "name": "stan.brojSTana"},
-                { "data": "stan.\u010Detvrt", "name": "stan.Četvrt"},
-                { "data": "stan.povr\u0161ina", "name": "stan.Površina"},
+                { "data": "stan.adresa", "name": "stan.adresa" },
+                { "data": "stan.kat", "name": "stan.kat" },
+                { "data": "stan.brojSTana", "name": "stan.brojSTana" },
+                { "data": "stan.\u010Detvrt", "name": "stan.Četvrt" },
+                { "data": "stan.povr\u0161ina", "name": "stan.Površina" },
                 { "data": "napomena", "name": "Napomena" }
 
             ],

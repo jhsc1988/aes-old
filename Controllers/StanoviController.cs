@@ -21,9 +21,16 @@ namespace aes.Controllers
         }
 
         // GET: Stanovi
-        public async Task<IActionResult> Index()
+
+        // unnecessary overhead
+        
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Stan.ToListAsync());
+        //}
+        public IActionResult Index()
         {
-            return View(await _context.Stan.ToListAsync());
+            return View();
         }
 
         // GET: Stanovi/Details/5
