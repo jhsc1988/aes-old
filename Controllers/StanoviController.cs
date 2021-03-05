@@ -157,7 +157,7 @@ namespace aes.Controllers
         /// </summary>
         /// <returns>Vraća listu stanova u JSON obliku za server side processing</returns>
         [HttpPost]
-        public IActionResult GetList()
+        public async Task <IActionResult> GetList()
         {
             // Server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -168,13 +168,13 @@ namespace aes.Controllers
 
 
             List<Stan> StanList = new List<Stan>();
-            StanList = _context.Stan.ToList<Stan>();
+            StanList = await _context.Stan.ToListAsync<Stan>();
 
             // filter
             int totalRows = StanList.Count;
             if (!string.IsNullOrEmpty(searchValue))  
             {
-                StanList = StanList.
+                StanList = await StanList.
                     Where(
                     x => x.StanId.ToString().Contains(searchValue.ToLower())
                     || x.SifraObjekta.ToString().Contains(searchValue.ToLower())
@@ -185,7 +185,7 @@ namespace aes.Controllers
                     || x.Površina.ToString().Contains(searchValue.ToLower())
                     || (x.StatusKorištenja != null && x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToList<Stan>();
+                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<Stan>();
             }
             int totalRowsAfterFiltering = StanList.Count;
 
@@ -202,7 +202,7 @@ namespace aes.Controllers
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
         /// <returns>Vraća filtriranu listu stanova (za koje ne postoje omm HEP-ODS-a) u JSON obliku za server side processing</returns>
-        public IActionResult GetListFiltered()
+        public async Task<IActionResult> GetListFiltered()
         {
             // Server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -213,13 +213,13 @@ namespace aes.Controllers
 
 
             List<Stan> StanList = new List<Stan>();
-            StanList = _context.Stan.Where(p => !_context.Ods.Any(o => o.StanId == p.Id)).ToList<Stan>();
+            StanList = await _context.Stan.Where(p => !_context.Ods.Any(o => o.StanId == p.Id)).ToListAsync<Stan>();
 
             // filter
             int totalRows = StanList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                StanList = StanList.
+                StanList = await StanList.
                     Where(
                     x => x.StanId.ToString().Contains(searchValue.ToLower())
                     || x.SifraObjekta.ToString().Contains(searchValue.ToLower())
@@ -230,7 +230,7 @@ namespace aes.Controllers
                     || x.Površina.ToString().Contains(searchValue.ToLower())
                     || (x.StatusKorištenja != null && x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToList<Stan>();
+                    || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<Stan>();
             }
             int totalRowsAfterFiltering = StanList.Count;
 
