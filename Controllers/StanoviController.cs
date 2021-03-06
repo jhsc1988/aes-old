@@ -179,6 +179,7 @@ namespace aes.Controllers
             int totalRows = StanList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
+                // TODO: filter unnecessary ToLower remove, za sve kontrolere
                 StanList = await StanList.
                     Where(
                     x => x.StanId.ToString().Contains(searchValue.ToLower())
