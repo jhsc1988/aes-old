@@ -19,6 +19,7 @@
             <th>Iznos</th>
             <th>Klasa plaćanja</th>
             <th>Datum potvrde</th>
+            <th>Napomena</th>
         </tr>
     </thead>
 </table>
@@ -54,6 +55,7 @@
                 },
                 { "data": "klasaPlacanja", "name": "klasaPlacanja" },
                 { "data": "datumPotvrde", "name": "datumPotvrde" },
+                { "data": "napomena", "name": "napomena" },
             ],
             "paging": true,
             "serverSide": true,
@@ -86,6 +88,10 @@
                 {
                     "targets": 4, // KlasaPlacanja
                     "render": $.fn.dataTable.render.ellipsis(20),
+                },
+                {
+                    "targets": 5, // Napomena
+                    "render": $.fn.dataTable.render.ellipsis(30),
                 },
             ]
         });

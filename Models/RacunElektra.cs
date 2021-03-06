@@ -22,6 +22,7 @@ namespace aes.Models
 
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum Izdavanja")]
+        [DataType(DataType.Date)]
         public DateTime DatumIzdavanja { get; set; }
 
         [Required]

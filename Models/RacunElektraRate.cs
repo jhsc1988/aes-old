@@ -22,6 +22,7 @@ namespace aes.Models
 
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Razdoblje")]
+        [DataType(DataType.Date)]
         public DateTime Razdoblje { get; set; }
 
         [Required]
@@ -39,9 +40,14 @@ namespace aes.Models
         public string KlasaPlacanja { get; set; }
 
         [Display(Name = "Datum Potvrde")]
+        [DataType(DataType.Date)]
         public DateTime? DatumPotvrde { get; set; } // nullable mi treba za not required
 
         [Display(Name = "Vrijeme unosa")]
+        [DataType(DataType.Date)]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
+
+        [MaxLength(255)]
+        public string Napomena { get; set; }
     }
 }

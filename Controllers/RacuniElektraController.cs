@@ -221,9 +221,10 @@ namespace aes.Controllers
                     || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
                     || x.Iznos.ToString().Contains(searchValue)
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))).ToDynamicListAsync<RacunElektra>();
-                // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
+                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunElektra>();
+                    // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
+                    // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = RacunElektraList.Count;
 

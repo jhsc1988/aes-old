@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Controllers
 {
@@ -161,6 +162,95 @@ namespace aes.Controllers
         private bool RacunElektraIzvrsenjeUslugeExists(int id)
         {
             return _context.RacunElektraIzvrsenjeUsluge.Any(e => e.Id == id);
+        }
+
+        // validation
+        [HttpGet]
+        public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
+        {
+            if (brojRacuna.Length < 19 || brojRacuna.Length > 19)
+            {
+                return Json($"Broj računa nije ispravan");
+            }
+
+            var db = await _context.RacunElektraIzvrsenjeUsluge.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
+            if (db != null)
+            {
+                return Json($"Račun {brojRacuna} već postoji.");
+            }
+            return Json(true);
+        }
+
+
+
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu računa izvršenja usluge Elektre u JSON obliku za server side processing</returns>
+        [HttpPost]
+        public async Task<IActionResult> GetList()
+        {
+            // server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = new List<RacunElektraIzvrsenjeUsluge>();
+            RacunElektraIzvrsenjeUslugeList = await _context.RacunElektraIzvrsenjeUsluge.ToListAsync<RacunElektraIzvrsenjeUsluge>();
+
+            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
+            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in RacunElektraIzvrsenjeUslugeList)
+            {
+                racunElektraIzvrsenjeUsluge.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraIzvrsenjeUsluge.ElektraKupacId);
+            }
+
+            // filter
+            // TODO: fali napomena
+            int totalRows = RacunElektraIzvrsenjeUslugeList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                RacunElektraIzvrsenjeUslugeList = await RacunElektraIzvrsenjeUslugeList.
+                    Where(
+                    x => x.BrojRacuna.Contains(searchValue)
+                    || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
+                    || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                    || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
+                    || (x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower()))
+                    || x.Iznos.ToString().Contains(searchValue)
+                    || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue))).ToDynamicListAsync<RacunElektraIzvrsenjeUsluge>();
+                    // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
+                    // sortiranje radi normalno za datume, neovisno o formatu ToString
+            }
+            int totalRowsAfterFiltering = RacunElektraIzvrsenjeUslugeList.Count;
+
+            // trebam System.Linq.Dynamic.Core;
+            // sorting
+            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraIzvrsenjeUsluge>();
+
+            return Json(new { data = RacunElektraIzvrsenjeUslugeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+        }
+
+        // TODO: delete for production  !!!!
+        // Area51
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON()
+        {
+            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = new List<RacunElektraIzvrsenjeUsluge>();
+            RacunElektraIzvrsenjeUslugeList = await _context.RacunElektraIzvrsenjeUsluge.ToListAsync<RacunElektraIzvrsenjeUsluge>();
+
+            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in RacunElektraIzvrsenjeUslugeList)
+            {
+                racunElektraIzvrsenjeUsluge.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraIzvrsenjeUsluge.ElektraKupacId);
+            }
+            return Json(RacunElektraIzvrsenjeUslugeList);
         }
     }
 }
