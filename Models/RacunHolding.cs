@@ -43,5 +43,9 @@ namespace aes.Models
 
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
+
+        [MaxLength(255)]
+        public string Napomena { get; set; }
+
     }
 }

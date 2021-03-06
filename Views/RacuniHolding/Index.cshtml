@@ -1,83 +1,110 @@
-﻿@model IEnumerable<aes.Models.RacunHolding>
+﻿@*@model IEnumerable<aes.Models.RacunHolding>
+        // overhead
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
+<h4>Pregled računa - Holding</h4>
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novog</a>
 </p>
-<table class="table">
+<hr />
+<table class="display nowrap" id="RacunHoldingTable" style="width:100%">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BrojRacuna)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DatumIzdavanja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Iznos)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dopis)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RedniBroj)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KlasaPlacanja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DatumPotvrde)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VrijemeUnosa)
-            </th>
-            <th></th>
+            <th>Broj računa</th>
+            <th>Šifra objekta</th>
+            <th>Stan ID</th>
+            <th>Datum izdavanja</th>
+            <th>Iznos</th>
+            <th>Klasa plaćanja</th>
+            <th>Datum potvrde</th>
+            <th>Napomena</th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BrojRacuna)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stan.Adresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatumIzdavanja)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Iznos)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dopis.Urbroj)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RedniBroj)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KlasaPlacanja)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatumPotvrde)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+
+        $('#RacunHoldingTable').DataTable({
+            "ajax": {
+                "url": "/RacuniHolding/GetList",
+                "type": "POST",
+                "datatype": "json"
+            },
+            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
+            // koristi se kao selector (nije posve jasna dokumentacija)
+            "columns": [
+                {
+                    "data": null, "name": "brojRacuna",
+                    "render": function (data, type, row, meta) {
+                        return '<a href="RacuniHolding/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                    }
+                },
+                {
+                    "data": null, "name": "stan.sifraObjekta",
+                     "render": function (data, type, row, meta) {
+                         return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
+                    }
+                },{
+                    "data": null, "name": "stan.stanId",
+                     "render": function (data, type, row, meta) {
+                         return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
+                    }
+                },
+
+                { "data": "datumIzdavanja", "name": "datumIzdavanja" },
+                {
+                    "data": "iznos", "name": "iznos",
+                    "render": $.fn.dataTable.render.number('.', ',', 2, '')
+                },
+
+                { "data": "klasaPlacanja", "name": "klasaPlacanja" },
+                { "data": "datumPotvrde", "name": "datumPotvrde" },
+                { "data": "napomena", "name": "napomena" },
+            ],
+            "paging": true,
+            "serverSide": true,
+            "order": [[3, 'asc']], // default sort po datumu
+            "bLengthChange": false,
+            //"processing": true,
+            "language": {
+                "processing": "tražim..."
+            },
+            "scrollX": true,
+            "columnDefs": [
+                {
+                    "targets": 0, // BrojRacuna
+                    "render": $.fn.dataTable.render.ellipsis(19),
+                },
+                {
+                    "targets": 1, // Šifra objekta
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },                {
+                    "targets": 2, // Stan ID
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 3, // DatumIzdavanja
+                    "render": function (data, type, row) {
+                        return moment(data).format("DD.MM.YYYY")
+                    }
+                },
+                {
+                    "targets": 4, // Iznos
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                },
+                {
+                    "targets": 5, // KlasaPlacanja
+                    "render": $.fn.dataTable.render.ellipsis(20),
+                },
+                {
+                    "targets": 6, // Napomena
+                    "render": $.fn.dataTable.render.ellipsis(30),
+                },
+            ]
+        });
+    });
+</script>

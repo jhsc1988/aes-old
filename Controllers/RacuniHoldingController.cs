@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Controllers
 {
@@ -161,6 +162,95 @@ namespace aes.Controllers
         private bool RacunHoldingExists(int id)
         {
             return _context.RacunHolding.Any(e => e.Id == id);
+        }
+
+        // validation
+        [HttpGet]
+        public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
+        {
+            if (brojRacuna.Length < 20 || brojRacuna.Length > 20)
+            {
+                return Json($"Broj računa nije ispravan");
+            }
+
+            var db = await _context.RacunHolding.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
+            if (db != null)
+            {
+                return Json($"Račun {brojRacuna} već postoji.");
+            }
+            return Json(true);
+        }
+
+
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu racuna Holdinga u JSON obliku za server side processing</returns>
+        [HttpPost]
+        public async Task<IActionResult> GetList()
+        {
+            // server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            List<RacunHolding> RacunHoldingList = new List<RacunHolding>();
+            RacunHoldingList = await _context.RacunHolding.ToListAsync<RacunHolding>();
+
+            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
+            foreach (RacunHolding racunHolding in RacunHoldingList)
+            {
+                racunHolding.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == racunHolding.StanId); // kod mene je racunHolding.StanId -> Stan.Id (primarni ključ)
+            }
+
+            // filter
+            // TODO: fali napomena
+            int totalRows = RacunHoldingList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                RacunHoldingList = await RacunHoldingList.
+                    Where(
+                    x => x.BrojRacuna.Contains(searchValue)
+                    || x.Stan.SifraObjekta.ToString().Contains(searchValue)
+                    || x.Stan.StanId.ToString().Contains(searchValue)
+                    || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                    || x.Iznos.ToString().Contains(searchValue)
+                    || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunHolding>();
+                    // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
+                    // sortiranje radi normalno za datume, neovisno o formatu ToString
+            }
+            int totalRowsAfterFiltering = RacunHoldingList.Count;
+
+            // trebam System.Linq.Dynamic.Core;
+            // sorting
+            RacunHoldingList = RacunHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            RacunHoldingList = RacunHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunHolding>();
+
+            return Json(new { data = RacunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+        }
+
+
+
+        // TODO: delete for production  !!!!
+        // Area51
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON()
+        {
+            List<RacunHolding> RacunHoldingList = new List<RacunHolding>();
+            RacunHoldingList = await _context.RacunHolding.ToListAsync<RacunHolding>();
+
+            foreach (RacunHolding racunHolding in RacunHoldingList)
+            {
+                racunHolding.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == racunHolding.StanId); // kod mene je racunHolding.StanId -> Stan.Id (primarni ključ)
+            }
+            return Json(RacunHoldingList);
         }
     }
 }
