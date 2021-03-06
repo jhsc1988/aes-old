@@ -11,7 +11,7 @@ namespace aes.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum obračuna")]
         public DateTime DatumObracuna { get; set; }
 
@@ -29,6 +29,6 @@ namespace aes.Models
         public int RNT { get; set; }
 
         [Display(Name = "Vrijeme unosa")]
-        public DateTime? VrijemeUnosa { get; set; }
+        public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
     }
 }

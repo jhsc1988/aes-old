@@ -12,23 +12,23 @@ namespace aes.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(10)]
-        [Remote(action: "BrojRacuna", controller: "RacunElektra")]
+        [MaxLength(19)]
+        [Remote(action: "BrojRacunaValidation", controller: "RacuniElektraRate")]
         public string BrojRacuna { get; set; }
 
-        [Required]
         public ElektraKupac ElektraKupac { get; set; }
+        [Required]
         public int ElektraKupacId { get; set; }
 
-        [Required]
+        // required se podrazumijeva jer nije nullable
         [Display(Name = "Razdoblje")]
         public DateTime Razdoblje { get; set; }
 
         [Required]
         public double Iznos { get; set; }
 
-        [Required]
         public Dopis Dopis { get; set; }
+        [Required]
         public int DopisId { get; set; }
 
         [Required]
@@ -36,13 +36,12 @@ namespace aes.Models
 
         [MaxLength(20)]
         [Display(Name = "Klasa Plaćanja")]
-#nullable enable
-        public string? KlasaPlacanja { get; set; }
-#nullable disable
+        public string KlasaPlacanja { get; set; }
+
         [Display(Name = "Datum Potvrde")]
-        public DateTime? DatumPotvrde { get; set; }
+        public DateTime? DatumPotvrde { get; set; } // nullable mi treba za not required
 
         [Display(Name = "Vrijeme unosa")]
-        public DateTime? VrijemeUnosa { get; set; }
+        public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
     }
 }

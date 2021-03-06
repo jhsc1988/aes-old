@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aes.Data;
 
 namespace aes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210306153519_racunElektraFix2")]
+    partial class racunElektraFix2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,13 +366,13 @@ namespace aes.Data.Migrations
 
                     b.Property<string>("BrojRacuna")
                         .IsRequired()
-                        .HasMaxLength(19)
-                        .HasColumnType("nvarchar(19)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("DatumIzdavanja")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DatumPotvrde")
+                    b.Property<DateTime>("DatumPotvrde")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DopisId")
@@ -393,7 +395,7 @@ namespace aes.Data.Migrations
                     b.Property<int>("RedniBroj")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("VrijemeUnosa")
+                    b.Property<DateTime>("VrijemeUnosa")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -499,8 +501,8 @@ namespace aes.Data.Migrations
 
                     b.Property<string>("BrojRacuna")
                         .IsRequired()
-                        .HasMaxLength(19)
-                        .HasColumnType("nvarchar(19)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime?>("DatumPotvrde")
                         .HasColumnType("datetime2");
