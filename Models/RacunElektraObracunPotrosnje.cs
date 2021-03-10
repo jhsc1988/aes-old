@@ -13,16 +13,17 @@ namespace aes.Models
 
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum obračuna")]
+        [DataType(DataType.Date)]
         public DateTime DatumObracuna { get; set; }
 
         [Required]
         [MaxLength(9)]
         public string brojilo { get; set; }
 
+        public RacunElektra RacunElektra { get; set; }
+
         [Required]
-        [Remote(action: "BrojRacuna", controller: "ElektraRacunObracunPotrosnje")]
-        [Display(Name = "Broj računa")]
-        public int BrojRacuna { get; set; }
+        public int RacunElektraId { get; set; }
 
         [Required]
         public int RVT { get; set; }
