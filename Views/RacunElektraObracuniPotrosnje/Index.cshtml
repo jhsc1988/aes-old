@@ -1,0 +1,88 @@
+﻿@*@model IEnumerable<aes.Models.RacunElektraObracunPotrosnje>
+
+    @{
+        ViewData["Title"] = "Index";
+    }*@
+
+<h4>Pregled računa - Holding</h4>
+<hr />
+<p>
+    <a asp-action="Create">Dodaj novog</a>
+</p>
+<hr />
+<table class="display nowrap" id="ObracunPotrosnjeTable" style="width:100%">
+    <thead>
+        <tr>
+            <th>Datum obračuna</th>
+            <th>brojilo</th>
+            <th>Broj računa</th>
+            <th>RVT</th>
+            <th>RNT</th>
+        </tr>
+    </thead>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#ObracunPotrosnjeTable').DataTable({
+            "ajax": {
+                "url": "/RacunElektraObracuniPotrosnje/GetList",
+                "type": "POST",
+                "datatype": "json"
+            },
+            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
+            // koristi se kao selector (nije posve jasna dokumentacija)
+            "columns": [
+                {
+                    "data": null,"name": "datumObracuna",
+                    "render": function (data, type, row, meta) {
+                        return '<a href="RacuniHolding/Details/' + data.id + '">' + data.datumObracuna + '</a>';
+                    }
+                },
+                {
+                    "data": "brojilo", "name": "brojilo",
+                },
+                {
+                    "data": null, "name": "racunElektra.brojRacuna",
+                     "render": function (data, type, row, meta) {
+                         return '<a href="RacuniElektra/Details/' + data.stan.id + '">' + data.racunElektra.brojRacuna + '</a>';
+                    }
+                },
+                { "data": "RVT", "name": "RVT" },
+                { "data": "RNT", "name": "RNT" },
+            ],
+            "paging": true,
+            "serverSide": true,
+            "order": [[0, 'asc']], // default sort po datumu
+            "bLengthChange": false,
+            //"processing": true,
+            "language": {
+                "processing": "tražim..."
+            },
+            "scrollX": true,
+            "columnDefs": [
+                {
+                    "targets": 0, // Datum obračuna
+                    "render": function (data, type, row) {
+                        return moment(data).format("DD.MM.YYYY")
+                    }
+                },
+                {
+                    "targets": 1, // brojilo
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },                {
+                    "targets": 2, // broj računa
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 3, // RVT
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 4, // RNT
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                }
+            ]
+        });
+    });
+</script>
