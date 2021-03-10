@@ -9,7 +9,6 @@ using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
 
-
 namespace aes.Controllers
 {
     public class RacunElektraObracuniPotrosnjeController : Controller
@@ -24,7 +23,8 @@ namespace aes.Controllers
         // GET: RacunElektraObracuniPotrosnje
         public async Task<IActionResult> Index()
         {
-            return View(await _context.RacunElektraObracunPotrosnje.ToListAsync());
+            var applicationDbContext = _context.RacunElektraObracunPotrosnje.Include(r => r.RacunElektra);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: RacunElektraObracuniPotrosnje/Details/5
@@ -36,6 +36,7 @@ namespace aes.Controllers
             }
 
             var racunElektraObracunPotrosnje = await _context.RacunElektraObracunPotrosnje
+                .Include(r => r.RacunElektra)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (racunElektraObracunPotrosnje == null)
             {
@@ -48,6 +49,7 @@ namespace aes.Controllers
         // GET: RacunElektraObracuniPotrosnje/Create
         public IActionResult Create()
         {
+            ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna");
             return View();
         }
 
@@ -56,15 +58,15 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DatumObracuna,brojilo,BrojRacuna,RVT,RNT,VrijemeUnosa")] RacunElektraObracunPotrosnje racunElektraObracunPotrosnje)
+        public async Task<IActionResult> Create([Bind("Id,DatumObracuna,brojilo,RacunElektraId,RVT,RNT,VrijemeUnosa")] RacunElektraObracunPotrosnje racunElektraObracunPotrosnje)
         {
             if (ModelState.IsValid)
             {
-                racunElektraObracunPotrosnje.VrijemeUnosa = DateTime.Now;
                 _context.Add(racunElektraObracunPotrosnje);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", racunElektraObracunPotrosnje.RacunElektraId);
             return View(racunElektraObracunPotrosnje);
         }
 
@@ -81,6 +83,7 @@ namespace aes.Controllers
             {
                 return NotFound();
             }
+            ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", racunElektraObracunPotrosnje.RacunElektraId);
             return View(racunElektraObracunPotrosnje);
         }
 
@@ -89,7 +92,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DatumObracuna,brojilo,BrojRacuna,RVT,RNT,VrijemeUnosa")] RacunElektraObracunPotrosnje racunElektraObracunPotrosnje)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DatumObracuna,brojilo,RacunElektraId,RVT,RNT,VrijemeUnosa")] RacunElektraObracunPotrosnje racunElektraObracunPotrosnje)
         {
             if (id != racunElektraObracunPotrosnje.Id)
             {
@@ -116,6 +119,7 @@ namespace aes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", racunElektraObracunPotrosnje.RacunElektraId);
             return View(racunElektraObracunPotrosnje);
         }
 
@@ -128,6 +132,7 @@ namespace aes.Controllers
             }
 
             var racunElektraObracunPotrosnje = await _context.RacunElektraObracunPotrosnje
+                .Include(r => r.RacunElektra)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (racunElektraObracunPotrosnje == null)
             {
@@ -152,7 +157,6 @@ namespace aes.Controllers
         {
             return _context.RacunElektraObracunPotrosnje.Any(e => e.Id == id);
         }
-
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
@@ -189,7 +193,7 @@ namespace aes.Controllers
                     || x.RacunElektra.BrojRacuna.ToString().Contains(searchValue)
                     || x.RVT.ToString().Contains(searchValue)
                     || x.RNT.ToString().Contains(searchValue)).ToDynamicListAsync<RacunElektraObracunPotrosnje>();
-                    // sortiranje radi normalno za datume, neovisno o formatu ToString
+                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = RacunElektraObracunPotrosnjeList.Count;
 

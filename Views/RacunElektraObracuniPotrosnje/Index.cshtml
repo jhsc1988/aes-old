@@ -36,7 +36,7 @@
                 {
                     "data": null,"name": "datumObracuna",
                     "render": function (data, type, row, meta) {
-                        return '<a href="RacuniHolding/Details/' + data.id + '">' + data.datumObracuna + '</a>';
+                        return '<a href="RacuniHolding/Details/' + data.id + '">' + moment(data).format("DD.MM.YYYY") + '</a>';
                     }
                 },
                 {
@@ -45,11 +45,11 @@
                 {
                     "data": null, "name": "racunElektra.brojRacuna",
                      "render": function (data, type, row, meta) {
-                         return '<a href="RacuniElektra/Details/' + data.stan.id + '">' + data.racunElektra.brojRacuna + '</a>';
+                         return '<a href="RacuniElektra/Details/' + data.racunElektra.id + '">' + data.racunElektra.brojRacuna + '</a>';
                     }
                 },
-                { "data": "RVT", "name": "RVT" },
-                { "data": "RNT", "name": "RNT" },
+                { "data": "rvt", "name": "rvt" },
+                { "data": "rnt", "name": "rnt" },
             ],
             "paging": true,
             "serverSide": true,
@@ -63,9 +63,6 @@
             "columnDefs": [
                 {
                     "targets": 0, // Datum obračuna
-                    "render": function (data, type, row) {
-                        return moment(data).format("DD.MM.YYYY")
-                    }
                 },
                 {
                     "targets": 1, // brojilo
