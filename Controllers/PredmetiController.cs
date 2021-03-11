@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Controllers
 {
@@ -58,6 +59,7 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
+                predmet.VrijemeUnosa = DateTime.Now;
                 _context.Add(predmet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -149,5 +151,58 @@ namespace aes.Controllers
         {
             return _context.Predmet.Any(e => e.Id == id);
         }
+
+        /// <summary>
+        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        /// </summary>
+        /// <returns>Vraća listu predmeta u JSON obliku za server side processing</returns>
+        [HttpPost]
+        public async Task<IActionResult> GetList()
+        {
+            // server side parameters
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            List<Predmet> PredmetList = new List<Predmet>();
+            PredmetList = await _context.Predmet.ToListAsync<Predmet>();
+
+            // filter
+            int totalRows = PredmetList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                PredmetList = await PredmetList.
+                    Where(
+                    x => x.Klasa.Contains(searchValue)
+                    || x.Naziv.Contains(searchValue)).ToDynamicListAsync<Predmet>();
+                // sortiranje radi normalno za datume, neovisno o formatu ToString
+            }
+            int totalRowsAfterFiltering = PredmetList.Count;
+
+            // trebam System.Linq.Dynamic.Core;
+            // sorting
+            PredmetList = PredmetList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            PredmetList = PredmetList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Predmet>();
+
+            return Json(new { data = PredmetList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+        }
+
+
+        // TODO: delete for production  !!!!
+        // Area51
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON()
+        {
+            List<Predmet> PredmetList = new List<Predmet>();
+            PredmetList = await _context.Predmet.ToListAsync<Predmet>();
+
+            return Json(PredmetList);
+        }
+
     }
 }

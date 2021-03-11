@@ -65,6 +65,7 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
+                stan.VrijemeUnosa = DateTime.Now;
                 _context.Add(stan);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

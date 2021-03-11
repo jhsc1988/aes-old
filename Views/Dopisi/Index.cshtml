@@ -1,53 +1,69 @@
-﻿@model IEnumerable<aes.Models.Dopis>
+﻿@*@model IEnumerable<aes.Models.Dopis>
 
-@{
-    ViewData["Title"] = "Index";
-}
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
-<h1>Index</h1>
-
+<h4>Obračuni potrošnje - HEP - Elektra</h4>
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novog</a>
 </p>
-<table class="table">
+<hr />
+<table class="display nowrap" id="DopisTable" style="width:100%">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Predmet)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Urbroj)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Datum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VrijemeUnosa)
-            </th>
-            <th></th>
+            <th>KLASA</th>
+            <th>Naziv</th>
+            <th>URBROJ</th>
+            <th>Datum dopisa</th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Predmet.Klasa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Urbroj)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Datum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        $('#DopisTable').DataTable({
+            "ajax": {
+                "url": "/Dopisi/GetList",
+                "type": "POST",
+                "datatype": "json"
+            },
+            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
+            // koristi se kao selector (nije posve jasna dokumentacija)
+            "columns": [
+                { "data": "predmet.klasa", "name": "predmet.klasa" },
+                { "data": "predmet.naziv", "name": "predmet.naziv" },
+                { "data": "urbroj", "name": "urbroj" },
+                {
+                    "data": null, "name": "datum",
+                    "render": function (data, type, row) {
+                        return moment(data).format("DD.MM.YYYY")
+                    }
+                },
+            ],
+            "paging": true,
+            "serverSide": true,
+            "order": [[3, 'asc']], // default sort po datumu
+            "bLengthChange": false,
+            //"processing": true,
+            "language": {
+                "processing": "tražim..."
+            },
+            "scrollX": true,
+            "columnDefs": [
+                {
+                    "targets": 0, // Klasa
+                    "render": $.fn.dataTable.render.ellipsis(21),
+                },
+                {
+                    "targets": 1, // Naziv
+                    "render": $.fn.dataTable.render.ellipsis(40),
+                },                {
+                    "targets": 2, // UrBroj
+                    "render": $.fn.dataTable.render.ellipsis(23),
+                }
+            ]
+        });
+    });
+</script>

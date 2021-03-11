@@ -11,13 +11,11 @@ namespace aes.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(8)]
+        [MaxLength(21)]
         public string Klasa { get; set; }
 
         [MaxLength(60)]
-#nullable enable
-        public string? Naziv { get; set; }
-#nullable disable
+        public string Naziv { get; set; }
 
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; }

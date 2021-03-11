@@ -1,47 +1,59 @@
-﻿@model IEnumerable<aes.Models.Predmet>
+﻿@*@model IEnumerable<aes.Models.Predmet>
 
-@{
-    ViewData["Title"] = "Index";
-}
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
-<h1>Index</h1>
 
+<h4>Predmeti</h4>
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novi</a>
 </p>
-<table class="table">
+<hr />
+<table class="display nowrap" id="PredmetiTable" style="width:100%">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Klasa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Naziv)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VrijemeUnosa)
-            </th>
-            <th></th>
+            <th>Klasa</th>
+            <th>Naziv</th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Klasa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Naziv)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VrijemeUnosa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        $('#PredmetiTable').DataTable({
+            "ajax": {
+                "url": "/Predmeti/GetList",
+                "type": "POST",
+                "datatype": "json"
+            },
+            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
+            // koristi se kao selector (nije posve jasna dokumentacija)
+            "columns": [
+
+                { "data": "klasa", "name": "klasa" },
+                { "data": "naziv", "name": "naziv" },
+            ],
+            "paging": true,
+            "serverSide": true,
+            "order": [[1, 'asc']], // default sort po nazivu
+            "bLengthChange": false,
+            //"processing": true,
+            "language": {
+                "processing": "tražim..."
+            },
+            "scrollX": true,
+            "columnDefs": [
+                {
+                    "targets": 0, // Klasa
+                    "render": $.fn.dataTable.render.ellipsis(21),
+                },
+                {
+                    "targets": 1, // Naziv
+                    "render": $.fn.dataTable.render.ellipsis(40),
+                }
+            ]
+        });
+    });
+</script>

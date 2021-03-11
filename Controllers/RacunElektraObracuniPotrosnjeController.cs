@@ -62,6 +62,7 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
+                racunElektraObracunPotrosnje.VrijemeUnosa = DateTime.Now;
                 _context.Add(racunElektraObracunPotrosnje);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -157,6 +158,7 @@ namespace aes.Controllers
         {
             return _context.RacunElektraObracunPotrosnje.Any(e => e.Id == id);
         }
+
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
