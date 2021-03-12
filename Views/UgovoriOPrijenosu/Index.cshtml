@@ -4,7 +4,7 @@
         ViewData["Title"] = "Index";
     }*@
 
-<h4>Ugovori o prijenosu</h4>
+<h4>Ugovori o prijenosu ugovora o korištenju mreže</h4>
 <hr />
 <p>
     <a asp-action="Create">Dodaj novog</a>
@@ -14,6 +14,7 @@
     <thead>
         <tr>
             <th>Broj ugovora</th>
+            <th>Ugovor o korištenju</th>
             <th>Datum prijenosa</th>
             <th>Datum potpisa</th>
             <th>Kupac</th>
@@ -38,6 +39,7 @@
             // koristi se kao selector (nije posve jasna dokumentacija)
             "columns": [
                 { "data": "brojUgovora", "name": "brojUgovora" },
+                { "data": "ugovorOKoristenju.brojUgovora", "name": "ugovorOKoristenju.brojUgovora" },
                 {
                     "data": null, "name": "datumPrijenosa",
                     "render": function (data, type, row) {
@@ -72,27 +74,31 @@
                     "render": $.fn.dataTable.render.ellipsis(14),
                 },
                 {
-                    "targets": 3, // Kupac
+                    "targets": 1, // Broj ugovora o korištenju
+                    "render": $.fn.dataTable.render.ellipsis(14),
+                },
+                {
+                    "targets": 4, // Kupac
                     "render": $.fn.dataTable.render.ellipsis(40),
                 },
                 {
-                    "targets": 4, // Kupac OIB
+                    "targets": 5, // Kupac OIB
                     "render": $.fn.dataTable.render.ellipsis(13),
                 },
                 {
-                    "targets": 5, // Klasa ugovora
+                    "targets": 6, // Klasa ugovora
                     "render": $.fn.dataTable.render.ellipsis(21),
                 },
                 {
-                    "targets": 6, // RBR ugovora
+                    "targets": 7, // RBR ugovora
                     "render": $.fn.dataTable.render.ellipsis(3),
                 },
                 {
-                    "targets": 7, // Klasa dostave
+                    "targets": 8, // Klasa dostave
                     "render": $.fn.dataTable.render.ellipsis(21),
                 },
                 {
-                    "targets": 8, // RBR dostave
+                    "targets": 9, // RBR dostave
                     "render": $.fn.dataTable.render.ellipsis(3),
                 },
             ]

@@ -189,10 +189,10 @@ namespace aes.Controllers
             List<UgovorOPrijenosu> UgovorOPrijenosuList = new List<UgovorOPrijenosu>();
             UgovorOPrijenosuList = await _context.UgovorOPrijenosu.ToListAsync<UgovorOPrijenosu>();
 
-            // TODO: ugovor prijenosa
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (UgovorOPrijenosu ugovorOPrijenosu in UgovorOPrijenosuList)
             {
+                ugovorOPrijenosu.UgovorOKoristenju = await _context.UgovorOKoristenju.FirstOrDefaultAsync(o => o.Id == ugovorOPrijenosu.UgovorOKoristenjuId);
                 ugovorOPrijenosu.Dopis = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == ugovorOPrijenosu.DopisId);
                 ugovorOPrijenosu.DopisDostave = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == ugovorOPrijenosu.DopisDostaveId);
             }
@@ -205,6 +205,7 @@ namespace aes.Controllers
                     Where(
                     x => x.BrojUgovora.Contains(searchValue)
                     || x.DatumPrijenosa.ToString().Contains(searchValue)
+                    || x.UgovorOKoristenju.BrojUgovora.Contains(searchValue)
                     || x.DatumPotpisa.ToString().Contains(searchValue)
                     || x.Kupac.ToLower().Contains(searchValue.ToLower())
                     || x.KupacOIB.ToString().Contains(searchValue)
@@ -234,9 +235,9 @@ namespace aes.Controllers
             List<UgovorOPrijenosu> UgovorOPrijenosuList = new List<UgovorOPrijenosu>();
             UgovorOPrijenosuList = await _context.UgovorOPrijenosu.ToListAsync<UgovorOPrijenosu>();
 
-            // TODO: ugovor prijenosa
             foreach (UgovorOPrijenosu ugovorOPrijenosu in UgovorOPrijenosuList)
             {
+                ugovorOPrijenosu.UgovorOKoristenju = await _context.UgovorOKoristenju.FirstOrDefaultAsync(o => o.Id == ugovorOPrijenosu.UgovorOKoristenjuId);
                 ugovorOPrijenosu.Dopis = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == ugovorOPrijenosu.DopisId);
                 ugovorOPrijenosu.DopisDostave = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == ugovorOPrijenosu.DopisDostaveId);
             }

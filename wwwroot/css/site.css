@@ -207,3 +207,8 @@ th {
     color: #212529;
     transition: 0.5s cubic-bezier(.33,.66,.66,1) !important;
 }
+
+.dataTables_wrapper {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
