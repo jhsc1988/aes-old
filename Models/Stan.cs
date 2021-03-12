@@ -12,60 +12,62 @@ namespace aes.Models
 
         [Required]
         [Display(Name = "ID")]
-        // TODO: set validation for StanId
         //[Remote(action: "StanId", controller: "Stanovi")]
         public int StanId { get; set; }
 
         [Required]
         [Display(Name = "Šifra objekta")]
-        // TODO: set validation for SifraObjekta
         //[Remote(action: "SifraObjekta", controller: "Stanovi")]
         public int SifraObjekta { get; set; }
 
         // nvarchar(64) - nvarchar can store any Unicode data
+#nullable enable
         [MaxLength(64)]
-        public string Vrsta { get; set; }
+        public string? Vrsta { get; set; }
+#nullable disable
 
         [Required]
         [MaxLength(64)]
         public string Adresa { get; set; }
 
+#nullable enable
         [MaxLength(16)]
-        public string Kat { get; set; }
+        public string? Kat { get; set; }
 
         [MaxLength(32)]
         [Display(Name = "Broj stana")]
-        public string BrojSTana { get; set; }
+        public string? BrojSTana { get; set; }
 
         [MaxLength(32)]
-        public string Naselje { get; set; }
+        public string? Naselje { get; set; }
 
         [MaxLength(32)]
-        public string Četvrt { get; set; }
+        public string? Četvrt { get; set; }
 
-        public double Površina { get; set; }
+        public double? Površina { get; set; }
 
         [MaxLength(32)]
         [Display(Name = "Status")]
-        public string StatusKorištenja { get; set; }
+        public string? StatusKorištenja { get; set; }
 
         [MaxLength(255)]
-        public string Korisnik { get; set; }
+        public string? Korisnik { get; set; }
 
         [MaxLength(32)]
-        public string Vlasništvo { get; set; }
+        public string? Vlasništvo { get; set; }
 
         [MaxLength(8)]
         [Display(Name = "Dio nekretnine")]
-        public string DioNekretnine { get; set; }
+        public string? DioNekretnine { get; set; }
 
         [MaxLength(8)]
-        public string Sektor { get; set; }
+        public string? Sektor { get; set; }
 
         [MaxLength(10)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
 
         [Display(Name = "Vrijeme unosa")]
-        public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
+        public DateTime? VrijemeUnosa { get; set; }
+#nullable disable
     }
 }
