@@ -21,10 +21,14 @@ namespace aes.Controllers
         }
 
         // GET: RacuniElektraRate
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.RacunElektraRate.Include(r => r.Dopis).Include(r => r.ElektraKupac);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.RacunElektraRate.Include(r => r.Dopis).Include(r => r.ElektraKupac);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: RacuniElektraRate/Details/5
@@ -196,7 +200,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<RacunElektraRate> RacunElektraRateList = new List<RacunElektraRate>();
             RacunElektraRateList = await _context.RacunElektraRate.ToListAsync<RacunElektraRate>();
 
@@ -207,7 +211,6 @@ namespace aes.Controllers
             }
 
             // filter
-            // TODO: fali napomena
             int totalRows = RacunElektraRateList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {

@@ -20,13 +20,11 @@ namespace aes.Controllers
         }
 
         // GET: Stanovi
-
-        // unnecessary overhead
-
         //public async Task<IActionResult> Index()
         //{
         //    return View(await _context.Stan.ToListAsync());
         //}
+
         public IActionResult Index()
         {
             return View();
@@ -172,7 +170,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<Stan> StanList = new List<Stan>();
             StanList = await _context.Stan.ToListAsync<Stan>();
 
@@ -180,16 +178,15 @@ namespace aes.Controllers
             int totalRows = StanList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                // TODO: filter unnecessary ToLower remove, za sve kontrolere
                 StanList = await StanList.
                     Where(
-                    x => x.StanId.ToString().Contains(searchValue.ToLower())
-                    || x.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    x => x.StanId.ToString().Contains(searchValue)
+                    || x.SifraObjekta.ToString().Contains(searchValue)
                     || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))
                     || (x.BrojSTana != null && x.BrojSTana.ToLower().Contains(searchValue.ToLower()))
                     || (x.Četvrt != null && x.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Površina.ToString().Contains(searchValue.ToLower())
+                    || x.Površina.ToString().Contains(searchValue)
                     || (x.StatusKorištenja != null && x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
                     || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<Stan>();
@@ -219,7 +216,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<Stan> StanList = new List<Stan>();
             StanList = await _context.Stan.Where(p => !_context.Ods.Any(o => o.StanId == p.Id)).ToListAsync<Stan>();
 
@@ -227,16 +224,16 @@ namespace aes.Controllers
             int totalRows = StanList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                // async/await - imam overhead (povećavam latency), ali proširujem scalability
+                // async/await - imam overhead, ali proširujem scalability
                 StanList = await StanList.
                     Where(
-                    x => x.StanId.ToString().Contains(searchValue.ToLower())
-                    || x.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    x => x.StanId.ToString().Contains(searchValue)
+                    || x.SifraObjekta.ToString().Contains(searchValue)
                     || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))
                     || (x.BrojSTana != null && x.BrojSTana.ToLower().Contains(searchValue.ToLower()))
                     || (x.Četvrt != null && x.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Površina.ToString().Contains(searchValue.ToLower())
+                    || x.Površina.ToString().Contains(searchValue)
                     || (x.StatusKorištenja != null && x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
                     || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<Stan>();
@@ -254,7 +251,7 @@ namespace aes.Controllers
         }
 
         // TODO: delete for production  !!!!
-        // Area 51 - testing facility
+        // Area 51
         [HttpGet]
         public async Task<IActionResult> GetListJSON()
         {

@@ -21,9 +21,13 @@ namespace aes.Controllers
         }
 
         // GET: Predmeti
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Predmet.ToListAsync());
+        //}        
+        public IActionResult Index()
         {
-            return View(await _context.Predmet.ToListAsync());
+            return View();
         }
 
         // GET: Predmeti/Details/5
@@ -166,7 +170,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<Predmet> PredmetList = new List<Predmet>();
             PredmetList = await _context.Predmet.ToListAsync<Predmet>();
 
@@ -178,7 +182,7 @@ namespace aes.Controllers
                     Where(
                     x => x.Klasa.Contains(searchValue)
                     || x.Naziv.Contains(searchValue)).ToDynamicListAsync<Predmet>();
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
+                    // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = PredmetList.Count;
 
@@ -191,7 +195,6 @@ namespace aes.Controllers
 
             return Json(new { data = PredmetList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
-
 
         // TODO: delete for production  !!!!
         // Area51

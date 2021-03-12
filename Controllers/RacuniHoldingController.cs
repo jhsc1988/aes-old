@@ -21,10 +21,15 @@ namespace aes.Controllers
         }
 
         // GET: RacuniHolding
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.RacunHolding.Include(r => r.Dopis).Include(r => r.Stan);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+        
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.RacunHolding.Include(r => r.Dopis).Include(r => r.Stan);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: RacuniHolding/Details/5
@@ -196,7 +201,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<RacunHolding> RacunHoldingList = new List<RacunHolding>();
             RacunHoldingList = await _context.RacunHolding.ToListAsync<RacunHolding>();
 
@@ -207,7 +212,6 @@ namespace aes.Controllers
             }
 
             // filter
-            // TODO: fali napomena
             int totalRows = RacunHoldingList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
@@ -235,8 +239,6 @@ namespace aes.Controllers
 
             return Json(new { data = RacunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
-
-
 
         // TODO: delete for production  !!!!
         // Area51

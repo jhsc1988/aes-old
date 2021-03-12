@@ -21,10 +21,14 @@ namespace aes.Controllers
         }
 
         // GET: ElektraKupci
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.ElektraKupac.Include(e => e.Ods);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.ElektraKupac.Include(e => e.Ods);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: ElektraKupci/Details/5
@@ -174,7 +178,7 @@ namespace aes.Controllers
             if (db != null)
             {
                 return Json($"Ugovorni račun {ugovorniRacun} već postoji."); // TODO: isti kupac se teoretski moze pojaviti na drugom omm
-                // treba staviti nekakav alert da već postoji
+                // TODO: treba staviti nekakav alert da već postoji
             }
             return Json(true);
         }
@@ -193,7 +197,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
             ElektraKupacList = await _context.ElektraKupac.ToListAsync<ElektraKupac>();
 
@@ -210,15 +214,15 @@ namespace aes.Controllers
             {
                 ElektraKupacList = await ElektraKupacList.
                     Where(
-                    x => x.UgovorniRacun.ToString().Contains(searchValue.ToLower())
-                    || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
-                    || x.Ods.Stan.StanId.ToString().Contains(searchValue.ToLower())
-                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    x => x.UgovorniRacun.ToString().Contains(searchValue)
+                    || x.Ods.Omm.ToString().Contains(searchValue)
+                    || x.Ods.Stan.StanId.ToString().Contains(searchValue)
+                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue)
                     || (x.Ods.Stan.Adresa != null && x.Ods.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.Kat != null && x.Ods.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.BrojSTana != null && x.Ods.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.Četvrt != null && x.Ods.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Ods.Stan.Površina.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Stan.Površina.ToString().Contains(searchValue)
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<ElektraKupac>();
             }
             int totalRowsAfterFiltering = ElektraKupacList.Count;
@@ -234,14 +238,13 @@ namespace aes.Controllers
         }
 
         // TODO: delete for production  !!!!
-        // Area 51 - testing facility
+        // Area 51
         [HttpGet]
         public async Task<IActionResult> GetListJSON() { 
         
             List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
             ElektraKupacList = await _context.ElektraKupac.ToListAsync<ElektraKupac>();
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (ElektraKupac elektraKupac in ElektraKupacList)
             {
                 elektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == elektraKupac.OdsId);

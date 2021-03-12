@@ -21,10 +21,15 @@ namespace aes.Controllers
         }
 
         // GET: UgovoriOPrijenosu
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.UgovorOPrijenosu.Include(u => u.Dopis).Include(u => u.DopisDostave).Include(u => u.UgovorOKoristenju);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
+
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.UgovorOPrijenosu.Include(u => u.Dopis).Include(u => u.DopisDostave).Include(u => u.UgovorOKoristenju);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: UgovoriOPrijenosu/Details/5
@@ -185,7 +190,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<UgovorOPrijenosu> UgovorOPrijenosuList = new List<UgovorOPrijenosu>();
             UgovorOPrijenosuList = await _context.UgovorOPrijenosu.ToListAsync<UgovorOPrijenosu>();
 

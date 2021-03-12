@@ -21,9 +21,6 @@ namespace aes.Controllers
         }
 
         // GET: OdsKupci
-
-        // unnecessary overhead
-
         //public async Task<IActionResult> Index()
         //{
         //    var applicationDbContext = _context.OdsKupac.Include(o => o.Ods);
@@ -32,7 +29,6 @@ namespace aes.Controllers
 
         public IActionResult Index()
         {
-            var applicationDbContext = _context.OdsKupac.Include(o => o.Ods);
             return View();
         }
 
@@ -201,7 +197,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<OdsKupac> OdsKupacList = new List<OdsKupac>();
             OdsKupacList = await _context.OdsKupac.ToListAsync<OdsKupac>();
 
@@ -218,15 +214,15 @@ namespace aes.Controllers
             {
                 OdsKupacList = await OdsKupacList.
                     Where(
-                    x => x.SifraKupca.ToString().Contains(searchValue.ToLower())
-                    || x.Ods.Omm.ToString().Contains(searchValue.ToLower())
-                    || x.Ods.Stan.StanId.ToString().Contains(searchValue.ToLower())
-                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    x => x.SifraKupca.ToString().Contains(searchValue)
+                    || x.Ods.Omm.ToString().Contains(searchValue)
+                    || x.Ods.Stan.StanId.ToString().Contains(searchValue)
+                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue)
                     || (x.Ods.Stan.Adresa != null && x.Ods.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.Kat != null && x.Ods.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.BrojSTana != null && x.Ods.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
                     || (x.Ods.Stan.Četvrt != null && x.Ods.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Ods.Stan.Površina.ToString().Contains(searchValue.ToLower())
+                    || x.Ods.Stan.Površina.ToString().Contains(searchValue)
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<OdsKupac>();
             }
             int totalRowsAfterFiltering = OdsKupacList.Count;
@@ -242,7 +238,7 @@ namespace aes.Controllers
         }
 
         // TODO: delete for production  !!!!
-        // Area 51 - testing facility
+        // Area 51
         [HttpGet]
         public async Task<IActionResult> GetListJSON()
         {
@@ -250,7 +246,6 @@ namespace aes.Controllers
             List<OdsKupac> OdsKupacList = new List<OdsKupac>();
             OdsKupacList = await _context.OdsKupac.ToListAsync<OdsKupac>();
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (OdsKupac odsKupac in OdsKupacList)
             {
                 odsKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == odsKupac.OdsId);

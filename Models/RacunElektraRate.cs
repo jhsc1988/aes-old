@@ -25,6 +25,8 @@ namespace aes.Models
         [DataType(DataType.Date)]
         public DateTime Razdoblje { get; set; }
 
+        // TODO: postaviti decimal za money
+        // [DataType(DataType.Currency)]
         [Required]
         public double Iznos { get; set; }
 

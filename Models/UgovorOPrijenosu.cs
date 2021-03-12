@@ -28,6 +28,7 @@ namespace aes.Models
         [DataType(DataType.Date)]
         public DateTime DatumPotpisa { get; set; }
 
+        // TODO: decimal ?
         [MaxLength(80)]
         public string Kupac { get; set; }
 

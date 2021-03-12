@@ -21,10 +21,14 @@ namespace aes.Controllers
         }
 
         // GET: RacuniElektra
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.RacunElektra.Include(r => r.Dopis).Include(r => r.ElektraKupac);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.RacunElektra.Include(r => r.Dopis).Include(r => r.ElektraKupac);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: RacuniElektra/Details/5
@@ -63,7 +67,7 @@ namespace aes.Controllers
         public async Task<IActionResult> Create([Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunElektra racunElektra)
         {
             // ModelState debbuger:
-            //var errors = ModelState.Values.SelectMany(v => v.Errors);
+            // var errors = ModelState.Values.SelectMany(v => v.Errors);
 
             if (ModelState.IsValid)
             {
@@ -199,7 +203,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<RacunElektra> RacunElektraList = new List<RacunElektra>();
             RacunElektraList = await _context.RacunElektra.ToListAsync<RacunElektra>();
 
@@ -210,7 +214,6 @@ namespace aes.Controllers
             }
             
             // filter
-            // TODO: fali napomena
             int totalRows = RacunElektraList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {

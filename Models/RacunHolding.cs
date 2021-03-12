@@ -24,6 +24,8 @@ namespace aes.Models
         [Display(Name = "Datum izdavanja")]
         public DateTime DatumIzdavanja { get; set; }
 
+        // TODO: postaviti decimal za money
+        // [DataType(DataType.Currency)]
         [Required]
         public double Iznos { get; set; }
 

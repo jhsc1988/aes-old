@@ -21,10 +21,14 @@ namespace aes.Controllers
         }
 
         // GET: RacunElektraObracuniPotrosnje
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.RacunElektraObracunPotrosnje.Include(r => r.RacunElektra);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.RacunElektraObracunPotrosnje.Include(r => r.RacunElektra);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: RacunElektraObracuniPotrosnje/Details/5
@@ -162,7 +166,7 @@ namespace aes.Controllers
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
-        /// <returns>Vraća listu racuna Holdinga u JSON obliku za server side processing</returns>
+        /// <returns>Vraća listu racuna Elektre u JSON obliku za server side processing</returns>
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
@@ -173,7 +177,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<RacunElektraObracunPotrosnje> RacunElektraObracunPotrosnjeList = new List<RacunElektraObracunPotrosnje>();
             RacunElektraObracunPotrosnjeList = await _context.RacunElektraObracunPotrosnje.ToListAsync<RacunElektraObracunPotrosnje>();
 
@@ -183,7 +187,6 @@ namespace aes.Controllers
                 racunElektraObracunPotrosnje.RacunElektra = await _context.RacunElektra.FirstOrDefaultAsync(o => o.Id == racunElektraObracunPotrosnje.RacunElektraId); // kod mene je racunElektraObracunPotrosnje.RacunElektraId -> RacunElektra.Id (primarni ključ)
             }
 
-
             // filter
             int totalRows = RacunElektraObracunPotrosnjeList.Count;
             if (!string.IsNullOrEmpty(searchValue))
@@ -191,8 +194,8 @@ namespace aes.Controllers
                 RacunElektraObracunPotrosnjeList = await RacunElektraObracunPotrosnjeList.
                     Where(
                     x => x.DatumObracuna.ToString().Contains(searchValue)
-                    || x.brojilo.ToString().Contains(searchValue)
-                    || x.RacunElektra.BrojRacuna.ToString().Contains(searchValue)
+                    || x.brojilo.Contains(searchValue)
+                    || x.RacunElektra.BrojRacuna.Contains(searchValue)
                     || x.RVT.ToString().Contains(searchValue)
                     || x.RNT.ToString().Contains(searchValue)).ToDynamicListAsync<RacunElektraObracunPotrosnje>();
                 // sortiranje radi normalno za datume, neovisno o formatu ToString

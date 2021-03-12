@@ -21,10 +21,14 @@ namespace aes.Controllers
         }
 
         // GET: RacunElektraIzvrsenjaUsluges
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.RacunElektraIzvrsenjeUsluge.Include(r => r.Dopis).Include(r => r.ElektraKupac);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.RacunElektraIzvrsenjeUsluge.Include(r => r.Dopis).Include(r => r.ElektraKupac);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: RacunElektraIzvrsenjaUsluges/Details/5
@@ -181,8 +185,6 @@ namespace aes.Controllers
             return Json(true);
         }
 
-
-
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
@@ -197,7 +199,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = new List<RacunElektraIzvrsenjeUsluge>();
             RacunElektraIzvrsenjeUslugeList = await _context.RacunElektraIzvrsenjeUsluge.ToListAsync<RacunElektraIzvrsenjeUsluge>();
 
@@ -208,7 +210,6 @@ namespace aes.Controllers
             }
 
             // filter
-            // TODO: fali napomena
             int totalRows = RacunElektraIzvrsenjeUslugeList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {

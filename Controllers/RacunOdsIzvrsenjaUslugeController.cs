@@ -21,10 +21,15 @@ namespace aes.Controllers
         }
 
         // GET: RacunOdsIzvrsenjaUsluge
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.RacunOdsIzvrsenjaUsluge.Include(r => r.Dopis).Include(r => r.OdsKupac);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}        
+
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.RacunOdsIzvrsenjaUsluge.Include(r => r.Dopis).Include(r => r.OdsKupac);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
 
         // GET: RacunOdsIzvrsenjaUsluge/Details/5
@@ -164,10 +169,6 @@ namespace aes.Controllers
             return _context.RacunOdsIzvrsenjaUsluge.Any(e => e.Id == id);
         }
 
-
-
-
-
         // validation
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
@@ -185,12 +186,10 @@ namespace aes.Controllers
             return Json(true);
         }
 
-
-
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
-        /// <returns>Vraća listu racuna Elektre u JSON obliku za server side processing</returns>
+        /// <returns>Vraća listu racuna ODS - izvrsenje usluge u JSON obliku za server side processing</returns>
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
@@ -201,7 +200,7 @@ namespace aes.Controllers
             var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
+            // async/await - imam overhead, ali proširujem scalability
             List<RacunOdsIzvrsenjaUsluge> RacunOdsIzvrsenjaUslugeList = new List<RacunOdsIzvrsenjaUsluge>();
             RacunOdsIzvrsenjaUslugeList = await _context.RacunOdsIzvrsenjaUsluge.ToListAsync<RacunOdsIzvrsenjaUsluge>();
 
@@ -212,7 +211,6 @@ namespace aes.Controllers
             }
 
             // filter
-            // TODO: fali napomena
             int totalRows = RacunOdsIzvrsenjaUslugeList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
@@ -241,9 +239,6 @@ namespace aes.Controllers
 
             return Json(new { data = RacunOdsIzvrsenjaUslugeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
-
-
-
 
         // TODO: delete for production  !!!!
         // Area51

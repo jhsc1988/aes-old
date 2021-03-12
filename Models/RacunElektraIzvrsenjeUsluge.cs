@@ -31,6 +31,8 @@ namespace aes.Models
         [MaxLength(64)]
         public string Usluga { get; set; }
 
+        // TODO: postaviti decimal za money
+        // [DataType(DataType.Currency)]
         [Required]
         public double Iznos { get; set; }
 

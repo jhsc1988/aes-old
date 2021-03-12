@@ -21,9 +21,6 @@ namespace aes.Controllers
         }
 
         // GET: Ods
-
-        // unnecessary overhead
-
         //public async Task<IActionResult> Index()
         //{
         //    var applicationDbContext = _context.Ods.Include(o => o.Stan);
@@ -212,14 +209,14 @@ namespace aes.Controllers
             {
                 OdsList = await OdsList.
                     Where(
-                    x => x.Omm.ToString().Contains(searchValue.ToLower())
-                    || x.Stan.StanId.ToString().Contains(searchValue.ToLower())
-                    || x.Stan.SifraObjekta.ToString().Contains(searchValue.ToLower())
+                    x => x.Omm.ToString().Contains(searchValue)
+                    || x.Stan.StanId.ToString().Contains(searchValue)
+                    || x.Stan.SifraObjekta.ToString().Contains(searchValue)
                     || (x.Stan.Adresa != null && x.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.Kat != null && x.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.BrojSTana != null && x.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.Četvrt != null && x.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Stan.Površina.ToString().Contains(searchValue.ToLower())
+                    || x.Stan.Površina.ToString().Contains(searchValue)
                     || (x.Stan.StatusKorištenja != null && x.Stan.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.Korisnik != null && x.Stan.Korisnik.ToLower().Contains(searchValue.ToLower()))
                     || (x.Stan.Vlasništvo != null && x.Stan.Vlasništvo.ToLower().Contains(searchValue.ToLower()))
@@ -237,7 +234,7 @@ namespace aes.Controllers
         }
 
         // TODO: delete for production  !!!!
-        // Area 51 - testing facility
+        // Area 51
         [HttpGet]
         public async Task<IActionResult> GetListJSON()
         {
@@ -245,7 +242,6 @@ namespace aes.Controllers
             List<Ods> OdsList = new List<Ods>();
             OdsList = await _context.Ods.ToListAsync<Ods>();
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (Ods ods in OdsList)
             {
                 ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == ods.StanId);

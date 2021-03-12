@@ -18,6 +18,6 @@ namespace aes.Models
         public string Naziv { get; set; }
 
         [Display(Name = "Vrijeme unosa")]
-        public DateTime? VrijemeUnosa { get; set; }
+        public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
     }
 }
