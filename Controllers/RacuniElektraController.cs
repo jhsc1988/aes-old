@@ -56,7 +56,11 @@ namespace aes.Controllers
         {
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
             ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id");
-            return View();
+
+            List<RacunElektra> re = new List<RacunElektra>();
+
+
+            return View(re);
         }
 
         // POST: RacuniElektra/Create
