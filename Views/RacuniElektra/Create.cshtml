@@ -9,115 +9,140 @@
         <h4>RacunElektra</h4>
         <hr />
 
-        <div id="ind">
-            <table id="tblCustomers" class="table table-responsive align-content-center" cellpadding="0" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th style="width:150px">BrojRacuna</th>
-                        <th style="width:150px">UgovorniRacun</th>
-                        <th style="width:150px">DatumIzdavanja</th>
-                        <th style="width:150px">Iznos</th>
-                        <th style="width:150px">DopisId</th>
-                        <th style="width:150px">RedniBroj</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (RacunElektra rac in Model)
-                    {
+        <form class="row g-3">
+            <div class="col-md-1">
+                <label class="form-label col-form-label-sm">Redni broj</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label col-form-label-sm">Broj Računa</label>
+                <input type="text" class="form-control" onchange="getData()">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label col-form-label-sm">Ugovorni Račun</label>
+                <input type="text" id="ugovorniRacun" class="form-control" onchange="getData()">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label col-form-label-sm">Datum izdavanja</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-md-1">
+                <label class="form-label col-form-label-sm">Iznos</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-auto">
+                <button type="button" id="btnAdd" class="btn btn-primary">Dodaj</button>
+            </div>
+        </form>
 
+            <div id="ind">
+                <table id="tblCustomers" class="table table-responsive align-content-center" cellpadding="0" cellspacing="0">
+                    <thead>
                         <tr>
-                            <td>@rac.BrojRacuna</td>
-                            <td>@rac.ElektraKupac.UgovorniRacun</td>
-                            <td>@rac.DatumIzdavanja</td>
-                            <td>@rac.Iznos</td>
-                            <td>@rac.DopisId</td>
-                            <td>@rac.RedniBroj</td>
-                            <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+                            <th style="width:150px">BrojRacuna</th>
+                            <th style="width:150px">UgovorniRacun</th>
+                            <th style="width:150px">DatumIzdavanja</th>
+                            <th style="width:150px">Iznos</th>
+                            <th style="width:150px">DopisId</th>
+                            <th style="width:150px">RedniBroj</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        @*@foreach (RacunElektra rac in Model)
+                        {
+
+                            <tr>
+                                <td>@rac.BrojRacuna</td>
+                                <td>@rac.ElektraKupac.UgovorniRacun</td>
+                                <td>@rac.DatumIzdavanja</td>
+                                <td>@rac.Iznos</td>
+                                <td>@rac.DopisId</td>
+                                <td>@rac.RedniBroj</td>
+                                <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+                            </tr>
+                        }*@
+                    </tbody>
+                </table>
+                <br />
+                <input type="button" id="btnSave" value="Save All" />
+                <script type="text/javascript">
+                    $("body").on("click", "#btnAdd", function () {
+                        //Reference the Name and Country TextBoxes.
+                        var brojRacuna = $("#brojRacuna");
+                        var ugovorniRacun = $("#ugovorniRacun");
+                        var datumIzdavanja = $("#datumIzdavanja");
+                        var iznos = $("#iznos");
+                        var dopisId = $("#dopisId");
+                        var redniBroj = $("#redniBroj");
+
+                        //Get the reference of the Table's TBODY element.
+                        var tBody = $("#tblCustomers > TBODY")[0];
+
+                        //Add Row.
+                        var row = tBody.insertRow(-1);
+
+                        var cell = $(row.insertCell(-1));
+                        cell.html(brojRacuna.val());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(ugovorniRacun.val());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(datumIzdavanja.val());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(iznos.val());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(dopisId.val());
+
+                        cell = $(row.insertCell(-1));
+                        cell.html(redniBroj.val());
+
+                        //Add Button cell.
+                        cell = $(row.insertCell(-1));
+
+                        row = tBody.insertRow(-1);
+                        row.className = "aaa";
+                        var x = row.insertCell(0);
+                        x.colSpan = "6";
+                        x.className = "b";
+
+                        x.innerHTML = "tredg";
+
+
+
+                        //var btnRemove = $("<input />");
+                        //btnRemove.attr("type", "button");
+                        //btnRemove.attr("onclick", "Remove(this);");
+                        //btnRemove.val("Remove");
+                        //cell.append(btnRemove);
+
+                        //Clear the TextBoxes.
+                        brojRacuna.val("");
+                        ugovorniRacun.val("");
+                        datumIzdavanja.val("");
+                        iznos.val("");
+                        dopisId.val("");
+                        redniBroj.val("");
+                    });
+
+                    function getData() {
+                        var data = '@Html.Raw(Json.Serialize(Model))';
+
+                        $.each(JSON.parse(data), function (key, value){
+                                console.log(key, value);
+
+                        });
+
+                   
                     }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td><input type="text" id="brojRacuna" /></td>
-                        <td><input type="text" id="ugovorniRacun" /></td>
-                        <td><input type="text" id="datumIzdavanja" /></td>
-                        <td><input type="text" id="iznos" /></td>
-                        <td><input type="text" id="dopisId" /></td>
-                        <td><input type="text" id="redniBroj" /></td>
-                        <td><input type="button" id="btnAdd" value="Add" /></td>
-                    </tr>
-                </tfoot>
+                </script>
+            </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
 
-            </table>
-            <br />
-            <input type="button" id="btnSave" value="Save All" />
-            <script type="text/javascript">
-                $("body").on("click", "#btnAdd", function () {
-                    //Reference the Name and Country TextBoxes.
-                    var brojRacuna = $("#brojRacuna");
-                    var ugovorniRacun = $("#ugovorniRacun");
-                    var datumIzdavanja = $("#datumIzdavanja");
-                    var iznos = $("#iznos");
-                    var dopisId = $("#dopisId");
-                    var redniBroj = $("#redniBroj");
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblCustomers > TBODY")[0];
-
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    var cell = $(row.insertCell(-1));
-                    cell.html(brojRacuna.val());
-
-                    cell = $(row.insertCell(-1));
-                    cell.html(ugovorniRacun.val());
-
-                    cell = $(row.insertCell(-1));
-                    cell.html(datumIzdavanja.val());
-
-                    cell = $(row.insertCell(-1));
-                    cell.html(iznos.val());
-
-                    cell = $(row.insertCell(-1));
-                    cell.html(dopisId.val());
-
-                    cell = $(row.insertCell(-1));
-                    cell.html(redniBroj.val());
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    row = tBody.insertRow(-1);
-                    row.className = "aaa";
-                    var x = row.insertCell(0);
-                    x.colSpan = "6";
-                    x.className = "b";
-
-                    x.innerHTML = "tredg";
-
-
-
-                    //var btnRemove = $("<input />");
-                    //btnRemove.attr("type", "button");
-                    //btnRemove.attr("onclick", "Remove(this);");
-                    //btnRemove.val("Remove");
-                    //cell.append(btnRemove);
-
-                    //Clear the TextBoxes.
-                    brojRacuna.val("");
-                    ugovorniRacun.val("");
-                    datumIzdavanja.val("");
-                    iznos.val("");
-                    dopisId.val("");
-                    redniBroj.val("");
-                });
-            </script>
-        </div>
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
-
-        @section Scripts {
-            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-        }
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }

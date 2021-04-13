@@ -60,7 +60,7 @@ namespace aes.Controllers
             List<RacunElektra> re = new List<RacunElektra>();
 
 
-            return View(re);
+            return View(_context.RacunElektra.ToList());
         }
 
         // POST: RacuniElektra/Create
