@@ -4,39 +4,42 @@
             ViewData["Title"] = "Create";
         }
 
-        <h1>Create</h1>
-
-        <h4>RacunElektra</h4>
+        <h6>RacunElektra</h6>
         <hr />
+        <div class="container">
+            <form class="row g-3 d-flex justify-content-center">
+                <div class="col-md-1">
+                    <label class="form-label col-form-label-sm">Redni broj</label>
+                    <input type="text" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label col-form-label-sm">Broj Računa</label>
+                    <input type="text" class="form-control form-control-sm" onchange="getData()">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label col-form-label-sm">Ugovorni Račun</label>
+                    <input type="text" id="ugovorniRacun" class="form-control form-control-sm" onchange="getData()">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label col-form-label-sm">Datum izdavanja</label>
+                    <input type="text" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label col-form-label-sm">Iznos</label>
+                    <input type="text" class="form-control form-control-sm">
+                </div>
+                <div class="col-auto align-self-center">
+                    <button type="button" id="btnAdd" class="btn btn-primary">Dodaj</button>
+                </div>
+                <div class="col-sm-auto">
+                    <label class="form-label col-form-label-sm" id="text"> </label>
+                </div>
+            </form>
+         </div>
 
-        <form class="row g-3">
-            <div class="col-md-1">
-                <label class="form-label col-form-label-sm">Redni broj</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label col-form-label-sm">Broj Računa</label>
-                <input type="text" class="form-control" onchange="getData()">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label col-form-label-sm">Ugovorni Račun</label>
-                <input type="text" id="ugovorniRacun" class="form-control" onchange="getData()">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label col-form-label-sm">Datum izdavanja</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col-md-1">
-                <label class="form-label col-form-label-sm">Iznos</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col-auto">
-                <button type="button" id="btnAdd" class="btn btn-primary">Dodaj</button>
-            </div>
-        </form>
-
+<br />
             <div id="ind">
-                <table id="tblCustomers" class="table table-responsive align-content-center" cellpadding="0" cellspacing="0">
+                <table id="tblCustomers" class="table center table-striped justify-content-center" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
                             <th style="width:150px">BrojRacuna</th>
@@ -49,18 +52,18 @@
                     </thead>
                     <tbody>
                         @*@foreach (RacunElektra rac in Model)
-                        {
+                    {
 
-                            <tr>
-                                <td>@rac.BrojRacuna</td>
-                                <td>@rac.ElektraKupac.UgovorniRacun</td>
-                                <td>@rac.DatumIzdavanja</td>
-                                <td>@rac.Iznos</td>
-                                <td>@rac.DopisId</td>
-                                <td>@rac.RedniBroj</td>
-                                <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
-                            </tr>
-                        }*@
+                        <tr>
+                            <td>@rac.BrojRacuna</td>
+                            <td>@rac.ElektraKupac.UgovorniRacun</td>
+                            <td>@rac.DatumIzdavanja</td>
+                            <td>@rac.Iznos</td>
+                            <td>@rac.DopisId</td>
+                            <td>@rac.RedniBroj</td>
+                            <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+                        </tr>
+                    }*@
                     </tbody>
                 </table>
                 <br />
@@ -74,6 +77,7 @@
                         var iznos = $("#iznos");
                         var dopisId = $("#dopisId");
                         var redniBroj = $("#redniBroj");
+                        var text = $("#text");
 
                         //Get the reference of the Table's TBODY element.
                         var tBody = $("#tblCustomers > TBODY")[0];
@@ -100,7 +104,7 @@
                         cell.html(redniBroj.val());
 
                         //Add Button cell.
-                        cell = $(row.insertCell(-1));
+                        //cell = $(row.insertCell(-1));
 
                         row = tBody.insertRow(-1);
                         row.className = "aaa";
@@ -108,9 +112,7 @@
                         x.colSpan = "6";
                         x.className = "b";
 
-                        x.innerHTML = "tredg";
-
-
+                        x.innerHTML = $('#text').html();
 
                         //var btnRemove = $("<input />");
                         //btnRemove.attr("type", "button");
@@ -125,17 +127,25 @@
                         iznos.val("");
                         dopisId.val("");
                         redniBroj.val("");
+                        text.html("");
                     });
 
                     function getData() {
-                        var data = '@Html.Raw(Json.Serialize(Model))';
-
-                        $.each(JSON.parse(data), function (key, value){
-                                console.log(key, value);
-
+                        $.each(JSON.parse('@Html.Raw(Json.Serialize(Model))'), function (key, value) {
+                            if ($('#ugovorniRacun').val() == value.elektraKupac.ugovorniRacun) {
+                                $('#text').html('<span style="font-weight:bold;"> ID: </span>' + value.elektraKupac.ods.stan.stanId + ' '
+                                    + '<span style="font-weight:bold;">adresa: </span>' + value.elektraKupac.ods.stan.adresa + ' '
+                                    + '<span style="font-weight:bold;">kat: </span>' + value.elektraKupac.ods.stan.kat + ' '
+                                    + '<span style="font-weight:bold;">broj stana: </span>' + value.elektraKupac.ods.stan.brojSTana + ' '
+                                    + '<span style="font-weight:bold;">četvrt: </span>' + value.elektraKupac.ods.stan.\u010Detvrt + ' '
+                                    + '<span style="font-weight:bold;">površina: </span>' + value.elektraKupac.ods.stan.povr\u0161ina + ' '
+                                    + '<span style="font-weight:bold;">status korištenja: </span>' + value.elektraKupac.ods.stan.statusKori\u0161tenja + ' '
+                                    + '<span style="font-weight:bold;">korisnik: </span>' + value.elektraKupac.ods.stan.korisnik + ' '
+                                    + '<span style="font-weight:bold;">vlasništvo: </span>' + value.elektraKupac.ods.stan.vlasni\u0161tvo + ' '
+                                )
+                                return false;
+                            }
                         });
-
-                   
                     }
                 </script>
             </div>
