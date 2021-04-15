@@ -219,3 +219,15 @@ th {
     font-size: 0.7rem;
     font-weight: 600;
 }
+
+.col-form-label-sm {
+    font-size: .775rem;
+}
+
+.form-control-sm {
+    font-size: .775rem;
+}
+
+.btn {
+    font-size: .775rem;
+}

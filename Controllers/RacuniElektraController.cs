@@ -249,6 +249,53 @@ namespace aes.Controllers
             return Json(new { data = RacunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
+
+        public class pm
+        {
+            public int PersonId { get; set; }
+        }
+
+
+
+
+        [HttpPost]
+        public JsonResult SaveToDB([FromBody] List<RacunElektra> p)
+        {
+
+            RacunElektra racuni = new RacunElektra();
+
+            {
+                //Truncate Table to delete all old records.
+                //entities.Database.ExecuteSqlCommand("TRUNCATE TABLE [Customers]");
+
+                //Check for NULL.
+                //if (racuniList == null)
+                //{
+                //    racuniList = new List<RacunElektra>();
+                //}
+
+                //Loop and insert records.
+                //foreach (RacunElektra r in racuniList)
+                //{
+                //    _context.RacunElektra.Add(racuni);
+                //}
+                 _context.SaveChangesAsync();
+
+                //int insertedRecords = re.SaveChanges();
+                return Json("uspjes no spremljeno");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
         // TODO: delete for production  !!!!
         // Area51
         [HttpGet]
@@ -269,5 +316,12 @@ namespace aes.Controllers
             }
             return Json(applicationDbContext.ToList());
         }
+
+
+
+
+
+
+
     }
 }
