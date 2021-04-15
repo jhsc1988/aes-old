@@ -1,71 +1,280 @@
-﻿@model aes.Models.RacunElektra
+﻿@model IEnumerable<aes.Models.RacunElektra>
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>RacunElektra</h4>
+<p><b>Elektra - računi</b></p>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="BrojRacuna" class="control-label"></label>
-                <input asp-for="BrojRacuna" class="form-control" />
-                <span asp-validation-for="BrojRacuna" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ElektraKupacId" class="control-label"></label>
-                <select asp-for="ElektraKupacId" class ="form-control" asp-items="ViewBag.ElektraKupacId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DatumIzdavanja" class="control-label"></label>
-                <input asp-for="DatumIzdavanja" class="form-control" />
-                <span asp-validation-for="DatumIzdavanja" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Iznos" class="control-label"></label>
-                <input asp-for="Iznos" class="form-control" />
-                <span asp-validation-for="Iznos" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DopisId" class="control-label"></label>
-                <select asp-for="DopisId" class ="form-control" asp-items="ViewBag.DopisId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="RedniBroj" class="control-label"></label>
-                <input asp-for="RedniBroj" class="form-control" />
-                <span asp-validation-for="RedniBroj" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="KlasaPlacanja" class="control-label"></label>
-                <input asp-for="KlasaPlacanja" class="form-control" />
-                <span asp-validation-for="KlasaPlacanja" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DatumPotvrde" class="control-label"></label>
-                <input asp-for="DatumPotvrde" class="form-control" />
-                <span asp-validation-for="DatumPotvrde" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VrijemeUnosa" class="control-label"></label>
-                <input asp-for="VrijemeUnosa" class="form-control" />
-                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="container">
+    <form class="row g-3 d-flex justify-content-center">
+        <div class="col-md-2">
+            <label hidden class="form-label col-form-label-sm">Broj Računa</label>
+            <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa">
+        </div>
+        <div class="col-md-2">
+            <label hidden class="form-label col-form-label-sm">Ugovorni Račun</label>
+            <input type="text" id="ugovorniRacun" class="form-control form-control-sm" onchange="getData()" placeholder="Ugovorni račun">
+        </div>
+        <div class="col-md-2">
+            <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{ /* onfocus i onblur - trik za pokazivanje placeholdera*/ }
+            <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja" onfocus="(this.type='date')" onblur="(this.type='text')">
+        </div>
+        <div class="col-md-1">
+            <label hidden class="form-label col-form-label-sm">Iznos</label>
+            <input type="text" id="iznos" class="form-control form-control-sm" placeholder="Iznos">
+        </div>
+        <div class="col-auto align-self-center">
+            <button type="button" id="btnAdd" class="btn btn-primary">Dodaj</button>
+        </div>
+        <div class="col-sm-auto">
+            <label class="form-label col-form-label-sm" id="text"> </label>
+        </div>
+    </form>
 </div>
 
+<br />
+<div id="ind">
+    <table class="display nowrap" id="indexTable" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th>rbr</th>
+                <th>Broj računa</th>
+                <th>Stan ID</th>
+                <th>Adresa</th>
+                <th>Korisnik</th>
+                <th>Status</th>
+                <th>Vlasništvo</th>
+                <th>Datum izdavanja</th>
+                <th>Iznos</th>
+                <th>Akcija</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+    <input type="button" id="btnSave" value="Save All" />
+    <script type="text/javascript">
+
+        // global variables
+        var data_stanId;
+        var data_adresa;
+        var data_kat;
+        var data_brojstana;
+        var data_cetvrt;
+        var data_povrsina;
+        var data_statuskoristenja;
+        var data_korisnik;
+        var data_vlasnistvo;
+
+        $('body').on("click", "#btnSave", function () {
+            var table = $('#indexTable').DataTable()
+
+            // javascript object
+            var data = table
+                .rows()
+                .data();
+
+            var racuni = new Array();
+            var racun = {};
+
+            for (i = 0; i < data.length; ++i){
+
+                racun.BrojRacuna = data[i][1];
+                
+                racun.ElektraKupacId = 1;
+                racun.DatumIzdavanja = data[i][7];
+                racun.Iznos = data[i][8];
+                
+                racun.DopisId = 1;
+                racun.RedniBroj = 1;
+              
+
+                racuni.push(racun);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/RacuniElektra/SaveToDB",
+                data: JSON.stringify(racuni),
+                
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+              
+                
+                success: function (r) {
+                    alert(racuni);
+                    console.log(pm);
+                    //alert(r + " record(s) inserted.");
+                }
+            });
+
+
+            console.log(racuni);
+
+        });
+
+        $("body").on("click", "#btnAdd", function () {
+
+            // get elements
+            var brojRacuna = $("#brojRacuna");
+            var ugovorniRacun = $("#ugovorniRacun");
+            var datumIzdavanja = $("#datumIzdavanja");
+            var iznos = $("#iznos");
+            var dopisId = $("#dopisId");
+            var redniBroj = $("#redniBroj");
+            var text = $("#text");
+
+            // clear
+            brojRacuna.val("");
+            ugovorniRacun.val("");
+            datumIzdavanja.val("");
+            iznos.val("");
+            dopisId.val("");
+            redniBroj.val("");
+            text.html("");
+
+        });
+
+        function getData() {
+            $.each(JSON.parse('@Html.Raw(Json.Serialize(Model))'), function (key, value) {
+                if ($('#ugovorniRacun').val() == value.elektraKupac.ugovorniRacun) {
+
+                    // get data
+                    data_stanId = value.elektraKupac.ods.stan.stanId;
+                    data_adresa = value.elektraKupac.ods.stan.adresa;
+                    data_kat = value.elektraKupac.ods.stan.kat;
+                    data_brojstana = value.elektraKupac.ods.stan.brojSTana;
+                    data_cetvrt = value.elektraKupac.ods.stan.\u010Detvrt;
+                    data_povrsina = value.elektraKupac.ods.stan.povr\u0161ina;
+                    data_statuskoristenja = value.elektraKupac.ods.stan.statusKori\u0161tenja;
+                    data_korisnik = value.elektraKupac.ods.stan.korisnik;
+                    data_vlasnistvo = value.elektraKupac.ods.stan.vlasni\u0161tvo;
+
+                    // #text string builder
+                    $('#text').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
+                        + '<span style="font-weight:bold;">adresa: </span>' + data_adresa + ' '
+                        + '<span style="font-weight:bold;">kat: </span>' + data_kat + ' '
+                        + '<span style="font-weight:bold;">broj stana: </span>' + data_brojstana + ' '
+                        + '<span style="font-weight:bold;">četvrt: </span>' + data_cetvrt + ' '
+                        + '<span style="font-weight:bold;">površina: </span>' + data_povrsina + ' '
+                        + '<span style="font-weight:bold;">status korištenja: </span>' + data_statuskoristenja + ' '
+                        + '<span style="font-weight:bold;">korisnik: </span>' + data_korisnik + ' '
+                        + '<span style="font-weight:bold;">vlasništvo: </span>' + data_vlasnistvo + ' '
+                    )
+                    return false;
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var t = $('#indexTable').DataTable({
+
+                "paging": true,
+                "ordering": false,
+                "bLengthChange": false,
+
+                "columns": [
+                    {
+                        "targets": 0, // rbr
+                        "render": $.fn.dataTable.render.ellipsis(3),
+                    },
+                    {
+                        "targets": 1, // BrojRacuna
+                        "render": $.fn.dataTable.render.ellipsis(19),
+                    },
+                    {
+                        "targets": 2, // Stan ID
+                        "render": $.fn.dataTable.render.ellipsis(5),
+                    },
+                    {
+                        "targets": 3, // Adresa
+                        "render": $.fn.dataTable.render.ellipsis(34),
+                    },
+                    {
+                        "targets": 4, // Korisnik
+                        "render": $.fn.dataTable.render.ellipsis(20),
+                    },
+                    {
+                        "targets": 5, // Status
+                        "render": $.fn.dataTable.render.ellipsis(8),
+                    },
+                    {
+                        "targets": 6, // Vlasništvo
+                        "render": $.fn.dataTable.render.ellipsis(10),
+                    },                    
+                    {
+                        "targets": 7, // Datum izdavanja
+                        "render": $.fn.dataTable.render.ellipsis(10),
+                    },
+                    {
+                        "targets": 8, // iznos
+                        "render": $.fn.dataTable.render.ellipsis(10),
+                    },
+                    {
+                        "targets": 9, // remove
+                        //"render": $.fn.dataTable.render.ellipsis(10),
+                    },
+                ]
+            })
+
+            // add rows on button click
+            $('#btnAdd').on('click', function () {
+                if (brojRacuna.value == "") {
+                    return false
+                } else {
+
+                    // insert variables
+                    t.row.add([
+                        0, // dummy variable
+                        brojRacuna.value,
+                        data_stanId,
+                        data_adresa,
+                        data_korisnik,
+                        data_statuskoristenja,
+                        data_vlasnistvo,
+                        datumIzdavanja.value,
+                        iznos.value,
+                        "<td><button type='button' class='remove btn btn-secondary btn-sm'>briši</button ></td >"
+                    ]).draw(false);
+
+                    // reset variables
+                    data_stanId = "";
+                    data_adresa = "";
+                    data_kat = "";
+                    data_brojstana = "";
+                    data_cetvrt = "";
+                    data_povrsina = "";
+                    data_statuskoristenja = "";
+                    data_korisnik = "";
+                    data_vlasnistvo = "";
+                }
+            });
+
+            // numbering
+            t.on('order.dt search.dt', function () {
+                t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            // remove
+            $('#indexTable').on('click', '.remove', function () {
+                var table = $('#indexTable').DataTable();
+                    table
+                        .row($(this).parents('tr'))
+                        .remove()
+                        .draw();               
+            });
+        });
+
+    </script>
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   
 }

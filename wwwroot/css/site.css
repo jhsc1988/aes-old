@@ -1,6 +1,13 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+.ind {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    background-color: black;
+}
+
 a.navbar-brand {
     white-space: normal;
     text-align: center;
@@ -211,4 +218,16 @@ th {
 .dataTables_wrapper {
     font-size: 0.7rem;
     font-weight: 600;
+}
+
+.col-form-label-sm {
+    font-size: .775rem;
+}
+
+.form-control-sm {
+    font-size: .775rem;
+}
+
+.btn {
+    font-size: .775rem;
 }
