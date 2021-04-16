@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
+using Newtonsoft.Json;
 
 namespace aes.Controllers
 {
@@ -52,19 +53,29 @@ namespace aes.Controllers
         }
 
         // GET: RacuniElektra/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
             ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id");
 
             List<RacunElektra> re = new List<RacunElektra>();
 
-            var applicationDbContext = _context.RacunElektra.
-                Include(r => r.Dopis).
-                Include(r => r.ElektraKupac).
-                Include(r => r.ElektraKupac.Ods).
-                Include(r => r.ElektraKupac.Ods.Stan);
-            return View(applicationDbContext.ToList());
+            var applicationDbContext = await _context.RacunElektra.ToListAsync();
+
+            ViewBag.Predmeti = new List<Predmet>();
+            foreach (Predmet element in await _context.Predmet.ToListAsync())
+            {
+                ViewBag.Predmeti.Add(element);
+            }
+
+            ViewBag.Dopisi = new List<Dopis>();
+            foreach (Dopis element in await _context.Dopis.ToListAsync())
+                ViewBag.Dopisi.Add(element);
+            
+            ViewBag.Predmeti = JsonConvert.SerializeObject(ViewBag.Predmeti);
+            ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
+            return View(applicationDbContext);
+
         }
 
         // POST: RacuniElektra/Create
@@ -86,8 +97,34 @@ namespace aes.Controllers
             }
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektra.DopisId);
             ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektra.ElektraKupacId);
+
+
+
+
+
+
             return View(racunElektra);
         }
+
+
+
+
+
+
+
+        //public JsonResult GetPredmeti(int? predmetId, int? dopisId)
+        //{
+        //    ViewBag.Predmeti = new List<SelectListItem>();
+        //    foreach (Predmet elementi in _context.Predmet.ToList())
+        //        ViewBag.Predmeti.Add(new SelectListItem { Text = elementi.Klasa, Value = elementi.Id.ToString() });
+
+        //}
+
+
+
+
+
+
 
         // GET: RacuniElektra/Edit/5
         public async Task<IActionResult> Edit(int? id)
