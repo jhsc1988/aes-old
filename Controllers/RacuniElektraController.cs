@@ -55,27 +55,43 @@ namespace aes.Controllers
         // GET: RacuniElektra/Create
         public async Task<IActionResult> CreateAsync()
         {
-            ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
-            ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id");
+            //ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
+            //ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id");
 
             List<RacunElektra> re = new List<RacunElektra>();
 
             var applicationDbContext = await _context.RacunElektra.ToListAsync();
 
-            ViewBag.Predmeti = new List<Predmet>();
-            foreach (Predmet element in await _context.Predmet.ToListAsync())
             {
-                ViewBag.Predmeti.Add(element);
+                ViewBag.Predmeti = new List<Predmet>();
+                foreach (Predmet element in await _context.Predmet.ToListAsync())
+                    ViewBag.Predmeti.Add(element);
+                ViewBag.Predmeti = JsonConvert.SerializeObject(ViewBag.Predmeti);
             }
 
-            ViewBag.Dopisi = new List<Dopis>();
-            foreach (Dopis element in await _context.Dopis.ToListAsync())
-                ViewBag.Dopisi.Add(element);
-            
-            ViewBag.Predmeti = JsonConvert.SerializeObject(ViewBag.Predmeti);
-            ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
-            return View(applicationDbContext);
+            {
+                ViewBag.Dopisi = new List<Dopis>();
+                foreach (Dopis element in await _context.Dopis.ToListAsync())
+                    ViewBag.Dopisi.Add(element);
+                ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
+            }
+            {
+                ViewBag.Kupci = new List<ElektraKupac>();
+                foreach (ElektraKupac element in await _context.ElektraKupac.ToListAsync())
+                    ViewBag.Kupci.Add(element);
+            }
 
+            {
+                foreach (ElektraKupac element in ViewBag.Kupci)
+                {
+                    element.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.OdsId);
+                }
+                foreach (ElektraKupac element in ViewBag.Kupci)
+                    element.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.Ods.StanId);
+
+                ViewBag.Kupci = JsonConvert.SerializeObject(ViewBag.Kupci);
+            }
+            return View(applicationDbContext);
         }
 
         // POST: RacuniElektra/Create
@@ -95,22 +111,12 @@ namespace aes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektra.DopisId);
-            ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektra.ElektraKupacId);
 
-
-
-
-
+            //ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektra.DopisId);
+            //ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektra.ElektraKupacId);
 
             return View(racunElektra);
         }
-
-
-
-
-
-
 
         //public JsonResult GetPredmeti(int? predmetId, int? dopisId)
         //{
@@ -119,12 +125,6 @@ namespace aes.Controllers
         //        ViewBag.Predmeti.Add(new SelectListItem { Text = elementi.Klasa, Value = elementi.Id.ToString() });
 
         //}
-
-
-
-
-
-
 
         // GET: RacuniElektra/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -139,8 +139,10 @@ namespace aes.Controllers
             {
                 return NotFound();
             }
+
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektra.DopisId);
             ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektra.ElektraKupacId);
+
             return View(racunElektra);
         }
 
@@ -176,8 +178,10 @@ namespace aes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektra.DopisId);
             ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektra.ElektraKupacId);
+
             return View(racunElektra);
         }
 
@@ -285,15 +289,6 @@ namespace aes.Controllers
 
             return Json(new { data = RacunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
-
-
-        public class pm
-        {
-            public int PersonId { get; set; }
-        }
-
-
-
 
         [HttpPost]
         public JsonResult SaveToDB([FromBody] List<RacunElektra> p)
