@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using aes.Data;
+using aes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using aes.Data;
-using aes.Models;
-using System.Linq.Dynamic.Core;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
@@ -62,36 +62,57 @@ namespace aes.Controllers
 
             var applicationDbContext = await _context.RacunElektra.ToListAsync();
 
+            getDataAsync();
+
+            return View(applicationDbContext);
+        }
+
+
+        [HttpPost]
+        public string getPredmeti()
+        {
+            List<Predmet> p = new List<Predmet>();
+            foreach (Predmet element in _context.Predmet.ToList())
+                p.Add(element);
+
+            return JsonConvert.SerializeObject(p);
+
+        }
+
+        [HttpPost]
+        public void getDataAsync()
+        {
+            ViewBag.Predmeti = new List<Predmet>();
+            ViewBag.Dopisi = new List<Dopis>();
+            ViewBag.Kupci = new List<ElektraKupac>();
             {
-                ViewBag.Predmeti = new List<Predmet>();
-                foreach (Predmet element in await _context.Predmet.ToListAsync())
+
+                foreach (Predmet element in  _context.Predmet.ToList())
                     ViewBag.Predmeti.Add(element);
                 ViewBag.Predmeti = JsonConvert.SerializeObject(ViewBag.Predmeti);
             }
 
             {
-                ViewBag.Dopisi = new List<Dopis>();
-                foreach (Dopis element in await _context.Dopis.ToListAsync())
+                foreach (Dopis element in  _context.Dopis.ToList())
                     ViewBag.Dopisi.Add(element);
                 ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
             }
             {
-                ViewBag.Kupci = new List<ElektraKupac>();
-                foreach (ElektraKupac element in await _context.ElektraKupac.ToListAsync())
+                foreach (ElektraKupac element in  _context.ElektraKupac.ToList())
                     ViewBag.Kupci.Add(element);
             }
 
             {
                 foreach (ElektraKupac element in ViewBag.Kupci)
                 {
-                    element.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.OdsId);
+                    element.Ods =  _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
                 }
                 foreach (ElektraKupac element in ViewBag.Kupci)
-                    element.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.Ods.StanId);
+                    element.Ods.Stan =  _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
 
                 ViewBag.Kupci = JsonConvert.SerializeObject(ViewBag.Kupci);
             }
-            return View(applicationDbContext);
+            //return Json("ok");
         }
 
         // POST: RacuniElektra/Create
@@ -261,7 +282,7 @@ namespace aes.Controllers
             {
                 racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
             }
-            
+
             // filter
             int totalRows = RacunElektraList.Count;
             if (!string.IsNullOrEmpty(searchValue))
@@ -275,8 +296,8 @@ namespace aes.Controllers
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
                     || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunElektra>();
-                    // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
-                    // sortiranje radi normalno za datume, neovisno o formatu ToString
+                // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
+                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = RacunElektraList.Count;
 
@@ -311,22 +332,32 @@ namespace aes.Controllers
                 //{
                 //    _context.RacunElektra.Add(racuni);
                 //}
-                 _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
 
                 //int insertedRecords = re.SaveChanges();
                 return Json("uspjes no spremljeno");
             }
         }
 
+        // csv read
+        //public void getCSV()
+        //{
+        //    var reader = new StreamReader(@"C:\Users\jhsc1\Radna površina\testing.csv");
 
+        //    {
 
+        //        List<string> listA = new List<string>();
+        //        List<string> listB = new List<string>();
+        //        while (!reader.EndOfStream)
+        //        {
+        //            var line = reader.ReadLine();
+        //            var values = line.Split(';');
 
-
-
-
-
-
-
+        //            listA.Add(values[0]);
+        //            //listB.Add(values[1]);
+        //        }
+        //    }
+        //}
 
         // TODO: delete for production  !!!!
         // Area51
@@ -348,12 +379,5 @@ namespace aes.Controllers
             }
             return Json(applicationDbContext.ToList());
         }
-
-
-
-
-
-
-
     }
 }
