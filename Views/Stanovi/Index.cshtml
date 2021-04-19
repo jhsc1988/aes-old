@@ -41,7 +41,8 @@
 
             $.each($tds, function (i, el) {
                 var txt = $(this).text();
-                $(this).html("").append("<input type='text' class='form - control' value=\"" + txt + "\">");
+                $(this).html("").append(
+                    "<div class='input-group input-group-sm my-auto'><input type='text' class='form-control' value=\"" + txt + "\"></div>");
             });
 
         });

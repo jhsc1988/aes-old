@@ -25,15 +25,21 @@
     <form class="row g-3 d-flex justify-content-center">
         <div class="col-md-2">
             <label hidden class="form-label col-form-label-sm">Broj Računa</label>
-            <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa" onchange="getData()">
+            <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
+                   onchange="getData()">
         </div>
         <div class="col-md-2">
-            <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{ /* onfocus i onblur - trik za pokazivanje placeholdera*/ }
-            <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja" onfocus="(this.type='date')" onblur="(this.type='text')">
+            <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{
+                /* onfocus i onblur - trik za
+pokazivanje placeholdera*/
+            }
+            <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja"
+                   onfocus="(this.type='date')" onblur="(this.type='text')">
         </div>
         <div class="col-md-1">
             <label hidden class="form-label col-form-label-sm">Iznos</label>
-            <input type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$" id="iznos" class="form-control form-control-sm" placeholder="Iznos">
+            <input type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$" id="iznos" class="form-control form-control-sm"
+                   placeholder="Iznos">
         </div>
         <div class="col-auto align-self-center">
             <button type="button" id="btnAdd" class="btn btn-primary">Dodaj</button>
@@ -76,195 +82,102 @@
 @section Scripts {
     <script type="text/javascript">
 
-        // variables
-        let data_dopis = 0;
-        let data_stanId = "";
-        let data_adresa = "";
-        let data_kat = "";
-        let data_brojstana = "";
-        let data_cetvrt = "";
-        let data_povrsina = "";
-        let data_statuskoristenja = "";
-        let data_korisnik = "";
-        let data_vlasnistvo = "";
-        let data_elektraKupacId = 0;
-        let brojRacuna = "";
-        let ugovorniRacun = "";
-        let text = $("#text");
-        let pred = "";
-        let dop = "";
 
-        function getPredmetiData() {
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("getPredmeti")",
-                success: function (predmeti) {
-                    pred = JSON.parse(predmeti);
 
-                }
-            });
-        }
+    // variables
+    let data_dopis = 0;
+    let data_stanId = "";
+    let data_adresa = "";
+    let data_kat = "";
+    let data_brojstana = "";
+    let data_cetvrt = "";
+    let data_povrsina = "";
+    let data_statuskoristenja = "";
+    let data_korisnik = "";
+    let data_vlasnistvo = "";
+    let data_elektraKupacId = 0;
+    let brojRacuna = "";
+    let ugovorniRacun = "";
+    let text = $("#text");
+    let pred = "";
+    let dop = "";
 
-        function drawSelectPredmetOptions() {
-            $('#selectPredmet').find("option").remove().end();
+
+    // functions
+    function getPredmetiData() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getPredmeti")",
+            success: function (predmeti) {
+                pred = JSON.parse(predmeti);
+
+            }
+        });
+    }
+
+    function drawSelectPredmetOptions() {
+        $('#selectPredmet').find("option").remove().end();
+        $("#selectPredmet").append($('<option>', {
+            value: 0,
+            text: "Predmet",
+        }));
+
+        $.each(pred, function (i, item) {
             $("#selectPredmet").append($('<option>', {
-                value: 0,
-                text: "Predmet",
+                value: item.Id,
+                text: item.Klasa
             }));
+        });
+    }
+    function verifyData(data) {
 
-            $.each(pred, function (i, item) {
-                $("#selectPredmet").append($('<option>', {
-                    value: item.Id,
-                    text: item.Klasa
-                }));
-            });
+        if (data.length == 0) {
+            alert("u tablici nema podataka");
+            return false;
         }
 
-        getPredmetiData();
-        drawSelectPredmetOptions();
+        let funRes = false;
 
-        // select
-        $("#selectPredmet").change(function () {
+        for (i = 0; i < data.length; ++i) {
 
-            let resultFlag = false;
-
-            $('#selectDopis').find("option").remove().end();
-            $("#selectDopis").append($('<option>', {
-                value: 0,
-                text: "Dopis",
-            }));
-
-            // u value atribut od option stavljam ID od predmeta
-            $.each(JSON.parse('@Html.Raw(ViewBag.Dopisi)'), function (i, item) {
-                if ($("#selectPredmet :selected").val() == item.PredmetId) {
-                    $('#selectDopis').removeAttr('disabled');
-                    $("#selectDopis").append($('<option>', {
-                        value: item.Id,
-                        text: item.Urbroj,
-                    }));
-                    resultFlag = true;
-                }
-            });
-
-            if (!resultFlag) {
-                $('#selectDopis').find("option").remove().end();
-                $("#selectDopis").append($('<option>', {
-                    value: 0,
-                    text: "Ovaj predmet nema niti jedan dopis"
-                }));
-                $('#selectDopis').attr('disabled', 'disabled');
-                data_dopis = 0;
-            }
-
-        });
-
-        $("#selectDopis").change(function () {
-            data_dopis = $("#selectDopis :selected").val();
-        });
-
-        $('body').on("click", "#btnSave", async function () {
-
-            let table = $('#indexTable').DataTable()
-
-            // javascript object
-            let data = table
-                .rows()
-                .data();
-
-            let racuni = new Array();
-            let racun = {};
-
-
-            if (verifyData(data)) {
-                $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), function (i, item) {
-                    if (item.UgovorniRacun == ugovorniRacun)
-                        data_elektraKupacId = item.Id;
-                });
-
-                $.each(data, async function (i) {
-                    racun.BrojRacuna = data[i][1];
-                    racun.ElektraKupacId = data_elektraKupacId;
-                    racun.DatumIzdavanja = data[i][7];
-                    racun.Iznos = data[i][8];
-                    racun.DopisId = data_dopis;
-                    racun.RedniBroj = i + 1;
-                    racuni.push(racun);
-                });
-
-                $.ajax({
-                    type: "POST",
-                    url: "/RacuniElektra/SaveToDB",
-                    data: JSON.stringify(racuni),
-
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-
-                    success: function (r) {
-                        //alert(r + " record(s) inserted.");
-                    }
-                });
-            }
-        });
-
-
-
-        $("#selectPredmet").mousedown(function () {
-
-            getPredmetiData();
-            drawSelectPredmetOptions();
-        })
-
-        function verifyData(data) {
-
-            if (data.length == 0) {
-                alert("u tablici nema podataka");
+            console.log("bu");
+            if (data[i][2] == "") {
+                alert("U tablici ima stanova bez ID-a !");
                 return false;
             }
 
-            let funRes = false;
-
-            for (i = 0; i < data.length; ++i) {
-
-                console.log("bu");
-                if (data[i][2] == "") {
-                    alert("U tablici ima stanova bez ID-a !");
-                    return false;
-                }
-
-                if (data_dopis == 0) {
-                    alert("Nije odabran dopis !");
-                    return false;
-                }
-
-                if (data[i][8] == "") {
-                    alert("U tablici ima računa bez iznosa !");
-                    return false;
-                }
-                funRes = true;
+            if (data_dopis == 0) {
+                alert("Nije odabran dopis !");
+                return false;
             }
-            return funRes;
+
+            if (data[i][8] == "") {
+                alert("U tablici ima računa bez iznosa !");
+                return false;
+            }
+            funRes = true;
         }
+        return funRes;
+    }
+    async function getData() {
 
+        await $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), async function (key, value) {
+            brojRacuna = $("#brojRacuna").val();
 
-        async function getData() {
+            ugovorniRacun = brojRacuna.substr(0, 10);
+            if ($('#brojRacuna').val() == value.UgovorniRacun) {
 
-            await $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), async function (key, value) {
-                brojRacuna = $("#brojRacuna").val();
-
-                ugovorniRacun = brojRacuna.substr(0, 10);
-                if ($('#brojRacuna').val() == value.UgovorniRacun) {
-
-                    // get data
-                    data_stanId = value.Ods.StanId;
-                    data_adresa = value.Ods.Stan.Adresa;
-                    data_kat = value.Ods.Stan.Kat;
-                    data_brojstana = value.Ods.Stan.BrojSTana;
-                    data_cetvrt = value.Ods.Stan.Četvrt;
-                    data_povrsina = value.Ods.Stan.Površina;
-                    data_statuskoristenja = value.Ods.Stan.StatusKorištenja;
-                    data_korisnik = value.Ods.Stan.Korisnik;
-                    data_vlasnistvo = value.Ods.Stan.Vlasništvo;
-                    data_elektraKupacId = value.Id;
+                // get data
+                data_stanId = value.Ods.StanId;
+                data_adresa = value.Ods.Stan.Adresa;
+                data_kat = value.Ods.Stan.Kat;
+                data_brojstana = value.Ods.Stan.BrojSTana;
+                data_cetvrt = value.Ods.Stan.Četvrt;
+                data_povrsina = value.Ods.Stan.Površina;
+                data_statuskoristenja = value.Ods.Stan.StatusKorištenja;
+                data_korisnik = value.Ods.Stan.Korisnik;
+                data_vlasnistvo = value.Ods.Stan.Vlasništvo;
+                data_elektraKupacId = value.Id;
 
                 // #text string builder
                 $('#text').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
@@ -276,106 +189,200 @@
                     + '<span style="font-weight:bold;">status korištenja: </span>' + data_statuskoristenja + ' '
                     + '<span style="font-weight:bold;">korisnik: </span>' + data_korisnik + ' '
                     + '<span style="font-weight:bold;">vlasništvo: </span>' + data_vlasnistvo + ' ')
-                    return false;
+                return false;
+            }
+        });
+    }
+
+    getPredmetiData();
+    drawSelectPredmetOptions();
+
+
+    // event handlers
+    // select
+    $("#selectPredmet").change(function () {
+
+        let resultFlag = false;
+
+        $('#selectDopis').find("option").remove().end();
+        $("#selectDopis").append($('<option>', {
+            value: 0,
+            text: "Dopis",
+        }));
+
+        // u value atribut od option stavljam ID od predmeta
+        $.each(JSON.parse('@Html.Raw(ViewBag.Dopisi)'), function (i, item) {
+            if ($("#selectPredmet :selected").val() == item.PredmetId) {
+                $('#selectDopis').removeAttr('disabled');
+                $("#selectDopis").append($('<option>', {
+                    value: item.Id,
+                    text: item.Urbroj,
+                }));
+                resultFlag = true;
+            }
+        });
+
+        if (!resultFlag) {
+            $('#selectDopis').find("option").remove().end();
+            $("#selectDopis").append($('<option>', {
+                value: 0,
+                text: "Ovaj predmet nema niti jedan dopis"
+            }));
+            $('#selectDopis').attr('disabled', 'disabled');
+            data_dopis = 0;
+        }
+
+    });
+
+    $("#selectDopis").change(function () {
+        data_dopis = $("#selectDopis :selected").val();
+    });
+
+    $('body').on("click", "#btnSave", async function () {
+
+        let table = $('#indexTable').DataTable()
+
+        // javascript object
+        let data = table
+            .rows()
+            .data();
+
+        let racuni = new Array();
+        let racun = {};
+
+
+        if (verifyData(data)) {
+            $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), function (i, item) {
+                if (item.UgovorniRacun == ugovorniRacun)
+                    data_elektraKupacId = item.Id;
+            });
+
+            $.each(data, async function (i) {
+                racun.BrojRacuna = data[i][1];
+                racun.ElektraKupacId = data_elektraKupacId;
+                racun.DatumIzdavanja = data[i][7];
+                racun.Iznos = data[i][8];
+                racun.DopisId = data_dopis;
+                racun.RedniBroj = i + 1;
+                racuni.push(racun);
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/RacuniElektra/SaveToDB",
+                data: JSON.stringify(racuni),
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (r) {
+                    //alert(r + " record(s) inserted.");
                 }
             });
         }
+    });
 
-        $(document).ready(async function () {
+    $("#selectPredmet").mousedown(function () {
 
-            let t = $('#indexTable').DataTable({
+        getPredmetiData();
+        drawSelectPredmetOptions();
+    })
 
-                "paging": true,
-                "ordering": false,
-                "bLengthChange": false,
+    $(document).ready(async function () {
 
-                "columns": [
-                    {
-                        "targets": 0, // rbr
-                        "render": $.fn.dataTable.render.ellipsis(3),
-                    },
-                    {
-                        "targets": 1, // BrojRacuna
-                        "render": $.fn.dataTable.render.ellipsis(19),
-                    },
-                    {
-                        "targets": 2, // Stan ID
-                        "render": $.fn.dataTable.render.ellipsis(5),
-                    },
-                    {
-                        "targets": 3, // Adresa
-                        "render": $.fn.dataTable.render.ellipsis(34),
-                    },
-                    {
-                        "targets": 4, // Korisnik
-                        "render": $.fn.dataTable.render.ellipsis(20),
-                    },
-                    {
-                        "targets": 5, // Status
-                        "render": $.fn.dataTable.render.ellipsis(8),
-                    },
-                    {
-                        "targets": 6, // Vlasništvo
-                        "render": $.fn.dataTable.render.ellipsis(10),
-                    },
-                    {
-                        "targets": 7, // Datum izdavanja
-                        "render": $.fn.dataTable.render.ellipsis(10),
-                    },
-                    {
-                        "targets": 8, // iznos
-                        "render": $.fn.dataTable.render.ellipsis(10),
-                    },
-                    {
-                        "targets": 9, // remove
-                        //"render": $.fn.dataTable.render.ellipsis(10),
-                    },
-                ]
-            })
+        let t = $('#indexTable').DataTable({
 
-            // add rows on button click
-            await $('#btnAdd').on('click', async function () {
+            "paging": true,
+            "ordering": false,
+            "bLengthChange": false,
 
-                if (brojRacuna == "") {
-                    return false
-                } else {
+            "columns": [
+                {
+                    "targets": 0, // rbr
+                    "render": $.fn.dataTable.render.ellipsis(3),
+                },
+                {
+                    "targets": 1, // BrojRacuna
+                    "render": $.fn.dataTable.render.ellipsis(19),
+                },
+                {
+                    "targets": 2, // Stan ID
+                    "render": $.fn.dataTable.render.ellipsis(5),
+                },
+                {
+                    "targets": 3, // Adresa
+                    "render": $.fn.dataTable.render.ellipsis(34),
+                },
+                {
+                    "targets": 4, // Korisnik
+                    "render": $.fn.dataTable.render.ellipsis(20),
+                },
+                {
+                    "targets": 5, // Status
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                },
+                {
+                    "targets": 6, // Vlasništvo
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 7, // Datum izdavanja
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 8, // iznos
+                    "render": $.fn.dataTable.render.ellipsis(10),
+                },
+                {
+                    "targets": 9, // remove
+                    //"render": $.fn.dataTable.render.ellipsis(10),
+                },
+            ]
+        })
 
-                    // insert variables
-                    t.row.add([
-                        0, // dummy variable - rbr
-                        brojRacuna,
-                        data_stanId,
-                        data_adresa,
-                        data_korisnik,
-                        data_statuskoristenja,
-                        data_vlasnistvo,
-                        datumIzdavanja.value,
-                        iznos.value,
-                        "<td><button type='button' class='remove btn btn-secondary btn-sm'>briši</button ></td >"
-                    ]).draw(false);
+        // add rows on button click
+        await $('#btnAdd').on('click', async function () {
 
-                    // reset variables
-                    data_stanId = "";
-                    data_adresa = "";
-                    data_kat = "";
-                    data_brojstana = "";
-                    data_cetvrt = "";
-                    data_povrsina = "";
-                    data_statuskoristenja = "";
-                    data_korisnik = "";
-                    data_vlasnistvo = "";
+            if (brojRacuna == "") {
+                return false
+            } else {
 
-                    brojRacuna = "";
-                    ugovorniRacun = "";
+                // insert variables
+                t.row.add([
+                    0, // dummy variable - rbr
+                    brojRacuna,
+                    data_stanId,
+                    data_adresa,
+                    data_korisnik,
+                    data_statuskoristenja,
+                    data_vlasnistvo,
+                    datumIzdavanja.value,
+                    iznos.value,
+                    "<td><button type='button' class='remove btn btn-secondary btn-sm'>briši</button ></td >"
+                ]).draw(false);
 
-                    $("#brojRacuna").val("");
-                    $("#datumIzdavanja").val("");
-                    $("#iznos").val("");
-                    $("#dopisId").val("");
-                    $("#redniBroj").val("");
-                    $("#text").html("");
-                }
-            });
+                // reset variables
+                data_stanId = "";
+                data_adresa = "";
+                data_kat = "";
+                data_brojstana = "";
+                data_cetvrt = "";
+                data_povrsina = "";
+                data_statuskoristenja = "";
+                data_korisnik = "";
+                data_vlasnistvo = "";
+
+                brojRacuna = "";
+                ugovorniRacun = "";
+
+                $("#brojRacuna").val("");
+                $("#datumIzdavanja").val("");
+                $("#iznos").val("");
+                $("#dopisId").val("");
+                $("#redniBroj").val("");
+                $("#text").html("");
+            }
+        });
 
         // auto numbering
         t.on('order.dt search.dt', function () {
@@ -387,10 +394,10 @@
         // remove row
         $('#indexTable').on('click', '.remove', function () {
             let table = $('#indexTable').DataTable();
-                table
-                    .row($(this).parents('tr'))
-                    .remove()
-                    .draw();
+            table
+                .row($(this).parents('tr'))
+                .remove()
+                .draw();
         });
     });
 
