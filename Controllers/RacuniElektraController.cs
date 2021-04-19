@@ -87,28 +87,28 @@ namespace aes.Controllers
             ViewBag.Kupci = new List<ElektraKupac>();
             {
 
-                foreach (Predmet element in  _context.Predmet.ToList())
+                foreach (Predmet element in _context.Predmet.ToList())
                     ViewBag.Predmeti.Add(element);
                 ViewBag.Predmeti = JsonConvert.SerializeObject(ViewBag.Predmeti);
             }
 
             {
-                foreach (Dopis element in  _context.Dopis.ToList())
+                foreach (Dopis element in _context.Dopis.ToList())
                     ViewBag.Dopisi.Add(element);
                 ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
             }
             {
-                foreach (ElektraKupac element in  _context.ElektraKupac.ToList())
+                foreach (ElektraKupac element in _context.ElektraKupac.ToList())
                     ViewBag.Kupci.Add(element);
             }
 
             {
                 foreach (ElektraKupac element in ViewBag.Kupci)
                 {
-                    element.Ods =  _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
+                    element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
                 }
                 foreach (ElektraKupac element in ViewBag.Kupci)
-                    element.Ods.Stan =  _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
+                    element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
 
                 ViewBag.Kupci = JsonConvert.SerializeObject(ViewBag.Kupci);
             }
@@ -312,7 +312,7 @@ namespace aes.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveToDB([FromBody] List<RacunElektra> p)
+        public JsonResult SaveToDB([FromBody] List<RacunElektra> racuniList)
         {
 
             RacunElektra racuni = new RacunElektra();
@@ -322,20 +322,30 @@ namespace aes.Controllers
                 //entities.Database.ExecuteSqlCommand("TRUNCATE TABLE [Customers]");
 
                 //Check for NULL.
-                //if (racuniList == null)
-                //{
-                //    racuniList = new List<RacunElektra>();
-                //}
+                if (racuniList == null)
+                {
+                    return Json(new { IsCreated = false, ErrorMessage = "My error message" });
+                }
 
                 //Loop and insert records.
-                //foreach (RacunElektra r in racuniList)
-                //{
-                //    _context.RacunElektra.Add(racuni);
-                //}
-                _context.SaveChangesAsync();
+                try
+                {
+                    foreach (RacunElektra r in racuniList)
+                    {
+                        _context.RacunElektra.Add(r);
+                    }
+                    _context.SaveChanges();
+                    return Json(new { IsCreated = true, ErrorMessage = "uspjesno" });
+
+                }
+                catch (Exception)
+                {
+
+                    return Json(new { IsCreated = false, ErrorMessage = "greska" });
+                }
 
                 //int insertedRecords = re.SaveChanges();
-                return Json("uspjes no spremljeno");
+                //return Json("uspjes no spremljeno");
             }
         }
 

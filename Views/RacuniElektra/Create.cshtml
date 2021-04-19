@@ -26,7 +26,7 @@
         <div class="col-md-2">
             <label hidden class="form-label col-form-label-sm">Broj Računa</label>
             <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
-                   onchange="getData()">
+                   maxlength="19" onchange="getData()">
         </div>
         <div class="col-md-2">
             <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{
@@ -42,7 +42,9 @@ pokazivanje placeholdera*/
                    placeholder="Iznos">
         </div>
         <div class="col-auto align-self-center">
-            <button type="button" id="btnAdd" class="btn btn-primary">Dodaj</button>
+            
+            <button type="button" id="btnAdd" class="btn btn-outline-secondary">
+                <i class="bi bi-plus"></i></button>
         </div>
         <div class="col-sm-auto">
             <label class="form-label col-form-label-sm" id="text"> </label>
@@ -85,6 +87,7 @@ pokazivanje placeholdera*/
 
 
     // variables
+        let t;
     let data_dopis = 0;
     let data_stanId = "";
     let data_adresa = "";
@@ -250,7 +253,7 @@ pokazivanje placeholdera*/
         let racuni = new Array();
         let racun = {};
 
-
+        // TODO: napraviti dinamičku provjeru
         if (verifyData(data)) {
             $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), function (i, item) {
                 if (item.UgovorniRacun == ugovorniRacun)
@@ -267,6 +270,9 @@ pokazivanje placeholdera*/
                 racuni.push(racun);
             });
 
+            // TODO: check if racun vec postoji
+            // TODO: truncate all if failed u bazi
+            // TODO: savetodb bi trebala biti async
             $.ajax({
                 type: "POST",
                 url: "/RacuniElektra/SaveToDB",
@@ -276,7 +282,13 @@ pokazivanje placeholdera*/
                 dataType: "json",
 
                 success: function (r) {
-                    //alert(r + " record(s) inserted.");
+                    //console.log(r.errorMessage);
+                    alert(r.errorMessage);
+                    t.clear().draw();
+                },
+                error: function (r) {
+                    //console.log(r);
+                    alert(r.errorMessage);
                 }
             });
         }
@@ -290,7 +302,7 @@ pokazivanje placeholdera*/
 
     $(document).ready( function () {
 
-        let t = $('#indexTable').DataTable({
+        t = $('#indexTable').DataTable({
 
             "paging": true,
             "ordering": false,
@@ -358,7 +370,7 @@ pokazivanje placeholdera*/
                     data_vlasnistvo,
                     datumIzdavanja.value,
                     iznos.value,
-                    "<td><button type='button' class='remove btn btn-secondary btn-sm'>briši</button ></td >"
+                    "<td><button type='button' class='remove btn btn-outline-secondary btn-sm'><i class='bi bi-x'></i></button ></td >"
                 ]).draw(false);
 
                 // reset variables
