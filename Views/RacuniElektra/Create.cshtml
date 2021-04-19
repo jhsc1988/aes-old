@@ -282,13 +282,7 @@ pokazivanje placeholdera*/
         }
     });
 
-    $("#selectPredmet").mousedown(function () {
-
-        getPredmetiData();
-        drawSelectPredmetOptions();
-    })
-
-        $("#selectPredmet").keypress(function () {
+    $("#selectPredmet").on('mousedown keypress', function () {
 
         getPredmetiData();
         drawSelectPredmetOptions();
