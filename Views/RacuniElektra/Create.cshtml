@@ -283,12 +283,12 @@ pokazivanje placeholdera*/
 
                 success: function (r) {
                     //console.log(r.errorMessage);
-                    alert(r.errorMessage);
+                    alert(r.message);
                     t.clear().draw();
                 },
                 error: function (r) {
                     //console.log(r);
-                    alert(r.errorMessage);
+                    alert(r.message);
                 }
             });
         }

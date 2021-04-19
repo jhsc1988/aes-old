@@ -318,16 +318,17 @@ namespace aes.Controllers
             RacunElektra racuni = new RacunElektra();
 
             {
-                //Truncate Table to delete all old records.
-                //entities.Database.ExecuteSqlCommand("TRUNCATE TABLE [Customers]");
 
-                //Check for NULL.
+                int dopisId = 0;
                 if (racuniList == null)
                 {
-                    return Json(new { IsCreated = false, ErrorMessage = "My error message" });
+                    return Json(new { IsCreated = false, Message = "nije poslan nijedan račun" });
+                }
+                else
+                {
+                    dopisId = racuniList[0].DopisId;
                 }
 
-                //Loop and insert records.
                 try
                 {
                     foreach (RacunElektra r in racuniList)
@@ -335,13 +336,18 @@ namespace aes.Controllers
                         _context.RacunElektra.Add(r);
                     }
                     _context.SaveChanges();
-                    return Json(new { IsCreated = true, ErrorMessage = "uspjesno" });
+
+                    return Json(new { IsCreated = true, Message = "uspjesno" });
 
                 }
                 catch (Exception)
                 {
+                    // brisi sve racune pod tim dopisom ako error
+                    var ListOfDataToDelete = _context.RacunElektra.Where(x => x.DopisId == dopisId);
+                    _context.RacunElektra.RemoveRange(ListOfDataToDelete);
 
-                    return Json(new { IsCreated = false, ErrorMessage = "greska" });
+                    _context.SaveChanges();
+                    return Json(new { IsCreated = false, Message = "greska" });
                 }
 
                 //int insertedRecords = re.SaveChanges();
