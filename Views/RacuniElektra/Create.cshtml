@@ -159,9 +159,9 @@ pokazivanje placeholdera*/
         }
         return funRes;
     }
-    async function getData() {
+     function getData() {
 
-        await $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), async function (key, value) {
+         $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'),  function (key, value) {
             brojRacuna = $("#brojRacuna").val();
 
             ugovorniRacun = brojRacuna.substr(0, 10);
@@ -238,7 +238,7 @@ pokazivanje placeholdera*/
         data_dopis = $("#selectDopis :selected").val();
     });
 
-    $('body').on("click", "#btnSave", async function () {
+    $('body').on("click", "#btnSave",  function () {
 
         let table = $('#indexTable').DataTable()
 
@@ -257,7 +257,7 @@ pokazivanje placeholdera*/
                     data_elektraKupacId = item.Id;
             });
 
-            $.each(data, async function (i) {
+            $.each(data,  function (i) {
                 racun.BrojRacuna = data[i][1];
                 racun.ElektraKupacId = data_elektraKupacId;
                 racun.DatumIzdavanja = data[i][7];
@@ -288,7 +288,13 @@ pokazivanje placeholdera*/
         drawSelectPredmetOptions();
     })
 
-    $(document).ready(async function () {
+        $("#selectPredmet").keypress(function () {
+
+        getPredmetiData();
+        drawSelectPredmetOptions();
+    })
+
+    $(document).ready( function () {
 
         let t = $('#indexTable').DataTable({
 
@@ -341,7 +347,7 @@ pokazivanje placeholdera*/
         })
 
         // add rows on button click
-        await $('#btnAdd').on('click', async function () {
+         $('#btnAdd').on('click',  function () {
 
             if (brojRacuna == "") {
                 return false
