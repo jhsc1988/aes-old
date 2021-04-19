@@ -32,6 +32,20 @@
 }
 <script>
     $(document).ready(function () {
+
+        $("#indexTable").on('mousedown', "tr td:nth-child(3)", function (e) {
+
+            //$(this).removeClass().addClass("fa fa-envelope-o");
+            var $row = $(this).closest("tr").off("mousedown");
+            var $tds = $row.find("td:eq(" + 2 + ")");
+
+            $.each($tds, function (i, el) {
+                var txt = $(this).text();
+                $(this).html("").append("<input type='text' class='form - control' value=\"" + txt + "\">");
+            });
+
+        });
+
         $('#indexTable').DataTable({
             "ajax": {
                 "url": "/Stanovi/GetList",
