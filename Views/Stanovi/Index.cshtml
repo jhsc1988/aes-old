@@ -31,27 +31,60 @@
 
 }
 <script>
+
     $(document).ready(function () {
 
-        $("#indexTable").on('mousedown', "tr td:nth-child(3)", function (e) {
 
-            //$(this).removeClass().addClass("fa fa-envelope-o");
-            var $row = $(this).closest("tr").off("mousedown");
-            var $tds = $row.find("td:eq(" + 2 + ")");
+        $(document).click(function (e) {
 
-            $.each($tds, function (i, el) {
-                var txt = $(this).text();
-                $(this).html("").append(
-                    "<div class='input-group input-group-sm my-auto'><input type='text' class='form-control' value=\"" + txt + "\"></div>");
-            });
+            let kr = $(e).parent().is("tr");
+            let br = $(e.target).is('#td_clicked');
+
+            console.log(br);
+            console.log(kr);
+
+            if (!(br)) {
+                console.log("bbbb");
+                $("#td_clicked").replaceWith("<td class='sorting_1'>144. BRIGADE HRVATSKE VOJSKE 0002</td>");
+            }
+            else if (kr){
+                console.log("klik na vanjski element");
+            }
 
         });
 
-        $('#indexTable').DataTable({
+        $("#indexTable").on('mousedown', "tr td:nth-child(3)", function (e) {
+
+            $(this).attr('id', 'td_clicked');
+                                        //$(this).removeClass().addClass("fa fa-envelope-o");
+                                        //var $row = $(this).closest("tr").off("mousedown");
+                                        //var $tds = $row.find("td:eq(" + 2 + ")");
+            var txt = $(this).text();
+
+            if ($(e.target).is('#td_clicked') && !$(e.target).is('#clicked')) {
+                $(this).html("").append(
+                    "<div id='clicked' class='input-group input-group-sm my-auto'><input type='text' class='form-control' value=\"" + txt + "\"></div>");
+            }
+                                        // cell = table.cell(this);
+
+            console.log($(e.target).is('div#clicked .form-control'));
+            console.log("inside");
+
+
+        });
+
+        //$(document).click((event) => {
+        //    if (!$(event.target).closest('#clicked').length) {
+        //        $("#clicked").replaceWith("<h2>New heading</h2>");
+        //    }
+        //});
+
+
+        table = $('#indexTable').DataTable({
             "ajax": {
                 "url": "/Stanovi/GetList",
                 "type": "POST",
-                "datatype": "json"                
+                "datatype": "json"
             },
             // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
             // koristi se kao selector (nije posve jasna dokumentacija)
@@ -61,7 +94,7 @@
                     "render": function (data, type, row, meta) {
                         return '<a href="Stanovi/Details/' + data.id + '">' + data.stanId + '</a>';
                     }
-                
+
                 },
                 {
                     "data": null, "name": "SifraObjekta",
@@ -81,13 +114,13 @@
                 { "data": "statusKori\u0161tenja", "name": "StatusKorištenja" },
                 { "data": "vlasni\u0161tvo", "name": "Vlasništvo" },
             ],
-            "paging":true,
-            "serverSide":true,
+            "paging": true,
+            "serverSide": true,
             "order": [[2, 'asc']],
             "bLengthChange": false,
             //"processing": true,
             "language": {
-                "processing":"tražim..."
+                "processing": "tražim..."
             },
             "scrollX": true,
             "columnDefs": [
@@ -100,8 +133,8 @@
                     "render": $.fn.dataTable.render.ellipsis(8),
                 },
                 {
-                 "targets": 2, // Adresa
-                 "render": $.fn.dataTable.render.ellipsis(34),
+                    "targets": 2, // Adresa
+                    "render": $.fn.dataTable.render.ellipsis(34),
                 },
                 {
                     "targets": 3, // Kat
@@ -120,8 +153,8 @@
                     "render": $.fn.dataTable.render.ellipsis(6),
                 },
                 {
-                 "targets": 7, // Korisnik
-                 "render": $.fn.dataTable.render.ellipsis(20)
+                    "targets": 7, // Korisnik
+                    "render": $.fn.dataTable.render.ellipsis(20)
                 },
                 {
                     "targets": 8, // Status
