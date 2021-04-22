@@ -1,8 +1,8 @@
 ﻿@*@model IEnumerable<aes.Models.Stan>
-    // overhead
-@{
-    ViewData["Title"] = "Index";
-}*@
+        // overhead
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
 <h4>Stanovi - pregled</h4>
 
@@ -33,49 +33,38 @@
 <script>
 
     $(document).ready(function () {
-
-
+        let txt;
         $(document).click(function (e) {
-
-            let kr = $(e).parent().is("tr");
-            let br = $(e.target).is('#td_clicked');
-
-            console.log(br);
-            console.log(kr);
-
-            if (!(br)) {
-                console.log("bbbb");
-                $("#td_clicked").replaceWith("<td class='sorting_1'>144. BRIGADE HRVATSKE VOJSKE 0002</td>");
+            if (!$(e.target).is('#td_clicked') && !$(e.target).is('#text_clicked')) {
+                //txt = $(this).html();  
+                $("#td_clicked").replaceWith("<td class='sorting_1'>" + txt + "</td>");
             }
-            else if (kr){
-                console.log("klik na vanjski element");
-            }
-
         });
-
         $("#indexTable").on('mousedown', "tr td:nth-child(3)", function (e) {
 
-            $(this).attr('id', 'td_clicked');
-                                        //$(this).removeClass().addClass("fa fa-envelope-o");
-                                        //var $row = $(this).closest("tr").off("mousedown");
-                                        //var $tds = $row.find("td:eq(" + 2 + ")");
-            var txt = $(this).text();
+            if (!$(e.target).is('#text_clicked')) {
+                txt = $(this).html(); 
+                $("#td_clicked").replaceWith("<td class='sorting_1'>" + txt + "</td>");
 
-            if ($(e.target).is('#td_clicked') && !$(e.target).is('#clicked')) {
-                $(this).html("").append(
-                    "<div id='clicked' class='input-group input-group-sm my-auto'><input type='text' class='form-control' value=\"" + txt + "\"></div>");
             }
-                                        // cell = table.cell(this);
+            $(this).attr('id', 'td_clicked');
 
-            console.log($(e.target).is('div#clicked .form-control'));
-            console.log("inside");
+            //$(this).removeClass().addClass("fa fa-envelope-o");
+            //var $row = $(this).closest("tr").off("mousedown");
+            //var $tds = $row.find("td:eq(" + 2 + ")");
+            // txt = $(this).text();
 
+            if ($(e.target).is('#td_clicked')) {
+                $(this).html("").append(
+                    "<div id='clicked' class='input-group input-group-sm my-auto'><input type='text' id ='text_clicked' class='form-control' value='" + txt + "'></div>");
+            }
 
+            // cell = table.cell(this);
         });
 
         //$(document).click((event) => {
-        //    if (!$(event.target).closest('#clicked').length) {
-        //        $("#clicked").replaceWith("<h2>New heading</h2>");
+        //    if (!$(event.target).closest('#div_clicked').length) {
+        //        $("#div_clicked").replaceWith("<h2>New heading</h2>");
         //    }
         //});
 
