@@ -31,42 +31,9 @@
 
 }
 <script>
-    let table;
-    let txt;
+
 
     $(document).ready(function () {
-
-        $(document).mousedown(function (e) {
-            if (!$(e.target).is('#text_clicked') && !$(e.target).is("#td_clicked"))
-                $("#td_clicked").replaceWith("<td class='sorting_1'>" + txt + "</td>");
-        });
-
-        $("#indexTable").on('mousedown', "tr td:nth-child(3)", function (e) {
-            console.log(table.row(this).data());
-
-            if (!$(e.target).is('#text_clicked'))
-                $("#td_clicked").replaceWith("<td class='sorting_1'>" + txt + "</td>");
-
-            if ($(e.target).is('td'))
-                $(this).attr('id', 'td_clicked');
-
-            if ($(e.target).is('#td_clicked') && $(e.target).find('#text_clicked').length === 0) {
-                txt = $(this).html();
-                $(this).html("").append(
-                    "<div id='clicked' class='input-group input-group-sm my-auto'><input type='text' id ='text_clicked' class='form-control' value='" + txt + "'></div>");
-            }
-
-            $('#text_clicked').on('input', function () {
-                    txt = $("#text_clicked").val();
-            });
-
-            $('#text_clicked').keypress(function (e) {
-                if (e.which == 13) {
-                    $("#td_clicked").replaceWith("<td class='sorting_1'>" + txt + "</td>");
-                }
-            });
-        });
-        
 
         table = $('#indexTable').DataTable({
             "ajax": {

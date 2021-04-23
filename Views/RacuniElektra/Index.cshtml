@@ -1,8 +1,8 @@
 ﻿@*@model IEnumerable<aes.Models.RacunElektra>
-    // overhead
-@{
-    ViewData["Title"] = "Index";
-}*@
+        // overhead
+    @{
+        ViewData["Title"] = "Index";
+    }*@
 
 <h4>Pregled računa - HEP - Elektra</h4>
 <hr />
@@ -24,10 +24,16 @@
     </thead>
 </table>
 
+<script src="~/js/inlineEdit.js" asp-append-version="true"></script>
 <script>
+
+    // for inline editing
+    let table;
+    let txt;
+
     $(document).ready(function () {
-        
-        $('#RacunElektraTable').DataTable({
+
+        table = $('#RacunElektraTable').DataTable({
             "ajax": {
                 "url": "/RacuniElektra/GetList",
                 "type": "POST",
@@ -44,8 +50,8 @@
                 },
                 {
                     "data": null, "name": "elektraKupac.ugovorniRacun",
-                     "render": function (data, type, row, meta) {
-                         return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                    "render": function (data, type, row, meta) {
+                        return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
                     }
                 },
                 { "data": "datumIzdavanja", "name": "datumIzdavanja" },
@@ -95,5 +101,8 @@
                 },
             ]
         });
+
+
+
     });
 </script>

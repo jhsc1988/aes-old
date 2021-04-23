@@ -77,6 +77,16 @@ namespace aes.Controllers
 
             return JsonConvert.SerializeObject(p);
 
+        }        
+        
+        public string getDopisi()
+        {
+            List<Dopis> d = new List<Dopis>();
+            foreach (Dopis element in _context.Dopis.ToList())
+                d.Add(element);
+
+            return JsonConvert.SerializeObject(d);
+
         }
 
         [HttpPost]
