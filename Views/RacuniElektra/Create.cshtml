@@ -26,7 +26,7 @@
         <div class="col-md-2">
             <label hidden class="form-label col-form-label-sm">Broj Računa</label>
             <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
-                   maxlength="19" onchange="getData()">
+                   maxlength="19">
         </div>
         <div class="col-md-2">
             <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{
@@ -152,7 +152,17 @@ pokazivanje placeholdera*/
 
             }
         });
-        }
+    }
+
+    function getKupciData() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getKupci")",
+            success: function (kupci) {
+                kup = JSON.parse(kupci);
+            }
+        });
+    }
 
         function getDopisiData() {
         $.ajax({
@@ -210,7 +220,8 @@ pokazivanje placeholdera*/
     }
      function getData() {
 
-         $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'),  function (key, value) {
+         getKupciData();
+         $.each(kup, function (key, value) {
             brojRacuna = $("#brojRacuna").val();
 
             ugovorniRacun = brojRacuna.substr(0, 10);
@@ -244,24 +255,34 @@ pokazivanje placeholdera*/
     }
 
         getPredmetiData();
-        getDopisiData
+        getDopisiData();
+        //getKupciData();
         drawSelectPredmetOptions();
 
 
     // event handlers
-    // select
     $("#selectPredmet").change(function () {
-
         drawSelectDopisOptions();
-
     });
-
-
-
 
     $("#selectDopis").change(function () {
         data_dopis = $("#selectDopis :selected").val();
     });
+
+    $("#brojRacuna").on("change focusin focusout", function () {
+        getData();
+    });
+
+    $("#selectPredmet").on('mousedown keypress', function () {
+        getPredmetiData();
+        getDopisiData();
+        drawSelectPredmetOptions();
+    })
+
+    $("#selectDopis").on('mousedown keypress', function () {
+        getDopisiData();
+        drawSelectDopisOptions();
+    })
 
     $('body').on("click", "#btnSave",  function () {
 
@@ -316,16 +337,7 @@ pokazivanje placeholdera*/
         }
     });
 
-    $("#selectPredmet").on('mousedown keypress', function () {
-        getPredmetiData();
-        getDopisiData();
-        drawSelectPredmetOptions();
-    })
 
-        $("#selectDopis").on('mousedown keypress', function () {
-            getDopisiData();
-            drawSelectDopisOptions();
-    })
 
     $(document).ready( function () {
 

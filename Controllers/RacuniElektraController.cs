@@ -87,7 +87,27 @@ namespace aes.Controllers
 
             return JsonConvert.SerializeObject(d);
 
+        }        
+        
+        public string getKupci()
+        {
+            List<ElektraKupac> ek = new List<ElektraKupac>();
+            foreach (ElektraKupac element in _context.ElektraKupac.ToList())
+                ek.Add(element);
+
+            foreach (ElektraKupac element in ek)
+            {
+                element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
+            }
+            foreach (ElektraKupac element in ek)
+                element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
+
+            return JsonConvert.SerializeObject(ek);
+
         }
+
+      
+
 
         [HttpPost]
         public void getDataAsync()
@@ -108,19 +128,11 @@ namespace aes.Controllers
                 ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
             }
             {
-                foreach (ElektraKupac element in _context.ElektraKupac.ToList())
-                    ViewBag.Kupci.Add(element);
+
             }
 
             {
-                foreach (ElektraKupac element in ViewBag.Kupci)
-                {
-                    element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
-                }
-                foreach (ElektraKupac element in ViewBag.Kupci)
-                    element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
 
-                ViewBag.Kupci = JsonConvert.SerializeObject(ViewBag.Kupci);
             }
             //return Json("ok");
         }
