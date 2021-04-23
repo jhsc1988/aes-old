@@ -48,7 +48,7 @@ pokazivanje placeholdera*/
             </button>
         </div>
         <div class="col-sm-auto">
-            <label class="form-label col-form-label-sm" id="text"> </label>
+            <label class="form-label col-form-label-sm" id="stanText"> </label>
         </div>
     </form>
 </div>
@@ -83,13 +83,11 @@ pokazivanje placeholdera*/
 </div>
 
 @section Scripts {
-    
+
     <script type="text/javascript">
 
-
-
     // variables
-        let t;
+    let t; // table
     let data_dopis = 0;
     let data_stanId = "";
     let data_adresa = "";
@@ -103,7 +101,7 @@ pokazivanje placeholdera*/
     let data_elektraKupacId = 0;
     let brojRacuna = "";
     let ugovorniRacun = "";
-    let text = $("#text");
+    let text = $("#stanText");
 
     let pred = "";
     let dop = "";
@@ -143,36 +141,37 @@ pokazivanje placeholdera*/
                 data_dopis = 0;
             }
         }
-    function getPredmetiData() {
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("getPredmeti")",
-            success: function (predmeti) {
-                pred = JSON.parse(predmeti);
 
-            }
-        });
-    }
+        function getPredmetiData() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getPredmeti")",
+                success: function (predmeti) {
+                    pred = JSON.parse(predmeti);
 
-    function getKupciData() {
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("getKupci")",
-            success: function (kupci) {
-                kup = JSON.parse(kupci);
-            }
-        });
-    }
+                }
+            });
+        }
+
+        function getKupciData() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getKupci")",
+                success: function (kupci) {
+                    kup = JSON.parse(kupci);
+                }
+            });
+        }
 
         function getDopisiData() {
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("getDopisi")",
-            success: function (dopisi) {
-                dop = JSON.parse(dopisi);
-            }
-        });
-    }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getDopisi")",
+                success: function (dopisi) {
+                    dop = JSON.parse(dopisi);
+                }
+            });
+        }
 
     function drawSelectPredmetOptions() {
         $('#selectPredmet').find("option").remove().end();
@@ -199,7 +198,6 @@ pokazivanje placeholdera*/
 
         for (i = 0; i < data.length; ++i) {
 
-            console.log("bu");
             if (data[i][2] == "") {
                 alert("U tablici ima stanova bez ID-a !");
                 return false;
@@ -225,32 +223,34 @@ pokazivanje placeholdera*/
             brojRacuna = $("#brojRacuna").val();
 
             ugovorniRacun = brojRacuna.substr(0, 10);
-            if ($('#brojRacuna').val() == value.UgovorniRacun) {
+             if ($('#brojRacuna').val() == value.UgovorniRacun) {
 
-                // get data
-                data_stanId = value.Ods.StanId;
-                data_adresa = value.Ods.Stan.Adresa;
-                data_kat = value.Ods.Stan.Kat;
-                data_brojstana = value.Ods.Stan.BrojSTana;
-                data_cetvrt = value.Ods.Stan.Četvrt;
-                data_povrsina = value.Ods.Stan.Površina;
-                data_statuskoristenja = value.Ods.Stan.StatusKorištenja;
-                data_korisnik = value.Ods.Stan.Korisnik;
-                data_vlasnistvo = value.Ods.Stan.Vlasništvo;
-                data_elektraKupacId = value.Id;
+                 // get data
+                 data_stanId = value.Ods.StanId;
+                 data_adresa = value.Ods.Stan.Adresa;
+                 data_kat = value.Ods.Stan.Kat;
+                 data_brojstana = value.Ods.Stan.BrojSTana;
+                 data_cetvrt = value.Ods.Stan.Četvrt;
+                 data_povrsina = value.Ods.Stan.Površina;
+                 data_statuskoristenja = value.Ods.Stan.StatusKorištenja;
+                 data_korisnik = value.Ods.Stan.Korisnik;
+                 data_vlasnistvo = value.Ods.Stan.Vlasništvo;
+                 data_elektraKupacId = value.Id;
 
-                // #text string builder
-                $('#text').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
-                    + '<span style="font-weight:bold;">adresa: </span>' + data_adresa + ' '
-                    + '<span style="font-weight:bold;">kat: </span>' + data_kat + ' '
-                    + '<span style="font-weight:bold;">broj stana: </span>' + data_brojstana + ' '
-                    + '<span style="font-weight:bold;">četvrt: </span>' + data_cetvrt + ' '
-                    + '<span style="font-weight:bold;">površina: </span>' + data_povrsina + ' '
-                    + '<span style="font-weight:bold;">status korištenja: </span>' + data_statuskoristenja + ' '
-                    + '<span style="font-weight:bold;">korisnik: </span>' + data_korisnik + ' '
-                    + '<span style="font-weight:bold;">vlasništvo: </span>' + data_vlasnistvo + ' ')
-                return false;
-            }
+                 // #stanText string builder
+                 $('#stanText').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
+                     + '<span style="font-weight:bold;">adresa: </span>' + data_adresa + ' '
+                     + '<span style="font-weight:bold;">kat: </span>' + data_kat + ' '
+                     + '<span style="font-weight:bold;">broj stana: </span>' + data_brojstana + ' '
+                     + '<span style="font-weight:bold;">četvrt: </span>' + data_cetvrt + ' '
+                     + '<span style="font-weight:bold;">površina: </span>' + data_povrsina + ' '
+                     + '<span style="font-weight:bold;">status korištenja: </span>' + data_statuskoristenja + ' '
+                     + '<span style="font-weight:bold;">korisnik: </span>' + data_korisnik + ' '
+                     + '<span style="font-weight:bold;">vlasništvo: </span>' + data_vlasnistvo + ' ')
+                 return false;
+             } else {
+                 $('#stanText').html('');
+             }
         });
     }
 
@@ -263,10 +263,6 @@ pokazivanje placeholdera*/
     // event handlers
     $("#selectPredmet").change(function () {
         drawSelectDopisOptions();
-    });
-
-    $("#selectDopis").change(function () {
-        data_dopis = $("#selectDopis :selected").val();
     });
 
     $("#brojRacuna").on("change focusin focusout", function () {
@@ -284,28 +280,27 @@ pokazivanje placeholdera*/
         drawSelectDopisOptions();
     })
 
+    $("#selectDopis").change(function () {
+        data_dopis = $("#selectDopis :selected").val();
+    });
+
     $('body').on("click", "#btnSave",  function () {
 
         let table = $('#indexTable').DataTable()
+        let data = table.rows().data(); // javascript object
+        let racuni = new Array(); // empty array
+        let racun = {}; // empty javascript object
 
-        // javascript object
-        let data = table
-            .rows()
-            .data();
-
-        let racuni = new Array();
-        let racun = {};
-
-        // TODO: napraviti dinamičku provjeru
         if (verifyData(data)) {
-            $.each(JSON.parse('@Html.Raw(ViewBag.Kupci)'), function (i, item) {
+            getKupciData();
+            $.each(kup, function (i, item) {
                 if (item.UgovorniRacun == ugovorniRacun)
-                    data_elektraKupacId = item.Id;
+                    data_elektraKupacId = item.Id; // bind this ugovorniRacun to variable for later use
             });
 
             $.each(data,  function (i) {
                 racun.BrojRacuna = data[i][1];
-                racun.ElektraKupacId = data_elektraKupacId;
+                racun.ElektraKupacId = data_elektraKupacId; // this
                 racun.DatumIzdavanja = data[i][7];
                 racun.Iznos = data[i][8];
                 racun.DopisId = data_dopis;
@@ -328,6 +323,7 @@ pokazivanje placeholdera*/
                     //console.log(r.errorMessage);
                     alert(r.message);
                     t.clear().draw();
+                    toastr.success('Hi! I am success message.');
                 },
                 error: function (r) {
                     //console.log(r);
@@ -337,10 +333,9 @@ pokazivanje placeholdera*/
         }
     });
 
-
-
     $(document).ready( function () {
 
+        // Datatables
         t = $('#indexTable').DataTable({
 
             "paging": true,
@@ -431,7 +426,7 @@ pokazivanje placeholdera*/
                 $("#iznos").val("");
                 $("#dopisId").val("");
                 $("#redniBroj").val("");
-                $("#text").html("");
+                $("#stanText").html("");
             }
         });
 

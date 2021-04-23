@@ -62,8 +62,6 @@ namespace aes.Controllers
 
             var applicationDbContext = await _context.RacunElektra.ToListAsync();
 
-            getDataAsync();
-
             return View(applicationDbContext);
         }
 
@@ -106,36 +104,7 @@ namespace aes.Controllers
 
         }
 
-      
-
-
-        [HttpPost]
-        public void getDataAsync()
-        {
-            ViewBag.Predmeti = new List<Predmet>();
-            ViewBag.Dopisi = new List<Dopis>();
-            ViewBag.Kupci = new List<ElektraKupac>();
-            {
-
-                foreach (Predmet element in _context.Predmet.ToList())
-                    ViewBag.Predmeti.Add(element);
-                ViewBag.Predmeti = JsonConvert.SerializeObject(ViewBag.Predmeti);
-            }
-
-            {
-                foreach (Dopis element in _context.Dopis.ToList())
-                    ViewBag.Dopisi.Add(element);
-                ViewBag.Dopisi = JsonConvert.SerializeObject(ViewBag.Dopisi);
-            }
-            {
-
-            }
-
-            {
-
-            }
-            //return Json("ok");
-        }
+    
 
         // POST: RacuniElektra/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
