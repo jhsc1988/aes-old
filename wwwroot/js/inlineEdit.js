@@ -3,10 +3,13 @@
     // get row data
     // console.log(table.row(e.target).index()); // return undefined on previous (do i need to redraw ? draw())
 
-    if (!$(e.target).is('#text_clicked') && !$(e.target).is("#td_clicked"))
+    if (!$(e.target).is('#text_clicked') && !$(e.target).is("#td_clicked")) {
+
         $("#td_clicked").replaceWith("<td>" + txt + "</td>");
+        table.draw();
+    }
 });
-         
+
 $("#RacunElektraTable").on('mousedown', "tr td:nth-last-child(-n+3)", function (e) {
 
     if (!$(e.target).is('#text_clicked'))
@@ -33,9 +36,7 @@ $("#RacunElektraTable").on('mousedown', "tr td:nth-last-child(-n+3)", function (
     $('#text_clicked').keypress(function (e) {
         if (e.which == 13) {
             $("#td_clicked").replaceWith("<td>" + txt + "</td>");
+            table.draw();
         }
     });
 });
-
-
-

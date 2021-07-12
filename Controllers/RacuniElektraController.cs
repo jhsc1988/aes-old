@@ -127,7 +127,8 @@ namespace aes.Controllers
             //ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektra.DopisId);
             //ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektra.ElektraKupacId);
 
-            return View(racunElektra);
+            //return View(racunElektra);
+            return View();
         }
 
         //public JsonResult GetPredmeti(int? predmetId, int? dopisId)
