@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -26,13 +27,14 @@ namespace aes.Controllers
         //    var applicationDbContext = _context.Ods.Include(o => o.Stan);
         //    return View(await applicationDbContext.ToListAsync());
         //}
-
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: Ods/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,6 +54,7 @@ namespace aes.Controllers
         }
 
         // GET: Ods/Create
+        [Authorize]
         public IActionResult Create()
         {
             // ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa");
@@ -63,6 +66,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,StanId,Omm,Napomena,VrijemeUnosa")] Ods ods)
         {
             if (ModelState.IsValid)
@@ -77,6 +81,7 @@ namespace aes.Controllers
         }
 
         // GET: Ods/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,6 +103,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,StanId,Omm,Napomena,VrijemeUnosa")] Ods ods)
         {
             if (id != ods.Id)
@@ -130,6 +136,7 @@ namespace aes.Controllers
         }
 
         // GET: Ods/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +158,7 @@ namespace aes.Controllers
         // POST: Ods/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ods = await _context.Ods.FindAsync(id);

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -26,13 +27,14 @@ namespace aes.Controllers
         //    var applicationDbContext = _context.OdsKupac.Include(o => o.Ods);
         //    return View(await applicationDbContext.ToListAsync());
         //}
-
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: OdsKupci/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,6 +54,7 @@ namespace aes.Controllers
         }
 
         // GET: OdsKupci/Create
+        [Authorize]
         public IActionResult Create()
         {
             //ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id");
@@ -63,6 +66,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,SifraKupca,OdsId,Napomena,VrijemeUnosa")] OdsKupac odsKupac)
         {
             if (ModelState.IsValid)
@@ -77,6 +81,7 @@ namespace aes.Controllers
         }
 
         // GET: OdsKupci/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,6 +103,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,SifraKupca,OdsId,Napomena,VrijemeUnosa")] OdsKupac odsKupac)
         {
             if (id != odsKupac.Id)
@@ -130,6 +136,7 @@ namespace aes.Controllers
         }
 
         // GET: OdsKupci/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +158,7 @@ namespace aes.Controllers
         // POST: OdsKupci/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var odsKupac = await _context.OdsKupac.FindAsync(id);

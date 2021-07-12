@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -26,13 +27,14 @@ namespace aes.Controllers
         //    var applicationDbContext = _context.RacunHolding.Include(r => r.Dopis).Include(r => r.Stan);
         //    return View(await applicationDbContext.ToListAsync());
         //}        
-        
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: RacuniHolding/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -53,6 +55,7 @@ namespace aes.Controllers
         }
 
         // GET: RacuniHolding/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
@@ -65,6 +68,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,BrojRacuna,StanId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunHolding racunHolding)
         {
             if (ModelState.IsValid)
@@ -79,6 +83,7 @@ namespace aes.Controllers
         }
 
         // GET: RacuniHolding/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -101,6 +106,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,BrojRacuna,StanId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunHolding racunHolding)
         {
             if (id != racunHolding.Id)
@@ -134,6 +140,7 @@ namespace aes.Controllers
         }
 
         // GET: RacuniHolding/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,6 +163,7 @@ namespace aes.Controllers
         // POST: RacuniHolding/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var racunHolding = await _context.RacunHolding.FindAsync(id);

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -26,13 +27,14 @@ namespace aes.Controllers
         //    var applicationDbContext = _context.UgovorOKoristenju.Include(u => u.Dopis).Include(u => u.DopisDostave).Include(u => u.Ods);
         //    return View(await applicationDbContext.ToListAsync());
         //}        
-       
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: UgovoriOKoristenju/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -54,6 +56,7 @@ namespace aes.Controllers
         }
 
         // GET: UgovoriOKoristenju/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
@@ -67,6 +70,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,BrojUgovora,OdsId,DatumPotpisaHEP,DatumPotpisaGZ,DopisId,RbrUgovora,DopisDostaveId,RbrDostave,VrijemeUnosa")] UgovorOKoristenju ugovorOKoristenju)
         {
             if (ModelState.IsValid)
@@ -83,6 +87,7 @@ namespace aes.Controllers
         }
 
         // GET: UgovoriOKoristenju/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,6 +111,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,BrojUgovora,OdsId,DatumPotpisaHEP,DatumPotpisaGZ,DopisId,RbrUgovora,DopisDostaveId,RbrDostave,VrijemeUnosa")] UgovorOKoristenju ugovorOKoristenju)
         {
             if (id != ugovorOKoristenju.Id)
@@ -140,6 +146,7 @@ namespace aes.Controllers
         }
 
         // GET: UgovoriOKoristenju/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -163,6 +170,7 @@ namespace aes.Controllers
         // POST: UgovoriOKoristenju/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ugovorOKoristenju = await _context.UgovorOKoristenju.FindAsync(id);

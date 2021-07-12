@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -25,13 +26,15 @@ namespace aes.Controllers
         //{
         //    var applicationDbContext = _context.Dopis.Include(d => d.Predmet);
         //    return View(await applicationDbContext.ToListAsync());
-        //}        
+        //}       
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: Dopisi/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -51,6 +54,7 @@ namespace aes.Controllers
         }
 
         // GET: Dopisi/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["PredmetId"] = new SelectList(_context.Predmet, "Id", "Klasa");
@@ -62,6 +66,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,PredmetId,Urbroj,Datum,VrijemeUnosa")] Dopis dopis)
         {
             if (ModelState.IsValid)
@@ -76,6 +81,7 @@ namespace aes.Controllers
         }
 
         // GET: Dopisi/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,6 +103,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,PredmetId,Urbroj,Datum,VrijemeUnosa")] Dopis dopis)
         {
             if (id != dopis.Id)
@@ -129,6 +136,7 @@ namespace aes.Controllers
         }
 
         // GET: Dopisi/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,6 +158,7 @@ namespace aes.Controllers
         // POST: Dopisi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var dopis = await _context.Dopis.FindAsync(id);

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aes.Data;
 using aes.Models;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -24,13 +25,15 @@ namespace aes.Controllers
         //public async Task<IActionResult> Index()
         //{
         //    return View(await _context.Predmet.ToListAsync());
-        //}        
+        //}     
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: Predmeti/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,6 +52,7 @@ namespace aes.Controllers
         }
 
         // GET: Predmeti/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -59,6 +63,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Klasa,Naziv,VrijemeUnosa")] Predmet predmet)
         {
             if (ModelState.IsValid)
@@ -72,6 +77,7 @@ namespace aes.Controllers
         }
 
         // GET: Predmeti/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,6 +98,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Klasa,Naziv,VrijemeUnosa")] Predmet predmet)
         {
             if (id != predmet.Id)
@@ -123,6 +130,7 @@ namespace aes.Controllers
         }
 
         // GET: Predmeti/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,6 +151,7 @@ namespace aes.Controllers
         // POST: Predmeti/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var predmet = await _context.Predmet.FindAsync(id);

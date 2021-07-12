@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -24,13 +25,14 @@ namespace aes.Controllers
         //{
         //    return View(await _context.Stan.ToListAsync());
         //}
-
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
         // GET: Stanovi/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,6 +51,7 @@ namespace aes.Controllers
         }
 
         // GET: Stanovi/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -59,6 +62,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,StanId,SifraObjekta,Vrsta,Adresa,Kat,BrojSTana,Naselje,Četvrt,Površina,StatusKorištenja,Korisnik,Vlasništvo,DioNekretnine,Sektor,Status,VrijemeUnosa")] Stan stan)
         {
             if (ModelState.IsValid)
@@ -72,6 +76,7 @@ namespace aes.Controllers
         }
 
         // GET: Stanovi/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,6 +97,7 @@ namespace aes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,StanId,SifraObjekta,Vrsta,Adresa,Kat,BrojSTana,Naselje,Četvrt,Površina,StatusKorištenja,Korisnik,Vlasništvo,DioNekretnine,Sektor,Status,VrijemeUnosa")] Stan stan)
         {
             if (id != stan.Id)
@@ -123,6 +129,7 @@ namespace aes.Controllers
         }
 
         // GET: Stanovi/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,6 +150,7 @@ namespace aes.Controllers
         // POST: Stanovi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var stan = await _context.Stan.FindAsync(id);
