@@ -323,22 +323,28 @@ th {
 
 .link-head {
     background-color: transparent;
-    border: none; 
+    border: none;
     color: #ffffff;
     font-size: 12px;
     font-weight: bold;
     margin-right: 10px;
     transition: 0.3s;
 }
-.link-head:hover{
+
+.link-head:hover {
     color: #e71010;
 }
 
-.link-add-new{
+.link-add-new {
     color: #e71010;
     font-weight: 700;
     transition: 0.3s;
 }
-.link-add-new:hover{
+
+.link-add-new:hover {
     color: #464646;
+}
+
+.table-full-width {
+    width: 100%!important;
 }

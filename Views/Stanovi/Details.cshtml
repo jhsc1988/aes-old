@@ -4,130 +4,273 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Stan</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <partial name="_Stan" />
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="h6" style="font-size: 0.8rem;">id: @Model.Id šo: @Model.SifraObjekta adresa: @Model.Adresa kat: @Model.Kat stan: @Model.BrojSTana</p>
     </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="font-weight: 600; font-size: 0.7rem; border-bottom: 1px solid #464646">
+        <li class="nav-item">
+            <a class="nav-link active" id="stan-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Stan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="false">Računi - elektra</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-rate-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="racuni-elektra-rate" aria-selected="false">Računi - elektra - rate</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="holding-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="holding" aria-selected="false">Računi - holding</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="ugovori-o-koristenju-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="ugovori-o-koristenju" aria-selected="false">Ugovori o korištenju</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="ugovori-o-prijenosu-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="ugovori-o-prijenosu" aria-selected="false">Ugovori o prijenosu</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-ods-izvrsenje-usluge-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="racuni-ods-izvrsenje-usluge" aria-selected="false">Računi ODS - izvršenje usluge</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-izvrsenje-usluge-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="racuni-elektra-izvrsenje-usluge" aria-selected="false">Računi Elektra - izvršenje usluge</a>
+        </li>
+    </ul>
+    
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active create-space-40" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StanId)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StanId)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.SifraObjekta)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.SifraObjekta)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Vrsta)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Vrsta)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Adresa)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Adresa)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Kat)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Kat)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.BrojSTana)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.BrojSTana)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Naselje)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Naselje)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Četvrt)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Četvrt)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Površina)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Površina)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StatusKorištenja)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StatusKorištenja)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Korisnik)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Korisnik)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Vlasništvo)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Vlasništvo)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.DioNekretnine)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.DioNekretnine)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Sektor)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Sektor)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Status)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.VrijemeUnosa)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.VrijemeUnosa)
+                    </dd>
+                </dl>
+            </div>  
+        </div>
+        
+        
+        <div class="tab-pane fade create-space-40" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
+            <table class="display nowrap table-full-width" id="indexTable">
+                <thead class="display nowrap table-full-width">
+                <tr class="display nowrap table-full-width">
+                    <th>Stan ID</th>
+                    <th>Šifra objekta</th>
+                    <th>Adresa</th>
+                    <th>Kat</th>
+                    <th>Broj stana</th>
+                    <th>Četvrt</th>
+                    <th>Površina</th>
+                    <th>Korisnik</th>
+                    <th>Status</th>
+                    <th>Vlasništvo</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
+            ovdje su podaci o ratama
+        </div>
+    </div>
+
+    
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
-<div>
-    <h4>Stan</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StanId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StanId)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SifraObjekta)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SifraObjekta)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vrsta)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vrsta)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Adresa)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Adresa)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Kat)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Kat)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.BrojSTana)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BrojSTana)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Naselje)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Naselje)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Četvrt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Četvrt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Površina)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Površina)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StatusKorištenja)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StatusKorištenja)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Korisnik)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Korisnik)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vlasništvo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vlasništvo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DioNekretnine)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DioNekretnine)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Sektor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Sektor)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VrijemeUnosa)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VrijemeUnosa)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+ <script>
+            
+            
+                $(document).ready(function () {
+                    
+                    // table head rendering fix: 
+                    // https://datatables.net/forums/discussion/48422/table-header-not-displaying-correctly-initially#Comment_128514
+                    // https://datatables.net/examples/api/tabs_and_scrolling.html
+                    
+                        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+                            $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+                        });
+                        
+                        
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                    table = $('#indexTable').DataTable({
+                        "ajax": {
+                            "url": "/Stanovi/GetList",
+                            "type": "POST",
+                            "datatype": "json"
+                        },
+                        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
+                        // koristi se kao selector (nije posve jasna dokumentacija)
+                        "columns": [
+                            {
+                                "data": null, "name": "StanId",
+                                "render": function (data, type, row, meta) {
+                                    return '<a href="Stanovi/Details/' + data.id + '">' + data.stanId + '</a>';
+                                }
+            
+                            },
+                            {
+                                "data": null, "name": "SifraObjekta",
+                                "render": function (data, type, row, meta) {
+                                    return '<a href="Stanovi/Details/' + data.id + '">' + data.sifraObjekta + '</a>';
+                                }
+                            },
+                            { "data": "adresa", "name": "Adresa" },
+                            { "data": "kat", "name": "Kat" },
+                            { "data": "brojSTana", "name": "BrojSTana" },
+                            { "data": "\u010Detvrt", "name": "Četvrt" },
+                            {
+                                "data": "povr\u0161ina", "name": "Površina",
+                                "render": $.fn.dataTable.render.number('.', ',', 2, '')
+                            },
+                            { "data": "korisnik", "name": "Korisnik" },
+                            { "data": "statusKori\u0161tenja", "name": "StatusKorištenja" },
+                            { "data": "vlasni\u0161tvo", "name": "Vlasništvo" },
+                        ],
+                        "paging": true,
+                        "serverSide": true,
+                        "order": [[2, 'asc']],
+                        "bLengthChange": false,
+                        //"processing": true,
+                        "language": {
+                            "processing": "tražim..."
+                        },
+                        "scrollX": true,
+                        "columnDefs": [
+                            {
+                                "targets": 0, // Stan ID
+                                "render": $.fn.dataTable.render.ellipsis(5),
+                            },
+                            {
+                                "targets": 1, // Šifra objekta
+                                "render": $.fn.dataTable.render.ellipsis(8),
+                            },
+                            {
+                                "targets": 2, // Adresa
+                                "render": $.fn.dataTable.render.ellipsis(34),
+                            },
+                            {
+                                "targets": 3, // Kat
+                                "render": $.fn.dataTable.render.ellipsis(10),
+                            },
+                            {
+                                "targets": 4, // Broj stana
+                                "render": $.fn.dataTable.render.ellipsis(12),
+                            },
+                            {
+                                "targets": 5, // Četvrt
+                                "render": $.fn.dataTable.render.ellipsis(20),
+                            },
+                            {
+                                "targets": 6, // Površina
+                                "render": $.fn.dataTable.render.ellipsis(6),
+                            },
+                            {
+                                "targets": 7, // Korisnik
+                                "render": $.fn.dataTable.render.ellipsis(20)
+                            },
+                            {
+                                "targets": 8, // Status
+                                "render": $.fn.dataTable.render.ellipsis(8)
+                            },
+                            {
+                                "targets": 9, // Vlasništvo
+                                "render": $.fn.dataTable.render.ellipsis(10)
+                            }
+                        ]
+                    });
+                });
+            </script>
