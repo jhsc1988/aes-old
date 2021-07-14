@@ -58,15 +58,15 @@ html {
 }
 
 .border-top {
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #d0d0d0 !important;
 }
 
 .border-bottom {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #d0d0d0!important;
 }
 
 .box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .15);
 }
 
 button.accept-policy {
@@ -83,11 +83,11 @@ html {
 
 body {
     /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
     /*font-family: Ubuntu-Regular, Arial, Tahoma;*/
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
     font-size: 0.8rem;
-    text-shadow: 0px 1px #FFFFFF; /*TODO: need secondary color*/
+    /*text-shadow: 0 1px #FFFFFF; !*TODO: need secondary color*!*/
     background-color: #F6F6F6;
 }
 
@@ -97,7 +97,7 @@ body {
     width: 100%;
     white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
-    box-shadow: 0 -0.25rem .75rem rgba(0, 0, 0, .05);
+    /*box-shadow: 0 -0.25rem .75rem rgba(0, 0, 0, .15);*/
 }
 
 .container {
@@ -237,4 +237,66 @@ th {
 
 .btn-group-sm > .btn, .btn-sm {
     font-size: .5rem;
-} 
+}
+
+.with-bg-and-border {
+    /*width: 500px;*/
+    background-color: #ffffff;
+    border: 1px solid #a0a0a0;
+    /* center screen */
+    /*position: absolute;*/
+    /*left: 50%;*/
+    /*top: 50%;*/
+    /*-webkit-transform: translate(-50%, -50%);*/
+    /*transform: translate(-50%, -50%);*/
+    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, .15);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-bg {
+
+    background-color: #ffffff;
+    border: 1px solid #d0d0d0;
+    /*box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, .15);*/
+    margin-left: auto;
+    margin-right: auto;
+
+    position: relative;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.head-bg {
+    background-color: #464646;
+    /*border: 1px solid #a0a0a0;*/
+    /* box-shadow: 0.25rem 0.25rem 0.25rem rgb(0 0 0 / 15%); */
+    position: relative;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding-top: 7px;
+    padding-left: 15px;
+    height:35px;
+    /* padding-top: 10px; */
+    margin: -11px -11px 10px;
+    color: #f6f6f6;
+}
+
+.logo-center{
+
+    /* margin-top: 110px; */
+    /*margin-right: 50px; */
+    display: flex;
+    /* position: absolute; */
+    /* top: 50%; */
+    /* left: 0; */
+    /* flex: none; */
+    justify-content: center;
+    align-self: center;
+
+}
+.logo{
+ object-fit: contain;
+}
+
+

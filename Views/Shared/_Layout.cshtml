@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.RazorPages
+@using Microsoft.AspNetCore.Http
+@using aes.Controllers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -22,102 +25,116 @@
 
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">aes</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Stanovi" asp-action="">Stanovi</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kupci<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ElektraKupci" asp-action="">Kupci - Elektra</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="OdsKupci" asp-action="">Kupci - ODS</a>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Ods" asp-action="">ODS - mjerna mjesta</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Računi<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RacuniElektra" asp-action="">Elektra - obračuni</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RacuniElektraRate" asp-action="">Elektra - rate</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RacunElektraIzvrsenjaUsluges" asp-action="">Elektra - izvršenja usluge</a>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RacunOdsIzvrsenjaUsluge" asp-action="">ODS - izvršenja usluge</a>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RacuniHolding" asp-action="">Holding</a>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RacunElektraObracuniPotrosnje" asp-action="">Elektra - obračuni potrošnje</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Predmeti<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Dopisi" asp-action="">Dopisi</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Predmeti" asp-action="">Predmeti</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ugovori<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="UgovoriOKoristenju" asp-action="">Ugovori o korištenju</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="UgovoriOPrijenosu" asp-action="">Ugovori o prijenosu</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <partial name="_LoginPartial"/>
+@if (User.Identity.IsAuthenticated)
+{
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
+            <div class="container">
+                <div class="logo" asp-controller="Home" asp-action="Index">
+                    <img src="~/logo-sm.png" alt="aes">
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark h6" asp-area="" asp-controller="Stanovi" asp-action="">Stanovi</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kupci<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ElektraKupci" asp-action="">Kupci - Elektra</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="OdsKupci" asp-action="">Kupci - ODS</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="Ods" asp-action="">ODS - mjerna mjesta</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Računi<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniElektra" asp-action="">Elektra - obračuni</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniElektraRate" asp-action="">Elektra - rate</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="RacunElektraIzvrsenjaUsluges" asp-action="">Elektra - izvršenja usluge</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="RacunOdsIzvrsenjaUsluge" asp-action="">ODS - izvršenja usluge</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniHolding" asp-action="">Holding</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="RacunElektraObracuniPotrosnje" asp-action="">Elektra - obračuni potrošnje</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Predmeti<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark text-dark h6" asp-area="" asp-controller="Dopisi" asp-action="">Dopisi</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark h6" asp-area="" asp-controller="Predmeti" asp-action="">Predmeti</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ugovori<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark nav-link text-dark h6" asp-area="" asp-controller="UgovoriOKoristenju" asp-action="">Ugovori o korištenju</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark nav-link text-dark h6" asp-area="" asp-controller="UgovoriOPrijenosu" asp-action="">Ugovori o prijenosu</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial"/>
+                </div>
             </div>
+        </nav>
+    </header>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - aes - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
+    </footer>
+           @* margin-bottom: 60px; -> za footer height - dirty fix *@
+    <div class="container" style="margin-bottom: 60px;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+}
+else if (!User.Identity.IsAuthenticated)
+{
+    <main>
         @RenderBody()
     </main>
-</div>
+}
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2021 - aes - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
+<script>
+
+</script>
 </body>
 </html>

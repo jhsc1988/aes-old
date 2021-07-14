@@ -1,63 +1,61 @@
 ﻿@model IEnumerable<aes.Models.RacunElektra>
-
 @{
     ViewData["Title"] = "Create";
 }
-
-<p><b>Elektra - računi</b></p>
-<hr />
-<form class="row g-3 d-flex justify-content-center">
-    <div class="col-md-2">
-        <select class="form-control form-control-sm" id="selectPredmet">
-            <option value="" disabled selected hidden>Predmet</option>
-        </select>
+<div class="content-bg">
+    <div class="head-bg">
+        <h6>Elektra - računi</h6>
     </div>
-    <div class="col-md-2">
-        <select class="form-control form-control-sm" id="selectDopis" disabled>
-            <option value="" disabled selected hidden>Dopis</option>
-        </select>
-    </div>
-</form>
-
-<br />
-
-<div class="container">
     <form class="row g-3 d-flex justify-content-center">
         <div class="col-md-2">
-            <label hidden class="form-label col-form-label-sm">Broj Računa</label>
-            <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
-                   maxlength="19">
+            <select class="form-control form-control-sm" id="selectPredmet">
+                <option value="" disabled selected hidden>Predmet</option>
+            </select>
         </div>
         <div class="col-md-2">
-            <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{
-                /* onfocus i onblur - trik za
-pokazivanje placeholdera*/
-            }
-            <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja"
-                   onfocus="(this.type='date')" onblur="(this.type='text')">
-        </div>
-        <div class="col-md-1">
-            <label hidden class="form-label col-form-label-sm">Iznos</label>
-            <input type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$" id="iznos" class="form-control form-control-sm"
-                   placeholder="Iznos">
-        </div>
-        <div class="col-auto align-self-center">
-
-            <button type="button" id="btnAdd" class="btn btn-outline-secondary">
-                <i class="bi bi-plus"></i>
-            </button>
-        </div>
-        <div class="col-sm-auto">
-            <label class="form-label col-form-label-sm" id="stanText"> </label>
+            <select class="form-control form-control-sm" id="selectDopis" disabled>
+                <option value="" disabled selected hidden>Dopis</option>
+            </select>
         </div>
     </form>
-</div>
+    <br />
+    <div class="container">
+        <form class="row g-3 d-flex justify-content-center">
+            <div class="col-md-2">
+                <label hidden class="form-label col-form-label-sm">Broj Računa</label>
+                <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
+                       maxlength="19">
+            </div>
+            <div class="col-md-2">
+                <label hidden class="form-label col-form-label-sm">Datum izdavanja</label> @{
+                                                                                               /* onfocus i onblur - trik za
+pokazivanje placeholdera*/
+                                                                                           }
+                <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja"
+                       onfocus="(this.type='date')" onblur="(this.type='text')">
+            </div>
+            <div class="col-md-1">
+                <label hidden class="form-label col-form-label-sm">Iznos</label>
+                <input type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$" id="iznos" class="form-control form-control-sm"
+                       placeholder="Iznos">
+            </div>
+            <div class="col-auto align-self-center">
 
-<br />
+                <button type="button" id="btnAdd" class="btn btn-secondary">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+            <div class="col-sm-auto">
+                <label class="form-label col-form-label-sm" id="stanText"> </label>
+            </div>
+        </form>
+    </div>
 
-<div id="ind">
-    <table class="display nowrap" id="indexTable" cellpadding="0" cellspacing="0">
-        <thead>
+    <br />
+
+    <div id="ind">
+        <table class="display nowrap" id="indexTable" cellpadding="0" cellspacing="0">
+            <thead>
             <tr>
                 <th>rbr</th>
                 <th>Broj računa</th>
@@ -70,16 +68,17 @@ pokazivanje placeholdera*/
                 <th>Iznos</th>
                 <th>Akcija</th>
             </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <br />
-    <input type="button" id="btnSave" value="Save All" />
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <br />
+        <input type="button" id="btnSave" value="Save All" />
 
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {
