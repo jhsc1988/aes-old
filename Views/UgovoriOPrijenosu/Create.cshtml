@@ -4,75 +4,77 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>UgovorOPrijenosu</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="BrojUgovora" class="control-label"></label>
-                <input asp-for="BrojUgovora" class="form-control" />
-                <span asp-validation-for="BrojUgovora" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UgovorOKoristenjuId" class="control-label"></label>
-                <select asp-for="UgovorOKoristenjuId" class ="form-control" asp-items="ViewBag.UgovorOKoristenjuId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DatumPrijenosa" class="control-label"></label>
-                <input asp-for="DatumPrijenosa" class="form-control" />
-                <span asp-validation-for="DatumPrijenosa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DatumPotpisa" class="control-label"></label>
-                <input asp-for="DatumPotpisa" class="form-control" />
-                <span asp-validation-for="DatumPotpisa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Kupac" class="control-label"></label>
-                <input asp-for="Kupac" class="form-control" />
-                <span asp-validation-for="Kupac" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="KupacOIB" class="control-label"></label>
-                <input asp-for="KupacOIB" class="form-control" />
-                <span asp-validation-for="KupacOIB" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DopisId" class="control-label"></label>
-                <select asp-for="DopisId" class ="form-control" asp-items="ViewBag.DopisId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="RbrUgovora" class="control-label"></label>
-                <input asp-for="RbrUgovora" class="form-control" />
-                <span asp-validation-for="RbrUgovora" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DopisDostaveId" class="control-label"></label>
-                <select asp-for="DopisDostaveId" class ="form-control" asp-items="ViewBag.DopisDostaveId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="RbrDostave" class="control-label"></label>
-                <input asp-for="RbrDostave" class="form-control" />
-                <span asp-validation-for="RbrDostave" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VrijemeUnosa" class="control-label"></label>
-                <input asp-for="VrijemeUnosa" class="form-control" />
-                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="h6">UgovorOPrijenosu - pregled</p>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="BrojUgovora" class="control-label"></label>
+                    <input asp-for="BrojUgovora" class="form-control" />
+                    <span asp-validation-for="BrojUgovora" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UgovorOKoristenjuId" class="control-label"></label>
+                    <select asp-for="UgovorOKoristenjuId" class ="form-control" asp-items="ViewBag.UgovorOKoristenjuId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DatumPrijenosa" class="control-label"></label>
+                    <input asp-for="DatumPrijenosa" class="form-control" />
+                    <span asp-validation-for="DatumPrijenosa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DatumPotpisa" class="control-label"></label>
+                    <input asp-for="DatumPotpisa" class="form-control" />
+                    <span asp-validation-for="DatumPotpisa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Kupac" class="control-label"></label>
+                    <input asp-for="Kupac" class="form-control" />
+                    <span asp-validation-for="Kupac" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="KupacOIB" class="control-label"></label>
+                    <input asp-for="KupacOIB" class="form-control" />
+                    <span asp-validation-for="KupacOIB" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DopisId" class="control-label"></label>
+                    <select asp-for="DopisId" class ="form-control" asp-items="ViewBag.DopisId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RbrUgovora" class="control-label"></label>
+                    <input asp-for="RbrUgovora" class="form-control" />
+                    <span asp-validation-for="RbrUgovora" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DopisDostaveId" class="control-label"></label>
+                    <select asp-for="DopisDostaveId" class ="form-control" asp-items="ViewBag.DopisDostaveId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RbrDostave" class="control-label"></label>
+                    <input asp-for="RbrDostave" class="form-control" />
+                    <span asp-validation-for="RbrDostave" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VrijemeUnosa" class="control-label"></label>
+                    <input asp-for="VrijemeUnosa" class="form-control" />
+                    <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

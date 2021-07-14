@@ -4,14 +4,19 @@
         ViewData["Title"] = "Index";
     }*@
 
-<h4>Pregled računa - Holding</h4>
-<hr />
-<p>
-    <a asp-action="Create">Dodaj novog</a>
-</p>
-<hr />
-<table class="display nowrap" id="RacunHoldingTable" style="width:100%">
-    <thead>
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="h6">Pregled računa - Holding</p>
+    </div>
+
+    <p>
+        <a asp-action="Create">Dodaj novog</a>
+    </p>
+    
+    <hr />
+    
+    <table class="display nowrap" id="RacunHoldingTable" style="width:100%">
+        <thead>
         <tr>
             <th>Broj računa</th>
             <th>Šifra objekta</th>
@@ -22,8 +27,9 @@
             <th>Datum potvrde</th>
             <th>Napomena</th>
         </tr>
-    </thead>
-</table>
+        </thead>
+    </table>
+</div>
 
 <script>
     $(document).ready(function () {

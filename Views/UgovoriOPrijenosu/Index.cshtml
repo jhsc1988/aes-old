@@ -4,14 +4,19 @@
         ViewData["Title"] = "Index";
     }*@
 
-<h4>Ugovori o prijenosu ugovora o korištenju mreže</h4>
-<hr />
-<p>
-    <a asp-action="Create">Dodaj novog</a>
-</p>
-<hr />
-<table class="display nowrap" id="UgovoriOPrijenosuTable" style="width:100%">
-    <thead>
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="h6">Ugovori o prijenosu ugovora o korištenju mreže - pregled</p>
+    </div>
+
+    <p>
+        <a asp-action="Create">Dodaj novog</a>
+    </p>
+
+    <hr />
+
+    <table class="display nowrap" id="UgovoriOPrijenosuTable" style="width:100%">
+        <thead>
         <tr>
             <th>Broj ugovora</th>
             <th>Ugovor o korištenju</th>
@@ -24,8 +29,9 @@
             <th>Klasa dostave</th>
             <th>RBR dostave</th>
         </tr>
-    </thead>
-</table>
+        </thead>
+    </table>
+</div>
 
 <script>
     $(document).ready(function () {

@@ -3,15 +3,19 @@
     @{
         ViewData["Title"] = "Index";
     }*@
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="h6">Obračuni potrošnje - HEP - Elektra</p>
+    </div>
 
-<h4>Obračuni potrošnje - HEP - Elektra</h4>
-<hr />
-<p>
-    <a asp-action="Create">Dodaj novog</a>
-</p>
-<hr />
-<table class="display nowrap" id="ObracunPotrosnjeTable" style="width:100%">
-    <thead>
+    <p>
+        <a asp-action="Create">Dodaj novog</a>
+    </p>
+    
+    <hr />
+    
+    <table class="display nowrap" id="ObracunPotrosnjeTable" style="width:100%">
+        <thead>
         <tr>
             <th>Datum obračuna</th>
             <th>brojilo</th>
@@ -19,8 +23,9 @@
             <th>RVT</th>
             <th>RNT</th>
         </tr>
-    </thead>
-</table>
+        </thead>
+    </table>
+</div>
 
 <script>
     $(document).ready(function () {
