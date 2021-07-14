@@ -11,36 +11,45 @@
     <div>
         <partial name="_Stan"/>
     </div>
-    <br />
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Create">
+    <br/>
+    <hr/>
+    <div class="row create-space-40">
+        <div class="col-md-6">
+            <form asp-action="Create" class="row g-3 d-flex justify-content-start">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
+                <div class="col-md-2 invisible" hidden>
                     <label hidden asp-for="StanId" class="control-label"></label>
-                    <input type="hidden" asp-for="StanId" id="SId" readonly class="form-control" />
+                    <input type="hidden" asp-for="StanId" id="SId" readonly class="form-control form-control-sm"/>
                     <span asp-validation-for="StanId" class="text-danger"></span>
+                </div>
 
-                    <br />
+                <br/>
+                <div class="col-md-2">
 
                     <label class="control-label" hidden></label>
-                    <input id="StanId" readonly class="form-control" placeholder="Stan ID" />
+                    <input id="StanId" readonly class="form-control form-control-sm" placeholder="Stan ID"/>
+                </div>
 
-                    <br />
+
+                <br/>
+                <div class="col-md-4">
 
                     <label hidden asp-for="Omm" class="control-label"></label>
-                    <input asp-for="Omm" id="Omm" class="form-control" placeholder="Obračunsko mjerno mjesto" />
+                    <input asp-for="Omm" id="Omm" class="form-control form-control-sm" placeholder="Obračunsko mjerno mjesto"/>
                     <span asp-validation-for="Omm" class="text-danger"></span>
+                </div>
 
-                    <br />
+
+                <br/>
+                <div class="col-md-4">
 
                     <label hidden asp-for="Napomena" class="control-label"></label>
-                    <input asp-for="Napomena" class="form-control" placeholder="Napomena" />
+                    <input asp-for="Napomena" class="form-control form-control-sm" placeholder="Napomena"/>
                     <span asp-validation-for="Napomena" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+
+                <div class="col-md-2">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
                 </div>
             </form>
         </div>
@@ -51,5 +60,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

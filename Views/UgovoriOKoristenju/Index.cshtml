@@ -3,17 +3,14 @@
     @{
         ViewData["Title"] = "Index";
     }*@
-
 <div class="content-bg">
-    <div class="head-bg">
-        <p class="h6">Ugovori o korištenju - pregled</p>
-    </div>
+<div class="row head-bg justify-content-between">
+    <p class="col-sm-10 h6">Ugovori o korištenju - pregled</p>
+    <a class="link-head" asp-controller="UgovoriOKoristenju" asp-action="Create">
+        <i class="bi bi-plus"></i>unos novog
+    </a>
 
-    <p>
-        <a asp-action="Create">Dodaj novog</a>
-    </p>
-    
-    <hr />
+</div>
     
     <table class="display nowrap" id="UgovoriOKoristenjuTable" style="width:100%">
         <thead>
