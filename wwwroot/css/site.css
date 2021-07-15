@@ -316,9 +316,8 @@ th {
     object-fit: contain;
 }
 
-.create-space-40 {
-    margin-top: 40px;
-    margin-bottom: 40px;
+.space-40-20 {
+    padding: 40px 20px !important;
 }
 
 .link-head {
@@ -346,5 +345,21 @@ th {
 }
 
 .table-full-width {
-    width: 100%!important;
+    width: 100% !important;
+}
+
+.nav-content-box {
+    border-bottom: solid 1px #dee2e6;
+    border-left: solid 1px #dee2e6;
+    border-right: solid 1px #dee2e6;
+    box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+
+.nav-tabs-style {
+    font-weight: 600;
+    font-size: 0.7rem;
+    border-bottom: 1px solid #dee2e6;
+}
+.font-size-11 {
+    font-size: 11px;
 }

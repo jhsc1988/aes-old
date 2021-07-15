@@ -5,16 +5,14 @@
     }*@
 
 <div class="content-bg">
-    <div class="head-bg">
-        <p class="h6">Pregled računa - HEP - Elektra</p>
+    <div class="row head-bg justify-content-between">
+        <p class="col-sm-10 h6">Pregled računa - HEP - Elektra</p>
+        <a class="link-head" asp-controller="RacuniElektra" asp-action="Create">
+            <i class="bi bi-plus"></i>unos novih
+        </a>
+
     </div>
 
-    <p>
-        <a asp-action="Create">Dodaj novog</a>
-    </p>
-    
-    <hr />
-    
     <table class="display nowrap" id="RacunElektraTable" style="width:100%">
         <thead>
         <tr>
@@ -27,20 +25,37 @@
             <th>Napomena</th>
         </tr>
         </thead>
+        @* <tfoot> *@
+        @* <tr> *@
+        @*     <th>Broj računa</th> *@
+        @*     <th>Ugovorni račun</th> *@
+        @*     <th>Datum izdavanja</th> *@
+        @*     <th>Iznos</th> *@
+        @*     <th>Klasa plaćanja</th> *@
+        @*     <th>Datum potvrde</th> *@
+        @*     <th>Napomena</th> *@
+        @* </tr> *@
+        @* </tfoot> *@
     </table>
 </div>
 
 <script src="~/js/inlineEdit.js" asp-append-version="true"></script>
-
+<script src="~/js/notify.js" asp-append-version="true"></script>
 <script>
 
     // for inline editing
     var table;
     var txt;
+    
+$.notify("Hello Worldaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "info");
 
     $(document).ready(function () {
 
         table = $('#RacunElektraTable').DataTable({
+        
+         
+        
+        
             "ajax": {
                 "url": "/RacuniElektra/GetList",
                 "type": "POST",
@@ -106,7 +121,32 @@
                     "targets": 5, // Napomena
                     "render": $.fn.dataTable.render.ellipsis(30),
                 },
-            ]
+            ],
+            
+            // initComplete: function () {
+            //                             this.api().columns().every( function () {
+            //                                 var column = this;
+            //                                 var select = $('<select><option value=""></option></select>')
+            //                                     .appendTo( $(column.footer()).empty() )
+            //                                     .on( 'change', function () {
+            //                                         var val = $.fn.dataTable.util.escapeRegex(
+            //                                             $(this).val()
+            //                                         );
+            //                 
+            //                                         column
+            //                                             .search( val ? '^'+val+'$' : '', true, false )
+            //                                             .draw();
+            //                                     } );
+            //                 
+            //                                 column.data().unique().sort().each( function ( d, j ) {
+            //                                     select.append( '<option value="'+d+'">'+d+'</option>' )
+            //                                 } );
+            //                             } );
+            //                         },
         });
+        
+ 
+        
+        
     });
 </script>
