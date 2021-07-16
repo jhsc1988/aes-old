@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
@@ -78,9 +79,8 @@ namespace aes.Controllers
                 p.Add(element);
 
             return JsonConvert.SerializeObject(p);
+        }
 
-        }        
-        
         public string getDopisi()
         {
             List<Dopis> d = new List<Dopis>();
@@ -88,9 +88,8 @@ namespace aes.Controllers
                 d.Add(element);
 
             return JsonConvert.SerializeObject(d);
+        }
 
-        }        
-        
         public string getKupci()
         {
             List<ElektraKupac> ek = new List<ElektraKupac>();
@@ -101,14 +100,13 @@ namespace aes.Controllers
             {
                 element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
             }
+
             foreach (ElektraKupac element in ek)
                 element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
 
             return JsonConvert.SerializeObject(ek);
-
         }
 
-    
 
         // POST: RacuniElektra/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -116,7 +114,10 @@ namespace aes.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunElektra racunElektra)
+        public async Task<IActionResult> Create(
+            [Bind(
+                "Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")]
+            RacunElektra racunElektra)
         {
             // ModelState debbuger:
             // var errors = ModelState.Values.SelectMany(v => v.Errors);
@@ -145,7 +146,7 @@ namespace aes.Controllers
         //}
 
         // GET: RacuniElektra/Edit/5
-        
+
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -172,8 +173,10 @@ namespace aes.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunElektra racunElektra)
+        public async Task<IActionResult> Edit(int id,
+            [Bind(
+                "Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")]
+            RacunElektra racunElektra)
         {
             if (id != racunElektra.Id)
             {
@@ -198,6 +201,7 @@ namespace aes.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -259,6 +263,7 @@ namespace aes.Controllers
             {
                 return Json($"Račun {brojRacuna} već postoji.");
             }
+
             return Json(true);
         }
 
@@ -267,65 +272,114 @@ namespace aes.Controllers
         /// </summary>
         /// <returns>Vraća listu racuna Elektre u JSON obliku za server side processing</returns>
         [HttpPost]
-        public async Task<IActionResult> GetList()
+        public async Task<IActionResult> GetList(string  klasa, string urbroj)
         {
+            var predmetIdAsInt = 0;
+            var dopisIdAsInt = 0;
+            
+            if (klasa is not null)
+            {
+                predmetIdAsInt = int.Parse(klasa);
+            }
+            
+            if (urbroj is not null)
+            {
+                dopisIdAsInt = int.Parse(urbroj);
+            }
+
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
             var length = Request.Form["length"].FirstOrDefault();
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnName = Request
+                .Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
             // async/await - imam overhead, ali proširujem scalability
-            List<RacunElektra> RacunElektraList = new List<RacunElektra>();
-            RacunElektraList = await _context.RacunElektra.ToListAsync<RacunElektra>();
+            List<RacunElektra> racunElektraList = new List<RacunElektra>();
+
+            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            {
+                racunElektraList = await _context.RacunElektra.ToListAsync<RacunElektra>();
+            }
+
+            if (predmetIdAsInt != 0 && dopisIdAsInt == 0)
+            {
+                racunElektraList = await _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                    .ToListAsync();
+            }
+
+            if (predmetIdAsInt != 0 && dopisIdAsInt != 0)
+            {
+                racunElektraList = await _context.RacunElektra.Where(
+                    x => x.Dopis.Predmet.Id == predmetIdAsInt
+                         && x.Dopis.Id == dopisIdAsInt).ToListAsync();
+            }
 
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunElektra racunElektra in RacunElektraList)
+            foreach (RacunElektra racunElektra in racunElektraList)
             {
-                racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
+                racunElektra.ElektraKupac =
+                    await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
+            }
+
+            foreach (RacunElektra racunElektra in racunElektraList)
+            {
+                racunElektra.Dopis =
+                    await _context.Dopis.FirstOrDefaultAsync(o => o.Id == racunElektra.DopisId);
+            }
+
+            foreach (RacunElektra re in racunElektraList)
+            {
+                re.Dopis.Predmet =
+                    await _context.Predmet.FirstOrDefaultAsync(o => o.Id == re.Dopis.PredmetId);
             }
 
             // filter
-            int totalRows = RacunElektraList.Count;
+            int totalRows = racunElektraList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                RacunElektraList = await RacunElektraList.
-                    Where(
-                    x => x.BrojRacuna.Contains(searchValue)
-                    || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                    || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
-                    || x.Iznos.ToString().Contains(searchValue)
-                    || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunElektra>();
+                racunElektraList = await racunElektraList.Where(
+                        x => x.BrojRacuna.Contains(searchValue)
+                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
+                             || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                             || x.Iznos.ToString().Contains(searchValue)
+                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                             || (x.DatumPotvrde != null &&
+                                 x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
+                    .ToDynamicListAsync<RacunElektra>();
                 // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
                 // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
-            int totalRowsAfterFiltering = RacunElektraList.Count;
+
+            int totalRowsAfterFiltering = racunElektraList.Count;
 
             // trebam System.Linq.Dynamic.Core;
             // sorting
-            RacunElektraList = RacunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            racunElektraList = racunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 
             // paging
-            RacunElektraList = RacunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektra>();
+            racunElektraList = racunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length))
+                .ToList<RacunElektra>();
 
-            return Json(new { data = RacunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new
+            {
+                data = racunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+            });
         }
 
         [HttpPost]
         public JsonResult SaveToDB([FromBody] List<RacunElektra> racuniList)
         {
-
             RacunElektra racuni = new RacunElektra();
 
             {
-
                 int dopisId = 0;
                 if (racuniList == null)
                 {
-                    return Json(new { IsCreated = false, Message = "nije poslan nijedan račun" });
+                    return Json(new {IsCreated = false, Message = "nije poslan nijedan račun"});
                 }
                 else
                 {
@@ -338,10 +392,10 @@ namespace aes.Controllers
                     {
                         _context.RacunElektra.Add(r);
                     }
+
                     _context.SaveChanges();
 
-                    return Json(new { IsCreated = true, Message = "uspjesno" });
-
+                    return Json(new {IsCreated = true, Message = "uspjesno"});
                 }
                 catch (Exception)
                 {
@@ -350,7 +404,7 @@ namespace aes.Controllers
                     _context.RacunElektra.RemoveRange(ListOfDataToDelete);
 
                     _context.SaveChanges();
-                    return Json(new { IsCreated = false, Message = "greska" });
+                    return Json(new {IsCreated = false, Message = "greska"});
                 }
 
                 //int insertedRecords = re.SaveChanges();
@@ -386,17 +440,40 @@ namespace aes.Controllers
             List<RacunElektra> RacunElektraList = new List<RacunElektra>();
             RacunElektraList = await _context.RacunElektra.ToListAsync<RacunElektra>();
 
-            var applicationDbContext = _context.RacunElektra.
-                Include(r => r.Dopis).
-                Include(r => r.ElektraKupac).
-                Include(r => r.ElektraKupac.Ods).
-                Include(r => r.ElektraKupac.Ods.Stan);
+            var applicationDbContext = _context.RacunElektra.Include(r => r.Dopis).Include(r => r.ElektraKupac)
+                .Include(r => r.ElektraKupac.Ods).Include(r => r.ElektraKupac.Ods.Stan);
 
             foreach (RacunElektra racunElektra in RacunElektraList)
             {
-                racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
+                racunElektra.ElektraKupac =
+                    await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
             }
+
             return Json(applicationDbContext.ToList());
+        }
+
+        private List<Predmet> _predmetiForDopisiForFIlter;
+
+        public JsonResult GetPredmetiDataForFilter()
+        {
+            var racunElektraList = _context.RacunElektra.ToList();
+            foreach (var element in racunElektraList)
+                element.Dopis = _context.Dopis.FirstOrDefault(x => element.DopisId == x.Id);
+
+            foreach (var element in racunElektraList)
+                element.Dopis.Predmet = _context.Predmet.FirstOrDefault(x => element.Dopis.PredmetId == x.Id);
+
+            var predmetList = racunElektraList.Select(element => element.Dopis.Predmet).Distinct().ToList();
+            _predmetiForDopisiForFIlter = predmetList;
+            return Json(predmetList);
+        }
+
+
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+        {
+            var dopisList = _context.Dopis.ToList();
+            var dopisForFilterList = dopisList.Where(element => element.PredmetId == predmetId).ToList();
+            return Json(dopisForFilterList);
         }
     }
 }

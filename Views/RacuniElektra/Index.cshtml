@@ -10,143 +10,40 @@
         <a class="link-head" asp-controller="RacuniElektra" asp-action="Create">
             <i class="bi bi-plus"></i>unos novih
         </a>
-
     </div>
+    <div class="space-40-20">
+        <form class="row g-3 d-flex justify-content-start">
+            <div class="col-md-2">
+                <select class="form-control form-control-sm" id="selectPredmet">
+                    <option value="" disabled selected hidden>Predmet</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control form-control-sm" id="selectDopis" disabled>
+                    <option value="" disabled selected hidden>Dopis</option>
+                </select>
+            </div>
+        </form>
 
-    <table class="display nowrap" id="RacunElektraTable" style="width:100%">
-        <thead>
-        <tr>
-            <th>Broj računa</th>
-            <th>Ugovorni račun</th>
-            <th>Datum izdavanja</th>
-            <th>Iznos</th>
-            <th>Klasa plaćanja</th>
-            <th>Datum potvrde</th>
-            <th>Napomena</th>
-        </tr>
-        </thead>
-        @* <tfoot> *@
-        @* <tr> *@
-        @*     <th>Broj računa</th> *@
-        @*     <th>Ugovorni račun</th> *@
-        @*     <th>Datum izdavanja</th> *@
-        @*     <th>Iznos</th> *@
-        @*     <th>Klasa plaćanja</th> *@
-        @*     <th>Datum potvrde</th> *@
-        @*     <th>Napomena</th> *@
-        @* </tr> *@
-        @* </tfoot> *@
-    </table>
+        <table class="display nowrap w-100" id="RacunElektraTable">
+            <thead>
+            <tr>
+                <th>Broj računa</th>
+                <th>Ugovorni račun</th>
+                <th>Datum izdavanja</th>
+                <th>Iznos</th>
+                <th>Klasa plaćanja</th>
+                <th>Datum potvrde</th>
+                <th>Napomena</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 
-<script src="~/js/inlineEdit.js" asp-append-version="true"></script>
-<script src="~/js/notify.js" asp-append-version="true"></script>
-<script>
 
-    // for inline editing
-    var table;
-    var txt;
-    
-$.notify("Hello Worldaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "info");
+<script src="~/js/inlineEdit.js"></script>
+<script src="~/js/notify.js"></script>
+<script src="~/js/RacuniElektra/filter.js"></script>
+<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
 
-    $(document).ready(function () {
-
-        table = $('#RacunElektraTable').DataTable({
-        
-         
-        
-        
-            "ajax": {
-                "url": "/RacuniElektra/GetList",
-                "type": "POST",
-                "datatype": "json"
-            },
-            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-            // koristi se kao selector (nije posve jasna dokumentacija)
-            "columns": [
-                {
-                    "data": null, "name": "brojRacuna",
-                    "render": function (data, type, row, meta) {
-                        return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
-                    }
-                },
-                {
-                    "data": null, "name": "elektraKupac.ugovorniRacun",
-                    "render": function (data, type, row, meta) {
-                        return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
-                    }
-                },
-                { "data": "datumIzdavanja", "name": "datumIzdavanja" },
-                {
-                    "data": "iznos", "name": "iznos",
-                    "render": $.fn.dataTable.render.number('.', ',', 2, '')
-                },
-                { "data": "klasaPlacanja", "name": "klasaPlacanja" },
-                { "data": "datumPotvrde", "name": "datumPotvrde" },
-                { "data": "napomena", "name": "napomena" },
-            ],
-            "paging": true,
-            "serverSide": true,
-            "order": [[2, 'asc']], // default sort po datumu
-            "bLengthChange": false,
-            //"processing": true,
-            "language": {
-                "processing": "tražim..."
-            },
-            "scrollX": true,
-            "columnDefs": [
-                {
-                    "targets": 0, // BrojRacuna
-                    "render": $.fn.dataTable.render.ellipsis(19),
-                },
-                {
-                    "targets": 1, // UgovorniRacun
-                    "render": $.fn.dataTable.render.ellipsis(10),
-                },
-                {
-                    "targets": 2, // DatumIzdavanja
-                    "render": function (data, type, row) {
-                        return moment(data).format("DD.MM.YYYY")
-                    }
-                },
-                {
-                    "targets": 3, // Iznos
-                    "render": $.fn.dataTable.render.ellipsis(8),
-                },
-                {
-                    "targets": 4, // KlasaPlacanja
-                    "render": $.fn.dataTable.render.ellipsis(20),
-                },
-                {
-                    "targets": 5, // Napomena
-                    "render": $.fn.dataTable.render.ellipsis(30),
-                },
-            ],
-            
-            // initComplete: function () {
-            //                             this.api().columns().every( function () {
-            //                                 var column = this;
-            //                                 var select = $('<select><option value=""></option></select>')
-            //                                     .appendTo( $(column.footer()).empty() )
-            //                                     .on( 'change', function () {
-            //                                         var val = $.fn.dataTable.util.escapeRegex(
-            //                                             $(this).val()
-            //                                         );
-            //                 
-            //                                         column
-            //                                             .search( val ? '^'+val+'$' : '', true, false )
-            //                                             .draw();
-            //                                     } );
-            //                 
-            //                                 column.data().unique().sort().each( function ( d, j ) {
-            //                                     select.append( '<option value="'+d+'">'+d+'</option>' )
-            //                                 } );
-            //                             } );
-            //                         },
-        });
-        
- 
-        
-        
-    });
-</script>
