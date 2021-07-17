@@ -21,3 +21,11 @@
     </table>
 </div>
 <script src="~/js/UgovoriOKoristenju/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#UgovoriOKoristenjuTable_filter input[type="search"]');
+    const filter = $('#UgovoriOKoristenjuTable_filter');
+    setStyle(input, filter);
+});
+</script>

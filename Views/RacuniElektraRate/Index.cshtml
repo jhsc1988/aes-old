@@ -2,7 +2,7 @@
     <div class="row head-bg justify-content-between">
         <p class="col-sm-10 h6">Pregled računa - HEP - Elektra rate</p>
         <a class="link-head" asp-controller="RacuniElektraRate" asp-action="Create">
-            <i class="bi bi-plus"></i>unos novog
+            <i class="bi bi-plus"></i>unos novih
         </a>
     </div>
     <table class="display nowrap w-100" id="RacunElektraRateTable">
@@ -20,3 +20,11 @@
     </table>
 </div>
 <script src="~/js/RacuniElektraRate/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#RacunElektraRateTable_filter input[type="search"]');
+    const filter = $('#RacunElektraRateTable_filter');
+    setStyle(input, filter);
+});
+</script>

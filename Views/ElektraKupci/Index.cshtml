@@ -1,11 +1,10 @@
 ﻿<div class="content-bg">
-    <div class="head-bg">
-        <p class="h6">Pregled kupaca - HEP - Elektra</p>
+    <div class="row head-bg justify-content-between">
+        <p class="col-sm-10 h6">Pregled računa - HEP - Elektra</p>
+        <a class="link-head" asp-controller="ElektraKupci" asp-action="Create">
+            <i class="bi bi-plus"></i>unos novog
+        </a>
     </div>
-    <p>
-        <a asp-action="Create">Dodaj novog</a>
-    </p>
-    <hr/>
     <table class="display nowrap w-100" id="ElektraKupacTable">
         <thead>
         <tr>
@@ -24,3 +23,11 @@
     </table>
 </div>
 <script src="~/js/ElektraKupci/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#ElektraKupacTable_filter input[type="search"]');
+    const filter = $('#ElektraKupacTable_filter');
+    setStyle(input, filter);
+});
+</script>

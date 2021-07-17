@@ -18,3 +18,11 @@
     </table>
 </div>
 <script src="~/js/RacunElektraObracuniPotrosnje/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#ObracunPotrosnjeTable_filter input[type="search"]');
+    const filter = $('#ObracunPotrosnjeTable_filter');
+    setStyle(input, filter);
+});
+</script>

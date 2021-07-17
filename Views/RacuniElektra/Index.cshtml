@@ -5,8 +5,7 @@
             <i class="bi bi-plus"></i>unos novih
         </a>
     </div>
-    <div class="space-40-20">
-        <form class="row g-3 d-flex justify-content-start">
+    <form class="row g-3 d-flex justify-content-start">
             <div class="col-md-2">
                 <select class="form-control form-control-sm" id="selectPredmet">
                     <option value="" disabled selected hidden>Predmet</option>
@@ -32,8 +31,15 @@
             </thead>
         </table>
     </div>
-</div>
 <script src="~/js/InlineEdit.js"></script>
 <script src="~/js/Notify.js"></script>
 <script src="~/js/RacuniElektra/Filter.js"></script>
 <script src="~/js/RacuniElektra/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#RacunElektraTable_filter input[type="search"]');
+    const filter = $('#RacunElektraTable_filter');
+    setStyle(input, filter);
+});
+</script>

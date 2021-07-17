@@ -83,6 +83,7 @@
     selectPredmet.on('change', function () {
         if (selectPredmet.val() === "0") // if Predmet is selected, reset
             drawSelectDopisOptions(); // 1. removes options, then 2. getDopisiData(); send null data
+        dopisiForFilter = null; // reset dopisi
         getDopisiData();
     });
     selectDopis.on('change', function () {

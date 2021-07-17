@@ -7,6 +7,11 @@
         "paging": true,
         "ordering": false,
         "bLengthChange": false,
+        //"processing": true,
+        "language": {
+            "processing": "tražim...",
+            "search": "", // remove search text
+        },
         "columns": [
             {
                 "targets": 0, // rbr

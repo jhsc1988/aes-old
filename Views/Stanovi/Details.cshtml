@@ -34,7 +34,7 @@
 </ul>
 <div class="tab-content nav-content-box" id="myTabContent">
 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <div class="space-40-20">
+    <div class="space-10-10">
         <dl class="row font-size-11">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.StanId)
@@ -135,7 +135,7 @@
         </dl>
     </div>
 </div>
-<div class="tab-pane fade space-40-20" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
+<div class="tab-pane fade space-10-10" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
     <table class="display nowrap w-100 " id="RacunElektraTable">
         <thead>
         <tr>
@@ -150,7 +150,7 @@
         </thead>
     </table>
 </div>
-<div class="tab-pane fade space-40-20" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
+<div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
     <table class="display nowrap w-100" id="RacunElektraRateTable">
         <thead>
         <tr>
@@ -165,7 +165,7 @@
         </thead>
     </table>
 </div>
-<div class="tab-pane fade space-40-20" id="holding" role="tabpanel" aria-labelledby="holding-tab">
+<div class="tab-pane fade space-10-10" id="holding" role="tabpanel" aria-labelledby="holding-tab">
     <table class="display nowrap w-100" id="RacunHoldingTable">
         <thead>
         <tr>
@@ -182,7 +182,7 @@
     </table>
 
 </div>
-<div class="tab-pane fade space-40-20" id="ugovori-o-koristenju" role="tabpanel" aria-labelledby="ugovori-o-koristenju-tab">
+<div class="tab-pane fade space-10-10" id="ugovori-o-koristenju" role="tabpanel" aria-labelledby="ugovori-o-koristenju-tab">
     <table class="display nowrap w-100" id="UgovoriOKoristenjuTable">
         <thead>
         <tr>
@@ -198,7 +198,7 @@
         </thead>
     </table>
 </div>
-<div class="tab-pane fade space-40-20" id="ugovori-o-prijenosu" role="tabpanel" aria-labelledby="ugovori-o-prijenosu-tab">
+<div class="tab-pane fade space-10-10" id="ugovori-o-prijenosu" role="tabpanel" aria-labelledby="ugovori-o-prijenosu-tab">
     <table class="display nowrap w-100" id="UgovoriOPrijenosuTable">
         <thead>
         <tr>
@@ -216,7 +216,7 @@
         </thead>
     </table>
 </div>
-<div class="tab-pane fade space-40-20" id="racuni-ods-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-ods-izvrsenje-usluge-tab">
+<div class="tab-pane fade space-10-10" id="racuni-ods-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-ods-izvrsenje-usluge-tab">
     <table class="display nowrap w-100" id="RacunOdsIzvrsenjaUslugeTable">
         <thead>
         <tr>
@@ -233,7 +233,7 @@
         </thead>
     </table>
 </div>
-<div class="tab-pane fade space-40-20" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
+<div class="tab-pane fade space-10-10" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
     <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
         <thead>
         <tr>
@@ -268,8 +268,39 @@ const stanid = @Model.Id;
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/UgovoriOKoristenjuTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/UgovoriOPrijenosuTable.js" asp-append-version="true"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
 $(document).ready(function () {
-   stanDetailsDatatablesAdjust(stanid); 
+    
+    stanDetailsDatatablesAdjust(stanid);
+   
+// ************************************ search in Datatables in Details styling ************************************ //
+    let input = $('#RacunElektraTable_filter input[type="search"]');
+    let filter = $('#RacunElektraTable_filter');
+    setStyle(input, filter);
+    
+    input = $('#RacunElektraRateTable_filter input[type="search"]');
+    filter = $('#RacunElektraRateTable_filter');
+    setStyle(input, filter);
+    
+    input = $('#RacunHoldingTable_filter input[type="search"]');
+    filter = $('#RacunHoldingTable_filter');
+    setStyle(input, filter);
+    
+    input = $('#UgovoriOKoristenjuTable_filter input[type="search"]');
+    filter = $('#UgovoriOKoristenjuTable_filter');
+    setStyle(input, filter);
+    
+    input = $('#UgovoriOPrijenosuTable_filter input[type="search"]');
+    filter = $('#UgovoriOPrijenosuTable_filter');
+    setStyle(input, filter); 
+    
+    input = $('#RacunOdsIzvrsenjaUslugeTable_filter input[type="search"]');
+    filter = $('#RacunOdsIzvrsenjaUslugeTable_filter');
+    setStyle(input, filter);  
+
+    input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
+    filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+    setStyle(input, filter);
 });
 </script>

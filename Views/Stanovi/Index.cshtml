@@ -20,3 +20,11 @@
     </table>
 </div>
 <script src="~/js/Stanovi/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#indexTable_filter input[type="search"]');
+    const filter = $('#indexTable_filter');
+    setStyle(input, filter);
+});
+</script>

@@ -1,11 +1,10 @@
 ﻿<div class="content-bg">
-    <div class="head-bg">
-        <p class="h6">Pregled kupaca - HEP - ODS</p>
+    <div class="row head-bg justify-content-between">
+        <p class="col-sm-10 h6">Pregled računa - HEP - Elektra</p>
+        <a class="link-head" asp-controller="OdsKupci" asp-action="Create">
+            <i class="bi bi-plus"></i>unos novog
+        </a>
     </div>
-    <p>
-        <a asp-action="Create">Dodaj novog</a>
-    </p>
-    <hr/>
     <table class="display nowrap w-100" id="OdsKupacTable">
         <thead>
         <tr>
@@ -24,3 +23,11 @@
     </table>
 </div>
 <script src="~/js/OdsKupci/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#OdsKupacTable_filter input[type="search"]');
+    const filter = $('#OdsKupacTable_filter');
+    setStyle(input, filter);
+});
+</script>

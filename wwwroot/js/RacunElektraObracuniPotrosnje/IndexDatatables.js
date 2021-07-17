@@ -32,7 +32,8 @@
         "bLengthChange": false,
         //"processing": true,
         "language": {
-            "processing": "tražim..."
+            "processing": "tražim...",
+            "search": "", // remove search text
         },
         "scrollX": true,
         "columnDefs": [

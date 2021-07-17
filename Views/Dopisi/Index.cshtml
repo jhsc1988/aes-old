@@ -17,3 +17,11 @@
     </table>
 </div>
 <script src="~/js/Dopisi/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#DopisTable_filter input[type="search"]');
+    const filter = $('#DopisTable_filter');
+    setStyle(input, filter);
+});
+</script>

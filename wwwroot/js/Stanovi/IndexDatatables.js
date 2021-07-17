@@ -40,9 +40,10 @@
         "serverSide": true,
         "order": [[2, 'asc']],
         "bLengthChange": false,
-        "processing": true,
+        //"processing": true,
         "language": {
-            "processing": "tražim..."
+            "processing": "tražim...",
+            "search": "", // remove search text
         },
         "scrollX": true,
         "columnDefs": [

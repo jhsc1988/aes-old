@@ -22,3 +22,11 @@
     </table>
 </div>
 <script src="~/js/Ods/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+$(document).ready(function () {
+    const input = $('#OdsTable_filter input[type="search"]');
+    const filter = $('#OdsTable_filter');
+    setStyle(input, filter);
+});
+</script>
