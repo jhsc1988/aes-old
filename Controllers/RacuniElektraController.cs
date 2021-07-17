@@ -272,20 +272,10 @@ namespace aes.Controllers
         /// </summary>
         /// <returns>Vraća listu racuna Elektre u JSON obliku za server side processing</returns>
         [HttpPost]
-        public async Task<IActionResult> GetList(string  klasa, string urbroj)
+        public async Task<IActionResult> GetList(string klasa, string urbroj)
         {
-            var predmetIdAsInt = 0;
-            var dopisIdAsInt = 0;
-            
-            if (klasa is not null)
-            {
-                predmetIdAsInt = int.Parse(klasa);
-            }
-            
-            if (urbroj is not null)
-            {
-                dopisIdAsInt = int.Parse(urbroj);
-            }
+            var predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+            var dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
 
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
