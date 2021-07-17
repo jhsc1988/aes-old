@@ -1,14 +1,11 @@
 ﻿@model Stan
-
 @{
     ViewData["Title"] = "Details";
 }
-
 <div class="content-bg">
 <div class="head-bg">
     <p class="h6" style="font-size: 0.8rem;">id: @Model.StanId šo: @Model.SifraObjekta adresa: @Model.Adresa kat: @Model.Kat stan: @Model.BrojSTana</p>
 </div>
-
 <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" id="stan-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Stan</a>
@@ -35,7 +32,6 @@
         <a class="nav-link" id="racuni-elektra-izvrsenje-usluge-tab" data-toggle="tab" href="#racuni-elektra-izvrsenje-usluge" role="tab" aria-controls="racuni-elektra-izvrsenje-usluge" aria-selected="false">Računi Elektra - izvršenje usluge</a>
     </li>
 </ul>
-
 <div class="tab-content nav-content-box" id="myTabContent">
 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
     <div class="space-40-20">
@@ -139,24 +135,20 @@
         </dl>
     </div>
 </div>
-
-
 <div class="tab-pane fade space-40-20" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
-    
-        <table class="display nowrap w-100 " id="RacunElektraTable">
-            <thead>
-            <tr>
-                <th>Broj računa</th>
-                <th>Ugovorni račun</th>
-                <th>Datum izdavanja</th>
-                <th>Iznos</th>
-                <th>Klasa plaćanja</th>
-                <th>Datum potvrde</th>
-                <th>Napomena</th>
-            </tr>
-            </thead>
-        </table>
-   
+    <table class="display nowrap w-100 " id="RacunElektraTable">
+        <thead>
+        <tr>
+            <th>Broj računa</th>
+            <th>Ugovorni račun</th>
+            <th>Datum izdavanja</th>
+            <th>Iznos</th>
+            <th>Klasa plaćanja</th>
+            <th>Datum potvrde</th>
+            <th>Napomena</th>
+        </tr>
+        </thead>
+    </table>
 </div>
 <div class="tab-pane fade space-40-20" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
     <table class="display nowrap w-100" id="RacunElektraRateTable">
@@ -190,7 +182,6 @@
     </table>
 
 </div>
-
 <div class="tab-pane fade space-40-20" id="ugovori-o-koristenju" role="tabpanel" aria-labelledby="ugovori-o-koristenju-tab">
     <table class="display nowrap w-100" id="UgovoriOKoristenjuTable">
         <thead>
@@ -207,7 +198,6 @@
         </thead>
     </table>
 </div>
-
 <div class="tab-pane fade space-40-20" id="ugovori-o-prijenosu" role="tabpanel" aria-labelledby="ugovori-o-prijenosu-tab">
     <table class="display nowrap w-100" id="UgovoriOPrijenosuTable">
         <thead>
@@ -226,7 +216,6 @@
         </thead>
     </table>
 </div>
-
 <div class="tab-pane fade space-40-20" id="racuni-ods-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-ods-izvrsenje-usluge-tab">
     <table class="display nowrap w-100" id="RacunOdsIzvrsenjaUslugeTable">
         <thead>
@@ -244,7 +233,6 @@
         </thead>
     </table>
 </div>
-
 <div class="tab-pane fade space-40-20" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
     <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
         <thead>
@@ -262,16 +250,26 @@
         </thead>
     </table>
 </div>
-
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
 </div>
-<script src="~/js/stanDetailsDatatables.js" asp-append-version="true"></script>
 <script>
-                $(document).ready(function () {
-                   stanDetailsDatatables(@Model.Id); 
-                });
+const stanid = @Model.Id;
+</script>
+<script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/RacunElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/RacunElektraRateTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/RacunElektraTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/RacunHoldingTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/RacunOdsIzvrsenjaUslugeTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/UgovoriOKoristenjuTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/UgovoriOPrijenosuTable.js" asp-append-version="true"></script>
+<script>
+$(document).ready(function () {
+   stanDetailsDatatablesAdjust(stanid); 
+});
 </script>

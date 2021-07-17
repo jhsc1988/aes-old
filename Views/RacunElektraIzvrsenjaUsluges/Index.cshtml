@@ -1,18 +1,10 @@
-﻿@*@model IEnumerable<aes.Models.RacunElektraIzvrsenjeUsluge>
-        // overhead
-    @{
-        ViewData["Title"] = "Index";
-    }*@
-
-<div class="content-bg">
+﻿<div class="content-bg">
 <div class="row head-bg justify-content-between">
     <p class="col-sm-10 h6">Pregled računa - HEP - Elektra - izvršenje usluge</p>
     <a class="link-head" asp-controller="RacunElektraIzvrsenjaUsluges" asp-action="Create">
         <i class="bi bi-plus"></i>unos novog
     </a>
-        
 </div>
-    
     <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
         <thead>
         <tr>
@@ -29,88 +21,4 @@
         </thead>
     </table>
 </div>
-
-<script>
-    $(document).ready(function () {
-
-        $('#RacunElektraIzvrsenjeUslugeTable').DataTable({
-            "ajax": {
-                "url": "/RacunElektraIzvrsenjaUsluges/GetList",
-                "type": "POST",
-                "datatype": "json"
-            },
-            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-            // koristi se kao selector (nije posve jasna dokumentacija)
-            "columns": [
-                {
-                    "data": null, "name": "brojRacuna",
-                    "render": function (data, type, row, meta) {
-                        return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
-                    }
-                },
-                {
-                    "data": null, "name": "elektraKupac.ugovorniRacun",
-                     "render": function (data, type, row, meta) {
-                         return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
-                    }
-                },
-                { "data": "datumIzdavanja", "name": "datumIzdavanja" },
-                { "data": "datumIzvrsenja", "name": "datumIzvrsenja" },
-                { "data": "usluga", "name": "usluga" },
-                {
-                    "data": "iznos", "name": "iznos",
-                    "render": $.fn.dataTable.render.number('.', ',', 2, '')
-                },
-                { "data": "klasaPlacanja", "name": "klasaPlacanja" },
-                { "data": "datumPotvrde", "name": "datumPotvrde" },
-                { "data": "napomena", "name": "napomena" },
-            ],
-            "paging": true,
-            "serverSide": true,
-            "order": [[2, 'asc']], // default sort po datumu
-            "bLengthChange": false,
-            //"processing": true,
-            "language": {
-                "processing": "tražim..."
-            },
-            "scrollX": true,
-            "columnDefs": [
-                {
-                    "targets": 0, // BrojRacuna
-                    "render": $.fn.dataTable.render.ellipsis(19),
-                },
-                {
-                    "targets": 1, // UgovorniRacun
-                    "render": $.fn.dataTable.render.ellipsis(10),
-                },
-                {
-                    "targets": 2, // DatumIzdavanja
-                    "render": function (data, type, row) {
-                        return moment(data).format("DD.MM.YYYY")
-                    }
-                },
-                {
-                    "targets": 3, // DatumIzvrsenja
-                    "render": function (data, type, row) {
-                        return moment(data).format("DD.MM.YYYY")
-                    }
-                },
-                {
-                    "targets": 4, // Usluga
-                    "render": $.fn.dataTable.render.ellipsis(30),
-                },                {
-                    "targets": 5, // Iznos
-                    "render": $.fn.dataTable.render.ellipsis(8),
-                },
-                {
-                    "targets": 6, // KlasaPlacanja
-                    "render": $.fn.dataTable.render.ellipsis(20),
-                },
-                {
-                    "targets": 7, // Napomena
-                    "render": $.fn.dataTable.render.ellipsis(30),
-                },
-            ]
-        });
-    });
-</script>
+<script src="~/js/RacunElektraIzvrsenjaUsluges/IndexDatatables.js"></script>

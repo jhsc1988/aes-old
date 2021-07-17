@@ -52,8 +52,8 @@
             },
             success: function (dopisi) {
                 setDopisiForFilterCallBack(dopisi);
-                refreshWithFilteredData();
                 drawSelectDopisOptions();
+                refreshWithFilteredData();
             }
         });
     }
