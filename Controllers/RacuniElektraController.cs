@@ -465,5 +465,30 @@ namespace aes.Controllers
             var dopisForFilterList = dopisList.Where(element => element.PredmetId == predmetId).ToList();
             return Json(dopisForFilterList);
         }
+
+        public JsonResult UpdateDbForInline(string id, string klasa, DateTime? datum, string napomena)
+        {
+            var idInt = int.Parse(id);
+            var racunToUpdate = _context.RacunElektra.First(x => x.Id == idInt);
+
+            racunToUpdate.KlasaPlacanja = klasa;
+            racunToUpdate.DatumPotvrde = datum;
+            racunToUpdate.Napomena = napomena;
+            
+            if (racunToUpdate.KlasaPlacanja == null && racunToUpdate.DatumPotvrde != null )
+            {
+                return Json(new {success = false, Message = "Klasa ne može biti prazna!"});
+            }
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                return Json(new {success = false, Message = "Greška"});
+            }
+            return Json(new {success = true, Message = "Uspješno upisano"});
+        }
     }
 }
