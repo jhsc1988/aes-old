@@ -466,29 +466,40 @@ namespace aes.Controllers
             return Json(dopisForFilterList);
         }
 
-        public JsonResult UpdateDbForInline(string id, string klasa, DateTime? datum, string napomena)
+        public  async Task<IActionResult> UpdateDbForInline(string id, string klasa, DateTime? datum, string napomena)
         {
             var idInt = int.Parse(id);
-            var racunToUpdate = _context.RacunElektra.First(x => x.Id == idInt);
+            var racunToUpdate = await _context.RacunElektra.FirstAsync(x => x.Id == idInt);
 
-            racunToUpdate.KlasaPlacanja = klasa;
-            racunToUpdate.DatumPotvrde = datum;
-            racunToUpdate.Napomena = napomena;
-            
-            if (racunToUpdate.KlasaPlacanja == null && racunToUpdate.DatumPotvrde != null )
+            if (racunToUpdate.KlasaPlacanja == null && datum != null )
             {
-                return Json(new {success = false, Message = "Klasa ne može biti prazna!"});
+                return Json(new {success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!"});
             }
 
+            if (klasa is null && datum is null && napomena is null)
+            {
+                racunToUpdate.KlasaPlacanja = null;
+                racunToUpdate.DatumPotvrde = null;
+            }
+
+            else if (datum is null && napomena is null)
+                racunToUpdate.KlasaPlacanja = klasa;
+            
+            if (datum is not null)
+                racunToUpdate.DatumPotvrde = datum;
+            
+            if(napomena is not null)
+                racunToUpdate.Napomena = napomena;
+            
             try
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                return Json(new {success = false, Message = "Greška"});
+                return Json(new {success = false, Message = "Greška baze podataka!"});
             }
-            return Json(new {success = true, Message = "Uspješno upisano"});
+            return Json(new {success = true, Message = "Evidentirano"});
         }
     }
 }

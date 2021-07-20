@@ -22,6 +22,7 @@ $(document).ready(function () {
         // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             {"data": "id", "name": "id"},
+            {"data": "redniBroj", "name": "redniBroj"},
             {
                 "data": null, "name": "brojRacuna",
                 "render": function (data, type, row, meta) {
@@ -63,28 +64,32 @@ $(document).ready(function () {
             },
             {
                 "targets": 1, // BrojRacuna
+                "render": $.fn.dataTable.render.ellipsis(3),
+            },
+            {
+                "targets": 2, // BrojRacuna
                 "render": $.fn.dataTable.render.ellipsis(19),
             },
             {
-                "targets": 2, // UgovorniRacun
+                "targets": 3, // UgovorniRacun
                 "render": $.fn.dataTable.render.ellipsis(10),
             },
             {
-                "targets": 3, // DatumIzdavanja
+                "targets": 4, // DatumIzdavanja
                 "render": function (data, type, row) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
             {
-                "targets": 4, // Iznos
+                "targets": 5, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 5, // KlasaPlacanja
+                "targets": 6, // KlasaPlacanja
                 "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 6, // Datum potvrde
+                "targets": 7, // Datum potvrde
                 "render": function (data, type, row) {
                     if (data == null)
                         return "";
@@ -92,7 +97,7 @@ $(document).ready(function () {
                 }
             },
             {
-                "targets": 7, // Napomena
+                "targets": 8, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(30),
             },
         ],
