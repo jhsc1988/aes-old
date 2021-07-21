@@ -57,7 +57,7 @@ pokazivanje placeholdera*/
         <br/>
 
         <div id="ind">
-            <table class="display nowrap" id="indexTable" cellpadding="0" cellspacing="0">
+            <table class="display nowrap w-100" id="indexTable">
                 <thead>
                 <tr>
                     <th>rbr</th>
@@ -69,11 +69,10 @@ pokazivanje placeholdera*/
                     <th>Vlasništvo</th>
                     <th>Datum izdavanja</th>
                     <th>Iznos</th>
-                    <th>Akcija</th>
+                    @* <th>Akcija</th> *@
                 </tr>
                 </thead>
-                <tbody>
-                </tbody>
+
             </table>
             <br/>
             <input type="button" id="btnSave" value="Save All"/>
@@ -87,10 +86,12 @@ pokazivanje placeholdera*/
 
 @section Scripts {
     <script src="~/js/RacuniElektra/Create/EventHandlers.js"></script>
-    <script src="~/js/RacuniElektra/Create/CreateDatatables.js"></script>
+
     <script src="~/js/RacuniElektra/Create/Save.js"></script>
+    <script src="~/js/RacuniElektra/Create/Add.js"></script>
     <script src="~/js/RacuniElektra/Create/PredmetiDopisiBuilder.js"></script>
     <script src="~/js/RacuniElektra/Create/NotificationBuilder.js"></script>
     <script src="~/js/RacuniElektra/Create/GlobalVariables.js"></script>
     <script src="~/js/RacuniElektra/Create/Init.js"></script>
+    <script src="~/js/RacuniElektra/Create/CreateDatatables.js"></script>
 }

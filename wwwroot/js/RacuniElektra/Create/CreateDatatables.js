@@ -3,102 +3,105 @@
     const selectIndexTable = $('#indexTable');
 
 // ************************************ DataTables definition ************************************ //
-    const table = selectIndexTable.DataTable({
-        "paging": true,
-        "ordering": false,
-        "bLengthChange": false,
-        //"processing": true,
-        "language": {
-            "processing": "tražim...",
-            "search": "", // remove search text
-        },
-        "columns": [
-            {
-                "targets": 0, // rbr
-                "render": $.fn.dataTable.render.ellipsis(3),
+
+        table = selectIndexTable.DataTable({
+
+            "ajax": {
+                "url": "/RacuniElektra/GetListCreate",
+                "type": "POST",
+                "datatype": "json",
             },
-            {
-                "targets": 1, // BrojRacuna
-                "render": $.fn.dataTable.render.ellipsis(19),
+
+            "columns": [
+                {"data": "redniBroj", "name": "redniBroj"},
+                {"data": "brojRacuna", "name": "brojRacuna"},
+                {"data": "stanid", "name": "elektraKupac.ods.stan.StanId"},
+                {"data": "adresa", "name": "elektraKupac.ods.stan.Adresa"},
+                {"data": "korisnik", "name": "elektraKupac.ods.stan.Korisnik"},
+                {"data": "status", "name": "elektraKupac.ods.stan.Status"},
+                {"data": "vlasni\u0161tvo", "name": "elektraKupac.ods.stan.Vlasništvo"},
+                {"data": "datumIzdavanja", "name": "datumIzdavanja"},
+                {
+                    "data": "iznos", "name": "iznos",
+                    "render": $.fn.dataTable.render.number('.', ',', 2, '')
+                },
+                // {"data" : null, "name": "akcija"},
+                
+            ],
+            "paging": true,
+            "serverSide": true,
+            "order": [[0, 'asc']], // default sort po datumu
+            "bLengthChange": false,
+
+            //"processing": true,
+            "language": {
+                "processing": "tražim...",
+                "search": "", // remove search text
             },
-            {
-                "targets": 2, // Stan ID
-                "render": $.fn.dataTable.render.ellipsis(5),
-            },
-            {
-                "targets": 3, // Adresa
-                "render": $.fn.dataTable.render.ellipsis(34),
-            },
-            {
-                "targets": 4, // Korisnik
-                "render": $.fn.dataTable.render.ellipsis(20),
-            },
-            {
-                "targets": 5, // Status
-                "render": $.fn.dataTable.render.ellipsis(8),
-            },
-            {
-                "targets": 6, // Vlasništvo
-                "render": $.fn.dataTable.render.ellipsis(10),
-            },
-            {
-                "targets": 7, // Datum izdavanja
-                "render": $.fn.dataTable.render.ellipsis(10),
-            },
-            {
-                "targets": 8, // iznos
-                "render": $.fn.dataTable.render.ellipsis(10),
-            },
-            {
-                "targets": 9, // remove
-                //"render": $.fn.dataTable.render.ellipsis(10),
-            },
-        ]
-    })
+            "scrollX": true,
+            "columnDefs": [
+                {
+                    "targets": 0, // rbr
+                    "render": $.fn.dataTable.render.ellipsis(3),
+                },
+                {
+                    "targets": 1, // BrojRacuna
+                    "render": $.fn.dataTable.render.ellipsis(3),
+                },
+                {
+                    "targets": 2, // Stan ID
+                    "render": $.fn.dataTable.render.ellipsis(5),
+                },
+                {
+                    "targets": 3, // Adresa
+                    "render": $.fn.dataTable.render.ellipsis(34),
+                },
+                {
+                    "targets": 4, // Korisnik
+                    "render": $.fn.dataTable.render.ellipsis(20)
+                },
+                {
+                    "targets": 5, // Status
+                    "render": $.fn.dataTable.render.ellipsis(8)
+                },
+                {
+                    "targets": 6, // Vlasništvo
+                    "render": $.fn.dataTable.render.ellipsis(10)
+                },
+                {
+                    "targets": 7, // Datum izdavanja
+                    "render": function (data, type, row) {
+                        if (data == null)
+                            return "";
+                        return moment(data).format("DD.MM.YYYY")
+                    }
+                },
+                {
+                    "targets": 8, // Iznos
+                    "render": $.fn.dataTable.render.ellipsis(8),
+                },
+                // {
+                //     "targets": 9, // remove
+                //     "orderable" : false,
+                //     "searchable": false,
+                //     "defaultContent": '',
+                //     //"render": $.fn.dataTable.render.ellipsis(10),
+                // },
+            ],
+        });
 // ************************************ add row ************************************ //
     $('#btnAdd').on('click', function () {
         if (brojRacuna === "") {
             return false
         } else {
-            // insert variables
-            table.row.add([
-                0, // dummy variable - rbr
-                brojRacuna,
-                data_stanId,
-                data_adresa,
-                data_korisnik,
-                data_statuskoristenja,
-                data_vlasnistvo,
-                datumIzdavanja.value,
-                iznos.value,
-                "<td><button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >"
-            ]).draw(false);
-            // reset variables
-            data_stanId = "";
-            data_adresa = "";
-            data_kat = "";
-            data_brojstana = "";
-            data_cetvrt = "";
-            data_povrsina = "";
-            data_statuskoristenja = "";
-            data_korisnik = "";
-            data_vlasnistvo = "";
-            brojRacuna = "";
-            ugovorniRacun = "";
-            $("#brojRacuna").val("");
-            $("#datumIzdavanja").val("");
-            $("#iznos").val("");
-            $("#dopisId").val("");
-            $("#redniBroj").val("");
-            $("#stanText").html("");
+            
+            AddNew(brojRacuna, $("#iznos").val());
         }
     });
-// ************************************ auto ordering (rbr) ************************************ //
-    table.on('order.dt search.dt', function () {
-        table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
-            cell.innerHTML = i + 1;
-        });
-    }).draw();
+
+    
+    
+    
 // ************************************ remove row ************************************ //
     selectIndexTable.on('click', '.remove', function () {
         table
