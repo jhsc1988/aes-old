@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Models
 {
@@ -21,8 +18,8 @@ namespace aes.Models
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum potpisa HEP")]
         [DataType(DataType.Date)]
-        public DateTime DatumPotpisaHEP { get; set; } 
-        
+        public DateTime DatumPotpisaHEP { get; set; }
+
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum potpisa GZ")]
         [DataType(DataType.Date)]

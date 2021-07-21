@@ -1,14 +1,13 @@
-﻿using System;
+﻿using aes.Data;
+using aes.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using aes.Data;
-using aes.Models;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
@@ -191,7 +190,7 @@ namespace aes.Controllers
                     Where(
                     x => x.Klasa.Contains(searchValue)
                     || x.Naziv.Contains(searchValue)).ToDynamicListAsync<Predmet>();
-                    // sortiranje radi normalno za datume, neovisno o formatu ToString
+                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = PredmetList.Count;
 

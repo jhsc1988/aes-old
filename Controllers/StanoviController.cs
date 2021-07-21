@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using aes.Data;
+﻿using aes.Data;
 using aes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
@@ -197,8 +197,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = StanList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -249,8 +251,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = StanList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = StanList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -309,8 +313,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = RacunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = RacunElektraList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -375,8 +381,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = RacunElektraRateList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = RacunElektraRateList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -425,8 +433,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = racuniHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = racuniHoldingList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -478,8 +488,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = RacuniOdsIzvrsenjeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = RacuniOdsIzvrsenjeList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -533,8 +545,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = RacuniElektraIzvrsenjeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = RacuniElektraIzvrsenjeList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -556,13 +570,13 @@ namespace aes.Controllers
 
             foreach (var uok in UgovoriOKoristenjuList)
                 uok.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == uok.OdsId);
-            
+
             foreach (var uok in UgovoriOKoristenjuList)
                 uok.Dopis = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == uok.DopisId);
-            
+
             foreach (var uok in UgovoriOKoristenjuList)
                 uok.Dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == uok.Dopis.PredmetId);
-            
+
             // filter
             var totalRows = UgovoriOKoristenjuList.Count;
             if (!string.IsNullOrEmpty(searchValue))
@@ -589,8 +603,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = UgovoriOKoristenjuList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = UgovoriOKoristenjuList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -613,10 +629,10 @@ namespace aes.Controllers
             foreach (var uok in UgovoriOPrijenosuList)
                 uok.UgovorOKoristenju =
                     await _context.UgovorOKoristenju.FirstOrDefaultAsync(o => o.Id == uok.UgovorOKoristenjuId);
-            
+
             foreach (var uok in UgovoriOPrijenosuList)
                 uok.Dopis = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == uok.DopisId);
-            
+
             foreach (var uok in UgovoriOPrijenosuList)
                 uok.Dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == uok.Dopis.PredmetId);
 
@@ -648,8 +664,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = UgovoriOPrijenosuList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = UgovoriOPrijenosuList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
     }

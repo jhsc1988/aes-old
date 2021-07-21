@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using aes.Data;
+using aes.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using aes.Data;
-using aes.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
@@ -249,8 +249,9 @@ namespace aes.Controllers
         // TODO: delete for production  !!!!
         // Area 51
         [HttpGet]
-        public async Task<IActionResult> GetListJSON() { 
-        
+        public async Task<IActionResult> GetListJSON()
+        {
+
             List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
             ElektraKupacList = await _context.ElektraKupac.ToListAsync<ElektraKupac>();
 

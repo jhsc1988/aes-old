@@ -1,5 +1,3 @@
-using System;
-
 namespace aes.Models
 {
     public class ErrorViewModel

@@ -1,5 +1,6 @@
 ﻿using aes.Data;
 using aes.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Exceptions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace aes.Controllers
 {
@@ -355,8 +354,10 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = racunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = racunElektraList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
 
@@ -369,7 +370,7 @@ namespace aes.Controllers
                 int dopisId = 0;
                 if (racuniList == null)
                 {
-                    return Json(new {IsCreated = false, Message = "nije poslan nijedan račun"});
+                    return Json(new { IsCreated = false, Message = "nije poslan nijedan račun" });
                 }
                 else
                 {
@@ -385,7 +386,7 @@ namespace aes.Controllers
 
                     _context.SaveChanges();
 
-                    return Json(new {IsCreated = true, Message = "uspjesno"});
+                    return Json(new { IsCreated = true, Message = "uspjesno" });
                 }
                 catch (Exception)
                 {
@@ -394,7 +395,7 @@ namespace aes.Controllers
                     _context.RacunElektra.RemoveRange(ListOfDataToDelete);
 
                     _context.SaveChanges();
-                    return Json(new {IsCreated = false, Message = "greska"});
+                    return Json(new { IsCreated = false, Message = "greska" });
                 }
 
                 //int insertedRecords = re.SaveChanges();
@@ -473,7 +474,7 @@ namespace aes.Controllers
 
             if (racunToUpdate.KlasaPlacanja == null && datum != null)
             {
-                return Json(new {success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!"});
+                return Json(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
             }
 
             if (klasa is null && datum is null && napomena is null)
@@ -497,10 +498,10 @@ namespace aes.Controllers
             }
             catch (DbUpdateException)
             {
-                return Json(new {success = false, Message = "Greška baze podataka!"});
+                return Json(new { success = false, Message = "Greška baze podataka!" });
             }
 
-            return Json(new {success = true, Message = "Evidentirano"});
+            return Json(new { success = true, Message = "Evidentirano" });
         }
 
 
@@ -533,13 +534,13 @@ namespace aes.Controllers
             foreach (var element in RacunElektraTempList)
             {
                 element.ElektraKupac.Ods =
-                    await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.Id);
+                    await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.OdsId);
             }
 
             foreach (var element in RacunElektraTempList)
             {
                 element.ElektraKupac.Ods.Stan =
-                    await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.Stan.Id);
+                    await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.StanId);
             }
 
 
@@ -574,35 +575,59 @@ namespace aes.Controllers
 
             return Json(new
             {
-                data = RacunElektraTempList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
+                data = RacunElektraTempList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
             });
         }
-        
-        
-        
-     
-        
-        
 
 
-        //public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos)
-        //{
-        //    var _iznos = double.Parse(iznos);
-        //    var ugovorniRacun = long.Parse(brojRacuna[..10]); // range notation
-            
 
-        //    List<RacunElektra> racuniTemp = new();
-        //    RacunElektra re = new()
-        //    {
-        //        BrojRacuna = brojRacuna,
-        //        Iznos = _iznos,
 
-        //    };
-        //    re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == ugovorniRacun);
-        //    _racuniElektraTempList.Add(re);
+        [HttpGet]
+        public async Task<IActionResult> GetListCreateJSON()
+        {
+            List<RacunElektraTemp> RacunElektraTempList = new List<RacunElektraTemp>();
+            RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync<RacunElektraTemp>();
 
-        //    return Json(_racuniElektraTempList);
-        //}
+            var applicationDbContext = _context.RacunElektraTemp.Include(r => r.ElektraKupac)
+                .Include(r => r.ElektraKupac.Ods).Include(r => r.ElektraKupac.Ods.Stan);
+
+            //foreach (var element in RacunElektraTempList)
+            //{
+            //    element.ElektraKupac =
+            //        await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == element.ElektraKupacId);
+            //}
+
+            return Json(applicationDbContext.ToList());
+        }
+
+
+
+
+
+        public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos)
+        {
+            var _iznos = double.Parse(iznos);
+            var ugovorniRacun = long.Parse(brojRacuna[..10]); // range notation
+
+            var RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
+
+            List<RacunElektra> racuniTemp = new();
+            RacunElektraTemp re = new()
+            {
+                BrojRacuna = brojRacuna,
+                Iznos = _iznos,
+
+            };
+            re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == ugovorniRacun);
+            RacunElektraTempList.Add(re);
+
+            _context.RacunElektraTemp.Add(re);
+            _context.SaveChanges();
+
+            return Json(RacunElektraTempList);
+        }
     }
 }

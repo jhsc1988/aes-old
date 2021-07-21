@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using aes.Data;
+using aes.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using aes.Data;
-using aes.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
@@ -233,8 +233,8 @@ namespace aes.Controllers
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
                     || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunHolding>();
-                    // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
-                    // sortiranje radi normalno za datume, neovisno o formatu ToString
+                // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
+                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = RacunHoldingList.Count;
 

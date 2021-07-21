@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using aes.Data;
+using aes.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using aes.Data;
-using aes.Models;
 
 namespace aes.Controllers
 {

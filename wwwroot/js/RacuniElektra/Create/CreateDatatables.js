@@ -15,11 +15,11 @@
             "columns": [
                 {"data": "redniBroj", "name": "redniBroj"},
                 {"data": "brojRacuna", "name": "brojRacuna"},
-                {"data": "stanid", "name": "elektraKupac.ods.stan.StanId"},
-                {"data": "adresa", "name": "elektraKupac.ods.stan.Adresa"},
-                {"data": "korisnik", "name": "elektraKupac.ods.stan.Korisnik"},
-                {"data": "status", "name": "elektraKupac.ods.stan.Status"},
-                {"data": "vlasni\u0161tvo", "name": "elektraKupac.ods.stan.Vlasništvo"},
+                { "data": "elektraKupac.ods.stan.stanId", "name": "elektraKupac.ods.stan.stanId"},
+                { "data": "elektraKupac.ods.stan.adresa", "name": "elektraKupac.ods.stan.adresa"},
+                { "data": "elektraKupac.ods.stan.korisnik", "name": "elektraKupac.ods.stan.korisnik"},
+                { "data": "elektraKupac.ods.stan.status", "name": "elektraKupac.ods.stan.status"},
+                { "data": "elektraKupac.ods.stan.vlasni\u0161tvo", "name": "elektraKupac.ods.stan.vlasništvo"},
                 {"data": "datumIzdavanja", "name": "datumIzdavanja"},
                 {
                     "data": "iznos", "name": "iznos",
@@ -99,9 +99,6 @@
         }
     });
 
-    
-    
-    
 // ************************************ remove row ************************************ //
     selectIndexTable.on('click', '.remove', function () {
         table
