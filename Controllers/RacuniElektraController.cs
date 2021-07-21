@@ -511,8 +511,6 @@ namespace aes.Controllers
         // }
 
 
-        private List<RacunElektra> _racuniElektraTempList = new();
-
         [HttpPost]
         public async Task<IActionResult> GetListCreate()
         {
@@ -524,28 +522,31 @@ namespace aes.Controllers
                 .Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
-            // async/await - imam overhead, ali proširujem scalability
 
-            foreach (var re in _racuniElektraTempList)
-                re.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == re.ElektraKupacId);
+            //List<RacunElektraTemp> RacunElektraTempList = new();
+            var RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
 
-            foreach (var element in _racuniElektraTempList)
+
+            foreach (var element in RacunElektraTempList)
+                element.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(element.BrojRacuna.Substring(0, 10)));
+
+            foreach (var element in RacunElektraTempList)
             {
                 element.ElektraKupac.Ods =
                     await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.Id);
             }
 
-            foreach (var element in _racuniElektraTempList)
+            foreach (var element in RacunElektraTempList)
             {
                 element.ElektraKupac.Ods.Stan =
                     await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.Stan.Id);
             }
-            
-            
+
+
             // filter
-            var totalRows = _racuniElektraTempList.Count;
+            var totalRows = RacunElektraTempList.Count;
             if (!string.IsNullOrEmpty(searchValue))
-                _racuniElektraTempList = await _racuniElektraTempList.Where(
+                RacunElektraTempList = await RacunElektraTempList.Where(
                         x => x.RedniBroj.ToString().Contains(searchValue)
                              || x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
@@ -558,58 +559,50 @@ namespace aes.Controllers
                              x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue)
                              || x.DatumIzdavanja.ToString().Contains(searchValue)
                              || x.Iznos.ToString().Contains(searchValue))
-                    .ToDynamicListAsync<RacunElektra>();
+                    .ToDynamicListAsync<RacunElektraTemp>();
 
-            var totalRowsAfterFiltering = _racuniElektraTempList.Count;
+            var totalRowsAfterFiltering = RacunElektraTempList.Count;
 
             // trebam System.Linq.Dynamic.Core;
             // sorting
-            _racuniElektraTempList = _racuniElektraTempList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection)
+            RacunElektraTempList = RacunElektraTempList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection)
                 .ToList();
 
             // paging
-            _racuniElektraTempList = _racuniElektraTempList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length))
+            RacunElektraTempList = RacunElektraTempList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length))
                 .ToList();
 
             return Json(new
             {
-                data = _racuniElektraTempList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                data = RacunElektraTempList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
                 recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering
             });
         }
         
         
         
-        
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListCreateJSON()
-        {
-            
-            return Json(_racuniElektraTempList);
-        }
+     
         
         
 
 
-        public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos)
-        {
-            var _iznos = double.Parse(iznos);
-            var ugovorniRacun = long.Parse(brojRacuna[..10]); // range notation
+        //public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos)
+        //{
+        //    var _iznos = double.Parse(iznos);
+        //    var ugovorniRacun = long.Parse(brojRacuna[..10]); // range notation
             
 
-            List<RacunElektra> racuniTemp = new();
-            RacunElektra re = new()
-            {
-                BrojRacuna = brojRacuna,
-                Iznos = _iznos,
+        //    List<RacunElektra> racuniTemp = new();
+        //    RacunElektra re = new()
+        //    {
+        //        BrojRacuna = brojRacuna,
+        //        Iznos = _iznos,
 
-            };
-            re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == ugovorniRacun);
-            _racuniElektraTempList.Add(re);
+        //    };
+        //    re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == ugovorniRacun);
+        //    _racuniElektraTempList.Add(re);
 
-            return Json(_racuniElektraTempList);
-        }
+        //    return Json(_racuniElektraTempList);
+        //}
     }
 }
