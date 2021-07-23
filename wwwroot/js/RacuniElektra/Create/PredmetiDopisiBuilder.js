@@ -26,20 +26,20 @@
         data_dopis = 0;
     }
 }
-function getPredmetiData() {
+function GetPredmetiData() {
     $.ajax({
         type: "POST",
-        url: "/RacuniElektra/getPredmeti",
+        url: "/RacuniElektra/GetPredmeti",
         success: function (predmeti) {
             pred = JSON.parse(predmeti);
         }
     });
 }
 
-function getDopisiData() {
+function GetDopisiData() {
     $.ajax({
         type: "POST",
-        url: "/RacuniElektra/getDopisi",
+        url: "/RacuniElektra/GetDopisi",
         success: function (dopisi) {
             dop = JSON.parse(dopisi);
         }

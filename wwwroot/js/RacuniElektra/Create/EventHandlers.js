@@ -8,12 +8,12 @@ selectPredmet.change(function () {
     drawSelectDopisOptions();
 });
 selectPredmet.on('mousedown keypress', function () {
-    getPredmetiData();
-    getDopisiData();
+    GetPredmetiData();
+    GetDopisiData();
     drawSelectPredmetOptions();
 })
 selectDopis.on('mousedown keypress', function () {
-    getDopisiData();
+    GetDopisiData();
     drawSelectDopisOptions();
 })
 selectDopis.change(function () {

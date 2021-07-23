@@ -1,44 +1,27 @@
 ﻿// ************************************ save to db ************************************ //
 
 $("#btnSave").on("click", function () {
-    let table = $('#indexTable').DataTable()
-    let data = table.rows().data(); // javascript object
-    let racuni = []; // empty array
-    let racun = {}; // empty javascript object
-    if (verifyData(data)) {
-        getKupciData();
-        $.each(kup, function (i, item) {
-            if (item.UgovorniRacun === ugovorniRacun)
-                data_elektraKupacId = item.Id; // bind this ugovorniRacun to variable for later use
-        });
-        $.each(data, function (i) {
-            racun.BrojRacuna = data[i][1];
-            racun.ElektraKupacId = data_elektraKupacId; // this
-            racun.DatumIzdavanja = data[i][7];
-            racun.Iznos = data[i][8];
-            racun.DopisId = data_dopis;
-            racun.RedniBroj = i + 1;
-            racuni.push(racun);
-        });
-        // TODO: check if racun vec postoji
-        // TODO: truncate all if failed u bazi
-        // TODO: savetodb bi trebala biti async
-        $.ajax({
-            type: "POST",
-            url: "/RacuniElektra/SaveToDB",
-            data: JSON.stringify(racuni),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (r) {
-                alert(r.message);
-                table.clear().draw();
-            },
-            error: function (r) {
-                alert(r.message);
+    $.ajax({
+        type: "POST",
+        url: "/RacuniElektra/SaveToDB",
+        data: {
+            _dopisid: data_dopis,
+        },
+        success: function (r) {
+            if (r.success) {
+                alertify.success(r.message);
+                table.ajax.reload(null, false); // user paging is not reset on reload(callback, resetPaging)
+            } else {
+                alertify.error(r.message);
+                table.ajax.reload(null, false); 
             }
-        });
-    }
-});
+        },
+        error: function (r) {
+            alertify.error(r.message);
+        }
+    });
+})
+
 
 // ************************************ functions ************************************ //
 function verifyData(data) {

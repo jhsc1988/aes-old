@@ -5,7 +5,7 @@
     const selectPredmet = $("#selectPredmet");
     const selectDopis = $("#selectDopis");
 // ************************************ init ************************************ //
-    getPredmetiData();
+    GetPredmetiData();
 
 // ************************************ get filtered data ************************************ //
     function refreshWithFilteredData() {
@@ -18,7 +18,7 @@
     }
 
 // ************************************ predmeti ************************************ //
-    function getPredmetiData() {
+    function GetPredmetiData() {
         $.ajax({
             type: "POST",
             url: "/RacuniElektra/GetPredmetiDataForFilter",
@@ -43,7 +43,7 @@
     }
 
 // ************************************ dopisi ************************************ //
-    function getDopisiData() {
+    function GetDopisiData() {
         $.ajax({
             type: "POST",
             url: "/RacuniElektra/GetDopisiDataForFilter",
@@ -82,9 +82,9 @@
 // ************************************ event handlers ************************************ //
     selectPredmet.on('change', function () {
         if (selectPredmet.val() === "0") // if Predmet is selected, reset
-            drawSelectDopisOptions(); // 1. removes options, then 2. getDopisiData(); send null data
+            drawSelectDopisOptions(); // 1. removes options, then 2. GetDopisiData(); send null data
         dopisiForFilter = null; // reset dopisi
-        getDopisiData();
+        GetDopisiData();
     });
     selectDopis.on('change', function () {
         refreshWithFilteredData();
