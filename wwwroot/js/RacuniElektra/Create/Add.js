@@ -11,10 +11,10 @@
         success: function (r) {
             if (r.success) {
                 alertify.success(r.message);
-                table.ajax.reload(null, false);
+                //table.ajax.reload(null, false);
             } else {
                 alertify.error(r.message);
-                table.ajax.reload(null, false); // user paging is not reset on reload(callback, resetPaging)
+                //table.ajax.reload(null, false); // user paging is not reset on reload(callback, resetPaging)
             }
         },
     });

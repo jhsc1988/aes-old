@@ -452,7 +452,6 @@ namespace aes.Controllers
         }
 
         // ************************************ Save to db for Create ************************************ //
-
         [HttpPost]
         public JsonResult SaveToDB(string _dopisid)
         {
@@ -554,6 +553,26 @@ namespace aes.Controllers
             Guid guid = Guid.NewGuid();
             return Json(new { success = true, Message = guid.ToString() });
 
+        }
+
+        // ************************************ check if brojRacuna Exists in table ************************************ //
+
+        public JsonResult CheckIfExists(string brojRacuna)
+        {
+            int t = _context.RacunElektraTemp.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
+            return t is >= 2
+                ? Json(new { success = true, Message = "true" })
+                : Json(new { success = false, Message = "false" });
+        }
+
+        // ************************************ check if brojRacuna Exists in payed ************************************ //
+
+        public JsonResult CheckIfExistsInPayed(string brojRacuna)
+        {
+            int t = _context.RacunElektra.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
+            return t is >= 1
+                ? Json(new { success = true, })
+                : Json(new { success = false, });
         }
 
         // ************************************ remove from db  for create ************************************ //
