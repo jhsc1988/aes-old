@@ -35,13 +35,14 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var stan = await _context.Stan
+            Stan stan = await _context.Stan
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (stan == null) return NotFound();
-
-            return View(stan);
+            return stan == null ? NotFound() : View(stan);
         }
 
         // GET: Stanovi/Create

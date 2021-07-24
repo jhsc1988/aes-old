@@ -107,10 +107,7 @@
                     "data": null,
                     "render":
                         function (data, type, row, meta) {
-                            var sid = data.id;
-                            var stanid = data.stanId;
-                            return '<a href="#" class="link-add-new" onclick="getData(\'' + sid + '\', \'' + stanid + '\')"><i class="bi bi-plus"></i>dodaj</a>'
-                            //return '<button onclick ="getData(\'' + sid + '\', \'' + stanid + '\')" class="btn btn-outline-dark">dodaj omm</button>';
+                            return '<a href="#" class="link-add-new" onclick="getData(\'' + data.id + '\', \'' + data.stanId + '\')"><i class="bi bi-plus"></i>dodaj</a>'
                         }
                 }
             ]

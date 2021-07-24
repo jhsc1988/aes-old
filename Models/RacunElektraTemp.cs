@@ -15,6 +15,6 @@ namespace aes.Models
         public DateTime? DatumIzdavanja { get; set; }
         public double? Iznos { get; set; }
         public int DopisId { get; set; }
-        public IdentityUser User;
+        public string UserId { get; set; }
     }
 }

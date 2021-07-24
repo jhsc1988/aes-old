@@ -26,6 +26,7 @@
         data_dopis = 0;
     }
 }
+
 function GetPredmetiData() {
     $.ajax({
         type: "POST",
@@ -45,6 +46,7 @@ function GetDopisiData() {
         }
     });
 }
+
 function drawSelectPredmetOptions() {
     $('#selectPredmet').find("option").remove().end();
     $("#selectPredmet").append($('<option>', {

@@ -1,23 +1,30 @@
 ﻿$(document).ready(function () {
-// ************************************ variables ************************************ //
+
+    // ************************************ variables ************************************ //
+
     let predmetiForFilter;
     let dopisiForFilter;
     const selectPredmet = $("#selectPredmet");
     const selectDopis = $("#selectDopis");
-// ************************************ init ************************************ //
+
+    // ************************************ init ************************************ //
+
     GetPredmetiData();
 
-// ************************************ get filtered data ************************************ //
+    // ************************************ get filtered data ************************************ //
+
     function refreshWithFilteredData() {
         $('#RacunElektraTable').DataTable().ajax.reload();
     }
 
-// ************************************ set dopisi callback for jQuery ************************************ //
+    // ************************************ set dopisi callback for jQuery ************************************ //
+
     function setDopisiForFilterCallBack(val) {
         dopisiForFilter = val;
     }
 
-// ************************************ predmeti ************************************ //
+    // ************************************ predmeti ************************************ //
+
     function GetPredmetiData() {
         $.ajax({
             type: "POST",
@@ -42,7 +49,8 @@
         });
     }
 
-// ************************************ dopisi ************************************ //
+    // ************************************ dopisi ************************************ //
+
     function GetDopisiData() {
         $.ajax({
             type: "POST",
@@ -79,13 +87,15 @@
         }
     }
 
-// ************************************ event handlers ************************************ //
+    // ************************************ event handlers ************************************ //
+
     selectPredmet.on('change', function () {
         if (selectPredmet.val() === "0") // if Predmet is selected, reset
             drawSelectDopisOptions(); // 1. removes options, then 2. GetDopisiData(); send null data
         dopisiForFilter = null; // reset dopisi
         GetDopisiData();
     });
+
     selectDopis.on('change', function () {
         refreshWithFilteredData();
     });

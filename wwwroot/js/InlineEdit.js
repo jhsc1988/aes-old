@@ -130,10 +130,12 @@ $("#RacunElektraTable").on('mousedown', "tr td:nth-last-child(-n+3)", function (
             }
         }
     });
+
     selectNapomenaTdClicked.on('input', function () {
         napomena = $('#napomena_input_clicked').val();
         napomenaUpdated = true;
     });
+
     selectNapomenaTdClicked.keypress(function (e) {
         if (e.which === 13) {
             selectNapomenaTdClicked.replaceWith("<td>" + napomena + "</td>");
@@ -146,6 +148,7 @@ $("#RacunElektraTable").on('mousedown', "tr td:nth-last-child(-n+3)", function (
 });
 
 // ************************************ update database fn ************************************ //
+
 function updateDb(klasa, datum, napomena) {
     $.ajax({
         type: "POST",

@@ -75,11 +75,15 @@ pokazivanje placeholdera*/
 
             </table>
             <br />
-            <input type="button" id="btnSave" value="Save All" />
 
+            <div class="col-md-2">
+                <input type="submit" value="Spremi" class="btn btn-secondary" id="btnSave" />
+                <input type="submit" value="Briši sve" class="btn btn-dark" id="btnDelete" />
+            </div>
         </div>
         <div>
-            <a asp-action="Index">Back to List</a>
+            <button onclick="location.href='@Url.Action("Index", "RacuniElektra")'" type='button' class='button-back search-top-20' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+            @*<a asp-action="Index">Back to List</a>*@
         </div>
     </div>
 </div>
@@ -87,13 +91,23 @@ pokazivanje placeholdera*/
 @section Scripts {
     <script src="~/js/RacuniElektra/Create/EventHandlers.js"></script>
 
-    <script src="~/js/RacuniElektra/Create/Save.js"></script>
+    <script src="~/js/RacuniElektra/Create/SaveDelete.js"></script>
     <script src="~/js/RacuniElektra/Create/Add.js"></script>
     <script src="~/js/RacuniElektra/Create/PredmetiDopisiBuilder.js"></script>
     <script src="~/js/RacuniElektra/Create/NotificationBuilder.js"></script>
     <script src="~/js/RacuniElektra/Create/GlobalVariables.js"></script>
     <script src="~/js/RacuniElektra/Create/Init.js"></script>
     <script src="~/js/RacuniElektra/Create/CreateDatatables.js"></script>
+
     <script src="~/js/alertify/alertify.min.js"></script>
     <link rel="stylesheet" href=~/js/alertify/css/alertify.css>
+    @*<script src="~/js/DatatablesSearchStyle.js"></script>*@
+    <script>
+        $(document).ready(function () {
+            const input = $('#indexTable_filter input[type="search"]');
+            const filter = $('#indexTable_filter');
+            //setStyle(input, filter);
+        });
+    </script>
+
 }

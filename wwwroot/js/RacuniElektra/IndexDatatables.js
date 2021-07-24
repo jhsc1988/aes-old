@@ -1,10 +1,6 @@
 ﻿// for inline editing
 let table;
 
-
-// notify test
-//
-
 $(document).ready(function () {
 
     table = $('#RacunElektraTable').DataTable({
@@ -21,8 +17,8 @@ $(document).ready(function () {
         // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
         // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
-            {"data": "id", "name": "id"},
-            {"data": "redniBroj", "name": "redniBroj"},
+            { "data": "id", "name": "id" },
+            { "data": "redniBroj", "name": "redniBroj" },
             {
                 "data": null, "name": "brojRacuna",
                 "render": function (data, type, row, meta) {
@@ -35,21 +31,21 @@ $(document).ready(function () {
                     return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
                 }
             },
-            {"data": "datumIzdavanja", "name": "datumIzdavanja"},
+            { "data": "datumIzdavanja", "name": "datumIzdavanja" },
             {
                 "data": "iznos", "name": "iznos",
                 "render": $.fn.dataTable.render.number('.', ',', 2, '')
             },
-            {"data": "klasaPlacanja", "name": "klasaPlacanja"},
-            {"data": "datumPotvrde", "name": "datumPotvrde"},
-            {"data": "napomena", "name": "napomena"},
-            
+            { "data": "klasaPlacanja", "name": "klasaPlacanja" },
+            { "data": "datumPotvrde", "name": "datumPotvrde" },
+            { "data": "napomena", "name": "napomena" },
+
         ],
         "paging": true,
         "serverSide": true,
         "order": [[2, 'asc']], // default sort po datumu
         "bLengthChange": false,
-      
+
         //"processing": true,
         "language": {
             "processing": "tražim...",
@@ -103,4 +99,3 @@ $(document).ready(function () {
         ],
     });
 });
-    

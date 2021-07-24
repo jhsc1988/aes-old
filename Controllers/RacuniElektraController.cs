@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
@@ -399,7 +400,7 @@ namespace aes.Controllers
             //RemoveAllFromDb(); // TODO: for testing - delete
 
             List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
-            
+
             int rbr = 1;
             foreach (RacunElektraTemp element in RacunElektraTempList)
             {
@@ -493,7 +494,7 @@ namespace aes.Controllers
             {
                 return Json(new { success = false, Message = "Greška prilikom ažuriranja u bazu!" });
             }
-            RemoveAllFromDb(); // brisem iz temp tablice
+            _ = RemoveAllFromDb(); // brisem iz temp tablice
             return Json(new { success = true, Message = "Računi su uspješno spremljeni" });
         }
 
@@ -507,20 +508,45 @@ namespace aes.Controllers
             List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
 
             List<RacunElektra> racuniTemp = new();
+
+            ClaimsPrincipal currentUser = User;
+            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+
             RacunElektraTemp re = new()
             {
                 BrojRacuna = brojRacuna,
                 Iznos = _iznos,
                 DatumIzdavanja = DateTime.Parse(date),
                 Guid = Guid.Parse(__guid),
-
+                UserId = userId,
             };
+
             RacunElektraTempList.Add(re);
+
+            int rbr = 1;
+            foreach (RacunElektraTemp e in RacunElektraTempList)
+            {
+                e.RedniBroj = rbr++;
+            }
 
             _ = _context.RacunElektraTemp.Add(re);
             _ = _context.SaveChanges();
 
             return Json(new { success = true, Message = "success" });
+        }
+
+        // ************************************ remove row ************************************ //
+
+        public async Task<IActionResult> RemoveRow(string racunId)
+        {
+            int id = int.Parse(racunId);
+
+            List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
+            RacunElektraTemp RacunToRemove = _context.RacunElektraTemp.FirstOrDefault(x => x.Id == id);
+            _ = _context.RacunElektraTemp.Remove(RacunToRemove);
+            _ = _context.SaveChanges();
+
+            return Json(new { success = true, Message = "obrisano" });
         }
 
         public JsonResult GetGUID()
@@ -532,10 +558,11 @@ namespace aes.Controllers
 
         // ************************************ remove from db  for create ************************************ //
 
-        public void RemoveAllFromDb()
+        public JsonResult RemoveAllFromDb()
         {
             _context.RacunElektraTemp.RemoveRange(_context.RacunElektraTemp);
             _ = _context.SaveChanges();
+            return Json(new { success = true, Message = "Uspješno obrisano" });
         }
 
     }

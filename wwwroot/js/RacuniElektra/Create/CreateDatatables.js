@@ -1,11 +1,24 @@
 ﻿$(document).ready(function () {
+
     // ************************************ variables ************************************ //
+
     const selectIndexTable = $('#indexTable');
     let guid;
 
     // ************************************ DataTables definition ************************************ //
+
     GetGUID();
     table = selectIndexTable.DataTable({
+
+        dom: 'frtipB',
+        buttons: ['excelHtml5','pdfHtml5'],
+
+        "rowCallback": function (row, data, index) {
+            if (data.elektraKupac.ods.stanId == 10049) {
+                $(row).addClass("redClass");
+                //$('td:eq(1)', row).css('background-color', 'Red');
+            }
+        },
 
         "ajax": {
             "url": "/RacuniElektra/GetListCreate",
@@ -85,9 +98,8 @@
                 "targets": 9, // remove
                 "orderable": false,
                 "searchable": false,
-                "render": function (data, type, row) {
-                    return "<button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >";
-                }
+                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
+
             },
             {
                 // if no data in JSON (for null references)
@@ -96,25 +108,6 @@
             }
         ],
     });
-    // ************************************ add row ************************************ //
-    $('#btnAdd').on('click', function () {
-        if (brojRacuna === "") {
-            return false
-        } else {
-
-            AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), guid);
-            table.row.add(["<td><button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >"]).draw();
-        }
-    });
-
-    // ************************************ remove row ************************************ //
-    selectIndexTable.on('click', '.remove', function () {
-        table
-            .row($(this).parents('tr'))
-            .remove()
-            .draw();
-    });
-
 
     // ************************************ get GUID ************************************ //
 
@@ -135,4 +128,36 @@
     function setGuid(_guid) {
         guid = _guid
     }
+
+    // ************************************ add row ************************************ //
+
+    $('#btnAdd').on('click', function () {
+        if (brojRacuna === "") {
+            return false
+        } else {
+            AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), guid);
+            table.row.add(["<td><button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >"]).draw();
+        }
+    });
+
+
+    // ************************************ remove row ************************************ //
+
+    $('#indexTable tbody').on('click', '#remove', function () {
+        var racunId = table.row($(this).parents('tr')).data().id;
+        $.ajax({
+            type: "POST",
+            url: "/RacuniElektra/RemoveRow",
+            data: { racunId: racunId },
+            success: function (r) {
+                if (r.success) {
+                    alertify.success(r.message);
+                    table.ajax.reload(null, false);
+                }
+            },
+            error: function (r) {
+            }
+        });
+    });
 });
+
