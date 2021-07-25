@@ -6,19 +6,19 @@
         </a>
     </div>
     <form class="row g-3 d-flex justify-content-end">
-            <div class="col-md-2">
-                <select class="form-control form-control-sm" id="selectPredmet">
-                    <option value="" disabled selected hidden>Predmet</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <select class="form-control form-control-sm" id="selectDopis" disabled>
-                    <option value="" disabled selected hidden>Dopis</option>
-                </select>
-            </div>
-        </form>
-        <table class="display nowrap w-100" id="RacunElektraTable">
-            <thead>
+        <div class="col-md-2">
+            <select class="form-control form-control-sm" id="selectPredmet">
+                <option value="" disabled selected hidden>Predmet</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control form-control-sm" id="selectDopis" disabled>
+                <option value="" disabled selected hidden>Dopis</option>
+            </select>
+        </div>
+    </form>
+    <table class="display nowrap w-100" id="RacunElektraTable">
+        <thead>
             <tr>
                 <th>id</th>
                 <th>rbr</th>
@@ -30,22 +30,23 @@
                 <th>Datum potvrde</th>
                 <th>Napomena</th>
             </tr>
-            </thead>
-        </table>
-    </div>
+        </thead>
+    </table>
+</div>
 <script src="~/js/InlineEdit.js"></script>
 
-<script src="~/js/RacuniElektra/Filter.js"></script>
-<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
+<script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
+<script src="~/js/filterPredmetiDopisi.js"></script>
+
 <script src="~/js/DatatablesSearchStyle.js"></script>
+<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
 <script>
-$(document).ready(function () {
-    const input = $('#RacunElektraTable_filter input[type="search"]');
-    const filter = $('#RacunElektraTable_filter');
-    setStyle(input, filter);
-});
+    $(document).ready(function () {
+        const input = $('#RacunElektraTable_filter input[type="search"]');
+        const filter = $('#RacunElektraTable_filter');
+        setStyle(input, filter);
+    });
 </script>
 
 <script src="~/js/alertify/alertify.min.js"></script>
 <link rel="stylesheet" href=~/js/alertify/css/alertify.css>
-@* <link rel="stylesheet" href="~/js/alertify/css/themes/semantic.css"> *@

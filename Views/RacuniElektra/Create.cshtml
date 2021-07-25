@@ -65,10 +65,10 @@ pokazivanje placeholdera*/
                         <th>Stan ID</th>
                         <th>Adresa</th>
                         <th>Korisnik</th>
-                        <th>Status</th>
                         <th>Vlasništvo</th>
                         <th>Datum izdavanja</th>
                         <th>Iznos</th>
+                        <th>Napomena</th>
                         <th>Akcija</th>
                     </tr>
                 </thead>
@@ -89,24 +89,22 @@ pokazivanje placeholdera*/
 </div>
 
 @section Scripts {
-    <script src="~/js/RacuniElektra/Create/EventHandlers.js"></script>
 
-    <script src="~/js/RacuniElektra/Create/SaveDelete.js"></script>
-    <script src="~/js/RacuniElektra/Create/Add.js"></script>
-    <script src="~/js/RacuniElektra/Create/PredmetiDopisiBuilder.js"></script>
+    <script src="~/js/RacuniElektra/Create/FilterPredmetiDopisiConfig.js"></script>
+    <script src="~/js/filterPredmetiDopisi.js"></script>
+
     <script src="~/js/RacuniElektra/Create/NotificationBuilder.js"></script>
     <script src="~/js/RacuniElektra/Create/GlobalVariables.js"></script>
-    <script src="~/js/RacuniElektra/Create/Init.js"></script>
     <script src="~/js/RacuniElektra/Create/CreateDatatables.js"></script>
 
     <script src="~/js/alertify/alertify.min.js"></script>
     <link rel="stylesheet" href=~/js/alertify/css/alertify.css>
-    @*<script src="~/js/DatatablesSearchStyle.js"></script>*@
+    <script src="~/js/DatatablesSearchStyle.js"></script>
     <script>
         $(document).ready(function () {
             const input = $('#indexTable_filter input[type="search"]');
             const filter = $('#indexTable_filter');
-            //setStyle(input, filter);
+            setStyle(input, filter);
         });
     </script>
 

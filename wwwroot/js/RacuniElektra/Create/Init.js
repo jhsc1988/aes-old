@@ -1,3 +1,0 @@
-﻿GetPredmetiData();
-GetDopisiData();
-drawSelectPredmetOptions();

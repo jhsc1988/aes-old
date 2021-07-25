@@ -1,23 +1,13 @@
 ﻿$(document).ready(function () {
 
-    // ************************************ variables ************************************ //
-
-    let predmetiForFilter;
-    let dopisiForFilter;
     const selectPredmet = $("#selectPredmet");
     const selectDopis = $("#selectDopis");
-
-    // ************************************ init ************************************ //
+    let predmetiForFilter;
+    let dopisiForFilter;
 
     GetPredmetiData();
 
-    // ************************************ get filtered data ************************************ //
-
-    function refreshWithFilteredData() {
-        $('#RacunElektraTable').DataTable().ajax.reload();
-    }
-
-    // ************************************ set dopisi callback for jQuery ************************************ //
+    // ************************************ set dopisi callback for AJAX ************************************ //
 
     function setDopisiForFilterCallBack(val) {
         dopisiForFilter = val;
@@ -25,13 +15,16 @@
 
     // ************************************ predmeti ************************************ //
 
+
     function GetPredmetiData() {
         $.ajax({
             type: "POST",
-            url: "/RacuniElektra/GetPredmetiDataForFilter",
+            url: GetPredmetiDataForFilterUrl,
             success: function (predmeti) {
                 predmetiForFilter = predmeti;
                 drawSelectPredmetOptions();
+                if (isItForFilter)
+                    refreshWithFilteredData();
             }
         });
     }
@@ -54,14 +47,14 @@
     function GetDopisiData() {
         $.ajax({
             type: "POST",
-            url: "/RacuniElektra/GetDopisiDataForFilter",
+            url: GetDopisiDataForFilterUrl,
             data: {
                 predmetId: $('#selectPredmet').val(), // in val is PredmetId
             },
             success: function (dopisi) {
                 setDopisiForFilterCallBack(dopisi);
                 drawSelectDopisOptions();
-                refreshWithFilteredData();
+
             }
         });
     }
@@ -73,7 +66,7 @@
             text: "Dopis",
         }));
         // if Predmet is selected (if array is empty), disable Dopisi 
-        if (dopisiForFilter.length === 0) {
+        if (dopisiForFilter != null && dopisiForFilter.length === 0) {
             selectDopis.attr('disabled', 'disabled');
         } else {
             $.each(dopisiForFilter, function (i, item) {
@@ -94,9 +87,5 @@
             drawSelectDopisOptions(); // 1. removes options, then 2. GetDopisiData(); send null data
         dopisiForFilter = null; // reset dopisi
         GetDopisiData();
-    });
-
-    selectDopis.on('change', function () {
-        refreshWithFilteredData();
     });
 });

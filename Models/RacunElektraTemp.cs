@@ -16,5 +16,6 @@ namespace aes.Models
         public double? Iznos { get; set; }
         public int DopisId { get; set; }
         public string UserId { get; set; }
+        public string Napomena { get; set; }
     }
 }

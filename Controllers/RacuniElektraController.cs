@@ -55,49 +55,6 @@ namespace aes.Controllers
             return View(applicationDbContext);
         }
 
-
-        [HttpPost]
-        public string GetPredmeti()
-        {
-            List<Predmet> p = new();
-            foreach (Predmet element in _context.Predmet.ToList())
-            {
-                p.Add(element);
-            }
-
-            return JsonConvert.SerializeObject(p);
-        }
-
-        public string GetDopisi()
-        {
-            List<Dopis> d = new();
-            foreach (Dopis element in _context.Dopis.ToList())
-            {
-                d.Add(element);
-            }
-
-            return JsonConvert.SerializeObject(d);
-        }
-
-        public string GetKupci()
-        {
-            List<ElektraKupac> ek = new();
-
-            foreach (ElektraKupac element in _context.ElektraKupac.ToList())
-            {
-                ek.Add(element);
-            }
-
-            foreach (ElektraKupac element in ek)
-            {
-                element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
-                element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
-            }
-
-            return JsonConvert.SerializeObject(ek);
-        }
-
-
         // POST: RacuniElektra/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -344,6 +301,25 @@ namespace aes.Controllers
             return Json(dopisForFilterList);
         }
 
+        // ************************************ get kupci for notification builder ************************************ //
+
+        public string GetKupci()
+        {
+            List<ElektraKupac> ek = new();
+
+            foreach (ElektraKupac element in _context.ElektraKupac.ToList())
+            {
+                ek.Add(element);
+            }
+
+            foreach (ElektraKupac element in ek)
+            {
+                element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
+                element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
+            }
+
+            return JsonConvert.SerializeObject(ek);
+        }
         // ************************************ Inline edit update db ************************************ //
 
         public async Task<IActionResult> UpdateDbForInline(string id, string klasa, DateTime? datum, string napomena)
@@ -397,7 +373,6 @@ namespace aes.Controllers
         {
 
             GetDatatablesParamas();
-            //RemoveAllFromDb(); // TODO: for testing - delete
 
             List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
 
@@ -406,10 +381,24 @@ namespace aes.Controllers
             {
                 element.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(element.BrojRacuna.Substring(0, 10)));
 
+                if (_context.RacunElektra.Any(o => o.BrojRacuna == element.BrojRacuna))
+                {
+                    element.Napomena = "račun već plaćen";
+                }
+
+                if (_context.RacunElektraTemp.Where(o => o.BrojRacuna == element.BrojRacuna).Count() >= 2)
+                {
+                    element.Napomena = "dupli račun";
+                }
+
                 if (element.ElektraKupac != null)
                 {
                     element.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.OdsId);
                     element.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.StanId);
+                }
+                else
+                {
+                    element.Napomena = "kupac ne postoji";
                 }
                 element.RedniBroj = rbr++;
             }
@@ -422,11 +411,9 @@ namespace aes.Controllers
                         x => x.RedniBroj.ToString().Contains(searchValue)
                              || x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
-                             || x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue)
+                             || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
                              || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
                              x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
-                             || (x.ElektraKupac.Ods.Stan.Status != null &&
-                             x.ElektraKupac.Ods.Stan.Status.Contains(searchValue))
                              || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
                              x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
                              || x.DatumIzdavanja.ToString().Contains(searchValue)
@@ -451,7 +438,34 @@ namespace aes.Controllers
             });
         }
 
+        // ************************************ Get Data for predmeti/dopisi dropdown ************************************ //
+
+        [HttpPost]
+        public JsonResult GetPredmetiCreate()
+        {
+            List<Predmet> p = new();
+            foreach (Predmet element in _context.Predmet.ToList())
+            {
+                p.Add(element);
+            }
+
+            return Json(p);
+        }
+
+        [HttpPost]
+        public JsonResult GetDopisiCreate()
+        {
+            List<Dopis> d = new();
+            foreach (Dopis element in _context.Dopis.ToList())
+            {
+                d.Add(element);
+            }
+
+            return Json(d);
+        }
+
         // ************************************ Save to db for Create ************************************ //
+
         [HttpPost]
         public JsonResult SaveToDB(string _dopisid)
         {
@@ -501,7 +515,30 @@ namespace aes.Controllers
 
         public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos, string date, string __guid)
         {
-            double _iznos = double.Parse(iznos);
+
+            if (brojRacuna == null)
+            {
+                return Json(new { success = false, Message = "Broj računa je obavezan" });
+            }
+            if (date == null)
+            {
+                return Json(new { success = false, Message = "Datum izdavanja je obavezan" });
+            }
+
+            double _iznos;
+            if (iznos != null)
+            {
+                _iznos = double.Parse(iznos);
+                if (_iznos <= 0)
+                {
+                    return Json(new { success = false, Message = "Iznos mora biti veći od 0 kn" });
+                }
+            }
+            else
+            {
+                return Json(new { success = false, Message = "Iznos je obavezan" });
+            }
+
             long ugovorniRacun = long.Parse(brojRacuna[..10]); // range notation
 
             List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
