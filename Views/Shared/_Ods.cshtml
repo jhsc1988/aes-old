@@ -1,6 +1,4 @@
-﻿@*@model IEnumerable<aes.Models.Ods>*@
-
-<table class="display nowrap" id="OdsTable" style="width:100%">
+﻿<table class="display nowrap w-100" id="OdsTable">
     <thead>
         <tr>
             <th>Omm</th>
@@ -21,12 +19,10 @@
     $(document).ready(function () {
         $('#OdsTable').DataTable({
             "ajax": {
-                "url": "/Ods/GetList",
+                "url": "/Ods/GetList", // samo stanovi sa mjernim mjestom
                 "type": "POST",
                 "datatype": "json"
             },
-            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-            // koristi se kao selector (nije posve jasna dokumentacija)
             "columns": [
                 {
                     "data": null, "name": "Omm",
@@ -63,7 +59,8 @@
             "bLengthChange": false,
             //"processing": true,
             "language": {
-                "processing": "tražim..."
+                "processing": "tražim...",
+                "search": "", // remove search text
             },
             "scrollX": true,
             "columnDefs": [
@@ -104,23 +101,22 @@
                     "render": $.fn.dataTable.render.ellipsis(40),
                 },
                 {
-                    "targets": 9,
+                    "targets": 9, // Akcija
                     "data": null,
                     "render":
                         function (data, type, row, meta) {
-                            var oid = data.id;
-                            var odsid = data.omm;
-                            return '<a href="#" onclick="getData(\'' + oid + '\', \'' + odsid + '\')">dodaj kupca</a>'
-                            //return '<button onclick ="getData(\'' + oid + '\', \'' + odsid + '\')" class="btn btn-outline-dark">dodaj omm</button>';
+                            return '<button class="button-add-remove" onclick="getData(\'' + data.stan.id + '\', \'' + data.omm + '\')"><i class="bi bi-plus"></i>dodaj</button>'
                         }
                 }
             ]
         });
     });
-    // unos podataka u <input/>
+
     function getData(id, stanid) {
         $('#OId').val(id);
         $('#OMM').val(stanid);
+
+        GetStanData(id); // poziv ajax f-je za notification builder
     };
 </script>
 

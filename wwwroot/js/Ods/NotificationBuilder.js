@@ -1,28 +1,19 @@
-﻿let data_stanId;
-let data_adresa;
-let data_kat;
-let data_brojstana;
-let data_cetvrt;
-let data_povrsina;
-let data_statuskoristenja;
-let data_korisnik;
-let data_vlasnistvo;
-
-function GetStanData(stanid) {
+﻿function GetStanData(sid) {
     $.ajax({
         type: "POST",
         url: "/Ods/GetStanData",
-        data: { stanid: stanid },
+        data: { sid: sid },
         success: function (stan) {
-            data_stanId = stan.stanId;
-            data_adresa = stan.adresa;
-            data_kat = stan.kat;
-            data_brojstana = stan.brojSTana;
-            data_cetvrt = stan.četvrt;
-            data_povrsina = stan.površina;
-            data_statuskoristenja = stan.statusKorištenja;
-            data_korisnik = stan.korisnik;
-            data_vlasnistvo = stan.vlasništvo;
+
+            const data_stanId = stan.stanId !== null ? stan.stanId : "-";
+            const data_adresa = stan.adresa !== null ? stan.adresa : "-";
+            const data_kat = stan.kat !== null ? stan.kat : "-";
+            const data_brojstana = stan.brojSTana !== null ? stan.brojSTana : "-";
+            const data_cetvrt = stan.četvrt !== null ? stan.četvrt : "-";
+            const data_povrsina = stan.površina !== null ? stan.površina : "-";
+            const data_statuskoristenja = stan.statusKorištenja !== null ? stan.statusKorištenja : "-";
+            const data_korisnik = stan.korisnik !== null ? stan.korisnik : "-";
+            const data_vlasnistvo = stan.vlasništvo !== null ? stan.vlasništvo : "-";
 
             $('#stanText').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
                 + '<span style="font-weight:bold;">adresa: </span>' + data_adresa + ' '
@@ -37,8 +28,3 @@ function GetStanData(stanid) {
         }
     });
 }
-
-$("#StanId").on("change", function () {
-    let i = $('#StanId').val();
-    GetStanData(i);
-});

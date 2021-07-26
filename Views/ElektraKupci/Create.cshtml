@@ -1,5 +1,4 @@
 ﻿@model aes.Models.ElektraKupac
-
 @{
     ViewData["Title"] = "Create";
 }
@@ -7,50 +6,70 @@
     <div class="head-bg">
         <p class="h6">Pregled kupaca - HEP - Elektra</p>
     </div>
-
     <div>
         <partial name="_Ods" />
     </div>
     <hr />
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Create">
+    <br />
+    <div class="row col-sm-auto padding-30">
+        <label class="form-label col-form-label-sm" id="stanText"> </label>
+    </div>
+    <div class="row space-10-10">
+        <div class="col-md-6">
+            <form asp-action="Create" class="row g-3 d-flex justify-content-start">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
+                <div class="col-md-2 invisible" hidden>
                     <label hidden asp-for="OdsId" class="control-label"></label>
-                    <input type="hidden" asp-for="OdsId" id="OId" readonly class="form-control" />
+                    <input type="hidden" asp-for="OdsId" id="OId" readonly class="form-control form-control-sm" />
                     <span asp-validation-for="OdsId" class="text-danger"></span>
-
-                    <br />
-
+                </div>
+                <div class="col-md-2">
                     <label class="control-label" hidden></label>
-                    <input id="OMM" readonly class="form-control" placeholder="OMM" />
-
-                    <br />
+                    <input id="OMM" readonly class="form-control form-control-sm" placeholder="OMM" />
+                </div>
+                <div class="col-md-4">
 
                     <label hidden asp-for="UgovorniRacun" class="control-label"></label>
-                    <input asp-for="UgovorniRacun" class="form-control" placeholder="Ugovorni račun" />
+                    <input asp-for="UgovorniRacun" class="form-control form-control-sm" placeholder="Ugovorni račun" />
                     <span asp-validation-for="UgovorniRacun" class="text-danger"></span>
-
-                    <br />
+                </div>
+                <div class="col-md-4">
 
                     <label hidden asp-for="Napomena" class="control-label"></label>
-                    <input asp-for="Napomena" class="form-control" placeholder="Napomena" />
+                    <input asp-for="Napomena" class="form-control form-control-sm" placeholder="Napomena" />
                     <span asp-validation-for="Napomena" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                <div class="col-md-2">
+                    <button type="submit" value="Spremi" class="dt-button">Spremi</button>
                 </div>
             </form>
         </div>
     </div>
-
+    <hr />
     <div>
-        <a asp-action="Index">Back to List</a>
+        <button onclick="location.href='@Url.Action("Index", "OdsKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
     </div>
 </div>
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/DatatablesSearchStyle.js"></script>
+    <script src="~/js/Ods/NotificationBuilder.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const input = $('#OdsTable_filter input[type="search"]');
+            const filter = $('#OdsTable_filter');
+
+            setStyle(input, filter); // postavljam css za searchbox
+        });
+
+        $("#OMM").on("change", function () {
+            let i = $('#SId').val();
+
+            GetStanData(i); // poziv ajax f-je za notification builder
+        });
+    </script>
 }

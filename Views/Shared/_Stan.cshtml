@@ -1,4 +1,4 @@
-﻿<table class="display nowrap" id="_StanTable" style="width:100%">
+﻿<table class="display nowrap w-100" id="_StanTable">
     <thead>
         <tr>
             <th>Stan ID</th>
@@ -23,8 +23,6 @@
                 "type": "POST",
                 "datatype": "json"
             },
-            // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-            // koristi se kao selector (nije posve jasna dokumentacija)
             "columns": [
                 {
                     "data": null, "name": "StanId",
@@ -102,21 +100,22 @@
                     "render": $.fn.dataTable.render.ellipsis(10)
                 },
                 {
-                    "targets": 10,
+                    "targets": 10, // Akcija
                     "data": null,
                     "render":
                         function (data, type, row, meta) {
-                            return '<a href="#" class="link-add-new" onclick="getData(\'' + data.id + '\', \'' + data.stanId + '\')"><i class="bi bi-plus"></i>dodaj</a>'
+                            return '<button class="button-add-remove" onclick="setInputData(\'' + data.id + '\', \'' + data.stanId + '\')"><i class="bi bi-plus"></i>dodaj</button>'
                         }
                 }
             ]
         });
     });
-    // unos podataka u <input/>
-    function getData(id, stanid) {
-        GetStanData(stanid);
+
+    function setInputData(id, stanid) {
         $('#SId').val(id);
         $('#StanId').val(stanid);
+
+        GetStanData(id); // poziv ajax f-je za notification builder
     };
 </script>
 

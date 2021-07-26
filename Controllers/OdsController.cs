@@ -260,12 +260,12 @@ namespace aes.Controllers
 
         // ************************************ get kupci for notification builder ************************************ //
 
-        public JsonResult GetStanData(string stanid)
+        public JsonResult GetStanData(string sid)
         {
             int idInt;
-            if (stanid != null)
+            if (sid != null)
             {
-                idInt = int.Parse(stanid);
+                idInt = int.Parse(sid);
             }
             else
             {
@@ -275,7 +275,7 @@ namespace aes.Controllers
             Stan st = new();
             List<Stan> stList = _context.Stan.ToList();
 
-            st = stList.FirstOrDefault(o => o.StanId == idInt);
+            st = stList.FirstOrDefault(o => o.Id == idInt);
             return Json(st);
 
         }

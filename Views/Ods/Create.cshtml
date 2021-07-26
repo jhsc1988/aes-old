@@ -23,33 +23,29 @@
                     <input type="hidden" asp-for="StanId" id="SId" readonly class="form-control form-control-sm" />
                     <span asp-validation-for="StanId" class="text-danger"></span>
                 </div>
-                <br />
                 <div class="col-md-2">
                     <label class="control-label" hidden></label>
                     <input id="StanId" readonly class="form-control form-control-sm" placeholder="Stan ID" />
                 </div>
-                <br />
                 <div class="col-md-4">
                     <label hidden asp-for="Omm" class="control-label"></label>
                     <input asp-for="Omm" id="Omm" class="form-control form-control-sm" placeholder="Obračunsko mjerno mjesto" />
                     <span asp-validation-for="Omm" class="text-danger"></span>
                 </div>
-                <br />
                 <div class="col-md-4">
                     <label hidden asp-for="Napomena" class="control-label"></label>
                     <input asp-for="Napomena" class="form-control form-control-sm" placeholder="Napomena" />
                     <span asp-validation-for="Napomena" class="text-danger"></span>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" value="Create" class="dt-button">Spremi</button>
+                    <button type="submit" value="Spremi" class="dt-button">Spremi</button>
                 </div>
             </form>
         </div>
     </div>
     <hr />
     <div>
-        <button @Url.Action("Index", "Ods") type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
-        @* <a asp-action="Index">Back to List</a>*@
+        <button onclick="location.href='@Url.Action("Index", "Ods")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
     </div>
 </div>
 
@@ -58,11 +54,17 @@
     <script src="~/js/Ods/NotificationBuilder.js"></script>
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-<script>
-    $(document).ready(function () {
-        const input = $('#_StanTable_filter input[type="search"]');
-        const filter = $('#_StanTable_filter');
-        setStyle(input, filter);
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            const input = $('#_StanTable_filter input[type="search"]');
+            const filter = $('#_StanTable_filter');
+
+            setStyle(input, filter); // postavljam css za searchbox
+        });
+
+        $("#StanId").on("change", function () {
+            let i = $('#SId').val();
+            GetStanData(i);
+        });
+    </script>
 }
