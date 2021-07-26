@@ -44,8 +44,8 @@ pokazivanje placeholdera*/
                 </div>
                 <div class="col-auto align-self-center">
 
-                    <button type="button" id="btnAdd" class="btn btn-secondary">
-                        <i class="bi bi-plus"></i>
+                    <button type="button" id="btnAdd" class="dt-button">
+                        <i class="bi bi-plus"></i>dodaj
                     </button>
                 </div>
                 <div class="col-sm-auto">
@@ -76,13 +76,19 @@ pokazivanje placeholdera*/
             </table>
             <br />
 
-            <div class="col-md-2">
-                <input type="submit" value="Spremi" class="btn btn-secondary" id="btnSave" />
-                <input type="submit" value="Briši sve" class="btn btn-dark" id="btnDelete" />
+            <hr />
+            <div class="row">
+                <div class="margin-20">
+                    <button type="button" class="dt-button" id="btnSave">Spremi</button>
+                </div>
+                <div class="margin-20">
+                    <button type="button" class="dt-button" id="btnDelete">Briši sve</button>
+                </div>
             </div>
         </div>
+        <hr />
         <div>
-            <button onclick="location.href='@Url.Action("Index", "RacuniElektra")'" type='button' class='button-back search-top-20' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+            <button onclick="location.href='@Url.Action("Index", "RacuniElektra")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
             @*<a asp-action="Index">Back to List</a>*@
         </div>
     </div>
@@ -90,6 +96,10 @@ pokazivanje placeholdera*/
 
 @section Scripts {
 
+    <script>
+        let dopisiForFilter;
+        const selectDopis = $("#selectDopis");
+    </script>
     <script src="~/js/RacuniElektra/Create/FilterPredmetiDopisiConfig.js"></script>
     <script src="~/js/filterPredmetiDopisi.js"></script>
 

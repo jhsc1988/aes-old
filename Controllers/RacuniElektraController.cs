@@ -453,15 +453,11 @@ namespace aes.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetDopisiCreate()
+        public JsonResult GetDopisiCreate(int predmetId)
         {
-            List<Dopis> d = new();
-            foreach (Dopis element in _context.Dopis.ToList())
-            {
-                d.Add(element);
-            }
-
-            return Json(d);
+            List<Dopis> dopisList = _context.Dopis.ToList();
+            List<Dopis> dopisForFilterList = dopisList.Where(element => element.PredmetId == predmetId).ToList();
+            return Json(dopisForFilterList);
         }
 
         // ************************************ Save to db for Create ************************************ //

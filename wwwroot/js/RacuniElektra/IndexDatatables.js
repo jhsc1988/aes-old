@@ -1,6 +1,7 @@
 ﻿// for inline editing
 let table;
 
+
 $(document).ready(function () {
 
 
@@ -89,10 +90,7 @@ $(document).ready(function () {
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
             {
-                "data": null, "name": "brojRacuna",
-                "render": function (data, type, row, meta) {
-                    return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
-                }
+                "data": "brojRacuna", "name": "brojRacuna",
             },
             {
                 "data": null, "name": "elektraKupac.ugovorniRacun",
@@ -108,7 +106,7 @@ $(document).ready(function () {
             { "data": "klasaPlacanja", "name": "klasaPlacanja" },
             { "data": "datumPotvrde", "name": "datumPotvrde" },
             { "data": "napomena", "name": "napomena" },
-
+            { "data": null, "name": null },
         ],
         "paging": true,
         "serverSide": true,
@@ -164,6 +162,12 @@ $(document).ready(function () {
             {
                 "targets": 8, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(30),
+            },
+            {
+                "targets": 9, // akcija - hidden
+                "visible": false,
+                "searchable": false,
+                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
             },
         ],
     });

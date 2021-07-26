@@ -7,6 +7,7 @@
         }
     });
 }
+
 function getData() {
     GetKupciData();
     $.each(kup, function (key, value) {
@@ -40,3 +41,7 @@ function getData() {
         }
     });
 }
+
+$("#brojRacuna").on("change focusin focusout", function () {
+    getData();
+});

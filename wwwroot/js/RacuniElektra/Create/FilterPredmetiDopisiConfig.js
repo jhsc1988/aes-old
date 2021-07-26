@@ -4,8 +4,11 @@ const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiCreate";
 
 $("#selectDopis").change(function () {
     data_dopis = $("#selectDopis :selected").val();
+    refreshWithFilteredData();
 });
-// ************************************ broj racuna ************************************ //
-$("#brojRacuna").on("change focusin focusout", function () {
-    getData();
-});
+
+
+function refreshWithFilteredData() {
+    $('#RacunElektraTable').DataTable().ajax.reload();
+}
+

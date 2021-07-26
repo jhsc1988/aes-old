@@ -3,23 +3,18 @@
     // ************************************ variables ************************************ //
 
     const selectIndexTable = $('#indexTable');
-
     let guid;
 
     // ************************************ DataTables definition ************************************ //
-
     GetGUID();
     table = selectIndexTable.DataTable({
-
         dom: 'frtipB',
         buttons: ['excelHtml5','pdfHtml5'],
-
         "ajax": {
             "url": "/RacuniElektra/GetListCreate",
             "type": "POST",
             "datatype": "json",
         },
-
         "columns": [
             { "data": "redniBroj", "name": "redniBroj" },
             { "data": "brojRacuna", "name": "brojRacuna" },
@@ -34,7 +29,6 @@
             },
             { "data": "napomena", "name": "napomena" },
             { "data": null, "name": "akcija" },
-
         ],
         "paging": true,
         "serverSide": true,
@@ -97,7 +91,7 @@
                 "targets": 9, // remove
                 "orderable": false,
                 "searchable": false,
-                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
+                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button>"
             },
             {
                 // if no data in JSON (for null references)

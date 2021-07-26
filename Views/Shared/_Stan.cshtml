@@ -1,16 +1,14 @@
-﻿@*@model IEnumerable<aes.Models.Stan>*@
-
-<table class="display nowrap" id="_StanTable" style="width:100%">
+﻿<table class="display nowrap" id="_StanTable" style="width:100%">
     <thead>
         <tr>
-            <th>StanId</th>
-            <th>SifraObjekta</th>
+            <th>Stan ID</th>
+            <th>Šifra objekta</th>
             <th>Adresa</th>
             <th>Kat</th>
-            <th>BrojSTana</th>
+            <th>Broj stana</th>
             <th>Četvrt</th>
             <th>Površina</th>
-            <th>StatusKorištenja</th>
+            <th>Status korištenja</th>
             <th>Korisnik</th>
             <th>Vlasništvo</th>
             <th>Akcija</th>
@@ -58,7 +56,8 @@
             "bLengthChange": false,
             //"processing": true,
             "language": {
-                "processing": "tražim..."
+                "processing": "tražim...",
+                "search": "", // remove search text
             },
             "scrollX": true,
             "columnDefs": [
@@ -115,6 +114,7 @@
     });
     // unos podataka u <input/>
     function getData(id, stanid) {
+        GetStanData(stanid);
         $('#SId').val(id);
         $('#StanId').val(stanid);
     };

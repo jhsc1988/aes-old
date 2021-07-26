@@ -439,9 +439,19 @@ th {
 }
 
 .dt-buttons {
-    margin-top: 5px!important;
+    margin-top: 5px !important;
 }
+
 div.dt-buttons {
-    position: relative!important;
-    float: right!important;
+    position: relative !important;
+    float: right !important;
+}
+
+.padding-30 {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.margin-20 {
+    margin-left: 20px;
 }

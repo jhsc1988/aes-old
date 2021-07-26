@@ -45,8 +45,10 @@ $(document).mousedown(function (e) {
     });
 });
 
+
+
 // for mouseclick on specific columns
-$("#RacunElektraTable").on('mousedown', "tr td:nth-last-child(-n+3)", function (e) {
+$("#RacunElektraTable").on('mousedown', elementForEdit, function (e) {
 
     if ($(e.target).is('td:nth-child(6)') && !$(e.target).is("#klasa_td_clicked")) {
 

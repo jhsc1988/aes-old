@@ -1,9 +1,9 @@
 ﻿$(document).ready(function () {
 
     const selectPredmet = $("#selectPredmet");
-    const selectDopis = $("#selectDopis");
+
     let predmetiForFilter;
-    let dopisiForFilter;
+
 
     GetPredmetiData();
 
@@ -54,7 +54,7 @@
             success: function (dopisi) {
                 setDopisiForFilterCallBack(dopisi);
                 drawSelectDopisOptions();
-
+                refreshWithFilteredData();
             }
         });
     }

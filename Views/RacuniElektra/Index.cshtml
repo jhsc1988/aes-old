@@ -29,12 +29,21 @@
                 <th>Klasa plaćanja</th>
                 <th>Datum potvrde</th>
                 <th>Napomena</th>
+                <th>Akcija</th>
             </tr>
         </thead>
     </table>
 </div>
-<script src="~/js/InlineEdit.js"></script>
+<script>
+    let isItEditing = false;
+    let elementForEdit = "tr td:nth-child(n+6)";
+    let dopisiForFilter;
+    const selectDopis = $("#selectDopis");
 
+
+</script>
+    <script src="~/js/InlineEdit.js"></script>
+<script src="~/js/RacuniElektra/InlineEditRacunDetails.js"></script>
 <script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
 <script src="~/js/filterPredmetiDopisi.js"></script>
 
@@ -46,6 +55,8 @@
         const filter = $('#RacunElektraTable_filter');
         setStyle(input, filter);
     });
+
+    
 </script>
 
 <script src="~/js/alertify/alertify.min.js"></script>

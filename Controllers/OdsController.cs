@@ -257,5 +257,28 @@ namespace aes.Controllers
             }
             return Json(OdsList);
         }
+
+        // ************************************ get kupci for notification builder ************************************ //
+
+        public JsonResult GetStanData(string stanid)
+        {
+            int idInt;
+            if (stanid != null)
+            {
+                idInt = int.Parse(stanid);
+            }
+            else
+            {
+                return Json(new { success = false, Message = "Greška, prazan id" });
+            }
+
+            Stan st = new();
+            List<Stan> stList = _context.Stan.ToList();
+
+            st = stList.FirstOrDefault(o => o.StanId == idInt);
+            return Json(st);
+
+        }
+
     }
 }
