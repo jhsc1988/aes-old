@@ -320,43 +320,99 @@ namespace aes.Controllers
 
             return JsonConvert.SerializeObject(ek);
         }
+
         // ************************************ Inline edit update db ************************************ //
 
-        public async Task<IActionResult> UpdateDbForInline(string id, string klasa, DateTime? datum, string napomena)
+        private enum Columns
         {
-            int idInt = int.Parse(id);
-            RacunElektra racunToUpdate = await _context.RacunElektra.FirstAsync(x => x.Id == idInt);
+            racun = 1,
+            datumIzdavanja = 2,
+            iznos = 3,
+            klasa = 4,
+            datumPotvrde = 5,
+            napomena = 6
+        }
 
-            if (racunToUpdate.KlasaPlacanja == null && datum != null)
+        public async Task<IActionResult> UpdateDbForInline(string id, string updatedColumn, string x)
+        {
+            try
             {
-                return Json(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
+                int idNum = int.Parse(id);
+                int updatedColumnNum = int.Parse(updatedColumn);
+                RacunElektra racunToUpdate = await _context.RacunElektra.FirstAsync(x => x.Id == idNum);
+                Columns column = (Columns)updatedColumnNum;
+
+                switch (column)
+                {
+                    case Columns.racun:
+                        if (x.Length < 10)
+                        {
+                            return Json(new { success = false, Message = "Broj računa nije ispravan!" });
+                        }
+                        if (!x.Substring(0, 10).Equals(racunToUpdate.BrojRacuna.Substring(0, 10)))
+                        {
+                            return Json(new { success = false, Message = "Pogrešan broj računa - ugovorni računi ne smije se razlikovati!" });
+                        }
+                        racunToUpdate.BrojRacuna = x;
+                        break;
+                    case Columns.datumIzdavanja:
+                        racunToUpdate.DatumIzdavanja = DateTime.Parse(x);
+                        break;
+                    case Columns.iznos:
+                        racunToUpdate.Iznos = double.Parse(x);
+                        break;
+                    case Columns.klasa:
+                        racunToUpdate.KlasaPlacanja = x;
+                        if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null)
+                        {
+                            racunToUpdate.DatumPotvrde = null;
+                        }
+                        break;
+                    case Columns.datumPotvrde:
+                        if (racunToUpdate.KlasaPlacanja is null)
+                        {
+                            return Json(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
+                        }
+                        else
+                        {
+                            racunToUpdate.DatumPotvrde = DateTime.Parse(x);
+                        }
+                        break;
+                    case Columns.napomena:
+                        racunToUpdate.Napomena = x;
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
-            if (klasa is null && datum is null && napomena is null)
+            catch (ArgumentNullException)
             {
-                racunToUpdate.KlasaPlacanja = null;
-                racunToUpdate.DatumPotvrde = null;
+                return Json(new { success = false, Message = "ArgumentNullException (Parse error)" });
             }
 
-            else if (datum is null && napomena is null)
+            catch (FormatException)
             {
-                racunToUpdate.KlasaPlacanja = klasa;
+                return Json(new { success = false, Message = "FormatException (Parse error)" });
+
             }
 
-            if (datum is not null)
+            catch (OverflowException)
             {
-                racunToUpdate.DatumPotvrde = datum;
+                return Json(new { success = false, Message = "OverflowException (Parse error)" });
             }
 
-            if (napomena is not null)
+            catch (InvalidOperationException)
             {
-                racunToUpdate.Napomena = napomena;
+                return Json(new { success = false, Message = "InvalidOperationException" });
             }
 
             try
             {
                 _ = await _context.SaveChangesAsync();
             }
+
             catch (DbUpdateException)
             {
                 return Json(new { success = false, Message = "Greška baze podataka!" });

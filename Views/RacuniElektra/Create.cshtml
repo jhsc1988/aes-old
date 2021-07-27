@@ -30,12 +30,8 @@
                 </div>
                 <div class="col-md-2">
                     <label hidden class="form-label col-form-label-sm">Datum izdavanja</label>
-                    @{
-                        /* onfocus i onblur - trik za
-pokazivanje placeholdera*/
-                    }
                     <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja"
-                           onfocus="(this.type='date')" onblur="(this.type='text')">
+                           onfocus="(this.type='date')" onblur="(this.type='text')" @{/*trik za pokazivanje placeholdera*/}>
                 </div>
                 <div class="col-md-1">
                     <label hidden class="form-label col-form-label-sm">Iznos</label>
