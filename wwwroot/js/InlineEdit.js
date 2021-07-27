@@ -1,6 +1,4 @@
-﻿// ************************************ variables ************************************ //
-
-let racunId;
+﻿let racunId;
 let klasa, klasaUpdated;
 let datum, datumUpdated;
 let napomena, napomenaUpdated;
@@ -8,7 +6,8 @@ let racunBr, racunUpdated;
 let datumIzdavanja, datumIzdavanjaUpdated;
 let iznos, iznosUpdated;
 
-// for mouseclick anywhere else
+// ************************************ for mouseclick anywhere - reset ************************************ //
+
 $(document).mousedown(function (e) {
 
     if (isItEditing) {
@@ -17,7 +16,7 @@ $(document).mousedown(function (e) {
         if (!$(e.target).is('#racun_input_clicked') && !$(e.target).is("#racun_td_clicked")) {
             $("#racun_td_clicked").replaceWith("<td>" + racunBr + "</td>");
             if (racunUpdated) {
-                updateDb("1", racunBr);
+                updateDb(1, racunBr);
                 racunUpdated = false;
             }
         }
@@ -26,7 +25,7 @@ $(document).mousedown(function (e) {
         if (!$(e.target).is('#datum_izdavanja_input_clicked') && !$(e.target).is("#datum_izdavanja_td_clicked")) {
             $("#datum_izdavanja_td_clicked").replaceWith("<td>" + datumIzdavanja + "</td>");
             if (datumIzdavanjaUpdated) {
-                updateDb("2", datumIzdavanja);
+                updateDb(2, datumIzdavanja);
                 datumIzdavanjaUpdated = false;
             }
         }
@@ -35,7 +34,7 @@ $(document).mousedown(function (e) {
         if (!$(e.target).is('#iznos_input_clicked') && !$(e.target).is("#iznos_td_clicked")) {
             $("#iznos_td_clicked").replaceWith("<td>" + iznos + "</td>");
             if (iznosUpdated) {
-                updateDb("3", iznos);
+                updateDb(3, iznos);
                 iznosUpdated = false;
             }
         }
@@ -45,7 +44,7 @@ $(document).mousedown(function (e) {
             $("#klasa_td_clicked").replaceWith("<td>" + klasa + "</td>"); // reset input field to td
             // if text has changed - update db
             if (klasaUpdated) {
-                updateDb("4", klasa);
+                updateDb(4, klasa);
                 klasaUpdated = false; // reset updated flag
             }
         }
@@ -54,7 +53,7 @@ $(document).mousedown(function (e) {
         if (!$(e.target).is('#datum_input_clicked') && !$(e.target).is("#datum_td_clicked")) {
             $("#datum_td_clicked").replaceWith("<td>" + datum + "</td>");
             if (datumUpdated) {
-                updateDb("5", datum);
+                updateDb(5, datum);
                 datumUpdated = false;
             }
         }
@@ -63,7 +62,7 @@ $(document).mousedown(function (e) {
         if (!$(e.target).is('#napomena_input_clicked') && !$(e.target).is("#napomena_td_clicked")) {
             $("#napomena_td_clicked").replaceWith("<td>" + napomena + "</td>");
             if (napomenaUpdated) {
-                updateDb("6", napomena);
+                updateDb(6, napomena);
                 napomenaUpdated = false;
             }
         }
@@ -77,7 +76,8 @@ $(document).mousedown(function (e) {
     }
 });
 
-// for mouseclick on specific columns
+// ************************************ for mouseclick on editable columns ************************************ //
+
 $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
 
     if (isItEditing) {
@@ -86,7 +86,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         if ($(e.target).is('td:nth-child(2)') && !$(e.target).is("#racun_td_clicked")) {
             $("#racun_td_clicked").not(e.target).replaceWith("<td>" + racunBr + "</td>"); // reset input
             if (racunUpdated) {
-                updateDb("1", racunBr);
+                updateDb(1, racunBr);
                 racunUpdated = false;
             }
 
@@ -103,7 +103,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         if ($(e.target).is('td:nth-child(4)')) {
             $("#datum_izdavanja_td_clicked").not(e.target).replaceWith("<td>" + datumIzdavanja + "</td>");
             if (datumIzdavanjaUpdated) {
-                updateDb("2", datumIzdavanja);
+                updateDb(2, datumIzdavanja);
                 datumIzdavanjaUpdated = false;
             }
             $(this).attr('id', 'datum_izdavanja_td_clicked');
@@ -118,7 +118,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         if ($(e.target).is('td:nth-child(5)')) {
             $("#iznos_td_clicked").not(e.target).replaceWith("<td>" + iznos + "</td>");
             if (iznosUpdated) {
-                updateDb("3", iznos);
+                updateDb(3, iznos);
                 iznosUpdated = false;
             }
 
@@ -134,7 +134,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         if ($(e.target).is('td:nth-child(6)') && !$(e.target).is("#klasa_td_clicked")) {
             $("#klasa_td_clicked").not(e.target).replaceWith("<td>" + klasa + "</td>");
             if (klasaUpdated) {
-                updateDb("4", klasa);
+                updateDb(4, klasa);
                 klasaUpdated = false;
             }
 
@@ -151,7 +151,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
             $("#datum_td_clicked").not(e.target).replaceWith("<td>" + datum + "</td>");
 
             if (datumUpdated) {
-                updateDb("5", datum);
+                updateDb(5, datum);
                 datumUpdated = false;
             }
             $(this).attr('id', 'datum_td_clicked');
@@ -167,7 +167,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
             $(this).attr('id', 'napomena_td_clicked');
 
             if (napomenaUpdated) {
-                updateDb("6", napomena);
+                updateDb(6, napomena);
                 napomenaUpdated = false;
             }
 
@@ -178,7 +178,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         }
     }
 
-    // ************************************ write data to variables on input ************************************ //
+    // ************************************ mark as updated ************************************ //
 
     const selectKlasaTdClicked = $('#klasa_td_clicked');
     const selectDatumTdClicked = $('#datum_td_clicked');
@@ -193,30 +193,10 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         racunUpdated = true;
     });
 
-    selectRacunTdClicked.keypress(function (e) {
-        if (e.which === 13) { // 13 - enter key, 9 - tab key
-            selectRacunTdClicked.replaceWith("<td>" + racunBr + "</td>");
-            if (racunUpdated) {
-                updateDb("1", racunBr);
-                racunUpdated = false;
-            }
-        }
-    });
-
     // Datum izdavanja
     selectDatumIzdavanjaTdClicked.on('input', function () {
         datumIzdavanja = $('#datum_izdavanja_input_clicked').val();
         datumIzdavanjaUpdated = true;
-    });
-
-    selectDatumIzdavanjaTdClicked.keypress(function (e) {
-        if (e.which === 13) {
-            selectDatumIzdavanjaTdClicked.replaceWith("<td>" + datumIzdavanja + "</td>");
-            if (datumIzdavanjaUpdated) {
-                updateDb("2", datumIzdavanja);
-                datumIzdavanjaUpdated = false;
-            }
-        }
     });
 
     // Iznos
@@ -225,30 +205,10 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         iznosUpdated = true;
     });
 
-    selectIznosTdClicked.keypress(function (e) {
-        if (e.which === 13) { // 13 - enter key, 9 - tab key
-            selectIznosTdClicked.replaceWith("<td>" + iznos + "</td>");
-            if (iznosUpdated) {
-                updateDb("3", iznos);
-                iznosUpdated = false;
-            }
-        }
-    });
-
     // Klasa
     selectKlasaTdClicked.on('input', function () {
         klasa = $('#klasa_input_clicked').val();
         klasaUpdated = true;
-    });
-
-    selectKlasaTdClicked.keypress(function (e) {
-        if (e.which === 13) { // 13 - enter key, 9 - tab key
-            selectKlasaTdClicked.replaceWith("<td>" + klasa + "</td>");
-            if (klasaUpdated) {
-                updateDb("4", klasa);
-                klasaUpdated = false;
-            }
-        }
     });
 
     // Datum potvrde
@@ -257,35 +217,81 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         datumUpdated = true;
     });
 
-    selectDatumTdClicked.keypress(function (e) {
-        if (e.which === 13) {
-            selectDatumTdClicked.replaceWith("<td>" + datum + "</td>");
-            if (datumUpdated) {
-                updateDb("5", datum);
-                datumUpdated = false;
-            }
-        }
-    });
-
     // Napomena
     selectNapomenaTdClicked.on('input', function () {
         napomena = $('#napomena_input_clicked').val();
         napomenaUpdated = true;
     });
 
+    // ************************************ on keypress events ************************************ //
+
+    selectRacunTdClicked.keypress(function (e) {
+        if (e.which === 13) { // 13 - enter key, 9 - tab key
+            selectRacunTdClicked.replaceWith("<td>" + racunBr + "</td>");
+            if (racunUpdated) {
+                updateDb(1, racunBr);
+                racunUpdated = false;
+            }
+        }
+    });
+
+    selectDatumIzdavanjaTdClicked.keypress(function (e) {
+        if (e.which === 13) {
+            selectDatumIzdavanjaTdClicked.replaceWith("<td>" + datumIzdavanja + "</td>");
+            if (datumIzdavanjaUpdated) {
+                updateDb(2, datumIzdavanja);
+                datumIzdavanjaUpdated = false;
+            }
+        }
+    });
+
+    selectIznosTdClicked.keypress(function (e) {
+        if (e.which === 13) { // 13 - enter key, 9 - tab key
+            selectIznosTdClicked.replaceWith("<td>" + iznos + "</td>");
+            if (iznosUpdated) {
+                updateDb(3, iznos);
+                iznosUpdated = false;
+            }
+        }
+    });
+
+    selectKlasaTdClicked.keypress(function (e) {
+        if (e.which === 13) { // 13 - enter key, 9 - tab key
+            selectKlasaTdClicked.replaceWith("<td>" + klasa + "</td>");
+            if (klasaUpdated) {
+                updateDb(4, klasa);
+                klasaUpdated = false;
+            }
+        }
+    });
+
+    
+    selectDatumTdClicked.keypress(function (e) {
+        if (e.which === 13) {
+            selectDatumTdClicked.replaceWith("<td>" + datum + "</td>");
+            if (datumUpdated) {
+                updateDb(5, datum);
+                datumUpdated = false;
+            }
+        }
+    });
+
     selectNapomenaTdClicked.keypress(function (e) {
         if (e.which === 13) {
             selectNapomenaTdClicked.replaceWith("<td>" + napomena + "</td>");
             if (napomenaUpdated) {
-                updateDb("6", napomena);
+                updateDb(6, napomena);
                 napomenaUpdated = false;
             }
         }
     });
 });
 
-// ************************************ update database fn ************************************ //
-
+/**
+ * Saves data to DB by Ajax POST method
+ * @param {any} updatedColumn Number of visible column
+ * @param {any} x edited text
+ */
 function updateDb(updatedColumn, x) {
     $.ajax({
         type: "POST",
