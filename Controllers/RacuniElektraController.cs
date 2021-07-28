@@ -17,10 +17,27 @@ namespace aes.Controllers
     public class RacuniElektraController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        private readonly Predmet predmet;
+        private readonly Dopis dopis;
+        private RacunElektra racunElektra;
+        List<RacunElektra> racunElektraList;
+        List<ElektraKupac> elektraKupacList;
+        List<Predmet> predmetList;
         public RacuniElektraController(ApplicationDbContext context)
         {
             _context = context;
+            predmet = new(_context);
+            dopis = new(_context);
+            racunElektraList = _context.RacunElektra.ToList();
+            elektraKupacList = _context.ElektraKupac.ToList();
+            predmetList = _context.Predmet.ToList();
+
+            foreach (ElektraKupac e in _context.ElektraKupac.ToList())
+            {
+                e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
+                e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
+            }
+
         }
 
         [Authorize]
@@ -284,15 +301,9 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult GetPredmetiDataForFilter()
         {
-            List<RacunElektra> racunElektraList = _context.RacunElektra.ToList();
-            foreach (RacunElektra element in racunElektraList)
-            {
-                element.Dopis = _context.Dopis.FirstOrDefault(x => element.DopisId == x.Id);
-                element.Dopis.Predmet = _context.Predmet.FirstOrDefault(x => element.Dopis.PredmetId == x.Id);
-            }
-
-            List<Predmet> predmetList = racunElektraList.Select(element => element.Dopis.Predmet).Distinct().ToList();
-            return Json(predmetList);
+            List<Racun> re = new();
+            re.AddRange(racunElektraList);
+            return Json(predmet.GetPredmetiDataForFilter(re));
         }
 
         /// <summary>
@@ -302,9 +313,7 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult GetDopisiDataForFilter(int predmetId)
         {
-            List<Dopis> dopisList = _context.Dopis.ToList();
-            List<Dopis> dopisForFilterList = dopisList.Where(element => element.PredmetId == predmetId).ToList();
-            return Json(dopisForFilterList);
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
         }
 
         /// <summary>
@@ -313,15 +322,7 @@ namespace aes.Controllers
         /// <returns>string</returns>
         public string GetKupci()
         {
-            List<ElektraKupac> ek = _context.ElektraKupac.ToList();
-
-            foreach (ElektraKupac element in ek)
-            {
-                element.Ods = _context.Ods.FirstOrDefault(o => o.Id == element.OdsId);
-                element.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == element.Ods.StanId);
-            }
-
-            return JsonConvert.SerializeObject(ek);
+            return JsonConvert.SerializeObject(elektraKupacList);
         }
 
         /// <summary>
@@ -487,8 +488,7 @@ namespace aes.Controllers
         /// <returns></returns>
         public JsonResult GetPredmetiCreate()
         {
-            List<Predmet> p = _context.Predmet.ToList();
-            return Json(p);
+            return Json(predmetList);
         }
 
         /// <summary>
@@ -498,9 +498,7 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult GetDopisiCreate(int predmetId)
         {
-            List<Dopis> dopisList = _context.Dopis.ToList();
-            List<Dopis> dopisForFilterList = dopisList.Where(element => element.PredmetId == predmetId).ToList();
-            return Json(dopisForFilterList);
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
         }
 
         /// <summary>
@@ -679,10 +677,9 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult CheckIfExistsInPayed(string brojRacuna)
         {
-            int t = _context.RacunElektra.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
-            return t is >= 1
-                ? Json(new { success = true, })
-                : Json(new { success = false, });
+            List<Racun> racunList = new();
+            racunElektraList.AddRange(racunElektraList);
+            return Racun.CheckIfExistsInPayed(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
         }
 
         /// <summary>

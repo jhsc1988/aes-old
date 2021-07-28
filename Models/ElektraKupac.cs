@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aes.Models
 {
-    public class ElektraKupac
+    public class ElektraKupac : Kupac
     {
-        public int Id { get; set; }
-
         [Required]
         [Remote(action: "UgovorniRacunValidation", controller: "ElektraKupci")]
         public long UgovorniRacun { get; set; }
@@ -16,11 +14,6 @@ namespace aes.Models
 
         [Required]
         public int OdsId { get; set; }
-
-        [MaxLength(255)]
-        public string Napomena { get; set; }
-
-        [Display(Name = "Vrijeme unosa")]
-        public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
     }
+
 }
