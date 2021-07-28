@@ -546,7 +546,7 @@ namespace aes.Migrations
                     b.ToTable("RacunElektraRate");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
+            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -554,25 +554,35 @@ namespace aes.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BrojRacuna")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(19)
+                        .HasColumnType("nvarchar(19)");
 
-                    b.Property<DateTime?>("DatumIzdavanja")
+                    b.Property<DateTime>("DatumIzdavanja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatumPotvrde")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DopisId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ElektraKupacId")
+                    b.Property<int>("ElektraKupacId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double?>("Iznos")
+                    b.Property<double>("Iznos")
                         .HasColumnType("float");
 
+                    b.Property<string>("KlasaPlacanja")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<string>("Napomena")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("RedniBroj")
                         .HasColumnType("int");
@@ -580,11 +590,16 @@ namespace aes.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("VrijemeUnosa")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DopisId");
 
                     b.HasIndex("ElektraKupacId");
 
-                    b.ToTable("RacunElektraTemp");
+                    b.ToTable("RacunElektraT");
                 });
 
             modelBuilder.Entity("aes.Models.RacunHolding", b =>
@@ -1031,11 +1046,21 @@ namespace aes.Migrations
                     b.Navigation("ElektraKupac");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
+            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
                 {
+                    b.HasOne("aes.Models.Dopis", "Dopis")
+                        .WithMany()
+                        .HasForeignKey("DopisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("aes.Models.ElektraKupac", "ElektraKupac")
                         .WithMany()
-                        .HasForeignKey("ElektraKupacId");
+                        .HasForeignKey("ElektraKupacId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dopis");
 
                     b.Navigation("ElektraKupac");
                 });

@@ -413,73 +413,73 @@ namespace aes.Controllers
         /// Gets RacunElektraTemp list for Create Datatables
         /// </summary>
         /// <returns>async Task<IActionResult> (JSON)</returns>
-        public async Task<IActionResult> GetListCreate()
-        {
-            GetDatatablesParamas();
+        //public async Task<IActionResult> GetListCreate()
+        //{
+        //    GetDatatablesParamas();
 
-            List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
+        //    List<RacunElektraT> RacunElektraTList = await _context.RacunElektraT.ToListAsync();
 
-            int rbr = 1;
-            foreach (RacunElektraTemp element in RacunElektraTempList)
-            {
-                element.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(element.BrojRacuna.Substring(0, 10)));
+        //    int rbr = 1;
+        //    foreach (RacunElektraT element in RacunElektraTList)
+        //    {
+        //        element.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(element.BrojRacuna.Substring(0, 10)));
 
-                if (_context.RacunElektra.Any(o => o.BrojRacuna == element.BrojRacuna))
-                {
-                    element.Napomena = "račun već plaćen";
-                }
+        //        if (_context.RacunElektra.Any(o => o.BrojRacuna == element.BrojRacuna))
+        //        {
+        //            element.Napomena = "račun već plaćen";
+        //        }
 
-                if (_context.RacunElektraTemp.Where(o => o.BrojRacuna == element.BrojRacuna).Count() >= 2)
-                {
-                    element.Napomena = "dupli račun";
-                }
+        //        if (_context.RacunElektraT.Where(o => o.BrojRacuna == element.BrojRacuna).Count() >= 2)
+        //        {
+        //            element.Napomena = "dupli račun";
+        //        }
 
-                if (element.ElektraKupac != null)
-                {
-                    element.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.OdsId);
-                    element.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.StanId);
-                }
-                else
-                {
-                    element.Napomena = "kupac ne postoji";
-                }
-                element.RedniBroj = rbr++;
-            }
+        //        if (element.ElektraKupac != null)
+        //        {
+        //            element.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.OdsId);
+        //            element.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.StanId);
+        //        }
+        //        else
+        //        {
+        //            element.Napomena = "kupac ne postoji";
+        //        }
+        //        element.RedniBroj = rbr++;
+        //    }
 
-            // filter
-            int totalRows = RacunElektraTempList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                RacunElektraTempList = await RacunElektraTempList.Where(
-                        x => x.RedniBroj.ToString().Contains(searchValue)
-                             || x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
-                             || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
-                             || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
-                             x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
-                             || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
-                             x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
-                             || x.DatumIzdavanja.ToString().Contains(searchValue)
-                             || x.Iznos.ToString().Contains(searchValue))
-                    .ToDynamicListAsync<RacunElektraTemp>();
-            }
+        //    // filter
+        //    int totalRows = RacunElektraTList.Count;
+        //    if (!string.IsNullOrEmpty(searchValue))
+        //    {
+        //        RacunElektraTList = await RacunElektraTList.Where(
+        //                x => x.RedniBroj.ToString().Contains(searchValue)
+        //                     || x.BrojRacuna.Contains(searchValue)
+        //                     || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
+        //                     || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
+        //                     || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
+        //                     x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
+        //                     || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
+        //                     x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
+        //                     || x.DatumIzdavanja.ToString().Contains(searchValue)
+        //                     || x.Iznos.ToString().Contains(searchValue))
+        //            .ToDynamicListAsync<RacunElektraT>();
+        //    }
 
-            int totalRowsAfterFiltering = RacunElektraTempList.Count;
+        //    int totalRowsAfterFiltering = RacunElektraTList.Count;
 
-            // sorting
-            RacunElektraTempList = RacunElektraTempList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+        //    // sorting
+        //    RacunElektraTList = RacunElektraTList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 
-            // paging
-            RacunElektraTempList = RacunElektraTempList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+        //    // paging
+        //    RacunElektraTList = RacunElektraTList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
 
-            return Json(new
-            {
-                data = RacunElektraTempList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
+        //    return Json(new
+        //    {
+        //        data = RacunElektraTList,
+        //        draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+        //        recordsTotal = totalRows,
+        //        recordsFiltered = totalRowsAfterFiltering
+        //    });
+        //}
 
         /// <summary>
         /// Gets list of predmeti for dropdown on Create page
@@ -505,49 +505,49 @@ namespace aes.Controllers
         /// </summary>
         /// <param name="_dopisid">Id of Dopis</param>
         /// <returns>JsonResult</returns>
-        public JsonResult SaveToDB(string _dopisid)
-        {
-            int dop = int.Parse(_dopisid);
+        //public JsonResult SaveToDB(string _dopisid)
+        //{
+        //    int dop = int.Parse(_dopisid);
 
-            if (dop == 0)
-            {
-                return Json(new { success = false, Message = "Nije odabran dopis!" });
-            }
+        //    if (dop == 0)
+        //    {
+        //        return Json(new { success = false, Message = "Nije odabran dopis!" });
+        //    }
 
-            List<RacunElektraTemp> RacunElektraTempList = _context.RacunElektraTemp.ToList();
+        //    List<RacunElektraTemp> RacunElektraTempList = _context.RacunElektraTemp.ToList();
 
-            foreach (RacunElektraTemp e in RacunElektraTempList)
-            {
-                e.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
+        //    foreach (RacunElektraTemp e in RacunElektraTempList)
+        //    {
+        //        e.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
 
-                if (e.ElektraKupac == null)
-                {
-                    return Json(new { success = false, Message = "U tablici postoje računi koji se ne odnose na mjerno mjesto!" });
-                }
+        //        if (e.ElektraKupac == null)
+        //        {
+        //            return Json(new { success = false, Message = "U tablici postoje računi koji se ne odnose na mjerno mjesto!" });
+        //        }
 
-                RacunElektra re = new()
-                {
-                    RedniBroj = e.RedniBroj,
-                    BrojRacuna = e.BrojRacuna,
-                    DatumIzdavanja = (DateTime)e.DatumIzdavanja,
-                    Iznos = (double)e.Iznos,
-                    DopisId = dop,
-                    ElektraKupacId = e.ElektraKupac.Id,
-                };
-                _ = _context.RacunElektra.Add(re);
-            }
-            try
-            {
-                _ = _context.SaveChanges();
-                _ = RemoveAllFromDb(); // brisem iz temp tablice
-                return Json(new { success = true, Message = "Spremljeno" });
+        //        RacunElektra re = new()
+        //        {
+        //            RedniBroj = e.RedniBroj,
+        //            BrojRacuna = e.BrojRacuna,
+        //            DatumIzdavanja = (DateTime)e.DatumIzdavanja,
+        //            Iznos = (double)e.Iznos,
+        //            DopisId = dop,
+        //            ElektraKupacId = e.ElektraKupac.Id,
+        //        };
+        //        _ = _context.RacunElektra.Add(re);
+        //    }
+        //    try
+        //    {
+        //        _ = _context.SaveChanges();
+        //        _ = RemoveAllFromDb(); // brisem iz temp tablice
+        //        return Json(new { success = true, Message = "Spremljeno" });
 
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
-        }
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        return Json(new { success = true, Message = "Greška" });
+        //    }
+        //}
 
         /// <summary>
         /// Adds new row to RacunElektraTemp
@@ -557,149 +557,150 @@ namespace aes.Controllers
         /// <param name="date">Datum izdavanja</param>
         /// <param name="__guid">Guid // TODO: use UserID instead</param>
         /// <returns></returns>
-        public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos, string date, string __guid)
-        {
-            double _iznos;
+        //    public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos, string date, string __guid)
+        //    {
+        //        double _iznos;
 
-            if (brojRacuna == null)
-            {
-                return Json(new { success = false, Message = "Broj računa je obavezan" });
-            }
-            if (date == null)
-            {
-                return Json(new { success = false, Message = "Datum izdavanja je obavezan" });
-            }
+        //        if (brojRacuna == null)
+        //        {
+        //            return Json(new { success = false, Message = "Broj računa je obavezan" });
+        //        }
+        //        if (date == null)
+        //        {
+        //            return Json(new { success = false, Message = "Datum izdavanja je obavezan" });
+        //        }
 
-            if (iznos != null)
-            {
-                _iznos = double.Parse(iznos);
-                if (_iznos <= 0)
-                {
-                    return Json(new { success = false, Message = "Iznos mora biti veći od 0 kn" });
-                }
-            }
-            else
-            {
-                return Json(new { success = false, Message = "Iznos je obavezan" });
-            }
+        //        if (iznos != null)
+        //        {
+        //            _iznos = double.Parse(iznos);
+        //            if (_iznos <= 0)
+        //            {
+        //                return Json(new { success = false, Message = "Iznos mora biti veći od 0 kn" });
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return Json(new { success = false, Message = "Iznos je obavezan" });
+        //        }
 
-            List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
+        //        List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
 
-            ClaimsPrincipal currentUser = User;
-            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        //        ClaimsPrincipal currentUser = User;
+        //        string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            RacunElektraTemp re = new()
-            {
-                BrojRacuna = brojRacuna,
-                Iznos = _iznos,
-                DatumIzdavanja = DateTime.Parse(date),
-                Guid = Guid.Parse(__guid),
-                UserId = userId,
-            };
+        //        RacunElektraTemp re = new()
+        //        {
+        //            BrojRacuna = brojRacuna,
+        //            Iznos = _iznos,
+        //            DatumIzdavanja = DateTime.Parse(date),
+        //            Guid = Guid.Parse(__guid),
+        //            UserId = userId,
+        //        };
 
-            RacunElektraTempList.Add(re);
+        //        RacunElektraTempList.Add(re);
 
-            int rbr = 1;
-            foreach (RacunElektraTemp e in RacunElektraTempList)
-            {
-                e.RedniBroj = rbr++;
-            }
+        //        int rbr = 1;
+        //        foreach (RacunElektraTemp e in RacunElektraTempList)
+        //        {
+        //            e.RedniBroj = rbr++;
+        //        }
 
-            _ = _context.RacunElektraTemp.Add(re);
+        //        _ = _context.RacunElektraTemp.Add(re);
 
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Spremljeno" });
+        //        try
+        //        {
+        //            _ = _context.SaveChanges();
+        //            return Json(new { success = true, Message = "Spremljeno" });
 
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
-        }
+        //        }
+        //        catch (DbUpdateException)
+        //        {
+        //            return Json(new { success = true, Message = "Greška" });
+        //        }
+        //    }
 
-        /// <summary>
-        /// Remove Row from RacunElektraTemp
-        /// </summary>
-        /// <param name="racunId">Id of RacunElektra</param>
-        /// <returns>async Task<IActionResult></returns>
-        public async Task<IActionResult> RemoveRow(string racunId)
-        {
-            int id = int.Parse(racunId);
+        //    /// <summary>
+        //    /// Remove Row from RacunElektraTemp
+        //    /// </summary>
+        //    /// <param name="racunId">Id of RacunElektra</param>
+        //    /// <returns>async Task<IActionResult></returns>
+        //    public async Task<IActionResult> RemoveRow(string racunId)
+        //    {
+        //        int id = int.Parse(racunId);
 
-            List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
-            RacunElektraTemp RacunToRemove = _context.RacunElektraTemp.FirstOrDefault(x => x.Id == id);
-            _ = _context.RacunElektraTemp.Remove(RacunToRemove);
-            _ = RemoveAllFromDb(); // brisem iz temp tablice
+        //        List<RacunElektraTemp> RacunElektraTempList = await _context.RacunElektraTemp.ToListAsync();
+        //        RacunElektraTemp RacunToRemove = _context.RacunElektraTemp.FirstOrDefault(x => x.Id == id);
+        //        _ = _context.RacunElektraTemp.Remove(RacunToRemove);
+        //        _ = RemoveAllFromDb(); // brisem iz temp tablice
 
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Spremljeno" });
+        //        try
+        //        {
+        //            _ = _context.SaveChanges();
+        //            return Json(new { success = true, Message = "Spremljeno" });
 
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
-        }
+        //        }
+        //        catch (DbUpdateException)
+        //        {
+        //            return Json(new { success = true, Message = "Greška" });
+        //        }
+        //    }
 
-        /// <summary>
-        /// TODO: remove, use UserID instead
-        /// </summary>
-        /// <returns>JsonResult</returns>
-        public JsonResult GetGUID()
-        {
-            Guid guid = Guid.NewGuid();
-            return Json(new { success = true, Message = guid.ToString() });
+        //    /// <summary>
+        //    /// TODO: remove, use UserID instead
+        //    /// </summary>
+        //    /// <returns>JsonResult</returns>
+        //    public JsonResult GetGUID()
+        //    {
+        //        Guid guid = Guid.NewGuid();
+        //        return Json(new { success = true, Message = guid.ToString() });
 
-        }
+        //    }
 
-        /// <summary>
-        /// Checks if brojRacuna exists in ElektraRacuniTemp.
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <returns>JsonResult</returns>
-        public JsonResult CheckIfExists(string brojRacuna)
-        {
-            int t = _context.RacunElektraTemp.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
-            return t is >= 2
-                ? Json(new { success = true, Message = "true" })
-                : Json(new { success = false, Message = "false" });
-        }
+        //    /// <summary>
+        //    /// Checks if brojRacuna exists in ElektraRacuniTemp.
+        //    /// </summary>
+        //    /// <param name="brojRacuna">Broj računa</param>
+        //    /// <returns>JsonResult</returns>
+        //    public JsonResult CheckIfExists(string brojRacuna)
+        //    {
+        //        int t = _context.RacunElektraTemp.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
+        //        return t is >= 2
+        //            ? Json(new { success = true, Message = "true" })
+        //            : Json(new { success = false, Message = "false" });
+        //    }
 
-        /// <summary>
-        /// Checks if brojRacuna exists in already payed
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <returns>JsonResult</returns>
-        public JsonResult CheckIfExistsInPayed(string brojRacuna)
-        {
-            List<Racun> racunList = new();
-            racunList.AddRange(racunElektraList);
-            return Racun.CheckIfExistsInPayed(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
-        }
+        //    /// <summary>
+        //    /// Checks if brojRacuna exists in already payed
+        //    /// </summary>
+        //    /// <param name="brojRacuna">Broj računa</param>
+        //    /// <returns>JsonResult</returns>
+        //    public JsonResult CheckIfExistsInPayed(string brojRacuna)
+        //    {
+        //        List<Racun> racunList = new();
+        //        racunList.AddRange(racunElektraList);
+        //        return Racun.CheckIfExistsInPayed(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
+        //    }
 
-        /// <summary>
-        /// Used for Emptying RacunElektraTemp
-        /// </summary>
-        /// <returns>JsonResult</returns>
-        public JsonResult RemoveAllFromDb()
-        {
-            _context.RacunElektraTemp.RemoveRange(_context.RacunElektraTemp);
+        //    /// <summary>
+        //    /// Used for Emptying RacunElektraTemp
+        //    /// </summary>
+        //    /// <returns>JsonResult</returns>
+        //    public JsonResult RemoveAllFromDb()
+        //    {
+        //        _context.RacunElektraTemp.RemoveRange(_context.RacunElektraTemp);
 
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Obrisano" });
+        //        try
+        //        {
+        //            _ = _context.SaveChanges();
+        //            return Json(new { success = true, Message = "Obrisano" });
 
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
-        }
+        //        }
+        //        catch (DbUpdateException)
+        //        {
+        //            return Json(new { success = true, Message = "Greška" });
+        //        }
+        //    }
 
+        //}
     }
 }

@@ -55,7 +55,6 @@ namespace aes.Models
         [MaxLength(255)]
         public string Napomena { get; set; }
 
-        string CreatedByUserId { get; set; }
         public static bool CheckIfExistsInPayed(string brojRacuna, List<Racun> racunList)
         {
             int num = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
