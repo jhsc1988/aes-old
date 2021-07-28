@@ -413,73 +413,73 @@ namespace aes.Controllers
         /// Gets RacunElektraTemp list for Create Datatables
         /// </summary>
         /// <returns>async Task<IActionResult> (JSON)</returns>
-        //public async Task<IActionResult> GetListCreate()
-        //{
-        //    GetDatatablesParamas();
+        public async Task<IActionResult> GetListCreate()
+        {
+            GetDatatablesParamas();
 
-        //    List<RacunElektraT> RacunElektraTList = await _context.RacunElektraT.ToListAsync();
+            List<RacunElektraTemp> RacunElektraTList = await _context.RacunElektraT.ToListAsync();
 
-        //    int rbr = 1;
-        //    foreach (RacunElektraT element in RacunElektraTList)
-        //    {
-        //        element.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(element.BrojRacuna.Substring(0, 10)));
+            int rbr = 1;
+            foreach (RacunElektraTemp element in RacunElektraTList)
+            {
+                element.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(element.BrojRacuna.Substring(0, 10)));
 
-        //        if (_context.RacunElektra.Any(o => o.BrojRacuna == element.BrojRacuna))
-        //        {
-        //            element.Napomena = "račun već plaćen";
-        //        }
+                if (_context.RacunElektra.Any(o => o.BrojRacuna == element.BrojRacuna))
+                {
+                    element.Napomena = "račun već plaćen";
+                }
 
-        //        if (_context.RacunElektraT.Where(o => o.BrojRacuna == element.BrojRacuna).Count() >= 2)
-        //        {
-        //            element.Napomena = "dupli račun";
-        //        }
+                if (_context.RacunElektraT.Where(o => o.BrojRacuna == element.BrojRacuna).Count() >= 2)
+                {
+                    element.Napomena = "dupli račun";
+                }
 
-        //        if (element.ElektraKupac != null)
-        //        {
-        //            element.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.OdsId);
-        //            element.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.StanId);
-        //        }
-        //        else
-        //        {
-        //            element.Napomena = "kupac ne postoji";
-        //        }
-        //        element.RedniBroj = rbr++;
-        //    }
+                if (element.ElektraKupac != null)
+                {
+                    element.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.OdsId);
+                    element.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == element.ElektraKupac.Ods.StanId);
+                }
+                else
+                {
+                    element.Napomena = "kupac ne postoji";
+                }
+                element.RedniBroj = rbr++;
+            }
 
-        //    // filter
-        //    int totalRows = RacunElektraTList.Count;
-        //    if (!string.IsNullOrEmpty(searchValue))
-        //    {
-        //        RacunElektraTList = await RacunElektraTList.Where(
-        //                x => x.RedniBroj.ToString().Contains(searchValue)
-        //                     || x.BrojRacuna.Contains(searchValue)
-        //                     || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
-        //                     || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
-        //                     || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
-        //                     x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
-        //                     || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
-        //                     x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
-        //                     || x.DatumIzdavanja.ToString().Contains(searchValue)
-        //                     || x.Iznos.ToString().Contains(searchValue))
-        //            .ToDynamicListAsync<RacunElektraT>();
-        //    }
+            // filter
+            int totalRows = RacunElektraTList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                RacunElektraTList = await RacunElektraTList.Where(
+                        x => x.RedniBroj.ToString().Contains(searchValue)
+                             || x.BrojRacuna.Contains(searchValue)
+                             || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
+                             || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
+                             || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
+                             x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
+                             || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
+                             x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
+                             || x.DatumIzdavanja.ToString().Contains(searchValue)
+                             || x.Iznos.ToString().Contains(searchValue))
+                    .ToDynamicListAsync<RacunElektraTemp>();
+            }
 
-        //    int totalRowsAfterFiltering = RacunElektraTList.Count;
+            int totalRowsAfterFiltering = RacunElektraTList.Count;
 
-        //    // sorting
-        //    RacunElektraTList = RacunElektraTList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            // sorting
+            RacunElektraTList = RacunElektraTList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 
-        //    // paging
-        //    RacunElektraTList = RacunElektraTList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+            // paging
+            RacunElektraTList = RacunElektraTList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
 
-        //    return Json(new
-        //    {
-        //        data = RacunElektraTList,
-        //        draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-        //        recordsTotal = totalRows,
-        //        recordsFiltered = totalRowsAfterFiltering
-        //    });
-        //}
+            return Json(new
+            {
+                data = RacunElektraTList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
+        }
 
         /// <summary>
         /// Gets list of predmeti for dropdown on Create page

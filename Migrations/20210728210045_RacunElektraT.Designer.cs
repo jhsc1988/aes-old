@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aes.Data;
 
 namespace aes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210728210045_RacunElektraT")]
+    partial class RacunElektraT
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,6 +375,10 @@ namespace aes.Migrations
                     b.Property<DateTime?>("DatumPotvrde")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DopisId")
                         .HasColumnType("int");
 
@@ -403,6 +409,8 @@ namespace aes.Migrations
                     b.HasIndex("ElektraKupacId");
 
                     b.ToTable("RacunElektra");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("RacunElektra");
                 });
 
             modelBuilder.Entity("aes.Models.RacunElektraIzvrsenjeUsluge", b =>
@@ -827,7 +835,7 @@ namespace aes.Migrations
                     b.ToTable("UgovorOPrijenosu");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
+            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
                 {
                     b.HasBaseType("aes.Models.RacunElektra");
 
@@ -837,7 +845,7 @@ namespace aes.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("RacuniElektraTemp");
+                    b.HasDiscriminator().HasValue("RacunElektraT");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1093,15 +1101,6 @@ namespace aes.Migrations
                     b.Navigation("DopisDostave");
 
                     b.Navigation("UgovorOKoristenju");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
-                {
-                    b.HasOne("aes.Models.RacunElektra", null)
-                        .WithOne()
-                        .HasForeignKey("aes.Models.RacunElektraTemp", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

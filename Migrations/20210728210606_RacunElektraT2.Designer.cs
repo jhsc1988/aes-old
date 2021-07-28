@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aes.Data;
 
 namespace aes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210728210606_RacunElektraT2")]
+    partial class RacunElektraT2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -827,7 +829,7 @@ namespace aes.Migrations
                     b.ToTable("UgovorOPrijenosu");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
+            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
                 {
                     b.HasBaseType("aes.Models.RacunElektra");
 
@@ -1095,11 +1097,11 @@ namespace aes.Migrations
                     b.Navigation("UgovorOKoristenju");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
+            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
                 {
                     b.HasOne("aes.Models.RacunElektra", null)
                         .WithOne()
-                        .HasForeignKey("aes.Models.RacunElektraTemp", "Id")
+                        .HasForeignKey("aes.Models.RacunElektraT", "Id")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
