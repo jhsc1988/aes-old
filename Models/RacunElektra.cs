@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace aes.Models
 {
-    public class RacunElektra : RacunHEP
+    public class RacunElektra : Racun
     {
-        // required se podrazumijeva jer nije nullable
-        [Display(Name = "Datum Izdavanja")]
-        [DataType(DataType.Date)]
-        public DateTime DatumIzdavanja { get; set; }
+        public ElektraKupac ElektraKupac { get; set; }
+        [Required]
+        public int ElektraKupacId { get; set; }
+
+
     }
 }
