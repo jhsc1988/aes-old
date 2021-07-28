@@ -19,7 +19,6 @@ namespace aes.Controllers
         private readonly ApplicationDbContext _context;
         private readonly Predmet predmet;
         private readonly Dopis dopis;
-        private RacunElektra racunElektra;
         List<RacunElektra> racunElektraList;
         List<ElektraKupac> elektraKupacList;
         List<Predmet> predmetList;
@@ -678,7 +677,7 @@ namespace aes.Controllers
         public JsonResult CheckIfExistsInPayed(string brojRacuna)
         {
             List<Racun> racunList = new();
-            racunElektraList.AddRange(racunElektraList);
+            racunList.AddRange(racunElektraList);
             return Racun.CheckIfExistsInPayed(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
         }
 

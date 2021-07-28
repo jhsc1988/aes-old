@@ -4,8 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-
+using aes.Data;
+using aes.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Security.Claims;
+using System.Threading.Tasks;
 namespace aes.Models
 {
     public abstract class Racun
@@ -44,6 +57,12 @@ namespace aes.Models
         [MaxLength(255)]
         public string Napomena { get; set; }
 
+        public ClaimsPrincipal CreatedBy { get; set; }
+
+        public Racun()
+        {
+            CreatedBy = ClaimsPrincipal.Current;
+        }
         public static bool CheckIfExistsInPayed(string brojRacuna, List<Racun> racunList)
         {
             int num = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
