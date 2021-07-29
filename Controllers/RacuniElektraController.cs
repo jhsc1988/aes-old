@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class RacuniElektraController : Controller
+    public class RacuniElektraController : Controller, IRacunController
     {
         private readonly ApplicationDbContext _context;
         private readonly Predmet predmet;
@@ -220,14 +220,15 @@ namespace aes.Controllers
             return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Datatables parameters
         /// </summary>
         private string start, length, searchValue, sortColumnName, sortDirection;
 
-        /// <summary>
-        /// Gets params from Datatables which was requested by Datatables AJAX POST method
-        /// </summary>
         public void GetDatatablesParamas()
         {
             // server side parameters
@@ -238,12 +239,6 @@ namespace aes.Controllers
             sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
         }
 
-        /// <summary>
-        /// Gets list of all Racuni
-        /// </summary>
-        /// <param name="klasa"></param>
-        /// <param name="urbroj"></param>
-        /// <returns>async Task<IActionResult> (JSON)</returns>
         public async Task<IActionResult> GetList(string klasa, string urbroj)
         {
             int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
@@ -270,7 +265,11 @@ namespace aes.Controllers
             {
                 racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
                 racunElektra.Dopis = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == racunElektra.DopisId);
-                racunElektra.Dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == racunElektra.Dopis.PredmetId);
+
+                if (racunElektra.Dopis != null)
+                {
+                    racunElektra.Dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == racunElektra.Dopis.PredmetId);
+                }
             }
 
             int totalRows = racunElektraList.Count;
@@ -301,125 +300,6 @@ namespace aes.Controllers
             });
         }
 
-        /// <summary>
-        /// Gets predmeti for filtered data
-        /// </summary>
-        /// <returns>JsonResult</returns>
-        public JsonResult GetPredmetiDataForFilter()
-        {
-            List<Racun> re = new();
-            re.AddRange(racunElektraList);
-            return Json(predmet.GetPredmetiDataForFilter(re));
-        }
-
-        /// <summary>
-        /// Gets dopisi for predmet for filtered data
-        /// </summary>
-        /// <param name="predmetId"></param>
-        /// <returns>JsonResult</returns>
-        public JsonResult GetDopisiDataForFilter(int predmetId)
-        {
-            return Json(dopis.GetDopisiDataForFilter(predmetId));
-        }
-
-        /// <summary>
-        /// Gets list of Kupci for notification (info) builder
-        /// </summary>
-        /// <returns>string</returns>
-        public string GetKupci()
-        {
-            return JsonConvert.SerializeObject(elektraKupacList);
-        }
-
-        /// <summary>
-        /// Columns in Index - used for inline editor
-        /// </summary>
-        private enum Columns
-        {
-            racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6
-        }
-
-        /// <summary>
-        /// Db update on inline edit
-        /// </summary>
-        /// <param name="id">Id of Racun</param>
-        /// <param name="updatedColumn">Column which was updated</param>
-        /// <param name="x">Changed text variable</param>
-        /// <returns></returns>
-        public async Task<IActionResult> UpdateDbForInline(string id, string updatedColumn, string x)
-        {
-
-            int idNum = int.Parse(id);
-            int updatedColumnNum = int.Parse(updatedColumn);
-            RacunElektra racunToUpdate = await _context.RacunElektra.FirstAsync(x => x.Id == idNum);
-            Columns column = (Columns)updatedColumnNum;
-
-            switch (column)
-            {
-                case Columns.racun:
-                    if (x.Length < 10)
-                    {
-                        return Json(new { success = false, Message = "Broj računa nije ispravan!" });
-                    }
-                    if (!x.Substring(0, 10).Equals(racunToUpdate.BrojRacuna.Substring(0, 10)))
-                    {
-                        return Json(new { success = false, Message = "Pogrešan broj računa - ugovorni računi ne smije se razlikovati!" });
-                    }
-                    racunToUpdate.BrojRacuna = x;
-                    break;
-
-                case Columns.datumIzdavanja:
-                    racunToUpdate.DatumIzdavanja = DateTime.Parse(x);
-                    break;
-
-                case Columns.iznos:
-                    racunToUpdate.Iznos = double.Parse(x);
-                    break;
-
-                case Columns.klasa:
-                    racunToUpdate.KlasaPlacanja = x;
-                    if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null)
-                    {
-                        racunToUpdate.DatumPotvrde = null;
-                    }
-                    break;
-
-                case Columns.datumPotvrde:
-                    if (racunToUpdate.KlasaPlacanja is null)
-                    {
-                        return Json(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
-                    }
-                    else
-                    {
-                        racunToUpdate.DatumPotvrde = DateTime.Parse(x);
-                    }
-                    break;
-
-                case Columns.napomena:
-                    racunToUpdate.Napomena = x;
-                    break;
-
-                default:
-                    break;
-            }
-
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Spremljeno" });
-            }
-
-            catch (DbUpdateException)
-            {
-                return Json(new { success = false, Message = "Greška!" });
-            }
-
-        }
-
-        /// <summary>
-        /// Gets RacunElektraTemp list for Create Datatables
-        /// </summary>
-        /// <returns>async Task<IActionResult> (JSON)</returns>
         public async Task<IActionResult> GetListCreate()
         {
             GetDatatablesParamas();
@@ -489,109 +369,65 @@ namespace aes.Controllers
             });
         }
 
-        /// <summary>
-        /// Gets list of predmeti for dropdown on Create page
-        /// </summary>
-        /// <returns></returns>
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public JsonResult GetPredmetiDataForFilter()
+        {
+            List<Racun> re = new();
+            racunElektraList = _context.RacunElektra.ToList();
+            re.AddRange(racunElektraList);
+            return Json(predmet.GetPredmetiDataForFilter(re));
+        }
+
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
         public JsonResult GetPredmetiCreate()
         {
             return Json(predmetList);
         }
 
-        /// <summary>
-        /// Gets list of dopisi for predmet for dropdown on Create page
-        /// </summary>
-        /// <param name="predmetId">Id of Predmet</param>
-        /// <returns>JsonResult</returns>
         public JsonResult GetDopisiCreate(int predmetId)
         {
             return Json(dopis.GetDopisiDataForFilter(predmetId));
         }
 
-        /// <summary>
-        /// Moves from RacunElektraTemp to RacuniElektra table
-        /// </summary>
-        /// <param name="_dopisid">Id of Dopis</param>
-        /// <returns>JsonResult</returns>
-        public JsonResult SaveToDB(string _dopisid)
+        public string GetKupci()
         {
-            int dopisId = int.Parse(_dopisid);
-
-            if (dopisId is 0)
-            {
-                return Json(new { success = false, Message = "Nije odabran dopis!" });
-            }
-
-            racunElektraList = _context.RacunElektra.ToList();
-            foreach (RacunElektra e in racunElektraList)
-            {
-                e.IsItTemp = null;
-                e.DopisId = dopisId;
-            }
-
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Spremljeno" });
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
+            return JsonConvert.SerializeObject(elektraKupacList);
         }
 
-        /// <summary>
-        /// Adds new row to RacunElektraTemp
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <param name="iznos">Iznos računa</param>
-        /// <param name="date">Datum izdavanja</param>
-        /// <param name="__guid">Guid // TODO: use UserID instead</param>
-        /// <returns></returns>
+        public async Task<IActionResult> UpdateDbForInline(string id, string updatedColumn, string x)
+        {
+            int idNum = int.Parse(id);
+            int updatedColumnNum = int.Parse(updatedColumn);
+            RacunElektra racunToUpdate = await _context.RacunElektra.FirstAsync(e => e.Id == idNum);
+            return Racun.UpdateDbForInline(updatedColumnNum, x, racunToUpdate, _context);
+        }
+
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
         {
             return new JsonResult(RacunElektra.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         }
 
-        /// <summary>
-        /// Remove Row from RacunElektraTemp
-        /// </summary>
-        /// <param name="racunId">Id of RacunElektra</param>
-        /// <returns>async Task<IActionResult></returns>
+        public JsonResult SaveToDB(string _dopisid)
+        {
+            return RacunElektra.SaveToDB(_dopisid, GetUid(), _context);
+        }
+
         public async Task<IActionResult> RemoveRow(string racunId)
         {
             int id = int.Parse(racunId);
-
             racunElektraList = _context.RacunElektra.ToList();
             List<Racun> racunList = new();
             racunList.AddRange(racunElektraList);
-
             RacunElektra RacunToRemove = await _context.RacunElektra.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (Racun.RemoveRow(RacunToRemove.Id, racunList))
-            {
-                try
-                {
-                    _ = _context.SaveChanges();
-                    return Json(new { success = true, Message = "Spremljeno" });
-
-                }
-                catch (DbUpdateException)
-                {
-                    return Json(new { success = false, Message = "Greška" });
-                }
-            }
-            else
-            {
-                return Json(new { success = false, Message = "Greška" });
-            }
+            return Racun.RemoveRow(RacunToRemove.Id, racunList) ? Racun.TrySave(_context) : Json(new { success = false, Message = "Greška" });
         }
 
-        /// <summary>
-        /// Checks if brojRacuna exists in ElektraRacuniTemp.
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <returns>JsonResult</returns>
         public JsonResult CheckIfExists(string brojRacuna)
         {
             List<Racun> racunList = new();
@@ -600,11 +436,6 @@ namespace aes.Controllers
             return Racun.CheckIfExists(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
         }
 
-        /// <summary>
-        /// Checks if brojRacuna exists in already payed
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <returns>JsonResult</returns>
         public JsonResult CheckIfExistsInPayed(string brojRacuna)
         {
             List<Racun> racunList = new();
@@ -612,27 +443,9 @@ namespace aes.Controllers
             return Racun.CheckIfExistsInPayed(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
         }
 
-        /// <summary>
-        /// Used for Emptying RacunElektraTemp
-        /// </summary>
-        /// <returns>JsonResult</returns>
         public JsonResult RemoveAllFromDb()
         {
-
-            racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
-            _context.RacunElektra.RemoveRange(racunElektraList);
-
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Obrisano" });
-
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
+            return new JsonResult(RacunElektra.RemoveAllFromDb(GetUid(), _context));
         }
-
     }
 }

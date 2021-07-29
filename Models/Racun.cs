@@ -35,7 +35,7 @@ namespace aes.Models
 
         public DateTime? DatumIzdavanja { get; set; }
         public Dopis Dopis { get; set; }
-        public int DopisId { get; set; }
+        public int? DopisId { get; set; }
 
         [Required]
         public int RedniBroj { get; set; }
@@ -82,7 +82,7 @@ namespace aes.Models
             datumIzdavanja = null;
             msg = null;
             DateTime dt;
-           
+
             if (!double.TryParse(iznos, out _iznos))
             {
                 msg = "Iznos je neispravan";
@@ -120,6 +120,93 @@ namespace aes.Models
 
             datumIzdavanja = dt;
             return true;
+        }
+        public static JsonResult TrySave(ApplicationDbContext _context)
+        {
+            try
+            {
+                _ = _context.SaveChanges();
+                return new(new { success = true, Message = "Spremljeno" });
+            }
+            catch (DbUpdateException)
+            {
+                return new(new { success = true, Message = "Greška" });
+            }
+        }
+        public static JsonResult TryDelete(ApplicationDbContext _context)
+        {
+            try
+            {
+                _ = _context.SaveChanges();
+                return new(new { success = true, Message = "Obrisano" });
+
+            }
+            catch (DbUpdateException)
+            {
+                return new(new { success = true, Message = "Greška" });
+            }
+        }
+
+        /// <summary>
+        /// Columns in Index - used for inline editor
+        /// </summary>
+        private enum Columns
+        {
+            racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6
+        }
+        public static JsonResult UpdateDbForInline(int updatedColumnNum, string x, Racun racunToUpdate, ApplicationDbContext _context)
+        {
+            Columns column = (Columns)updatedColumnNum;
+
+            switch (column)
+            {
+                case Columns.racun:
+                    if (x.Length < 10)
+                    {
+                        return new(new { success = false, Message = "Broj računa nije ispravan!" });
+                    }
+                    if (!x.Substring(0, 10).Equals(racunToUpdate.BrojRacuna.Substring(0, 10)))
+                    {
+                        return new(new { success = false, Message = "Pogrešan broj računa - ugovorni računi ne smije se razlikovati!" });
+                    }
+                    racunToUpdate.BrojRacuna = x;
+                    break;
+
+                case Columns.datumIzdavanja:
+                    racunToUpdate.DatumIzdavanja = DateTime.Parse(x);
+                    break;
+
+                case Columns.iznos:
+                    racunToUpdate.Iznos = double.Parse(x);
+                    break;
+
+                case Columns.klasa:
+                    racunToUpdate.KlasaPlacanja = x;
+                    if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null)
+                    {
+                        racunToUpdate.DatumPotvrde = null;
+                    }
+                    break;
+
+                case Columns.datumPotvrde:
+                    if (racunToUpdate.KlasaPlacanja is null)
+                    {
+                        return new(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
+                    }
+                    else
+                    {
+                        racunToUpdate.DatumPotvrde = DateTime.Parse(x);
+                    }
+                    break;
+
+                case Columns.napomena:
+                    racunToUpdate.Napomena = x;
+                    break;
+
+                default:
+                    break;
+            }
+            return TrySave(_context);
         }
     }
 }

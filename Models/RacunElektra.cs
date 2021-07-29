@@ -25,7 +25,7 @@ namespace aes.Models
                 BrojRacuna = brojRacuna,
                 Iznos = _iznos,
                 DatumIzdavanja = datumIzdavanja,
-                DopisId = _dopisId,
+                DopisId = _dopisId == 0 ? null : _dopisId,
                 CreatedByUserId = userId,
                 IsItTemp = true,
             };
@@ -44,13 +44,39 @@ namespace aes.Models
             try
             {
                 _ = _context.SaveChanges();
-                return new (new { success= true, Message= "Spremljeno" });
+                return new(new { success = true, Message = "Spremljeno" });
 
             }
             catch (DbUpdateException)
             {
                 return new(new { success = false, Message = "Greška" });
             }
+        }
+        public static JsonResult RemoveAllFromDb(string userId, ApplicationDbContext _context)
+        {
+
+            List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
+            _context.RacunElektra.RemoveRange(racunElektraList);
+
+            return TryDelete(_context);
+        }
+        public static JsonResult SaveToDB(string _dopisid, string userId, ApplicationDbContext _context)
+        {
+            int dopisId = int.Parse(_dopisid);
+
+            if (dopisId is 0)
+            {
+                return new(new { success = false, Message = "Nije odabran dopis!" });
+            }
+
+            List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
+            foreach (RacunElektra e in racunElektraList)
+            {
+                e.IsItTemp = null;
+                e.DopisId = dopisId;
+            }
+
+            return TrySave(_context);
         }
     }
 }

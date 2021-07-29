@@ -30,12 +30,18 @@ namespace aes.Models
 
         public List<Predmet> GetPredmetiDataForFilter(List<Racun> racunList)
         {
+            List<Predmet> lp = new();
             foreach (Racun e in racunList)
             {
                 e.Dopis = _context.Dopis.FirstOrDefault(x => e.DopisId == x.Id);
-                e.Dopis.Predmet = _context.Predmet.FirstOrDefault(x => e.Dopis.PredmetId == x.Id);
+                if (e.Dopis != null)
+                {
+                    lp.Add(_context.Predmet.FirstOrDefault(x => e.Dopis.PredmetId == x.Id));
+                }
             }
-            return racunList.Select(element => element.Dopis.Predmet).Distinct().ToList();
+            var v = lp.Distinct();
+
+            return v.ToList();
         }
 
     }
