@@ -512,41 +512,23 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult SaveToDB(string _dopisid)
         {
-            int dop = int.Parse(_dopisid);
+            int dopisId = int.Parse(_dopisid);
 
-            if (dop == 0)
+            if (dopisId is 0)
             {
                 return Json(new { success = false, Message = "Nije odabran dopis!" });
             }
 
-            racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
-
-
+            racunElektraList = _context.RacunElektra.ToList();
             foreach (RacunElektra e in racunElektraList)
             {
-                e.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
-
-                if (e.ElektraKupac == null)
-                {
-                    return Json(new { success = false, Message = "U tablici postoje računi koji se ne odnose na mjerno mjesto!" });
-                }
-
-                RacunElektra re = new()
-                {
-                    RedniBroj = e.RedniBroj,
-                    BrojRacuna = e.BrojRacuna,
-                    DatumIzdavanja = e.DatumIzdavanja,
-                    Iznos = (double)e.Iznos,
-                    DopisId = dop,
-                    ElektraKupacId = e.ElektraKupac.Id,
-                    IsItTemp = null,
-                };
-                _ = _context.RacunElektra.Add(re);
+                e.IsItTemp = null;
+                e.DopisId = dopisId;
             }
+
             try
             {
                 _ = _context.SaveChanges();
-                _ = RemoveAllFromDb(); // remove temp flag
                 return Json(new { success = true, Message = "Spremljeno" });
 
             }
