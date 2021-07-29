@@ -540,6 +540,7 @@ namespace aes.Controllers
                     Iznos = (double)e.Iznos,
                     DopisId = dop,
                     ElektraKupacId = e.ElektraKupac.Id,
+                    IsItTemp = null,
                 };
                 _ = _context.RacunElektra.Add(re);
             }
@@ -604,6 +605,7 @@ namespace aes.Controllers
                 DatumIzdavanja = DateTime.Parse(date),
                 DopisId = _dopisId,
                 CreatedByUserId = userId,
+                IsItTemp = true,
             };
             
             re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
