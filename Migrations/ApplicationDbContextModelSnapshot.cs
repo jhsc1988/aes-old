@@ -379,6 +379,9 @@ namespace aes.Migrations
                     b.Property<int>("ElektraKupacId")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("IsItTemp")
+                        .HasColumnType("bit");
+
                     b.Property<double>("Iznos")
                         .HasColumnType("float");
 
@@ -827,19 +830,6 @@ namespace aes.Migrations
                     b.ToTable("UgovorOPrijenosu");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
-                {
-                    b.HasBaseType("aes.Models.RacunElektra");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("RacuniElektraTemp");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1093,15 +1083,6 @@ namespace aes.Migrations
                     b.Navigation("DopisDostave");
 
                     b.Navigation("UgovorOKoristenju");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
-                {
-                    b.HasOne("aes.Models.RacunElektra", null)
-                        .WithOne()
-                        .HasForeignKey("aes.Models.RacunElektraTemp", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

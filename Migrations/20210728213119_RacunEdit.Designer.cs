@@ -10,8 +10,8 @@ using aes.Data;
 namespace aes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210728210045_RacunElektraT")]
-    partial class RacunElektraT
+    [Migration("20210728213119_RacunEdit")]
+    partial class RacunEdit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -375,15 +375,14 @@ namespace aes.Migrations
                     b.Property<DateTime?>("DatumPotvrde")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("DopisId")
                         .HasColumnType("int");
 
                     b.Property<int>("ElektraKupacId")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("IsItTemp")
+                        .HasColumnType("bit");
 
                     b.Property<double>("Iznos")
                         .HasColumnType("float");
@@ -409,8 +408,6 @@ namespace aes.Migrations
                     b.HasIndex("ElektraKupacId");
 
                     b.ToTable("RacunElektra");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("RacunElektra");
                 });
 
             modelBuilder.Entity("aes.Models.RacunElektraIzvrsenjeUsluge", b =>
@@ -833,19 +830,6 @@ namespace aes.Migrations
                     b.HasIndex("UgovorOKoristenjuId");
 
                     b.ToTable("UgovorOPrijenosu");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
-                {
-                    b.HasBaseType("aes.Models.RacunElektra");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("RacunElektraT");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -23,8 +23,5 @@ namespace aes.Data
         public DbSet<aes.Models.RacunHolding> RacunHolding { get; set; }
         public DbSet<aes.Models.UgovorOKoristenju> UgovorOKoristenju { get; set; }
         public DbSet<aes.Models.UgovorOPrijenosu> UgovorOPrijenosu { get; set; }
-        public DbSet<aes.Models.RacunElektraTemp> RacunElektraT { get; set; }
-
-
     }
 }

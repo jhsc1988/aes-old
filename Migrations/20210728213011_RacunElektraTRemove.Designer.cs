@@ -10,8 +10,8 @@ using aes.Data;
 namespace aes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210728210606_RacunElektraT2")]
-    partial class RacunElektraT2
+    [Migration("20210728213011_RacunElektraTRemove")]
+    partial class RacunElektraTRemove
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -829,19 +829,6 @@ namespace aes.Migrations
                     b.ToTable("UgovorOPrijenosu");
                 });
 
-            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
-                {
-                    b.HasBaseType("aes.Models.RacunElektra");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("RacuniElektraTemp");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1095,15 +1082,6 @@ namespace aes.Migrations
                     b.Navigation("DopisDostave");
 
                     b.Navigation("UgovorOKoristenju");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunElektraT", b =>
-                {
-                    b.HasOne("aes.Models.RacunElektra", null)
-                        .WithOne()
-                        .HasForeignKey("aes.Models.RacunElektraT", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
