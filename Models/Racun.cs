@@ -57,10 +57,18 @@ namespace aes.Models
 
         public bool? IsItTemp { get; set; }
 
+        public string CreatedByUserId { get; set; }
+
         public static bool CheckIfExistsInPayed(string brojRacuna, List<Racun> racunList)
         {
-            int num = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
-            return num >= 1;
+            int numOfOccurrences = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
+            return numOfOccurrences >= 1;
+        }
+
+        public static bool CheckIfExists(string brojRacuna, List<Racun> racunList)
+        {
+            int numOfOccurrences = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
+            return numOfOccurrences >= 2;
         }
     }
 }
