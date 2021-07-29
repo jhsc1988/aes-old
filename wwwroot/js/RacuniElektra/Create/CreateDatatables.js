@@ -207,12 +207,12 @@
                 dopisId: dopisId,
             },
             success: function (r) {
-                if (r.success) {
-                    alertify.success(r.message);
+                if (r.value.success) {
+                    alertify.success(r.value.message);
                     resetInput();
 
                 } else {
-                    alertify.error(r.message);
+                    alertify.error(r.value.message);
                 }
                 table.ajax.reload(null, false); // user paging is not reset on reload(callback, resetPaging)
             },

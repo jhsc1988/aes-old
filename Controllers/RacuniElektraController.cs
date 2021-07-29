@@ -22,8 +22,7 @@ namespace aes.Controllers
         private readonly List<Predmet> predmetList;
         private readonly List<ElektraKupac> elektraKupacList;
         private List<RacunElektra> racunElektraList;
-        private readonly ClaimsPrincipal currentUser;
-        private readonly string userId;
+        private string userId;
         public RacuniElektraController(ApplicationDbContext context)
         {
             _context = context;
@@ -33,9 +32,6 @@ namespace aes.Controllers
             elektraKupacList = _context.ElektraKupac.ToList();
             predmetList = _context.Predmet.ToList();
 
-            currentUser = User;
-            userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-
             foreach (ElektraKupac e in _context.ElektraKupac.ToList())
             {
                 e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
@@ -44,6 +40,12 @@ namespace aes.Controllers
 
         }
 
+        private string GetUid()
+        {
+            ClaimsPrincipal currentUser;
+            currentUser = User;
+            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
         [Authorize]
         public IActionResult Index()
         {
@@ -277,7 +279,7 @@ namespace aes.Controllers
                 racunElektraList = await racunElektraList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.Iznos.ToString().Contains(searchValue)
                              || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
                              || (x.DatumPotvrde != null &&
@@ -422,6 +424,7 @@ namespace aes.Controllers
         {
             GetDatatablesParamas();
 
+            userId = GetUid();
             racunElektraList = await _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToListAsync();
 
             int rbr = 1;
@@ -530,7 +533,6 @@ namespace aes.Controllers
             {
                 _ = _context.SaveChanges();
                 return Json(new { success = true, Message = "Spremljeno" });
-
             }
             catch (DbUpdateException)
             {
@@ -546,67 +548,9 @@ namespace aes.Controllers
         /// <param name="date">Datum izdavanja</param>
         /// <param name="__guid">Guid // TODO: use UserID instead</param>
         /// <returns></returns>
-        public async Task<IActionResult> AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
         {
-            double _iznos;
-            int _dopisId = int.Parse(dopisId);
-
-            if (brojRacuna == null)
-            {
-                return Json(new { success = false, Message = "Broj računa je obavezan" });
-            }
-            if (date == null)
-            {
-                return Json(new { success = false, Message = "Datum izdavanja je obavezan" });
-            }
-
-            if (iznos != null)
-            {
-                _iznos = double.Parse(iznos);
-                if (_iznos <= 0)
-                {
-                    return Json(new { success = false, Message = "Iznos mora biti veći od 0 kn" });
-                }
-            }
-            else
-            {
-                return Json(new { success = false, Message = "Iznos je obavezan" });
-            }
-
-            racunElektraList = await _context.RacunElektra.ToListAsync();
-
-            // TODO: ElektraKupacId
-            RacunElektra re = new()
-            {
-                BrojRacuna = brojRacuna,
-                Iznos = _iznos,
-                DatumIzdavanja = DateTime.Parse(date),
-                DopisId = _dopisId,
-                CreatedByUserId = userId,
-                IsItTemp = true,
-            };
-            
-            re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
-            racunElektraList.Add(re);
-
-            int rbr = 1;
-            foreach (RacunElektra e in racunElektraList)
-            {
-                e.RedniBroj = rbr++;
-            }
-
-            _ = _context.RacunElektra.Add(re);
-
-            try
-            {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Spremljeno" });
-
-            }
-            catch (DbUpdateException)
-            {
-                return Json(new { success = true, Message = "Greška" });
-            }
+            return new JsonResult(RacunElektra.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         }
 
         /// <summary>
@@ -618,32 +562,29 @@ namespace aes.Controllers
         {
             int id = int.Parse(racunId);
 
-            racunElektraList = await _context.RacunElektra.ToListAsync();
-            RacunElektra RacunToRemove = _context.RacunElektra.FirstOrDefault(x => x.Id == id);
-            _ = _context.RacunElektra.Remove(RacunToRemove);
-            _ = RemoveAllFromDb(); // brisem iz temp tablice
+            racunElektraList = _context.RacunElektra.ToList();
+            List<Racun> racunList = new();
+            racunList.AddRange(racunElektraList);
 
-            try
+            RacunElektra RacunToRemove = await _context.RacunElektra.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (Racun.RemoveRow(RacunToRemove.Id, racunList))
             {
-                _ = _context.SaveChanges();
-                return Json(new { success = true, Message = "Spremljeno" });
+                try
+                {
+                    _ = _context.SaveChanges();
+                    return Json(new { success = true, Message = "Spremljeno" });
 
+                }
+                catch (DbUpdateException)
+                {
+                    return Json(new { success = false, Message = "Greška" });
+                }
             }
-            catch (DbUpdateException)
+            else
             {
-                return Json(new { success = true, Message = "Greška" });
+                return Json(new { success = false, Message = "Greška" });
             }
-        }
-
-        /// <summary>
-        /// TODO: remove, use UserID instead
-        /// </summary>
-        /// <returns>JsonResult</returns>
-        public JsonResult GetGUID()
-        {
-            Guid guid = Guid.NewGuid();
-            return Json(new { success = true, Message = guid.ToString() });
-
         }
 
         /// <summary>
@@ -654,7 +595,6 @@ namespace aes.Controllers
         public JsonResult CheckIfExists(string brojRacuna)
         {
             List<Racun> racunList = new();
-
             racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
             racunList.AddRange(racunElektraList);
             return Racun.CheckIfExists(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
