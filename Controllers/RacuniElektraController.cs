@@ -19,9 +19,11 @@ namespace aes.Controllers
         private readonly ApplicationDbContext _context;
         private readonly Predmet predmet;
         private readonly Dopis dopis;
-        List<RacunElektra> racunElektraList;
-        List<ElektraKupac> elektraKupacList;
-        List<Predmet> predmetList;
+        private readonly List<Predmet> predmetList;
+        private readonly List<ElektraKupac> elektraKupacList;
+        private List<RacunElektra> racunElektraList;
+        private readonly ClaimsPrincipal currentUser;
+        private readonly string userId;
         public RacuniElektraController(ApplicationDbContext context)
         {
             _context = context;
@@ -30,6 +32,9 @@ namespace aes.Controllers
             racunElektraList = _context.RacunElektra.ToList();
             elektraKupacList = _context.ElektraKupac.ToList();
             predmetList = _context.Predmet.ToList();
+
+            currentUser = User;
+            userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
 
             foreach (ElektraKupac e in _context.ElektraKupac.ToList())
             {
@@ -417,9 +422,6 @@ namespace aes.Controllers
         {
             GetDatatablesParamas();
 
-            ClaimsPrincipal currentUser = User;
-            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-
             racunElektraList = await _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToListAsync();
 
             int rbr = 1;
@@ -517,9 +519,6 @@ namespace aes.Controllers
                 return Json(new { success = false, Message = "Nije odabran dopis!" });
             }
 
-            ClaimsPrincipal currentUser = User;
-            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-
             racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
 
 
@@ -593,9 +592,6 @@ namespace aes.Controllers
             }
 
             racunElektraList = await _context.RacunElektra.ToListAsync();
-
-            ClaimsPrincipal currentUser = User;
-            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // TODO: ElektraKupacId
             RacunElektra re = new()
@@ -677,9 +673,6 @@ namespace aes.Controllers
         {
             List<Racun> racunList = new();
 
-            ClaimsPrincipal currentUser = User;
-            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-
             racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
             racunList.AddRange(racunElektraList);
             return Racun.CheckIfExists(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
@@ -703,8 +696,6 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult RemoveAllFromDb()
         {
-            ClaimsPrincipal currentUser = User;
-            string userId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
 
             racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
             _context.RacunElektra.RemoveRange(racunElektraList);
