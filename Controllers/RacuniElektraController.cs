@@ -605,7 +605,8 @@ namespace aes.Controllers
                 DopisId = _dopisId,
                 CreatedByUserId = userId,
             };
-
+            
+            re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
             racunElektraList.Add(re);
 
             int rbr = 1;
