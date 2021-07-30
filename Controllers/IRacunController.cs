@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using aes.Data;
+using aes.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,13 @@ namespace aes.Controllers
 {
     interface IRacunController
     {
+
+        /// <summary>
+        /// Gets user id
+        /// </summary>
+        /// <returns>string</returns>
+        public string GetUid();
+
         /// <summary>
         /// Gets params from Datatables which was requested by Datatables AJAX POST method
         /// </summary>
@@ -66,7 +75,7 @@ namespace aes.Controllers
         /// <param name="updatedColumn">Column which was updated</param>
         /// <param name="x">Changed text variable</param>
         /// <returns></returns>
-        public Task<IActionResult> UpdateDbForInline(string id, string updatedColumn, string x);
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x);
 
         /// <summary>
         /// Adds new row to RacunElektraTemp
@@ -90,7 +99,7 @@ namespace aes.Controllers
         /// </summary>
         /// <param name="racunId">Id of RacunElektra</param>
         /// <returns>async Task<IActionResult></returns>
-        public Task<IActionResult> RemoveRow(string racunId);
+        public JsonResult RemoveRow(string racunId);
 
         /// <summary>
         /// Used for Emptying entries in Create page

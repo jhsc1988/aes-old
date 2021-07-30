@@ -7,7 +7,7 @@ function setStyle(input, filter) {
     input.css({'width': '300px', 'display': 'inline-block'});
 
     filter.removeClass('dataTables_filter');
-    filter.addClass('search-top-20');
+    filter.addClass('search-top-20 col-lg-12');
 }
 
 

@@ -41,42 +41,74 @@ namespace aes.Models
 
             _ = _context.RacunElektra.Add(re);
 
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Spremljeno" });
-
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = false, Message = "Greška" });
-            }
+            return TrySave(_context);
         }
-        public static JsonResult RemoveAllFromDb(string userId, ApplicationDbContext _context)
-        {
 
+        public static List<RacunElektra> GetListCreateList(string userId, ApplicationDbContext _context)
+        {
             List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
-            _context.RacunElektra.RemoveRange(racunElektraList);
 
-            return TryDelete(_context);
-        }
-        public static JsonResult SaveToDB(string _dopisid, string userId, ApplicationDbContext _context)
-        {
-            int dopisId = int.Parse(_dopisid);
-
-            if (dopisId is 0)
-            {
-                return new(new { success = false, Message = "Nije odabran dopis!" });
-            }
-
-            List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
+            int rbr = 1;
             foreach (RacunElektra e in racunElektraList)
             {
-                e.IsItTemp = null;
-                e.DopisId = dopisId;
+
+                e.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
+
+                List<Racun> racunList = new();
+                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == null || false).ToList());
+                e.Napomena = CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                racunList.Clear();
+
+                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
+                if (e.Napomena is null)
+                {
+                    e.Napomena = CheckIfExists(e.BrojRacuna, racunList);
+                }
+
+                racunList.Clear();
+
+                if (e.ElektraKupac != null)
+                {
+                    e.ElektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.ElektraKupac.OdsId);
+                    e.ElektraKupac.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.ElektraKupac.Ods.StanId);
+                }
+                else
+                {
+                    e.Napomena = "kupac ne postoji";
+                }
+                e.RedniBroj = rbr++;
+            }
+            return racunElektraList;
+        }
+
+        public static List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
+        {
+            List<RacunElektra> racunElektraList = new();
+
+            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            {
+                racunElektraList = _context.RacunElektra.ToList();
             }
 
-            return TrySave(_context);
+            if (predmetIdAsInt != 0)
+            {
+                racunElektraList = dopisIdAsInt == 0
+                    ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
+                    : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
+            }
+
+
+            foreach (RacunElektra racunElektra in racunElektraList)
+            {
+                racunElektra.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.Id == racunElektra.ElektraKupacId);
+                racunElektra.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == racunElektra.DopisId);
+
+                if (racunElektra.Dopis != null)
+                {
+                    racunElektra.Dopis.Predmet = _context.Predmet.FirstOrDefault(o => o.Id == racunElektra.Dopis.PredmetId);
+                }
+            }
+            return racunElektraList;
         }
     }
 }

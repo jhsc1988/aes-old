@@ -15,6 +15,15 @@ using System.Linq.Dynamic.Core;
 using System.Text.Json;
 namespace aes.Models
 {
+    public enum Tip
+    {
+        RacunElektra,
+        RacunElektraRate,
+        Holding,
+        ElektraIzvrsenje,
+        OdsIzvrsenje,
+    }
+
     public abstract class Racun
     {
         public int Id { get; set; }
@@ -71,17 +80,36 @@ namespace aes.Models
             return numOfOccurrences >= 1 ? "račun već plaćen" : null;
         }
 
-        public static JsonResult RemoveRow(ApplicationDbContext _context)
+        public static JsonResult RemoveRow(Tip tip, string racunId, ApplicationDbContext _context)
         {
+            int id = int.Parse(racunId);
+
+            switch (tip)
+            {
+                case Tip.RacunElektra:
+                    _ = _context.RacunElektra.Remove(_context.RacunElektra.FirstOrDefault(x => x.Id == id));
+                    break;
+                case Tip.RacunElektraRate:
+                    _ = _context.RacunElektraRate.Remove(_context.RacunElektraRate.FirstOrDefault(x => x.Id == id));
+                    break;
+                case Tip.Holding:
+                    _ = _context.RacunHolding.Remove(_context.RacunHolding.FirstOrDefault(x => x.Id == id));
+                    break;
+                case Tip.ElektraIzvrsenje:
+                    _ = _context.RacunElektraIzvrsenjeUsluge.Remove(_context.RacunElektraIzvrsenjeUsluge.FirstOrDefault(x => x.Id == id));
+                    break;
+                case Tip.OdsIzvrsenje:
+                    _ = _context.RacunOdsIzvrsenjaUsluge.Remove(_context.RacunOdsIzvrsenjaUsluge.FirstOrDefault(x => x.Id == id));
+                    break;
+                default:
+                    break;
+            }
             return TryDelete(_context);
         }
 
         public static bool Validate(string brojRacuna, string iznos, string date, string dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja)
         {
-            _iznos = 0;
-            datumIzdavanja = null;
-            msg = null;
-            DateTime dt;
+            _iznos = 0; datumIzdavanja = null; msg = null; DateTime dt;
 
             if (!int.TryParse(dopisId, out _dopisId))
             {
@@ -121,31 +149,7 @@ namespace aes.Models
             datumIzdavanja = dt;
             return true;
         }
-        public static JsonResult TrySave(ApplicationDbContext _context)
-        {
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Spremljeno" });
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = true, Message = "Greška" });
-            }
-        }
-        public static JsonResult TryDelete(ApplicationDbContext _context)
-        {
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Obrisano" });
 
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = true, Message = "Greška" });
-            }
-        }
 
         /// <summary>
         /// Columns in Index - used for inline editor
@@ -154,9 +158,32 @@ namespace aes.Models
         {
             racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6
         }
-        public static JsonResult UpdateDbForInline(int updatedColumnNum, string x, Racun racunToUpdate, ApplicationDbContext _context)
+        public static JsonResult UpdateDbForInline(Tip tip, string racunId, string updatedColumn, string x, ApplicationDbContext _context)
         {
-            Columns column = (Columns)updatedColumnNum;
+            int idNum = int.Parse(racunId);
+            Racun racunToUpdate = null;
+            Columns column = (Columns)int.Parse(updatedColumn);
+
+            switch (tip)
+            {
+                case Tip.RacunElektra:
+                    racunToUpdate = _context.RacunElektra.First(e => e.Id == idNum);
+                    break;
+                case Tip.RacunElektraRate:
+                    //racunToUpdate = _context.RacunElektraRate.First(e => e.Id == idNum);
+                    break;
+                case Tip.Holding:
+                    //racunToUpdate = _context.RacunHolding.First(e => e.Id == idNum);
+                    break;
+                case Tip.ElektraIzvrsenje:
+                    //racunToUpdate = _context.RacunElektraIzvrsenjeUsluge.First(e => e.Id == idNum);
+                    break;
+                case Tip.OdsIzvrsenje:
+                    //racunToUpdate = _context.RacunOdsIzvrsenjaUsluge.First(e => e.Id == idNum);
+                    break;
+                default:
+                    break;
+            }
 
             switch (column)
             {
@@ -208,6 +235,96 @@ namespace aes.Models
             }
             return TrySave(_context);
         }
+
+        public static JsonResult SaveToDb(Tip tip, string userId, string _dopisId, ApplicationDbContext _context)
+        {
+            List<Racun> racunList = new();
+            int dopisId = int.Parse(_dopisId);
+
+            if (dopisId is 0)
+            {
+                return new(new { success = false, Message = "Nije odabran dopis!" });
+            }
+
+            switch (tip)
+            {
+                case Tip.RacunElektra:
+                    racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    break;
+                case Tip.RacunElektraRate:
+                    //racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    break;
+                case Tip.Holding:
+                    //racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    break;
+                case Tip.ElektraIzvrsenje:
+                    //racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    break;
+                case Tip.OdsIzvrsenje:
+                    //racunList.AddRange(_context.RacunOdsIzvrsenjaUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    break;
+                default:
+                    break;
+            }
+            foreach (Racun e in racunList)
+            {
+                e.IsItTemp = null;
+                e.DopisId = dopisId;
+            }
+            return TrySave(_context);
+        }
+
+        public static JsonResult TrySave(ApplicationDbContext _context)
+        {
+            try
+            {
+                _ = _context.SaveChanges();
+                return new(new { success = true, Message = "Spremljeno" });
+            }
+            catch (DbUpdateException)
+            {
+                return new(new { success = false, Message = "Greška" });
+            }
+        }
+        public static JsonResult TryDelete(ApplicationDbContext _context)
+        {
+            try
+            {
+                _ = _context.SaveChanges();
+                return new(new { success = true, Message = "Obrisano" });
+
+            }
+            catch (DbUpdateException)
+            {
+                return new(new { success = false, Message = "Greška" });
+            }
+        }
+
+        public static JsonResult RemoveAllFromDb(Tip tip, string userId, ApplicationDbContext _context)
+        {
+            List<Racun> racunList = new();
+            switch (tip)
+            {
+                case Tip.RacunElektra:
+                    _context.RemoveRange(_context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    break;
+                case Tip.RacunElektraRate:
+                    //_context.RemoveRange(_context.RacunElektraRate.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    break;
+                case Tip.Holding:
+                    //_context.RemoveRange(_context.RacunHolding.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    break;
+                case Tip.ElektraIzvrsenje:
+                    //_context.RemoveRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    break;
+                case Tip.OdsIzvrsenje:
+                    //_context.RemoveRange(_context.RacunOdsIzvrsenjaUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    break;
+                default:
+                    break;
+            }
+            return TryDelete(_context);
+        }
+
     }
 }
-

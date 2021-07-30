@@ -22,7 +22,12 @@ namespace aes.Controllers
         private readonly List<Predmet> predmetList;
         private readonly List<ElektraKupac> elektraKupacList;
         private List<RacunElektra> racunElektraList;
-        private string userId;
+
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
+
         public RacuniElektraController(ApplicationDbContext context)
         {
             _context = context;
@@ -37,15 +42,8 @@ namespace aes.Controllers
                 e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
                 e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
             }
-
         }
 
-        private string GetUid()
-        {
-            ClaimsPrincipal currentUser;
-            currentUser = User;
-            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
         [Authorize]
         public IActionResult Index()
         {
@@ -224,11 +222,6 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// <summary>
-        /// Datatables parameters
-        /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
-
         public void GetDatatablesParamas()
         {
             // server side parameters
@@ -246,31 +239,7 @@ namespace aes.Controllers
 
             GetDatatablesParamas();
 
-            List<RacunElektra> racunElektraList = new();
-
-            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
-            {
-                racunElektraList = await _context.RacunElektra.ToListAsync();
-            }
-
-            if (predmetIdAsInt != 0)
-            {
-                racunElektraList = dopisIdAsInt == 0
-                    ? await _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToListAsync()
-                    : await _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToListAsync();
-            }
-
-
-            foreach (RacunElektra racunElektra in racunElektraList)
-            {
-                racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
-                racunElektra.Dopis = await _context.Dopis.FirstOrDefaultAsync(o => o.Id == racunElektra.DopisId);
-
-                if (racunElektra.Dopis != null)
-                {
-                    racunElektra.Dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == racunElektra.Dopis.PredmetId);
-                }
-            }
+            racunElektraList = RacunElektra.GetList(predmetIdAsInt, dopisIdAsInt, _context);
 
             int totalRows = racunElektraList.Count;
             if (!string.IsNullOrEmpty(searchValue))
@@ -304,39 +273,7 @@ namespace aes.Controllers
         {
             GetDatatablesParamas();
 
-            userId = GetUid();
-            racunElektraList = await _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToListAsync();
-
-            int rbr = 1;
-            foreach (RacunElektra e in racunElektraList)
-            {
-
-                e.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
-
-                List<Racun> racunList = new();
-                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == null || false).ToList());
-                e.Napomena = Racun.CheckIfExistsInPayed(e.BrojRacuna, racunList);
-                racunList.Clear();
-
-                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId == GetUid()).ToList());
-                if (e.Napomena is null)
-                {
-                    e.Napomena = Racun.CheckIfExists(e.BrojRacuna, racunList);
-                }
-
-                racunList.Clear();
-
-                if (e.ElektraKupac != null)
-                {
-                    e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
-                    e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
-                }
-                else
-                {
-                    e.Napomena = "kupac ne postoji";
-                }
-                e.RedniBroj = rbr++;
-            }
+            racunElektraList = RacunElektra.GetListCreateList(GetUid(), _context);
 
             // filter
             int totalRows = racunElektraList.Count;
@@ -375,13 +312,16 @@ namespace aes.Controllers
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string GetUid()
+        {
+            ClaimsPrincipal currentUser;
+            currentUser = User;
+            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            List<Racun> re = new();
-            racunElektraList = _context.RacunElektra.ToList();
-            re.AddRange(racunElektraList);
-            return Json(predmet.GetPredmetiDataForFilter(re));
+            return Json(predmet.GetPredmetiDataForFilter(Tip.RacunElektra));
         }
 
         public JsonResult GetDopisiDataForFilter(int predmetId)
@@ -404,12 +344,9 @@ namespace aes.Controllers
             return JsonConvert.SerializeObject(elektraKupacList);
         }
 
-        public async Task<IActionResult> UpdateDbForInline(string id, string updatedColumn, string x)
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
         {
-            int idNum = int.Parse(id);
-            int updatedColumnNum = int.Parse(updatedColumn);
-            RacunElektra racunToUpdate = await _context.RacunElektra.FirstAsync(e => e.Id == idNum);
-            return Racun.UpdateDbForInline(updatedColumnNum, x, racunToUpdate, _context);
+            return Racun.UpdateDbForInline(Tip.RacunElektra, id, updatedColumn, x, _context);
         }
 
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
@@ -417,25 +354,19 @@ namespace aes.Controllers
             return new JsonResult(RacunElektra.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         }
 
-        public JsonResult SaveToDB(string _dopisid)
+        public JsonResult SaveToDB(string _dopisId)
         {
-            return RacunElektra.SaveToDB(_dopisid, GetUid(), _context);
+            return Racun.SaveToDb(Tip.RacunElektra, GetUid(), _dopisId, _context);
         }
 
-        public async Task<IActionResult> RemoveRow(string racunId)
+        public JsonResult RemoveRow(string racunId)
         {
-            int id = int.Parse(racunId);
-            racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId == GetUid()).ToList();
-            List<Racun> racunList = new();
-            racunList.AddRange(racunElektraList);
-            RacunElektra RacunToRemove = await _context.RacunElektra.FirstOrDefaultAsync(x => x.Id == id);
-            _context.RacunElektra.Remove(RacunToRemove);
-            return Racun.RemoveRow(_context);
+            return Racun.RemoveRow(Tip.RacunElektra, racunId, _context);
         }
 
         public JsonResult RemoveAllFromDb()
         {
-            return new JsonResult(RacunElektra.RemoveAllFromDb(GetUid(), _context));
+            return Racun.RemoveAllFromDb(Tip.RacunElektra, GetUid(), _context);
         }
     }
 }
