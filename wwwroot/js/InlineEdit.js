@@ -100,7 +100,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         }
 
         // Datum izdavanja
-        if ($(e.target).is('td:nth-child(4)')) {
+        if ($(e.target).is('td:nth-child(4)') && !$(e.target).is("#datum_izdavanja_td_clicked")) {
             $("#datum_izdavanja_td_clicked").not(e.target).replaceWith("<td>" + datumIzdavanja + "</td>");
             if (datumIzdavanjaUpdated) {
                 updateDb(2, datumIzdavanja);
@@ -115,7 +115,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         }
 
         // Iznos
-        if ($(e.target).is('td:nth-child(5)')) {
+        if ($(e.target).is('td:nth-child(5)') && !$(e.target).is("#iznos_td_clicked")) {
             $("#iznos_td_clicked").not(e.target).replaceWith("<td>" + iznos + "</td>");
             if (iznosUpdated) {
                 updateDb(3, iznos);
@@ -144,10 +144,11 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
                 "<input type='text' id ='klasa_input_clicked' class='form-control' value='" + klasa + "'></div>");
+            
         }
 
         // Datum potvrde
-        if ($(e.target).is('td:nth-child(7)')) {
+        if ($(e.target).is('td:nth-child(7)') && !$(e.target).is("#datum_td_clicked")) {
             $("#datum_td_clicked").not(e.target).replaceWith("<td>" + datum + "</td>");
 
             if (datumUpdated) {
@@ -162,7 +163,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         }
 
         // Napomena
-        if ($(e.target).is('td:nth-child(8)')) {
+        if ($(e.target).is('td:nth-child(8)') && !$(e.target).is("#napomena_td_clicked")) {
             $("#napomena_td_clicked").not(e.target).each().replaceWith("<td>" + napomena + "</td>");
             $(this).attr('id', 'napomena_td_clicked');
 

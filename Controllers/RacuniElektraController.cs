@@ -310,17 +310,21 @@ namespace aes.Controllers
             int rbr = 1;
             foreach (RacunElektra e in racunElektraList)
             {
+
                 e.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
 
-                if (_context.RacunElektra.Any(o => o.BrojRacuna == e.BrojRacuna))
+                List<Racun> racunList = new();
+                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == null || false).ToList());
+                e.Napomena = Racun.CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                racunList.Clear();
+
+                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId == GetUid()).ToList());
+                if (e.Napomena is null)
                 {
-                    e.Napomena = "račun već plaćen";
+                    e.Napomena = Racun.CheckIfExists(e.BrojRacuna, racunList);
                 }
 
-                if (_context.RacunElektra.Where(o => o.BrojRacuna == e.BrojRacuna).Count() >= 2)
-                {
-                    e.Napomena = "dupli račun";
-                }
+                racunList.Clear();
 
                 if (e.ElektraKupac != null)
                 {
@@ -421,26 +425,12 @@ namespace aes.Controllers
         public async Task<IActionResult> RemoveRow(string racunId)
         {
             int id = int.Parse(racunId);
-            racunElektraList = _context.RacunElektra.ToList();
+            racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId == GetUid()).ToList();
             List<Racun> racunList = new();
             racunList.AddRange(racunElektraList);
             RacunElektra RacunToRemove = await _context.RacunElektra.FirstOrDefaultAsync(x => x.Id == id);
-            return Racun.RemoveRow(RacunToRemove.Id, racunList) ? Racun.TrySave(_context) : Json(new { success = false, Message = "Greška" });
-        }
-
-        public JsonResult CheckIfExists(string brojRacuna)
-        {
-            List<Racun> racunList = new();
-            racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
-            racunList.AddRange(racunElektraList);
-            return Racun.CheckIfExists(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
-        }
-
-        public JsonResult CheckIfExistsInPayed(string brojRacuna)
-        {
-            List<Racun> racunList = new();
-            racunList.AddRange(racunElektraList);
-            return Racun.CheckIfExistsInPayed(brojRacuna, racunList) ? Json(new { success = true, }) : Json(new { success = false, });
+            _context.RacunElektra.Remove(RacunToRemove);
+            return Racun.RemoveRow(_context);
         }
 
         public JsonResult RemoveAllFromDb()

@@ -19,7 +19,7 @@ namespace aes.Models
             if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
                 return new(new { success = false, Message = msg });
 
-            List<RacunElektra> racunElektraList = _context.RacunElektra.ToList();
+            List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunElektra re = new()
             {
                 BrojRacuna = brojRacuna,

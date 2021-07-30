@@ -59,35 +59,29 @@ namespace aes.Models
 
         public string CreatedByUserId { get; set; }
 
-        public static bool CheckIfExists(string brojRacuna, List<Racun> racunList)
+        public static string CheckIfExists(string brojRacuna, List<Racun> racunList)
         {
             int numOfOccurrences = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
-            return numOfOccurrences >= 2;
+            return numOfOccurrences >= 2 ? "dupli račun" : null;
         }
 
-        public static bool CheckIfExistsInPayed(string brojRacuna, List<Racun> racunList)
+        public static string CheckIfExistsInPayed(string brojRacuna, List<Racun> racunList)
         {
             int numOfOccurrences = racunList.Where(x => x.BrojRacuna.Equals(brojRacuna)).Count();
-            return numOfOccurrences >= 1;
+            return numOfOccurrences >= 1 ? "račun već plaćen" : null;
         }
 
-        public static bool RemoveRow(int racunId, List<Racun> racunList)
+        public static JsonResult RemoveRow(ApplicationDbContext _context)
         {
-            return racunList.Remove(racunList.FirstOrDefault(e => e.Id == racunId));
+            return TryDelete(_context);
         }
 
         public static bool Validate(string brojRacuna, string iznos, string date, string dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja)
         {
-            _dopisId = 0;
+            _iznos = 0;
             datumIzdavanja = null;
             msg = null;
             DateTime dt;
-
-            if (!double.TryParse(iznos, out _iznos))
-            {
-                msg = "Iznos je neispravan";
-                return false;
-            }
 
             if (!int.TryParse(dopisId, out _dopisId))
             {
@@ -109,6 +103,12 @@ namespace aes.Models
             else if (!DateTime.TryParse(date, out dt))
             {
                 msg = "Datum izdavanja je obavezan";
+                return false;
+            }
+
+            if (!double.TryParse(iznos, out _iznos))
+            {
+                msg = "Iznos je neispravan";
                 return false;
             }
 

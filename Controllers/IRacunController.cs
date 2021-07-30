@@ -68,7 +68,6 @@ namespace aes.Controllers
         /// <returns></returns>
         public Task<IActionResult> UpdateDbForInline(string id, string updatedColumn, string x);
 
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId);
         /// <summary>
         /// Adds new row to RacunElektraTemp
         /// </summary>
@@ -77,6 +76,7 @@ namespace aes.Controllers
         /// <param name="date">Datum izdavanja</param>
         /// <param name="__guid">Guid // TODO: use UserID instead</param>
         /// <returns></returns>
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId);
 
         /// <summary>
         /// Moves from RacunElektraTemp to RacuniElektra table
@@ -91,20 +91,6 @@ namespace aes.Controllers
         /// <param name="racunId">Id of RacunElektra</param>
         /// <returns>async Task<IActionResult></returns>
         public Task<IActionResult> RemoveRow(string racunId);
-
-        /// <summary>
-        /// Checks if brojRacuna exists in ElektraRacuniTemp.
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <returns>JsonResult</returns>
-        public JsonResult CheckIfExists(string brojRacuna);
-
-        /// <summary>
-        /// Checks if brojRacuna exists in already payed
-        /// </summary>
-        /// <param name="brojRacuna">Broj računa</param>
-        /// <returns>JsonResult</returns>
-        public JsonResult CheckIfExistsInPayed(string brojRacuna);
 
         /// <summary>
         /// Used for Emptying entries in Create page
