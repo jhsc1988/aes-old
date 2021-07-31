@@ -2,13 +2,13 @@
 
 namespace aes.Migrations
 {
-    public partial class RacunElektraTempUpdate2 : Migration
+    public partial class Racun_add_created_by : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Napomena",
-                table: "RacunElektraTemp",
+                name: "CreatedByUserId",
+                table: "RacunElektra",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -16,8 +16,8 @@ namespace aes.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Napomena",
-                table: "RacunElektraTemp");
+                name: "CreatedByUserId",
+                table: "RacunElektra");
         }
     }
 }

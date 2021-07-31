@@ -10,8 +10,8 @@ using aes.Data;
 namespace aes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210723194245_RacunElektraTempFix2")]
-    partial class RacunElektraTempFix2
+    [Migration("20210729090031_eFix")]
+    partial class eFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -369,6 +369,9 @@ namespace aes.Migrations
                         .HasMaxLength(19)
                         .HasColumnType("nvarchar(19)");
 
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DatumIzdavanja")
                         .HasColumnType("datetime2");
 
@@ -380,6 +383,9 @@ namespace aes.Migrations
 
                     b.Property<int>("ElektraKupacId")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("IsItTemp")
+                        .HasColumnType("bit");
 
                     b.Property<double>("Iznos")
                         .HasColumnType("float");
@@ -546,44 +552,6 @@ namespace aes.Migrations
                     b.HasIndex("ElektraKupacId");
 
                     b.ToTable("RacunElektraRate");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BrojRacuna")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DatumIzdavanja")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DopisId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ElektraKupacId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("Iznos")
-                        .HasColumnType("float");
-
-                    b.Property<int>("RedniBroj")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ElektraKupacId");
-
-                    b.ToTable("RacunElektraTemp");
                 });
 
             modelBuilder.Entity("aes.Models.RacunHolding", b =>
@@ -1026,15 +994,6 @@ namespace aes.Migrations
                         .IsRequired();
 
                     b.Navigation("Dopis");
-
-                    b.Navigation("ElektraKupac");
-                });
-
-            modelBuilder.Entity("aes.Models.RacunElektraTemp", b =>
-                {
-                    b.HasOne("aes.Models.ElektraKupac", "ElektraKupac")
-                        .WithMany()
-                        .HasForeignKey("ElektraKupacId");
 
                     b.Navigation("ElektraKupac");
                 });

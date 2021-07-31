@@ -96,11 +96,11 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
             // set as text input
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
-                "<input type='text' id ='racun_input_clicked' class='form-control' value='" + racunBr + "'></div>");
+                "<input type='text' id ='racun_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + racunBr + "'></div>");
         }
 
         // Datum izdavanja
-        if ($(e.target).is('td:nth-child(4)')) {
+        if ($(e.target).is('td:nth-child(4)') && !$(e.target).is("#datum_izdavanja_td_clicked")) {
             $("#datum_izdavanja_td_clicked").not(e.target).replaceWith("<td>" + datumIzdavanja + "</td>");
             if (datumIzdavanjaUpdated) {
                 updateDb(2, datumIzdavanja);
@@ -111,11 +111,11 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
 
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
-                "<input type='date' id ='datum_izdavanja_input_clicked' class='form-control' value='" + datumIzdavanja + "'></div>");
+                "<input type='date' id ='datum_izdavanja_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + datumIzdavanja + "'></div>");
         }
 
         // Iznos
-        if ($(e.target).is('td:nth-child(5)')) {
+        if ($(e.target).is('td:nth-child(5)') && !$(e.target).is("#iznos_td_clicked")) {
             $("#iznos_td_clicked").not(e.target).replaceWith("<td>" + iznos + "</td>");
             if (iznosUpdated) {
                 updateDb(3, iznos);
@@ -127,7 +127,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
 
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
-                "<input type='text' id ='iznos_input_clicked' class='form-control' value='" + iznos + "'></div>");
+                "<input type='text' id ='iznos_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + iznos + "'></div>");
         }
 
         // Klasa
@@ -143,11 +143,12 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
 
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
-                "<input type='text' id ='klasa_input_clicked' class='form-control' value='" + klasa + "'></div>");
+                "<input type='text' id ='klasa_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + klasa + "'></div>");
+
         }
 
         // Datum potvrde
-        if ($(e.target).is('td:nth-child(7)')) {
+        if ($(e.target).is('td:nth-child(7)') && !$(e.target).is("#datum_td_clicked")) {
             $("#datum_td_clicked").not(e.target).replaceWith("<td>" + datum + "</td>");
 
             if (datumUpdated) {
@@ -158,11 +159,11 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
             datum = $(this).html();
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
-                "<input type='date' id ='datum_input_clicked' class='form-control' value='" + datum + "'></div>");
+                "<input type='date' id ='datum_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + datum + "'></div>");
         }
 
         // Napomena
-        if ($(e.target).is('td:nth-child(8)')) {
+        if ($(e.target).is('td:nth-child(8)') && !$(e.target).is("#napomena_td_clicked")) {
             $("#napomena_td_clicked").not(e.target).each().replaceWith("<td>" + napomena + "</td>");
             $(this).attr('id', 'napomena_td_clicked');
 
@@ -174,7 +175,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
             napomena = $(this).html();
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
-                "<input type='text' id ='napomena_input_clicked' class='form-control' value='" + napomena + "'></div>");
+                "<input type='text' id ='napomena_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + napomena + "'></div>");
         }
     }
 
@@ -265,7 +266,7 @@ $("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
         }
     });
 
-    
+
     selectDatumTdClicked.keypress(function (e) {
         if (e.which === 13) {
             selectDatumTdClicked.replaceWith("<td>" + datum + "</td>");

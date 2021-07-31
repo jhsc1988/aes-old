@@ -3,7 +3,6 @@
     // ************************************ variables ************************************ //
 
     const selectIndexTable = $('#indexTable');
-    let guid;
 
     // ************************************ DataTables definition ************************************ //
     GetGUID();
@@ -124,7 +123,7 @@
     // ************************************ add row ************************************ //
 
     $('#btnAdd').on('click', function () {
-            AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), guid);
+            AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), data_dopis);
             table.row.add(["<td><button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >"]).draw();
     });
 
@@ -196,7 +195,7 @@
 
     // ************************************ functions ************************************ //
 
-    function AddNew(brojRacuna, iznos, _datum, _guid) {
+    function AddNew(brojRacuna, iznos, _datum, dopisId) {
         $.ajax({
             type: "POST",
             url: "/RacuniElektra/AddNewTemp",
@@ -204,15 +203,15 @@
                 brojRacuna: brojRacuna,
                 iznos: iznos,
                 date: _datum,
-                __guid: _guid,
+                dopisId: dopisId,
             },
             success: function (r) {
-                if (r.success) {
-                    alertify.success(r.message);
+                if (r.value.success) {
+                    alertify.success(r.value.message);
                     resetInput();
 
                 } else {
-                    alertify.error(r.message);
+                    alertify.error(r.value.message);
                 }
                 table.ajax.reload(null, false); // user paging is not reset on reload(callback, resetPaging)
             },
