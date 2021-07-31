@@ -321,7 +321,7 @@ namespace aes.Controllers
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(predmet.GetPredmetiDataForFilter(Tip.RacunElektra));
+            return Json(predmet.GetPredmetiDataForFilter(RacunTip.RacunElektra));
         }
 
         public JsonResult GetDopisiDataForFilter(int predmetId)
@@ -346,7 +346,7 @@ namespace aes.Controllers
 
         public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
         {
-            return Racun.UpdateDbForInline(Tip.RacunElektra, id, updatedColumn, x, _context);
+            return Racun.UpdateDbForInline(RacunTip.RacunElektra, id, updatedColumn, x, _context);
         }
 
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
@@ -356,17 +356,17 @@ namespace aes.Controllers
 
         public JsonResult SaveToDB(string _dopisId)
         {
-            return Racun.SaveToDb(Tip.RacunElektra, GetUid(), _dopisId, _context);
+            return Racun.SaveToDb(RacunTip.RacunElektra, GetUid(), _dopisId, _context);
         }
 
         public JsonResult RemoveRow(string racunId)
         {
-            return Racun.RemoveRow(Tip.RacunElektra, racunId, _context);
+            return Racun.RemoveRow(RacunTip.RacunElektra, racunId, _context);
         }
 
         public JsonResult RemoveAllFromDb()
         {
-            return Racun.RemoveAllFromDb(Tip.RacunElektra, GetUid(), _context);
+            return Racun.RemoveAllFromDb(RacunTip.RacunElektra, GetUid(), _context);
         }
     }
 }

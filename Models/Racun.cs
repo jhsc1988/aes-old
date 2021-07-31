@@ -1,29 +1,14 @@
 ﻿using aes.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using aes.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Linq.Dynamic.Core;
-using System.Text.Json;
 namespace aes.Models
 {
-    public enum Tip
-    {
-        RacunElektra,
-        RacunElektraRate,
-        Holding,
-        ElektraIzvrsenje,
-        OdsIzvrsenje,
-    }
-
     public abstract class Racun
     {
         public int Id { get; set; }
@@ -80,26 +65,26 @@ namespace aes.Models
             return numOfOccurrences >= 1 ? "račun već plaćen" : null;
         }
 
-        public static JsonResult RemoveRow(Tip tip, string racunId, ApplicationDbContext _context)
+        public static JsonResult RemoveRow(RacunTip tip, string racunId, ApplicationDbContext _context)
         {
             int id = int.Parse(racunId);
 
             switch (tip)
             {
-                case Tip.RacunElektra:
-                    _ = _context.RacunElektra.Remove(_context.RacunElektra.FirstOrDefault(x => x.Id == id));
+                case RacunTip.RacunElektra:
+                    _ = _context.Remove(_context.RacunElektra.FirstOrDefault(x => x.Id == id));
                     break;
-                case Tip.RacunElektraRate:
-                    _ = _context.RacunElektraRate.Remove(_context.RacunElektraRate.FirstOrDefault(x => x.Id == id));
+                case RacunTip.RacunElektraRate:
+                    _ = _context.Remove(_context.RacunElektraRate.FirstOrDefault(x => x.Id == id));
                     break;
-                case Tip.Holding:
-                    _ = _context.RacunHolding.Remove(_context.RacunHolding.FirstOrDefault(x => x.Id == id));
+                case RacunTip.Holding:
+                    _ = _context.Remove(_context.RacunHolding.FirstOrDefault(x => x.Id == id));
                     break;
-                case Tip.ElektraIzvrsenje:
-                    _ = _context.RacunElektraIzvrsenjeUsluge.Remove(_context.RacunElektraIzvrsenjeUsluge.FirstOrDefault(x => x.Id == id));
+                case RacunTip.ElektraIzvrsenje:
+                    _ = _context.Remove(_context.RacunElektraIzvrsenjeUsluge.FirstOrDefault(x => x.Id == id));
                     break;
-                case Tip.OdsIzvrsenje:
-                    _ = _context.RacunOdsIzvrsenjaUsluge.Remove(_context.RacunOdsIzvrsenjaUsluge.FirstOrDefault(x => x.Id == id));
+                case RacunTip.OdsIzvrsenje:
+                    _ = _context.Remove(_context.RacunOdsIzvrsenjaUsluge.FirstOrDefault(x => x.Id == id));
                     break;
                 default:
                     break;
@@ -152,13 +137,13 @@ namespace aes.Models
 
 
         /// <summary>
-        /// Columns in Index - used for inline editor
+        /// Columns in Index - columns definitions for inline editor
         /// </summary>
         private enum Columns
         {
             racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6
         }
-        public static JsonResult UpdateDbForInline(Tip tip, string racunId, string updatedColumn, string x, ApplicationDbContext _context)
+        public static JsonResult UpdateDbForInline(RacunTip tip, string racunId, string updatedColumn, string x, ApplicationDbContext _context)
         {
             int idNum = int.Parse(racunId);
             Racun racunToUpdate = null;
@@ -166,19 +151,19 @@ namespace aes.Models
 
             switch (tip)
             {
-                case Tip.RacunElektra:
+                case RacunTip.RacunElektra:
                     racunToUpdate = _context.RacunElektra.First(e => e.Id == idNum);
                     break;
-                case Tip.RacunElektraRate:
+                case RacunTip.RacunElektraRate:
                     //racunToUpdate = _context.RacunElektraRate.First(e => e.Id == idNum);
                     break;
-                case Tip.Holding:
+                case RacunTip.Holding:
                     //racunToUpdate = _context.RacunHolding.First(e => e.Id == idNum);
                     break;
-                case Tip.ElektraIzvrsenje:
+                case RacunTip.ElektraIzvrsenje:
                     //racunToUpdate = _context.RacunElektraIzvrsenjeUsluge.First(e => e.Id == idNum);
                     break;
-                case Tip.OdsIzvrsenje:
+                case RacunTip.OdsIzvrsenje:
                     //racunToUpdate = _context.RacunOdsIzvrsenjaUsluge.First(e => e.Id == idNum);
                     break;
                 default:
@@ -236,7 +221,7 @@ namespace aes.Models
             return TrySave(_context);
         }
 
-        public static JsonResult SaveToDb(Tip tip, string userId, string _dopisId, ApplicationDbContext _context)
+        public static JsonResult SaveToDb(RacunTip tip, string userId, string _dopisId, ApplicationDbContext _context)
         {
             List<Racun> racunList = new();
             int dopisId = int.Parse(_dopisId);
@@ -248,19 +233,19 @@ namespace aes.Models
 
             switch (tip)
             {
-                case Tip.RacunElektra:
+                case RacunTip.RacunElektra:
                     racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
-                case Tip.RacunElektraRate:
+                case RacunTip.RacunElektraRate:
                     //racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
-                case Tip.Holding:
+                case RacunTip.Holding:
                     //racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
-                case Tip.ElektraIzvrsenje:
+                case RacunTip.ElektraIzvrsenje:
                     //racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
-                case Tip.OdsIzvrsenje:
+                case RacunTip.OdsIzvrsenje:
                     //racunList.AddRange(_context.RacunOdsIzvrsenjaUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
                 default:
@@ -300,24 +285,24 @@ namespace aes.Models
             }
         }
 
-        public static JsonResult RemoveAllFromDb(Tip tip, string userId, ApplicationDbContext _context)
+        public static JsonResult RemoveAllFromDb(RacunTip tip, string userId, ApplicationDbContext _context)
         {
             List<Racun> racunList = new();
             switch (tip)
             {
-                case Tip.RacunElektra:
+                case RacunTip.RacunElektra:
                     _context.RemoveRange(_context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
-                case Tip.RacunElektraRate:
+                case RacunTip.RacunElektraRate:
                     //_context.RemoveRange(_context.RacunElektraRate.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
-                case Tip.Holding:
+                case RacunTip.Holding:
                     //_context.RemoveRange(_context.RacunHolding.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
-                case Tip.ElektraIzvrsenje:
+                case RacunTip.ElektraIzvrsenje:
                     //_context.RemoveRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
-                case Tip.OdsIzvrsenje:
+                case RacunTip.OdsIzvrsenje:
                     //_context.RemoveRange(_context.RacunOdsIzvrsenjaUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
                 default:

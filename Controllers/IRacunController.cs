@@ -1,14 +1,9 @@
-﻿using aes.Data;
-using aes.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    interface IRacunController
+    internal interface IRacunController
     {
 
         /// <summary>

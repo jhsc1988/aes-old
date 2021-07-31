@@ -27,7 +27,7 @@ namespace aes.Models
             _context = context;
         }
 
-        public List<Predmet> GetPredmetiDataForFilter(Tip tip)
+        public List<Predmet> GetPredmetiDataForFilter(RacunTip tip)
         {
 
             List<Racun> racunList = new();
@@ -35,19 +35,19 @@ namespace aes.Models
 
             switch (tip)
             {
-                case Tip.RacunElektra:
+                case RacunTip.RacunElektra:
                     racunList.AddRange(_context.RacunElektra.ToList());
                     break;
-                case Tip.RacunElektraRate:
+                case RacunTip.RacunElektraRate:
                     //racunList.AddRange(_context.RacunElektraRate.ToList());
                     break;
-                case Tip.Holding:
+                case RacunTip.Holding:
                     //racunList.AddRange(_context.RacunHolding.ToList());
                     break;
-                case Tip.ElektraIzvrsenje:
+                case RacunTip.ElektraIzvrsenje:
                     //racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.ToList());
                     break;
-                case Tip.OdsIzvrsenje:
+                case RacunTip.OdsIzvrsenje:
                     //racunList.AddRange(_context.RacunOdsIzvrsenjaUsluge.ToList());
                     break;
                 default:
