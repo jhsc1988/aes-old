@@ -1,4 +1,4 @@
-﻿$('#RacunElektraTable').DataTable({
+﻿$('#IndexTable').DataTable({
     "ajax": {
         "url": "/Stanovi/GetRacuniForStan",
         "type": "POST",

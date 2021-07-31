@@ -9,7 +9,7 @@
         dom: 'frtipB',
         buttons: ['excelHtml5','pdfHtml5'],
         "ajax": {
-            "url": "/RacuniElektra/GetListCreate",
+            "url": "/RacuniElektraRate/GetListCreate",
             "type": "POST",
             "datatype": "json",
         },
@@ -113,7 +113,7 @@
         var racunId = table.row($(this).parents('tr')).data().id;
         $.ajax({
             type: "POST",
-            url: "/RacuniElektra/RemoveRow",
+            url: "/RacuniElektraRate/RemoveRow",
             data: { racunId: racunId },
             success: function (r) {
                 if (r.success) {
@@ -132,7 +132,7 @@
     $("#btnSave").on("click", function () {
         $.ajax({
             type: "POST",
-            url: "/RacuniElektra/SaveToDB",
+            url: "/RacuniElektraRate/SaveToDB",
             data: {
                 _dopisid: data_dopis,
             },
@@ -156,7 +156,7 @@
     $("#btnDelete").on("click", function () {
         $.ajax({
             type: "POST",
-            url: "/RacuniElektra/RemoveAllFromDb",
+            url: "/RacuniElektraRate/RemoveAllFromDb",
             success: function (r) {
                 if (r.success) {
                     alertify.success(r.message);
@@ -177,7 +177,7 @@
     function AddNew(brojRacuna, iznos, _datum, dopisId) {
         $.ajax({
             type: "POST",
-            url: "/RacuniElektra/AddNewTemp",
+            url: "/RacuniElektraRate/AddNewTemp",
             data: {
                 brojRacuna: brojRacuna,
                 iznos: iznos,

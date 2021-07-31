@@ -58,7 +58,7 @@ $(document).ready(function () {
 
 
 
-    table = $('#RacunElektraTable').DataTable({
+    table = $('#IndexTable').DataTable({
 
 
 
@@ -89,9 +89,7 @@ $(document).ready(function () {
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
-            {
-                "data": "brojRacuna", "name": "brojRacuna",
-            },
+            { "data": "brojRacuna", "name": "brojRacuna" },
             {
                 "data": null, "name": "elektraKupac.ugovorniRacun",
                 "render": function (data, type, row, meta) {
@@ -126,7 +124,7 @@ $(document).ready(function () {
                 "searchable": false,
             },
             {
-                "targets": 1, // BrojRacuna
+                "targets": 1, // Redni broj
                 "render": $.fn.dataTable.render.ellipsis(3),
             },
             {

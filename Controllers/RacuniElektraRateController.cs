@@ -4,29 +4,45 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class RacuniElektraRateController : Controller
+    public class RacuniElektraRateController : Controller, IRacunController
     {
         private readonly ApplicationDbContext _context;
+        private readonly Predmet predmet;
+        private readonly Dopis dopis;
+        private readonly List<Predmet> predmetList;
+        private readonly List<ElektraKupac> elektraKupacList;
+        private List<RacunElektraRate> racunElektraRateList;
 
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
         public RacuniElektraRateController(ApplicationDbContext context)
         {
             _context = context;
-        }
+            predmet = new(_context);
+            dopis = new(_context);
+            racunElektraRateList = _context.RacunElektraRate.ToList();
+            elektraKupacList = _context.ElektraKupac.ToList();
+            predmetList = _context.Predmet.ToList();
 
-        // GET: RacuniElektraRate
-        //public async Task<IActionResult> Index()
-        //{
-        //    var applicationDbContext = _context.RacunElektraRate.Include(r => r.Dopis).Include(r => r.ElektraKupac);
-        //    return View(await applicationDbContext.ToListAsync());
-        //}    
+            foreach (ElektraKupac e in _context.ElektraKupac.ToList())
+            {
+                e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
+                e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
+            }
+        }
+   
         [Authorize]
         public IActionResult Index()
         {
@@ -42,26 +58,25 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunElektraRate = await _context.RacunElektraRate
+            RacunElektraRate racunElektraRate = await _context.RacunElektraRate
                 .Include(r => r.Dopis)
                 .Include(r => r.ElektraKupac)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (racunElektraRate == null)
-            {
-                return NotFound();
-            }
-
-            return View(racunElektraRate);
+            return racunElektraRate == null ? NotFound() : View(racunElektraRate);
         }
 
         // GET: RacuniElektraRate/Create
+        // GET: RacuniElektra/Create
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj");
-            ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id");
-            return View();
+            List<RacunElektraRate> applicationDbContext = await _context.RacunElektraRate.ToListAsync();
+
+            return View(applicationDbContext);
         }
+
+
+
 
         // POST: RacuniElektraRate/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -78,8 +93,6 @@ namespace aes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektraRate.DopisId);
-            ViewData["ElektraKupacId"] = new SelectList(_context.ElektraKupac, "Id", "Id", racunElektraRate.ElektraKupacId);
             return View(racunElektraRate);
         }
 
@@ -195,35 +208,35 @@ namespace aes.Controllers
             return Json(true);
         }
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu rata Elektre u JSON obliku za server side processing</returns>
-        [HttpPost]
-        public async Task<IActionResult> GetList()
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void GetDatatablesParamas()
         {
             // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        }
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<RacunElektraRate> RacunElektraRateList = new List<RacunElektraRate>();
-            RacunElektraRateList = await _context.RacunElektraRate.ToListAsync<RacunElektraRate>();
+        [HttpPost]
+        public async Task<IActionResult> GetList(string klasa, string urbroj)
+        {
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunElektraRate racunElektraRate in RacunElektraRateList)
-            {
-                racunElektraRate.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraRate.ElektraKupacId);
-            }
+            int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+            int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
 
-            // filter
-            int totalRows = RacunElektraRateList.Count;
+            GetDatatablesParamas();
+
+            racunElektraRateList = RacunElektraRate.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+
+            int totalRows = racunElektraRateList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                RacunElektraRateList = await RacunElektraRateList.
+                racunElektraRateList = await racunElektraRateList.
                     Where(
                     x => x.BrojRacuna.Contains(searchValue)
                     || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
@@ -232,34 +245,117 @@ namespace aes.Controllers
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
                     || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunElektraRate>();
-                // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
-            int totalRowsAfterFiltering = RacunElektraRateList.Count;
+            int totalRowsAfterFiltering = racunElektraRateList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
             // sorting
-            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            racunElektraRateList = racunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 
             // paging
-            RacunElektraRateList = RacunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraRate>();
+            racunElektraRateList = racunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraRate>();
 
-            return Json(new { data = RacunElektraRateList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new { data = racunElektraRateList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
+        public async Task<IActionResult> GetListCreate()
         {
-            List<RacunElektraRate> RacunElektraRateList = new List<RacunElektraRate>();
-            RacunElektraRateList = await _context.RacunElektraRate.ToListAsync<RacunElektraRate>();
+            GetDatatablesParamas();
 
-            foreach (RacunElektraRate racunElektraRate in RacunElektraRateList)
+            racunElektraRateList = RacunElektraRate.GetListCreateList(GetUid(), _context);
+
+            // filter
+            int totalRows = racunElektraRateList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
             {
-                racunElektraRate.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraRate.ElektraKupacId);
+                racunElektraRateList = await racunElektraRateList.Where(
+                        x => x.RedniBroj.ToString().Contains(searchValue)
+                             || x.BrojRacuna.Contains(searchValue)
+                             || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
+                             || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
+                             || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
+                             x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
+                             || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
+                             x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
+                             || x.DatumIzdavanja.ToString().Contains(searchValue)
+                             || x.Iznos.ToString().Contains(searchValue))
+                    .ToDynamicListAsync<RacunElektraRate>();
             }
-            return Json(RacunElektraRateList);
+
+            int totalRowsAfterFiltering = racunElektraRateList.Count;
+
+            // sorting
+            racunElektraRateList = racunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            racunElektraRateList = racunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+
+            return Json(new
+            {
+                data = racunElektraRateList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public string GetUid()
+        {
+            ClaimsPrincipal currentUser;
+            currentUser = User;
+            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
+        public JsonResult GetPredmetiDataForFilter()
+        {
+            return Json(predmet.GetPredmetiDataForFilter(RacunTip.RacunElektraRate));
+        }
+
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
+        public JsonResult GetPredmetiCreate()
+        {
+            return Json(predmetList);
+        }
+
+        public JsonResult GetDopisiCreate(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
+        public string GetKupci()
+        {
+            return JsonConvert.SerializeObject(elektraKupacList);
+        }
+
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
+        {
+            return Racun.UpdateDbForInline(RacunTip.RacunElektraRate, id, updatedColumn, x, _context);
+        }
+
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
+        {
+            return new JsonResult(RacunElektra.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        }
+
+        public JsonResult SaveToDB(string _dopisId)
+        {
+            return Racun.SaveToDb(RacunTip.RacunElektraRate, GetUid(), _dopisId, _context);
+        }
+
+        public JsonResult RemoveRow(string racunId)
+        {
+            return Racun.RemoveRow(RacunTip.RacunElektraRate, racunId, _context);
+        }
+
+        public JsonResult RemoveAllFromDb()
+        {
+            return Racun.RemoveAllFromDb(RacunTip.RacunElektraRate, GetUid(), _context);
         }
     }
 }

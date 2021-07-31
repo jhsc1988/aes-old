@@ -70,7 +70,7 @@ $(document).mousedown(function (e) {
         // get id from closest row to #_input_clicked 
         $('#klasa_td_clicked, #datum_td_clicked, #napomena_td_clicked, #racun_td_clicked, #iznos_td_clicked, #datum_izdavanja_td_clicked').on('click', function () {
             const tr = this.closest('tr');
-            const table = $('#RacunElektraTable').DataTable();
+            const table = $('#IndexTable').DataTable();
             racunId = table.row(tr).data().id;
         });
     }
@@ -78,7 +78,7 @@ $(document).mousedown(function (e) {
 
 // ************************************ for mouseclick on editable columns ************************************ //
 
-$("#RacunElektraTable").on('mousedown', 'tr td', function (e) {
+$("#IndexTable").on('mousedown', 'tr td', function (e) {
 
     if (isItEditing) {
 

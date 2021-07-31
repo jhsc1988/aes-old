@@ -155,7 +155,7 @@ namespace aes.Models
                     racunToUpdate = _context.RacunElektra.First(e => e.Id == idNum);
                     break;
                 case RacunTip.RacunElektraRate:
-                    //racunToUpdate = _context.RacunElektraRate.First(e => e.Id == idNum);
+                    racunToUpdate = _context.RacunElektraRate.First(e => e.Id == idNum);
                     break;
                 case RacunTip.Holding:
                     //racunToUpdate = _context.RacunHolding.First(e => e.Id == idNum);
@@ -237,7 +237,7 @@ namespace aes.Models
                     racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
                 case RacunTip.RacunElektraRate:
-                    //racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
                 case RacunTip.Holding:
                     //racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
@@ -294,7 +294,7 @@ namespace aes.Models
                     _context.RemoveRange(_context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
                 case RacunTip.RacunElektraRate:
-                    //_context.RemoveRange(_context.RacunElektraRate.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    _context.RemoveRange(_context.RacunElektraRate.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
                 case RacunTip.Holding:
                     //_context.RemoveRange(_context.RacunHolding.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));

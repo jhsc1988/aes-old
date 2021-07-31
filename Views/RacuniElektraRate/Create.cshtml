@@ -1,76 +1,93 @@
-﻿@model aes.Models.RacunElektraRate
+﻿@model IEnumerable<aes.Models.RacunElektraRate>
+
 
 @{
     ViewData["Title"] = "Create";
 }
 <div class="content-bg">
     <div class="head-bg">
-        <p class="h6">RacunElektraRate - kreiraj novog</p>
+        <p class="h6">Elektra - rate</p>
     </div>
-
-    <h6>Create</h6>
-
-    <hr />
-    
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="BrojRacuna" class="control-label"></label>
-                    <input asp-for="BrojRacuna" class="form-control" />
-                    <span asp-validation-for="BrojRacuna" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ElektraKupacId" class="control-label"></label>
-                    <select asp-for="ElektraKupacId" class ="form-control" asp-items="ViewBag.ElektraKupacId"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Razdoblje" class="control-label"></label>
-                    <input asp-for="Razdoblje" class="form-control" />
-                    <span asp-validation-for="Razdoblje" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Iznos" class="control-label"></label>
-                    <input asp-for="Iznos" class="form-control" />
-                    <span asp-validation-for="Iznos" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="DopisId" class="control-label"></label>
-                    <select asp-for="DopisId" class ="form-control" asp-items="ViewBag.DopisId"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="RedniBroj" class="control-label"></label>
-                    <input asp-for="RedniBroj" class="form-control" />
-                    <span asp-validation-for="RedniBroj" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="KlasaPlacanja" class="control-label"></label>
-                    <input asp-for="KlasaPlacanja" class="form-control" />
-                    <span asp-validation-for="KlasaPlacanja" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="DatumPotvrde" class="control-label"></label>
-                    <input asp-for="DatumPotvrde" class="form-control" />
-                    <span asp-validation-for="DatumPotvrde" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VrijemeUnosa" class="control-label"></label>
-                    <input asp-for="VrijemeUnosa" class="form-control" />
-                    <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
-            </form>
+    <div class="container">
+        <div>
+            <partial name="_RacuniAddNew" />
         </div>
     </div>
-
-    <div>
-        <a asp-action="Index">Back to List</a>
+    <div class="space-10-10">
+        <div id="ind">
+            <table class="display nowrap w-100" id="indexTable">
+                <thead>
+                    <tr>
+                        <th>Radni broj</th>
+                        <th>Broj računa</th>
+                        <th>Stan ID</th>
+                        <th>Adresa</th>
+                        <th>Korisnik</th>
+                        <th>Vlasništvo</th>
+                        <th>Datum izdavanja</th>
+                        <th>Iznos</th>
+                        <th>Napomena</th>
+                        <th>Akcija</th>
+                    </tr>
+                </thead>
+            </table>
+            <br />
+            <hr />
+            <div class="row">
+                <div class="margin-20">
+                    <button type="button" class="dt-button" id="btnSave">Spremi</button>
+                </div>
+                <div class="margin-20">
+                    <button type="button" class="dt-button" id="btnDelete">Briši sve</button>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div>
+            <button onclick="location.href='@Url.Action("Index", "RacuniElektraRate")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        let dopisiForFilter;
+        const isItForFilter = false;
+        const selectDopis = $("#selectDopis");
+
+        //predmet filter
+        const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiCreate";
+        const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiCreate";
+    </script>
+
+    <script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>
+    <script src=~/js/_js_global/notificationBuilder/NotificationBuilder.js></script>
+    <script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+
+    <script src="~/js/RacuniElektraRate/Create/CreateDatatables.js"></script>
+
+    @* alertify *@
+    <script src=~/js/alertify/alertify.min.js></script>
+    <link rel=stylesheet href=~/js/alertify/css/alertify.css>
+
+    @* search style *@
+    <script src="~/js/DatatablesSearchStyle.js"></script>
+    <script>
+        function GetKupciData() {
+            $.ajax({
+                type: "POST",
+                url: "/RacuniElektraRate/GetKupci",
+                success: function (kupci) {
+                    kup = JSON.parse(kupci);
+                }
+            });
+        }
+        $(document).ready(function () {
+            const input = $('#indexTable_filter input[type="search"]');
+            const filter = $('#indexTable_filter');
+            setStyle(input, filter);
+        });
+    </script>
 }

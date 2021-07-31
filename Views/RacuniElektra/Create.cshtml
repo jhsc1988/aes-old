@@ -16,7 +16,7 @@
             <table class="display nowrap w-100" id="indexTable">
                 <thead>
                     <tr>
-                        <th>rbr</th>
+                        <th>Radni broj</th>
                         <th>Broj računa</th>
                         <th>Stan ID</th>
                         <th>Adresa</th>
@@ -28,10 +28,8 @@
                         <th>Akcija</th>
                     </tr>
                 </thead>
-
             </table>
             <br />
-
             <hr />
             <div class="row">
                 <div class="margin-20">
@@ -54,24 +52,41 @@
 
     <script>
         let dopisiForFilter;
+        const isItForFilter = false;
         const selectDopis = $("#selectDopis");
-    </script>
-    <script src="~/js/RacuniElektra/Create/FilterPredmetiDopisiConfig.js"></script>
-    <script src="~/js/filterPredmetiDopisi.js"></script>
 
-    <script src="~/js/RacuniElektra/Create/NotificationBuilder.js"></script>
-    <script src="~/js/RacuniElektra/Create/GlobalVariables.js"></script>
+        //predmet filter
+        const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
+        const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
+    </script>
+
+
+    @* global scripts *@
+    <script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>
+    <script src=~/js/_js_global/notificationBuilder/NotificationBuilder.js></script>
+    <script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
     <script src="~/js/RacuniElektra/Create/CreateDatatables.js"></script>
 
-    <script src="~/js/alertify/alertify.min.js"></script>
-    <link rel="stylesheet" href=~/js/alertify/css/alertify.css>
+    @* alertify *@
+    <script src=~/js/alertify/alertify.min.js></script>
+    <link rel=stylesheet href=~/js/alertify/css/alertify.css>
+
+    @* search style *@
     <script src="~/js/DatatablesSearchStyle.js"></script>
     <script>
+        function GetKupciData() {
+            $.ajax({
+                type: "POST",
+                url: "/RacuniElektra/GetKupci",
+                success: function (kupci) {
+                    kup = JSON.parse(kupci);
+                }
+            });
+        }
         $(document).ready(function () {
             const input = $('#indexTable_filter input[type="search"]');
             const filter = $('#indexTable_filter');
             setStyle(input, filter);
         });
     </script>
-
 }

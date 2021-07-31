@@ -5,23 +5,14 @@
             <i class="bi bi-plus"></i>unos novih
         </a>
     </div>
-    <form class="row g-3 d-flex justify-content-end">
-        <div class="col-md-2">
-            <select class="form-control form-control-sm" id="selectPredmet">
-                <option value="" disabled selected hidden>Predmet</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select class="form-control form-control-sm" id="selectDopis" disabled>
-                <option value="" disabled selected hidden>Dopis</option>
-            </select>
-        </div>
-    </form>
-    <table class="display nowrap w-100" id="RacunElektraTable">
+    <div>
+        <partial name="_PredmetiDopisiFilter" />
+    </div>
+    <table class="display nowrap w-100" id="IndexTable">
         <thead>
             <tr>
-                <th>id</th>
-                <th>rbr</th>
+                <th>id</th> @* invisible *@
+                <th>Redni broj</th>
                 <th>Broj računa</th>
                 <th>Ugovorni račun</th>
                 <th>Datum izdavanja</th>
@@ -29,33 +20,41 @@
                 <th>Klasa plaćanja</th>
                 <th>Datum potvrde</th>
                 <th>Napomena</th>
-                <th>Akcija</th>
+                <th>Akcija</th> @* seen in editor *@
             </tr>
         </thead>
     </table>
 </div>
 <script>
-    let isItEditing = false;
     let dopisiForFilter;
+    let isItEditing = false;
+    //let isItForFilter = false;
     const selectDopis = $("#selectDopis");
+    const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
+    const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
 
-
-</script>
-    <script src="~/js/InlineEdit.js"></script>
-<script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
-<script src="~/js/filterPredmetiDopisi.js"></script>
-
-<script src="~/js/DatatablesSearchStyle.js"></script>
-<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
-<script>
-    $(document).ready(function () {
-        const input = $('#RacunElektraTable_filter input[type="search"]');
-        const filter = $('#RacunElektraTable_filter');
-        setStyle(input, filter);
+    $("#selectDopis").change(function () {
+        data_dopis = $("#selectDopis :selected").val();
+        refreshWithFilteredData();
     });
 
-    
-</script>
+    function refreshWithFilteredData() {
+        $('#IndexTable').DataTable().ajax.reload();
+    }
+</script>    
+<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+<script src="~/js/_js_global/InlineEdit.js"></script>
+<script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
 
 <script src="~/js/alertify/alertify.min.js"></script>
 <link rel="stylesheet" href=~/js/alertify/css/alertify.css>
+<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script>
+    $(document).ready(function () {
+        const input = $('#IndexTable_filter input[type="search"]');
+        const filter = $('#IndexTable_filter');
+        setStyle(input, filter);
+    });
+</script>
+

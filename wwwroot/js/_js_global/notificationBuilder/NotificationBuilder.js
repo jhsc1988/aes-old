@@ -1,14 +1,4 @@
-﻿function GetKupciData() {
-    $.ajax({
-        type: "POST",
-        url: "/RacuniElektra/GetKupci",
-        success: function (kupci) {
-            kup = JSON.parse(kupci);
-        }
-    });
-}
-
-function getData() {
+﻿function getData() {
     GetKupciData();
     $.each(kup, function (key, value) {
         brojRacuna = $("#brojRacuna").val();
