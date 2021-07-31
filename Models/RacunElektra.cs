@@ -30,7 +30,11 @@ namespace aes.Models
                 IsItTemp = true,
             };
 
-            re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
+            if (_context.ElektraKupac.Any(e => e.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10))))
+                re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
+            else
+                re.ElektraKupac = null;
+
             racunElektraList.Add(re);
 
             int rbr = 1;
