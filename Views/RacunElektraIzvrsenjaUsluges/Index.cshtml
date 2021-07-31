@@ -1,32 +1,35 @@
 ﻿<div class="content-bg">
-<div class="row head-bg justify-content-between">
-    <p class="col-sm-10 h6">Pregled računa - HEP - Elektra - izvršenje usluge</p>
-    <a class="link-head" asp-controller="RacunElektraIzvrsenjaUsluges" asp-action="Create">
-        <i class="bi bi-plus"></i>unos novih
-    </a>
-</div>
+    <div class="row head-bg justify-content-between">
+        <p class="col-sm-10 h6">Pregled računa - HEP - Elektra - izvršenje usluge</p>
+        <a class="link-head" asp-controller="RacunElektraIzvrsenjaUsluges" asp-action="Create">
+            <i class="bi bi-plus"></i>unos novih
+        </a>
+    </div>
+    <div>
+        <partial name="_PredmetiDopisiFilter" />
+    </div>
     <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
         <thead>
-        <tr>
-            <th>Broj računa</th>
-            <th>Ugovorni račun</th>
-            <th>Datum izdavanja</th>
-            <th>Datum izvršenja</th>
-            <th>Usluga</th>
-            <th>Iznos</th>
-            <th>Klasa plaćanja</th>
-            <th>Datum potvrde</th>
-            <th>Napomena</th>
-        </tr>
+            <tr>
+                <th>Broj računa</th>
+                <th>Ugovorni račun</th>
+                <th>Datum izdavanja</th>
+                <th>Datum izvršenja</th>
+                <th>Usluga</th>
+                <th>Iznos</th>
+                <th>Klasa plaćanja</th>
+                <th>Datum potvrde</th>
+                <th>Napomena</th>
+            </tr>
         </thead>
     </table>
 </div>
 <script src="~/js/RacunElektraIzvrsenjaUsluges/IndexDatatables.js"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
-$(document).ready(function () {
-    const input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
-    const filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
-    setStyle(input, filter);
-});
+    $(document).ready(function () {
+        const input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
+        const filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+        setStyle(input, filter);
+    });
 </script>
