@@ -4,17 +4,11 @@
 
     let predmetiForFilter;
 
-
     GetPredmetiData();
-
-    // ************************************ set dopisi callback for AJAX ************************************ //
 
     function setDopisiForFilterCallBack(val) {
         dopisiForFilter = val;
     }
-
-    // ************************************ predmeti ************************************ //
-
 
     function GetPredmetiData() {
         $.ajax({

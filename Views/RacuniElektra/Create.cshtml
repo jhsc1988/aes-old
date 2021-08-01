@@ -30,20 +30,12 @@
                 </thead>
             </table>
             <br />
-            <hr />
-            <div class="row">
-                <div class="margin-20">
-                    <button type="button" class="dt-button" id="btnSave">Spremi</button>
-                </div>
-                <div class="margin-20">
-                    <button type="button" class="dt-button" id="btnDelete">Briši sve</button>
-                </div>
-            </div>
         </div>
-        <hr />
+        <div>
+            <partial name="_SaveDeleteBottomCreate" />
+        </div>
         <div>
             <button onclick="location.href='@Url.Action("Index", "RacuniElektra")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
-            @*<a asp-action="Index">Back to List</a>*@
         </div>
     </div>
 </div>
