@@ -1,10 +1,9 @@
 ﻿$(document).ready(function () {
 
+    GetPredmetiData(); // init
     const selectPredmet = $("#selectPredmet");
-
+    const selectDopis = $("#selectDopis");
     let predmetiForFilter;
-
-    GetPredmetiData();
 
     function setDopisiForFilterCallBack(val) {
         dopisiForFilter = val;
@@ -83,3 +82,12 @@
         GetDopisiData();
     });
 });
+
+$("#selectDopis").change(function () {
+    data_dopis = $("#selectDopis :selected").val();
+    refreshWithFilteredData();
+});
+
+function refreshWithFilteredData() {
+    $('#IndexTable').DataTable().ajax.reload();
+}

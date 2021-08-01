@@ -43,52 +43,18 @@
 @section Scripts {
 
     <script>
-        let dopisiForFilter;
-        const isItForFilter = false;
-        const selectDopis = $("#selectDopis");
-
-        //predmet filter
-        const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
-        const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
-
-        $("#selectDopis").change(function () {
-            data_dopis = $("#selectDopis :selected").val();
-            refreshWithFilteredData();
-        });
-
-        function refreshWithFilteredData() {
-            $('#IndexTable').DataTable().ajax.reload();
-        }
-
+        const GetKupciDataUrl = "/RacuniElektra/GetKupci";
+        const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiCreate";
+        const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiCreate";
     </script>
+    <script src="~/js/RacuniElektraRate/Create/CreateDatatables.js"></script>
+    <script src="~/js/DatatablesSearchStyle.js"></script>
 
-
-    @* global scripts *@
     <script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>
     <script src=~/js/_js_global/notificationBuilder/NotificationBuilder.js></script>
-    <script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
-    <script src="~/js/RacuniElektra/Create/CreateDatatables.js"></script>
 
-    @* alertify *@
+    <script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+
     <script src=~/js/alertify/alertify.min.js></script>
     <link rel=stylesheet href=~/js/alertify/css/alertify.css>
-
-    @* search style *@
-    <script src="~/js/DatatablesSearchStyle.js"></script>
-    <script>
-        function GetKupciData() {
-            $.ajax({
-                type: "POST",
-                url: "/RacuniElektra/GetKupci",
-                success: function (kupci) {
-                    kup = JSON.parse(kupci);
-                }
-            });
-        }
-        $(document).ready(function () {
-            const input = $('#indexTable_filter input[type="search"]');
-            const filter = $('#indexTable_filter');
-            setStyle(input, filter);
-        });
-    </script>
 }

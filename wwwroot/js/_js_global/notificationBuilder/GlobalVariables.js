@@ -1,4 +1,9 @@
-﻿let data_dopis = 0;
+﻿// filter
+let dopisiForFilter;
+const isItForFilter = false;
+
+// notification builder
+let data_dopis = 0;
 let data_stanId = "";
 let data_adresa = "";
 let data_kat = "";

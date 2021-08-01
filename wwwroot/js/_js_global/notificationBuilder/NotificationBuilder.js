@@ -35,3 +35,18 @@
 $("#brojRacuna").on("change focusin focusout", function () {
     getData();
 });
+
+function GetKupciData() {
+    $.ajax({
+        type: "POST",
+        url: GetKupciDataUrl,
+        success: function (kupci) {
+            kup = JSON.parse(kupci);
+        }
+    });
+}
+$(document).ready(function () {
+    const input = $('#indexTable_filter input[type="search"]');
+    const filter = $('#indexTable_filter');
+    setStyle(input, filter);
+});
