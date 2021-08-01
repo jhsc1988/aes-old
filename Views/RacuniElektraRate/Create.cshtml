@@ -58,8 +58,17 @@
         const selectDopis = $("#selectDopis");
 
         //predmet filter
-        const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiCreate";
-        const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiCreate";
+        const GetPredmetiDataForFilterUrl = "/RacuniElektraRate/GetPredmetiCreate";
+        const GetDopisiDataForFilterUrl = "/RacuniElektraRate/GetDopisiCreate";
+
+        $("#selectDopis").change(function () {
+            data_dopis = $("#selectDopis :selected").val();
+            refreshWithFilteredData();
+        });
+
+        function refreshWithFilteredData() {
+            $('#IndexTable').DataTable().ajax.reload();
+        }
     </script>
 
     <script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>

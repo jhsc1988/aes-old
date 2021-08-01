@@ -11,7 +11,7 @@ namespace aes.Models
     public class RacunElektra : Racun
     {
         public ElektraKupac ElektraKupac { get; set; }
-        public int ElektraKupacId { get; set; }
+        public int? ElektraKupacId { get; set; }
 
         public static JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {
@@ -30,11 +30,7 @@ namespace aes.Models
                 IsItTemp = true,
             };
 
-            if (_context.ElektraKupac.Any(e => e.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10))))
-                re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
-            else
-                re.ElektraKupac = null;
-
+            re.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(re.BrojRacuna.Substring(0, 10)));
             racunElektraList.Add(re);
 
             int rbr = 1;
@@ -91,7 +87,7 @@ namespace aes.Models
 
             if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
             {
-                racunElektraList = _context.RacunElektra.ToList();
+                racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == null).ToList();
             }
 
             if (predmetIdAsInt != 0)

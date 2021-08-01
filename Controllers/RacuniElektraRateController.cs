@@ -340,7 +340,7 @@ namespace aes.Controllers
 
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
         {
-            return new JsonResult(RacunElektra.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+            return new JsonResult(RacunElektraRate.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         }
 
         public JsonResult SaveToDB(string _dopisId)

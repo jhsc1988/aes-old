@@ -11,7 +11,7 @@ namespace aes.Models
     {
         public ElektraKupac ElektraKupac { get; set; }
         [Required]
-        public int ElektraKupacId { get; set; }
+        public int? ElektraKupacId { get; set; }
 
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Razdoblje")]
@@ -94,7 +94,7 @@ namespace aes.Models
 
             if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
             {
-                RacunElektraRateList = _context.RacunElektraRate.ToList();
+                RacunElektraRateList = _context.RacunElektraRate.Where(e => e.IsItTemp == null).ToList();
             }
 
             if (predmetIdAsInt != 0)

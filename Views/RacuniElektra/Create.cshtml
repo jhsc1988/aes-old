@@ -58,6 +58,16 @@
         //predmet filter
         const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
         const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
+
+        $("#selectDopis").change(function () {
+            data_dopis = $("#selectDopis :selected").val();
+            refreshWithFilteredData();
+        });
+
+        function refreshWithFilteredData() {
+            $('#IndexTable').DataTable().ajax.reload();
+        }
+
     </script>
 
 
