@@ -21,8 +21,6 @@
             { "data": "elektraKupac.ods.stan.korisnik", "name": "elektraKupac.ods.stan.korisnik" },
             { "data": "elektraKupac.ods.stan.vlasni\u0161tvo", "name": "elektraKupac.ods.stan.vlasništvo" },
             { "data": "datumIzdavanja", "name": "datumIzdavanja" },
-            { "data": "datumIzvršenja", "name": "datumIzvršenja" },
-            { "data": "usluga", "name": "usluga" },
             {
                 "data": "iznos", "name": "iznos",
                 "render": $.fn.dataTable.render.number('.', ',', 2, '')
@@ -80,27 +78,15 @@
                 }
             },
             {
-                "targets": 7, // Datum izvršenja
-                "render": function (data, type, row) {
-                    if (data == null)
-                        return "";
-                    return moment(data).format("DD.MM.YYYY")
-                }
-            },
-            {
-                "targets": 8, // usluga
+                "targets": 7, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 9, // Iznos
-                "render": $.fn.dataTable.render.ellipsis(8),
-            },
-            {
-                "targets": 10, // Napomena
+                "targets": 8, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(28),
             },
             {
-                "targets": 11, // remove
+                "targets": 9, // remove
                 "orderable": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button>"
@@ -119,6 +105,7 @@
             AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), data_dopis);
             table.row.add(["<td><button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >"]).draw();
     });
+
 
     // ************************************ remove row ************************************ //
 
@@ -214,6 +201,8 @@
         $('#brojRacuna').val("");
         $('#datumIzdavanja').val("");
         $('#iznos').val("");
+        $('#usluga').val("");
+        $('#datumIzvrsenja').val("");
         $('#stanText').html("");
     }
 });

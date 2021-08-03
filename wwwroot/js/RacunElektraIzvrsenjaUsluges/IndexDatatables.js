@@ -1,24 +1,31 @@
-﻿$(document).ready(function () {
+﻿// for inline editing
+let table;
 
-    $('#RacunElektraIzvrsenjeUslugeTable').DataTable({
+$(document).ready(function () {
+
+    table = $('#IndexTable').DataTable({
         "ajax": {
             "url": "/RacunElektraIzvrsenjaUsluges/GetList",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.klasa = $("#selectPredmet").val();
+                d.urbroj = $("#selectDopis").val();
+            }
         },
         // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
         // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
-            {
-                "data": null, "name": "brojRacuna",
-                "render": function (data, type, row, meta) {
-                    return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
-                }
-            },
+            { "data": "id", "name": "id" },
+            { "data": "redniBroj", "name": "redniBroj" },
+            { "data": "brojRacuna", "name": "brojRacuna" },
+
             {
                 "data": null, "name": "elektraKupac.ugovorniRacun",
                 "render": function (data, type, row, meta) {
-                    return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                    if (data.elektraKupac != null)
+                        return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                    return '';
                 }
             },
             {"data": "datumIzdavanja", "name": "datumIzdavanja"},
@@ -30,7 +37,8 @@
             },
             {"data": "klasaPlacanja", "name": "klasaPlacanja"},
             {"data": "datumPotvrde", "name": "datumPotvrde"},
-            {"data": "napomena", "name": "napomena"},
+            { "data": "napomena", "name": "napomena" },
+            { "data": null, "name": null }, // akcija
         ],
         "paging": true,
         "serverSide": true,
@@ -44,39 +52,60 @@
         "scrollX": true,
         "columnDefs": [
             {
-                "targets": 0, // BrojRacuna
+                "targets": 0, // id - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 1, // Redni broj
+                "render": $.fn.dataTable.render.ellipsis(3),
+            },
+            {
+                "targets": 2, // BrojRacuna
                 "render": $.fn.dataTable.render.ellipsis(19),
             },
             {
-                "targets": 1, // UgovorniRacun
+                "targets": 3, // UgovorniRacun
                 "render": $.fn.dataTable.render.ellipsis(10),
             },
             {
-                "targets": 2, // DatumIzdavanja
+                "targets": 4, // DatumIzdavanja
                 "render": function (data, type, row) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
             {
-                "targets": 3, // DatumIzvrsenja
+                "targets": 5, // DatumIzvrsenja
                 "render": function (data, type, row) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
             {
-                "targets": 4, // Usluga
+                "targets": 6, // Usluga
                 "render": $.fn.dataTable.render.ellipsis(30),
             }, {
-                "targets": 5, // Iznos
+                "targets": 7, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 6, // KlasaPlacanja
+                "targets": 8, // KlasaPlacanja
                 "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 7, // Napomena
+                "targets": 9, // Datum potvrde
+                "render": function (data, type, row) {
+                    return moment(data).format("DD.MM.YYYY")
+                }
+            },
+            {
+                "targets": 10, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(30),
+            },
+            {
+                "targets": 11, // akcija - hidden
+                "visible": false,
+                "searchable": false,
+                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
             },
         ]
     });

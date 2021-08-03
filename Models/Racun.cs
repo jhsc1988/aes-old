@@ -141,7 +141,7 @@ namespace aes.Models
         /// </summary>
         private enum Columns
         {
-            racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6
+            racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6, datumIzvrsenja = 7, usluga = 8
         }
         public static JsonResult UpdateDbForInline(RacunTip tip, string racunId, string updatedColumn, string x, ApplicationDbContext _context)
         {
@@ -214,7 +214,10 @@ namespace aes.Models
                 case Columns.napomena:
                     racunToUpdate.Napomena = x;
                     break;
-
+                case Columns.datumIzvrsenja:
+                    break;
+                case Columns.usluga:
+                    break;
                 default:
                     break;
             }

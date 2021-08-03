@@ -15,18 +15,27 @@ namespace aes.Controllers
     public class RacunElektraIzvrsenjaUslugesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly Predmet predmet;
+        private readonly Dopis dopis;
+        private readonly List<Predmet> predmetList;
+        private readonly List<ElektraKupac> elektraKupacList;
+        private List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList;
+
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
 
         public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context)
         {
             _context = context;
+            predmet = new(_context);
+            dopis = new(_context);
+            racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.ToList();
+            elektraKupacList = _context.ElektraKupac.ToList();
+            predmetList = _context.Predmet.ToList();
         }
-
-        // GET: RacunElektraIzvrsenjaUsluges
-        //public async Task<IActionResult> Index()
-        //{
-        //    var applicationDbContext = _context.RacunElektraIzvrsenjeUsluge.Include(r => r.Dopis).Include(r => r.ElektraKupac);
-        //    return View(await applicationDbContext.ToListAsync());
-        //}    
+  
         [Authorize]
         public IActionResult Index()
         {
@@ -194,23 +203,28 @@ namespace aes.Controllers
             return Json(true);
         }
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu računa izvršenja usluge Elektre u JSON obliku za server side processing</returns>
-        [HttpPost]
-        public async Task<IActionResult> GetList()
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void GetDatatablesParamas()
         {
             // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        }
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = new List<RacunElektraIzvrsenjeUsluge>();
-            RacunElektraIzvrsenjeUslugeList = await _context.RacunElektraIzvrsenjeUsluge.ToListAsync<RacunElektraIzvrsenjeUsluge>();
+        [HttpPost]
+        public async Task<IActionResult> GetList(string klasa, string urbroj)
+        {
+            int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+            int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+
+            GetDatatablesParamas();
+
+            racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetList(predmetIdAsInt, dopisIdAsInt, _context);
 
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in RacunElektraIzvrsenjeUslugeList)

@@ -8,9 +8,11 @@
     <div>
         <partial name="_PredmetiDopisiFilter" />
     </div>
-    <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
+    <table class="display nowrap w-100" id="IndexTable">
         <thead>
             <tr>
+                <th>id</th> @* invisible *@
+                <th>Redni broj</th>
                 <th>Broj računa</th>
                 <th>Ugovorni račun</th>
                 <th>Datum izdavanja</th>
@@ -20,16 +22,33 @@
                 <th>Klasa plaćanja</th>
                 <th>Datum potvrde</th>
                 <th>Napomena</th>
+                <th>Akcija</th> @* seen in editor *@
             </tr>
         </thead>
     </table>
 </div>
+
+<script>
+    const GetPredmetiDataForFilterUrl = "/RacunElektraIzvrsenjaUsluges/GetPredmetiDataForFilter";
+    const GetDopisiDataForFilterUrl = "/RacunElektraIzvrsenjaUsluges/GetDopisiDataForFilter";
+</script>
+
 <script src="~/js/RacunElektraIzvrsenjaUsluges/IndexDatatables.js"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
+
+<script src="~/js/_js_global/InlineEdit/InlineEditUpdateDb.js"></script>
+<script src="~/js/_js_global/InlineEdit/InlineEditBrojRacunaDatumIzdavanja.js"></script>
+<script src="~/js/_js_global/InlineEdit/InlineEditUsluga.js"></script>
+
+<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+<script src="~/js/RacunElektraIzvrsenjaUsluges/FilterPredmetiDopisiConfig.js"></script>
+
+<script src="~/js/alertify/alertify.min.js"></script>
+<link rel="stylesheet" href=~/js/alertify/css/alertify.css>
 <script>
     $(document).ready(function () {
-        const input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
-        const filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+        const input = $('#IndexTable_filter input[type="search"]');
+        const filter = $('#IndexTable_filter');
         setStyle(input, filter);
     });
 </script>

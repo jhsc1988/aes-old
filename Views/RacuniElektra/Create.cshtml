@@ -43,6 +43,7 @@
 @section Scripts {
 
     <script>
+        const updateDbUrl = "/RacuniElektra/updateDbForInline";
         const GetKupciDataUrl = "/RacuniElektra/GetKupci";
         const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiCreate";
         const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiCreate";
@@ -57,4 +58,13 @@
 
     <script src=~/js/alertify/alertify.min.js></script>
     <link rel=stylesheet href=~/js/alertify/css/alertify.css>
+
+<script>
+    $(document).ready(function () {
+        const input = $('#indexTable_filter input[type="search"]');
+        const filter = $('#indexTable_filter');
+        setStyle(input, filter);
+    });
+</script>
+
 }

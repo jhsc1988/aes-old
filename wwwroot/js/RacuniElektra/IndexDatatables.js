@@ -1,7 +1,6 @@
 ﻿// for inline editing
 let table;
 
-
 $(document).ready(function () {
 
 
@@ -106,7 +105,7 @@ $(document).ready(function () {
             { "data": "klasaPlacanja", "name": "klasaPlacanja" },
             { "data": "datumPotvrde", "name": "datumPotvrde" },
             { "data": "napomena", "name": "napomena" },
-            { "data": null, "name": null },
+            { "data": null, "name": null }, // akcija
         ],
         "paging": true,
         "serverSide": true,

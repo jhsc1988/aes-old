@@ -1,56 +1,51 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using aes.Data;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace aes.Models
 {
-    public class RacunElektraIzvrsenjeUsluge
+    public class RacunElektraIzvrsenjeUsluge : Racun
     {
-        public int Id { get; set; }
-
-        [Required]
-        [MaxLength(19)]
-        [Remote(action: "BrojRacunaValidation", controller: "RacunElektraIzvrsenjaUsluges")]
-        public string BrojRacuna { get; set; }
 
         public ElektraKupac ElektraKupac { get; set; }
         [Required]
         public int ElektraKupacId { get; set; }
 
         // required se podrazumijeva jer nije nullable
-        [Display(Name = "Datum izdavanja")]
-        public DateTime DatumIzdavanja { get; set; }
-
-        // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum izvršenja")]
         public DateTime DatumIzvrsenja { get; set; }
 
-        [MaxLength(64)]
-        public string Usluga { get; set; }
+        public static List<RacunElektraIzvrsenjeUsluge> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
+        {
+            List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList = new();
 
-        // TODO: postaviti decimal za money
-        // [DataType(DataType.Currency)]
-        [Required]
-        public double Iznos { get; set; }
+            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            {
+                racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null).ToList();
+            }
 
-        public Dopis Dopis { get; set; }
-        [Required]
-        public int DopisId { get; set; }
+            if (predmetIdAsInt != 0)
+            {
+                racunElektraIzvrsenjeList = dopisIdAsInt == 0
+                    ? _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
+                    : _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
+            }
 
-        [Required]
-        public int RedniBroj { get; set; }
 
-        [MaxLength(20)]
-        [Display(Name = "Klasa Plaćanja")]
-        public string KlasaPlacanja { get; set; }
+            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenje in racunElektraIzvrsenjeList)
+            {
+                racunElektraIzvrsenje.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.Id == racunElektraIzvrsenje.ElektraKupacId);
+                racunElektraIzvrsenje.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == racunElektraIzvrsenje.DopisId);
 
-        [Display(Name = "Datum Potvrde")]
-        public DateTime? DatumPotvrde { get; set; } // nullable mi treba za not required
-
-        [Display(Name = "Vrijeme unosa")]
-        public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
-
-        [MaxLength(255)]
-        public string Napomena { get; set; }
+                if (racunElektraIzvrsenje.Dopis != null)
+                {
+                    racunElektraIzvrsenje.Dopis.Predmet = _context.Predmet.FirstOrDefault(o => o.Id == racunElektraIzvrsenje.Dopis.PredmetId);
+                }
+            }
+            return racunElektraIzvrsenjeList;
+        }
     }
 }
