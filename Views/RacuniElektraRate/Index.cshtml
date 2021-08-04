@@ -26,33 +26,24 @@
     </table>
 </div>
 <script>
-    let dopisiForFilter;
-    let isItEditing = false;
-    // let isItForFilter = false;
-    const selectDopis = $("#selectDopis");
+    const updateDbUrl = "/RacuniElektraRate/updateDbForInline";
     const GetPredmetiDataForFilterUrl = "/RacuniElektraRate/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacuniElektraRate/GetDopisiDataForFilter";
 
-    $("#selectDopis").change(function () {
-        data_dopis = $("#selectDopis :selected").val();
-        refreshWithFilteredData();
-    });
-
-    function refreshWithFilteredData() {
-        $('#IndexTable').DataTable().ajax.reload();
-    }
 </script>
-<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
-<script src="~/js/RacuniElektraRate/FilterPredmetiDopisiConfig.js"></script>
+<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
 
 <script src="~/js/_js_global/InlineEdit/InlineEditUpdateDb.js"></script>
 <script src="~/js/_js_global/InlineEdit/InlineEditBrojRacunaDatumIzdavanja.js"></script>
 <script src="~/js/_js_global/InlineEdit/InlineEditRacuni.js"></script>
 
+<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+<script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
+
 <script src="~/js/alertify/alertify.min.js"></script>
 <link rel="stylesheet" href=~/js/alertify/css/alertify.css>
-<script src="~/js/RacuniElektraRate/IndexDatatables.js"></script>
-<script src="~/js/DatatablesSearchStyle.js"></script>
+
 <script>
     $(document).ready(function () {
         const input = $('#IndexTable_filter input[type="search"]');

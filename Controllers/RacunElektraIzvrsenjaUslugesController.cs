@@ -4,15 +4,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class RacunElektraIzvrsenjaUslugesController : Controller
+    public class RacunElektraIzvrsenjaUslugesController : Controller, IRacunController
     {
         private readonly ApplicationDbContext _context;
         private readonly Predmet predmet;
@@ -34,8 +36,14 @@ namespace aes.Controllers
             racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.ToList();
             elektraKupacList = _context.ElektraKupac.ToList();
             predmetList = _context.Predmet.ToList();
+
+            foreach (ElektraKupac e in _context.ElektraKupac.ToList())
+            {
+                e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
+                e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
+            }
         }
-  
+
         [Authorize]
         public IActionResult Index()
         {
@@ -227,54 +235,139 @@ namespace aes.Controllers
             racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetList(predmetIdAsInt, dopisIdAsInt, _context);
 
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in RacunElektraIzvrsenjeUslugeList)
+            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in racunElektraIzvrsenjeList)
             {
                 racunElektraIzvrsenjeUsluge.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraIzvrsenjeUsluge.ElektraKupacId);
             }
 
             // filter
-            int totalRows = RacunElektraIzvrsenjeUslugeList.Count;
+            int totalRows = racunElektraIzvrsenjeList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                RacunElektraIzvrsenjeUslugeList = await RacunElektraIzvrsenjeUslugeList.
+                racunElektraIzvrsenjeList = await racunElektraIzvrsenjeList.
                     Where(
                     x => x.BrojRacuna.Contains(searchValue)
                     || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                    || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                    || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                     || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
                     || (x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower()))
                     || x.Iznos.ToString().Contains(searchValue)
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
                     || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue))).ToDynamicListAsync<RacunElektraIzvrsenjeUsluge>();
-                // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
-            int totalRowsAfterFiltering = RacunElektraIzvrsenjeUslugeList.Count;
+            int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
             // sorting
-            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
 
             // paging
-            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraIzvrsenjeUsluge>();
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraIzvrsenjeUsluge>();
 
-            return Json(new { data = RacunElektraIzvrsenjeUslugeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new { data = racunElektraIzvrsenjeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
+        public async Task<IActionResult> GetListCreate()
         {
-            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = new List<RacunElektraIzvrsenjeUsluge>();
-            RacunElektraIzvrsenjeUslugeList = await _context.RacunElektraIzvrsenjeUsluge.ToListAsync<RacunElektraIzvrsenjeUsluge>();
+            GetDatatablesParamas();
 
-            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in RacunElektraIzvrsenjeUslugeList)
+            racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetListCreateList(GetUid(), _context);
+
+            // filter
+            int totalRows = racunElektraIzvrsenjeList.Count;
+            if (!string.IsNullOrEmpty(searchValue))
             {
-                racunElektraIzvrsenjeUsluge.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraIzvrsenjeUsluge.ElektraKupacId);
+                racunElektraIzvrsenjeList = await racunElektraIzvrsenjeList.Where(
+                        x => x.RedniBroj.ToString().Contains(searchValue)
+                             || x.BrojRacuna.Contains(searchValue)
+                             || x.ElektraKupac.Ods.Stan.StanId.ToString().Contains(searchValue)
+                             || (x.ElektraKupac.Ods.Stan.Adresa != null && x.ElektraKupac.Ods.Stan.Adresa.Contains(searchValue))
+                             || (x.ElektraKupac.Ods.Stan.Korisnik != null &&
+                             x.ElektraKupac.Ods.Stan.Korisnik.Contains(searchValue))
+                             || (x.ElektraKupac.Ods.Stan.Vlasništvo != null &&
+                             x.ElektraKupac.Ods.Stan.Vlasništvo.Contains(searchValue))
+                             || x.DatumIzdavanja.ToString().Contains(searchValue)
+                             || x.DatumIzvrsenja.ToString().Contains(searchValue)
+                             || x.Iznos.ToString().Contains(searchValue)
+                             || x.Napomena.ToString().Contains(searchValue))
+                    .ToDynamicListAsync<RacunElektraIzvrsenjeUsluge>();
             }
-            return Json(RacunElektraIzvrsenjeUslugeList);
+
+            int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
+
+            // sorting
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+
+            // paging
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+
+            return Json(new
+            {
+                data = racunElektraIzvrsenjeList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public string GetUid()
+        {
+            ClaimsPrincipal currentUser;
+            currentUser = User;
+            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
+        public JsonResult GetPredmetiDataForFilter()
+        {
+            return Json(predmet.GetPredmetiDataForFilter(RacunTip.ElektraIzvrsenje));
+        }
+
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
+        public JsonResult GetPredmetiCreate()
+        {
+            return Json(predmetList);
+        }
+
+        public JsonResult GetDopisiCreate(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
+        public string GetKupci()
+        {
+            return JsonConvert.SerializeObject(elektraKupacList);
+        }
+
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
+        {
+            return Racun.UpdateDbForInline(RacunTip.ElektraIzvrsenje, id, updatedColumn, x, _context);
+        }
+
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja, string usluga, string dopisId)
+        {
+            return new JsonResult(RacunElektraIzvrsenjeUsluge.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
+        }
+
+        public JsonResult SaveToDB(string _dopisId)
+        {
+            return Racun.SaveToDb(RacunTip.ElektraIzvrsenje, GetUid(), _dopisId, _context);
+        }
+
+        public JsonResult RemoveRow(string racunId)
+        {
+            return Racun.RemoveRow(RacunTip.ElektraIzvrsenje, racunId, _context);
+        }
+
+        public JsonResult RemoveAllFromDb()
+        {
+            return Racun.RemoveAllFromDb(RacunTip.ElektraIzvrsenje, GetUid(), _context);
         }
     }
 }

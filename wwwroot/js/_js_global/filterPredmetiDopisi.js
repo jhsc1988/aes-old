@@ -4,6 +4,7 @@
     const selectPredmet = $("#selectPredmet");
     const selectDopis = $("#selectDopis");
     let predmetiForFilter;
+    let dopisiForFilter;
 
     function setDopisiForFilterCallBack(val) {
         dopisiForFilter = val;

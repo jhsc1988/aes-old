@@ -94,6 +94,8 @@ $(document).ready(function () {
             {
                 "targets": 9, // Datum potvrde
                 "render": function (data, type, row) {
+                    if (data == null)
+                        return "";
                     return moment(data).format("DD.MM.YYYY")
                 }
             },

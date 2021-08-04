@@ -13,7 +13,7 @@ $(document).mousedown(function (e) {
 
         // Datum izvrsenja
         if (!$(e.target).is('#datumIzvrsenja_input_clicked') && !$(e.target).is("#datumIzvrsenja_td_clicked")) {
-            $("#datumIzvrsenja_input_clicked").replaceWith("<td>" + datumIzvrsenja + "</td>");
+            $("#datumIzvrsenja_td_clicked").replaceWith("<td>" + datumIzvrsenja + "</td>");
             if (datumIzvrsenjaUpdated) {
                 updateDb(7, datumIzvrsenja);
                 datumIzvrsenjaUpdated = false;
@@ -83,6 +83,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Datum izvrsenja
         if ($(e.target).is('td:nth-child(5)') && !$(e.target).is("#datumIzvrsenja_td_clicked")) {
             $("#datumIzvrsenja_td_clicked").not(e.target).replaceWith("<td>" + datumIzvrsenja + "</td>");
+
             if (datumIzvrsenjaUpdated) {
                 updateDb(7, datumIzvrsenja);
                 datumIzvrsenjaUpdated = false;
@@ -99,6 +100,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Usluga
         if ($(e.target).is('td:nth-child(6)') && !$(e.target).is("#usluga_td_clicked")) {
             $("#usluga_td_clicked").not(e.target).replaceWith("<td>" + usluga + "</td>");
+
             if (uslugaUpdated) {
                 updateDb(8, usluga);
                 uslugaUpdated = false;
@@ -115,6 +117,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Iznos
         if ($(e.target).is('td:nth-child(7)') && !$(e.target).is("#iznos_td_clicked")) {
             $("#iznos_td_clicked").not(e.target).replaceWith("<td>" + iznos + "</td>");
+
             if (iznosUpdated) {
                 updateDb(3, iznos);
                 iznosUpdated = false;
@@ -131,6 +134,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Klasa plaćanja
         if ($(e.target).is('td:nth-child(8)') && !$(e.target).is("#klasa_td_clicked")) {
             $("#klasa_td_clicked").not(e.target).replaceWith("<td>" + klasaPlacanja + "</td>");
+
             if (klasaPlacanjaUpdated) {
                 updateDb(4, klasaPlacanja);
                 klasaPlacanjaUpdated = false;
@@ -153,8 +157,10 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
                 updateDb(5, datumPotvrde);
                 datumPotvrdeUpdated = false;
             }
+
             $(this).attr('id', 'datumPotvrde_td_clicked');
             datumPotvrde = $(this).html();
+
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
                 "<input type='date' id ='datumPotvrde_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + datumPotvrde + "'></div>");
@@ -163,14 +169,15 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Napomena
         if ($(e.target).is('td:nth-child(10)') && !$(e.target).is("#napomena_td_clicked")) {
             $("#napomena_td_clicked").not(e.target).each().replaceWith("<td>" + napomena + "</td>");
-            $(this).attr('id', 'napomena_td_clicked');
 
             if (napomenaUpdated) {
                 updateDb(6, napomena);
                 napomenaUpdated = false;
             }
 
+            $(this).attr('id', 'napomena_td_clicked');
             napomena = $(this).html();
+
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
                 "<input type='text' id ='napomena_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + napomena + "'></div>");
@@ -188,13 +195,13 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
 
     // Datum izvrsenja
     selectDatumIzvrsenjaTdUpdated.on('input', function () {
-        datumPotvrde = $('#datumIzvrsenja_input_clicked').val();
+        datumIzvrsenja = $('#datumIzvrsenja_input_clicked').val();
         datumIzvrsenjaUpdated = true;
     });
 
     // Usluga
     selectUslugaTdClicked.on('input', function () {
-        datumPotvrde = $('#usluga_input_clicked').val();
+        usluga = $('#usluga_input_clicked').val();
         uslugaUpdated = true;
     });
 

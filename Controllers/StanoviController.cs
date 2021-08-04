@@ -522,7 +522,7 @@ namespace aes.Controllers
                 RacuniElektraIzvrsenjeList = await RacuniElektraIzvrsenjeList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower())
                              || x.Iznos.ToString().Contains(searchValue)

@@ -64,6 +64,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Iznos
         if ($(e.target).is('td:nth-child(5)') && !$(e.target).is("#iznos_td_clicked")) {
             $("#iznos_td_clicked").not(e.target).replaceWith("<td>" + iznos + "</td>");
+
             if (iznosUpdated) {
                 updateDb(3, iznos);
                 iznosUpdated = false;
@@ -80,6 +81,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Klasa
         if ($(e.target).is('td:nth-child(6)') && !$(e.target).is("#klasa_td_clicked")) {
             $("#klasa_td_clicked").not(e.target).replaceWith("<td>" + klasa + "</td>");
+
             if (klasaUpdated) {
                 updateDb(4, klasa);
                 klasaUpdated = false;
@@ -102,8 +104,10 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
                 updateDb(5, datumPotvrde);
                 datumPotvrdeUpdated = false;
             }
+
             $(this).attr('id', 'datumPotvrde_td_clicked');
             datumPotvrde = $(this).html();
+
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
                 "<input type='date' id ='datumPotvrde_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + datumPotvrde + "'></div>");
@@ -112,14 +116,15 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
         // Napomena
         if ($(e.target).is('td:nth-child(8)') && !$(e.target).is("#napomena_td_clicked")) {
             $("#napomena_td_clicked").not(e.target).each().replaceWith("<td>" + napomena + "</td>");
-            $(this).attr('id', 'napomena_td_clicked');
 
             if (napomenaUpdated) {
                 updateDb(6, napomena);
                 napomenaUpdated = false;
             }
 
+            $(this).attr('id', 'napomena_td_clicked');
             napomena = $(this).html();
+
             $(this).html("").append(
                 "<div id='clicked' class='input-group input-group-sm my-auto'>" +
                 "<input type='text' id ='napomena_input_clicked' class='form-control' style='height: 25px; margin-top: -7px;margin-bottom: -7px' value='" + napomena + "'></div>");

@@ -21,6 +21,8 @@
             { "data": "elektraKupac.ods.stan.korisnik", "name": "elektraKupac.ods.stan.korisnik" },
             { "data": "elektraKupac.ods.stan.vlasni\u0161tvo", "name": "elektraKupac.ods.stan.vlasništvo" },
             { "data": "datumIzdavanja", "name": "datumIzdavanja" },
+            { "data": "datumIzvrsenja", "name": "datumIzvrsenja" },
+            { "data": "usluga", "name": "usluga" },
             {
                 "data": "iznos", "name": "iznos",
                 "render": $.fn.dataTable.render.number('.', ',', 2, '')
@@ -78,15 +80,28 @@
                 }
             },
             {
-                "targets": 7, // Iznos
+                "targets": 7, // Datum izvršenja
+                "render": function (data, type, row) {
+                    if (data == null)
+                        return "";
+                    return moment(data).format("DD.MM.YYYY")
+                }
+            },
+            {
+                "targets": 8, // Usluga
+                "render": $.fn.dataTable.render.ellipsis(10),
+                "orderable": false,
+            },
+            {
+                "targets": 9, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 8, // Napomena
+                "targets": 10, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(28),
             },
             {
-                "targets": 9, // remove
+                "targets": 11, // remove
                 "orderable": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button>"
@@ -102,14 +117,14 @@
     // ************************************ add row ************************************ //
 
     $('#btnAdd').on('click', function () {
-            AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), data_dopis);
+        AddNew(brojRacuna, $("#iznos").val(), $("#datumIzdavanja").val(), data_dopis, $("#datumIzvrsenja").val(), $("#usluga").val());
             table.row.add(["<td><button type='button' class='remove btn btn-outline-secondary btn-sm border-danger'><i class='bi bi-x'></i></button ></td >"]).draw();
     });
 
 
     // ************************************ remove row ************************************ //
 
-    $('#indexTable tbody').on('click', '#remove', function () {
+    $('#IndexTable tbody').on('click', '#remove', function () {
         var racunId = table.row($(this).parents('tr')).data().id;
         $.ajax({
             type: "POST",
@@ -174,7 +189,7 @@
 
     // ************************************ functions ************************************ //
 
-    function AddNew(brojRacuna, iznos, _datum, dopisId) {
+    function AddNew(brojRacuna, iznos, _datum, dopisId, datumIzvrsenja, usluga) {
         $.ajax({
             type: "POST",
             url: "/RacunElektraIzvrsenjaUsluges/AddNewTemp",
@@ -183,6 +198,8 @@
                 iznos: iznos,
                 date: _datum,
                 dopisId: dopisId,
+                datumIzvrsenja: datumIzvrsenja,
+                usluga: usluga
             },
             success: function (r) {
                 if (r.value.success) {
