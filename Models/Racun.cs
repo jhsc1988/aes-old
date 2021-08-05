@@ -158,7 +158,7 @@ namespace aes.Models
                     racunToUpdate = _context.RacunElektraRate.First(e => e.Id == idNum);
                     break;
                 case RacunTip.Holding:
-                    //racunToUpdate = _context.RacunHolding.First(e => e.Id == idNum);
+                    racunToUpdate = _context.RacunHolding.First(e => e.Id == idNum);
                     break;
                 case RacunTip.ElektraIzvrsenje:
                     racunToUpdate = _context.RacunElektraIzvrsenjeUsluge.First(e => e.Id == idNum);
@@ -245,7 +245,7 @@ namespace aes.Models
                     racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
                 case RacunTip.Holding:
-                    //racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
+                    racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
                 case RacunTip.ElektraIzvrsenje:
                     racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
@@ -302,7 +302,7 @@ namespace aes.Models
                     _context.RemoveRange(_context.RacunElektraRate.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
                 case RacunTip.Holding:
-                    //_context.RemoveRange(_context.RacunHolding.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
+                    _context.RemoveRange(_context.RacunHolding.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
                 case RacunTip.ElektraIzvrsenje:
                     _context.RemoveRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));

@@ -8,27 +8,29 @@
     <div>
         <partial name="_PredmetiDopisiFilter" />
     </div>
-    <table class="display nowrap w-100" id="RacunHoldingTable">
+    <table class="display nowrap w-100" id="IndexTable">
         <thead>
             <tr>
+                <th>id</th> @* invisible *@
+                <th>Redni broj</th>
                 <th>Broj računa</th>
                 <th>Šifra objekta</th>
-                <th>Stan ID</th>
                 <th>Datum izdavanja</th>
                 <th>Iznos</th>
                 <th>Klasa plaćanja</th>
                 <th>Datum potvrde</th>
                 <th>Napomena</th>
+                <th>Akcija</th> @* seen in editor *@
             </tr>
         </thead>
     </table>
 </div>
-<script src="~/js/RacuniHolding/IndexDatatables.js"></script>
-<script src="~/js/DatatablesSearchStyle.js"></script>
+
 <script>
-$(document).ready(function () {
-    const input = $('#RacunHoldingTable_filter input[type="search"]');
-    const filter = $('#RacunHoldingTable_filter');
-    setStyle(input, filter);
-});
+    const updateDbUrl = "/RacuniHolding/updateDbForInline";
+    const GetPredmetiDataForFilterUrl = "/RacuniHolding/GetPredmetiDataForFilter";
+    const GetDopisiDataForFilterUrl = "/RacuniHolding/GetDopisiDataForFilter";
 </script>
+<script src="~/js/RacuniHolding/IndexDatatables.js"></script>
+<script src="~/js/RacuniHolding/FilterPredmetiDopisiConfig.js"></script>
+<div> <partial name="Scripts/_IndexScripts" /> </div>

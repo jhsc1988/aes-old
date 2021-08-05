@@ -4,29 +4,40 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class RacuniHoldingController : Controller
+    public class RacuniHoldingController : Controller, IRacunController
     {
         private readonly ApplicationDbContext _context;
+        private readonly Predmet predmet;
+        private readonly Dopis dopis;
+        private readonly List<Predmet> predmetList;
+        private readonly List<Stan> stanList;
+        private List<RacunHolding> racunHoldingList;
+
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
 
         public RacuniHoldingController(ApplicationDbContext context)
         {
             _context = context;
+            predmet = new(_context);
+            dopis = new(_context);
+            racunHoldingList = _context.RacunHolding.ToList();
+            stanList = _context.Stan.ToList();
+            predmetList = _context.Predmet.ToList();
         }
 
-        // GET: RacuniHolding
-        //public async Task<IActionResult> Index()
-        //{
-        //    var applicationDbContext = _context.RacunHolding.Include(r => r.Dopis).Include(r => r.Stan);
-        //    return View(await applicationDbContext.ToListAsync());
-        //}        
         [Authorize]
         public IActionResult Index()
         {
@@ -166,9 +177,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var racunHolding = await _context.RacunHolding.FindAsync(id);
-            _context.RacunHolding.Remove(racunHolding);
-            await _context.SaveChangesAsync();
+            RacunHolding racunHolding = await _context.RacunHolding.FindAsync(id);
+            _ = _context.RacunHolding.Remove(racunHolding);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -181,86 +192,147 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
         {
-            if (brojRacuna.Length < 20 || brojRacuna.Length > 20)
+            if (brojRacuna.Length is < 20 or > 20)
             {
                 return Json($"Broj računa nije ispravan");
             }
 
-            var db = await _context.RacunHolding.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
-            if (db != null)
-            {
-                return Json($"Račun {brojRacuna} već postoji.");
-            }
-            return Json(true);
+            RacunHolding db = await _context.RacunHolding.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
+            return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu racuna Holdinga u JSON obliku za server side processing</returns>
-        [HttpPost]
-        public async Task<IActionResult> GetList()
+        public void GetDatatablesParamas()
         {
             // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        }
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<RacunHolding> RacunHoldingList = new List<RacunHolding>();
-            RacunHoldingList = await _context.RacunHolding.ToListAsync<RacunHolding>();
+        public async Task<IActionResult> GetList(string klasa, string urbroj)
+        {
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunHolding racunHolding in RacunHoldingList)
-            {
-                racunHolding.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == racunHolding.StanId); // kod mene je racunHolding.StanId -> Stan.Id (primarni ključ)
-            }
+            int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+            int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+
+            GetDatatablesParamas();
+
+            racunHoldingList = RacunHolding.GetList(predmetIdAsInt, dopisIdAsInt, _context);
 
             // filter
-            int totalRows = RacunHoldingList.Count;
+            int totalRows = racunHoldingList.Count;
             if (!string.IsNullOrEmpty(searchValue))
             {
-                RacunHoldingList = await RacunHoldingList.
+                racunHoldingList = await racunHoldingList.
                     Where(
                     x => x.BrojRacuna.Contains(searchValue)
                     || x.Stan.SifraObjekta.ToString().Contains(searchValue)
                     || x.Stan.StanId.ToString().Contains(searchValue)
-                    || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                    || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                     || x.Iznos.ToString().Contains(searchValue)
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
                     || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunHolding>();
-                // x.DatumPotvrde.Value mi treba jer metoda nullable objekta ne prima argument za funkciju ToString
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
-            int totalRowsAfterFiltering = RacunHoldingList.Count;
+            int totalRowsAfterFiltering = racunHoldingList.Count;
+            racunHoldingList = racunHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            racunHoldingList = racunHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            RacunHoldingList = RacunHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
-
-            // paging
-            RacunHoldingList = RacunHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunHolding>();
-
-            return Json(new { data = RacunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new { data = racunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
+        public async Task<IActionResult> GetListCreate()
         {
-            List<RacunHolding> RacunHoldingList = new List<RacunHolding>();
-            RacunHoldingList = await _context.RacunHolding.ToListAsync<RacunHolding>();
 
-            foreach (RacunHolding racunHolding in RacunHoldingList)
+            GetDatatablesParamas();
+            racunHoldingList = RacunHolding.GetListCreateList(GetUid(), _context);
+           
+            int totalRows = racunHoldingList.Count;
+           
+            // filter
+            if (!string.IsNullOrEmpty(searchValue))
             {
-                racunHolding.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == racunHolding.StanId); // kod mene je racunHolding.StanId -> Stan.Id (primarni ključ)
+                racunHoldingList = await racunHoldingList.
+                    Where(
+                    x => x.BrojRacuna.Contains(searchValue)
+                    || x.Stan.SifraObjekta.ToString().Contains(searchValue)
+                    || x.Stan.StanId.ToString().Contains(searchValue)
+                    || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
+                    || x.Iznos.ToString().Contains(searchValue)
+                    || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunHolding>();
             }
-            return Json(RacunHoldingList);
+            int totalRowsAfterFiltering = racunHoldingList.Count;
+            racunHoldingList = racunHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            racunHoldingList = racunHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
+
+            return Json(new { data = racunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public string GetUid()
+        {
+            ClaimsPrincipal currentUser;
+            currentUser = User; // User postoji samo u COntrolleru
+            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
+        public JsonResult GetPredmetiDataForFilter()
+        {
+            return Json(predmet.GetPredmetiDataForFilter(RacunTip.Holding));
+        }
+
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
+        public JsonResult GetPredmetiCreate()
+        {
+            return Json(predmetList);
+        }
+
+        public JsonResult GetDopisiCreate(int predmetId)
+        {
+            return Json(dopis.GetDopisiDataForFilter(predmetId));
+        }
+
+        public string GetKupci()
+        {
+            return JsonConvert.SerializeObject(stanList);
+        }
+
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
+        {
+            return Racun.UpdateDbForInline(RacunTip.Holding, id, updatedColumn, x, _context);
+        }
+
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
+        {
+            return new JsonResult(RacunHolding.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        }
+
+        public JsonResult SaveToDB(string _dopisId)
+        {
+            return Racun.SaveToDb(RacunTip.Holding, GetUid(), _dopisId, _context);
+        }
+
+        public JsonResult RemoveRow(string racunId)
+        {
+            return Racun.RemoveRow(RacunTip.Holding, racunId, _context);
+        }
+
+        public JsonResult RemoveAllFromDb()
+        {
+            return Racun.RemoveAllFromDb(RacunTip.Holding, GetUid(), _context);
         }
     }
 }

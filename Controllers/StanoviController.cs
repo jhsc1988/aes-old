@@ -412,7 +412,7 @@ namespace aes.Controllers
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.Stan.SifraObjekta.ToString().Contains(searchValue)
                              || x.Stan.StanId.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.Iznos.ToString().Contains(searchValue)
                              || x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue)
                              || x.DatumPotvrde != null &&

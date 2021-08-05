@@ -42,7 +42,7 @@ namespace aes.Models
                     racunList.AddRange(_context.RacunElektraRate.ToList());
                     break;
                 case RacunTip.Holding:
-                    //racunList.AddRange(_context.RacunHolding.ToList());
+                    racunList.AddRange(_context.RacunHolding.ToList());
                     break;
                 case RacunTip.ElektraIzvrsenje:
                     racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.ToList());
