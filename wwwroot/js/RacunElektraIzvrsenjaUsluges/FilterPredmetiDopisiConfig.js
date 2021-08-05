@@ -20,7 +20,7 @@ $("#selectPredmet").on('change', function (e) {
     var column = table.column(11);
     if (selectDopis.val() === "0" || selectDopis.val() === null || column.visible() === true) {
         column.visible(false);
-        isItEditing
+        isItEditing = false;
     }
     else {
         column.visible(true);
