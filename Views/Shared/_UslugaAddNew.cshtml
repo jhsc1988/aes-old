@@ -1,11 +1,11 @@
 ﻿<form class="row g-3 d-flex justify-content-center">
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row justify-content-center">
+        <div class="col-md-3">
             <label hidden class="form-label col-form-label-sm">Broj Računa</label>
             <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
                    maxlength="19">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label hidden class="form-label col-form-label-sm">Datum izdavanja</label>
             <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja"
                    onfocus="(this.type='date')" onblur="(this.type='text')" @{/*trik za pokazivanje placeholdera*/}>
@@ -15,25 +15,23 @@
             <input type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$" id="iznos" class="form-control form-control-sm"
                    placeholder="Iznos">
         </div>
+        <div class="col-md-3">
+            <label hidden class="form-label col-form-label-sm">Usluga</label>
+            <input type="text" id="usluga" class="form-control form-control-sm" placeholder="Usluga">
+        </div>
+        <div class="col-md-2">
+            <label hidden class="form-label col-form-label-sm">Datum izdavanja</label>
+            <input type="text" id="datumIzvrsenja" class="form-control form-control-sm" placeholder="Datum izvršenja"
+                   onfocus="(this.type='date')" onblur="(this.type='text')">
+        </div>
+        <div class="col-auto align-self-center">
+            <br />
+            <button type="button" id="btnAdd" class="dt-button">
+                <i class="bi bi-plus"></i>dodaj
+            </button>
+        </div>
     </div>
 </form>
-<br />
-<form class="row g-3 d-flex justify-content-center">
-    <div class="col-md-2">
-        <label hidden class="form-label col-form-label-sm">Usluga</label>
-        <input type="text" id="usluga" class="form-control form-control-sm" placeholder="Usluga">
-    </div>
-    <div class="col-md-2">
-        <label hidden class="form-label col-form-label-sm">Datum izdavanja</label>
-        <input type="text" id="datumIzvrsenja" class="form-control form-control-sm" placeholder="Datum izvršenja"
-               onfocus="(this.type='date')" onblur="(this.type='text')">
-    </div>
-    <div class="col-auto align-self-center">
-        <button type="button" id="btnAdd" class="dt-button">
-            <i class="bi bi-plus"></i>dodaj
-        </button>
-    </div>
-</form>
-    <div class="col-sm-auto">
-        <label class="form-label col-form-label-sm" id="stanText"> </label>
-    </div>
+<div class="row justify-content-center">
+    <label class="form-label col-form-label-sm" id="stanText"> </label>
+</div>

@@ -2,7 +2,7 @@
 
     // ************************************ variables ************************************ //
 
-    const selectIndexTable = $('#indexTable');
+    const selectIndexTable = $('#IndexTable');
 
     // ************************************ DataTables definition ************************************ //
     table = selectIndexTable.DataTable({
@@ -109,7 +109,7 @@
 
     // ************************************ remove row ************************************ //
 
-    $('#indexTable tbody').on('click', '#remove', function () {
+    $('#IndexTable tbody').on('click', '#remove', function () {
         var racunId = table.row($(this).parents('tr')).data().id;
         $.ajax({
             type: "POST",
