@@ -25,29 +25,13 @@
         </thead>
     </table>
 </div>
+
 <script>
     const updateDbUrl = "/RacuniElektra/updateDbForInline";
     const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
-
 </script>
 <script src="~/js/RacuniElektra/IndexDatatables.js"></script>
-<script src="~/js/DatatablesSearchStyle.js"></script>
-
-<script src="~/js/_js_global/InlineEdit/InlineEditUpdateDb.js"></script>
-<script src="~/js/_js_global/InlineEdit/InlineEditBrojRacunaDatumIzdavanja.js"></script>
-<script src="~/js/_js_global/InlineEdit/InlineEditRacuni.js"></script>
-
-<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
 <script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
+<div> <partial name="Scripts/_IndexScripts" /> </div>
 
-<script src="~/js/alertify/alertify.min.js"></script>
-<link rel="stylesheet" href=~/js/alertify/css/alertify.css>
-
-<script>
-    $(document).ready(function () {
-        const input = $('#IndexTable_filter input[type="search"]');
-        const filter = $('#IndexTable_filter');
-        setStyle(input, filter);
-    });
-</script>

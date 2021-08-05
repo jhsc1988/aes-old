@@ -1,0 +1,15 @@
+﻿@* scripts for Create pages for Racuni and Usluge *@
+
+<script src="~/js/DatatablesSearchStyle.js"></script>
+<script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>
+<script src=~/js/_js_global/notificationBuilder/NotificationBuilder.js></script>
+<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+<script src=~/js/alertify/alertify.min.js></script>
+<link rel=stylesheet href=~/js/alertify/css/alertify.css>
+<script>
+    $(document).ready(function () {
+        const input = $('#indexTable_filter input[type="search"]');
+        const filter = $('#indexTable_filter');
+        setStyle(input, filter);
+    });
+</script>

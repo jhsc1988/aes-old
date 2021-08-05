@@ -42,32 +42,11 @@
     </div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script>
-        const updateDbUrl = "/RacuniElektraRate/updateDbForInline";
-        const GetKupciDataUrl = "/RacuniElektraRate/GetKupci";
-        const GetPredmetiDataForFilterUrl = "/RacuniElektraRate/GetPredmetiCreate";
-        const GetDopisiDataForFilterUrl = "/RacuniElektraRate/GetDopisiCreate";
-    </script>
-    <script src="~/js/RacuniElektraRate/Create/CreateDatatables.js"></script>
-    <script src="~/js/DatatablesSearchStyle.js"></script>
-
-    <script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>
-    <script src=~/js/_js_global/notificationBuilder/NotificationBuilder.js></script>
-
-    <script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
-
-    <script src=~/js/alertify/alertify.min.js></script>
-    <link rel=stylesheet href=~/js/alertify/css/alertify.css>
-
-    <script>
-        $(document).ready(function () {
-            const input = $('#indexTable_filter input[type="search"]');
-            const filter = $('#indexTable_filter');
-            setStyle(input, filter);
-        });
-    </script>
-
-}
+<script>
+    const updateDbUrl = "/RacuniElektraRate/updateDbForInline";
+    const GetKupciDataUrl = "/RacuniElektraRate/GetKupci";
+    const GetPredmetiDataForFilterUrl = "/RacuniElektraRate/GetPredmetiCreate";
+    const GetDopisiDataForFilterUrl = "/RacuniElektraRate/GetDopisiCreate";
+</script>
+<script src="~/js/RacuniElektraRate/Create/CreateDatatables.js"></script>
+<div> <partial name="Scripts/_CreateScripts" /> </div>
