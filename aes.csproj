@@ -6,6 +6,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\UgovoriOKoristenju\**" />
+    <Compile Remove="Views\UgovoriOPrijenosu\**" />
+    <Compile Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <Compile Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <Content Remove="Views\UgovoriOKoristenju\**" />
+    <Content Remove="Views\UgovoriOPrijenosu\**" />
+    <Content Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <Content Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <EmbeddedResource Remove="Views\UgovoriOKoristenju\**" />
+    <EmbeddedResource Remove="Views\UgovoriOPrijenosu\**" />
+    <EmbeddedResource Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <EmbeddedResource Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <None Remove="Views\UgovoriOKoristenju\**" />
+    <None Remove="Views\UgovoriOPrijenosu\**" />
+    <None Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <None Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\UgovoriOKoristenjuController.cs" />
+    <Compile Remove="Controllers\UgovoriOPrijenosuController.cs" />
+    <Compile Remove="Models\UgovorOKoristenju.cs" />
+    <Compile Remove="Models\UgovorOPrijenosu.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
@@ -122,10 +148,6 @@
     <_ContentIncludedByDefault Remove="wwwroot\particles\css\style.css" />
     <_ContentIncludedByDefault Remove="wwwroot\particles\particles.js" />
     <_ContentIncludedByDefault Remove="wwwroot\particles\particles.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\js\UgovoriOPrijenosu\Create pages\" />
   </ItemGroup>
 
   <ItemGroup>

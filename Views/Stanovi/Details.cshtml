@@ -20,12 +20,6 @@
         <a class="nav-link" id="holding-tab" data-toggle="tab" href="#holding" role="tab" aria-controls="holding" aria-selected="false">Računi - holding</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="ugovori-o-koristenju-tab" data-toggle="tab" href="#ugovori-o-koristenju" role="tab" aria-controls="ugovori-o-koristenju" aria-selected="false">Ugovori o korištenju</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="ugovori-o-prijenosu-tab" data-toggle="tab" href="#ugovori-o-prijenosu" role="tab" aria-controls="ugovori-o-prijenosu" aria-selected="false">Ugovori o prijenosu</a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link" id="racuni-ods-izvrsenje-usluge-tab" data-toggle="tab" href="#racuni-ods-izvrsenje-usluge" role="tab" aria-controls="racuni-ods-izvrsenje-usluge" aria-selected="false">Računi ODS - izvršenje usluge</a>
     </li>
     <li class="nav-item">
@@ -180,41 +174,6 @@
         </tr>
         </thead>
     </table>
-
-</div>
-<div class="tab-pane fade space-10-10" id="ugovori-o-koristenju" role="tabpanel" aria-labelledby="ugovori-o-koristenju-tab">
-    <table class="display nowrap w-100" id="UgovoriOKoristenjuTable">
-        <thead>
-        <tr>
-            <th>Broj ugovora</th>
-            <th>Mjerno mjesto</th>
-            <th>Datum potpisa HEP</th>
-            <th>Datum potpisa GZ</th>
-            <th>Klasa ugovora</th>
-            <th>RBR ugovora</th>
-            <th>Klasa dostave</th>
-            <th>RBR dostave</th>
-        </tr>
-        </thead>
-    </table>
-</div>
-<div class="tab-pane fade space-10-10" id="ugovori-o-prijenosu" role="tabpanel" aria-labelledby="ugovori-o-prijenosu-tab">
-    <table class="display nowrap w-100" id="UgovoriOPrijenosuTable">
-        <thead>
-        <tr>
-            <th>Broj ugovora</th>
-            <th>Ugovor o korištenju</th>
-            <th>Datum prijenosa</th>
-            <th>Datum potpisa</th>
-            <th>Kupac</th>
-            <th>Kupac OIB</th>
-            <th>Klasa ugovora</th>
-            <th>RBR ugovora</th>
-            <th>Klasa dostave</th>
-            <th>RBR dostave</th>
-        </tr>
-        </thead>
-    </table>
 </div>
 <div class="tab-pane fade space-10-10" id="racuni-ods-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-ods-izvrsenje-usluge-tab">
     <table class="display nowrap w-100" id="RacunOdsIzvrsenjaUslugeTable">
@@ -266,8 +225,6 @@ const stanid = @Model.Id;
 <script src="~/js/Stanovi/Details/RacunHoldingTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunOdsIzvrsenjaUslugeTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
-<script src="~/js/Stanovi/Details/UgovoriOKoristenjuTable.js" asp-append-version="true"></script>
-<script src="~/js/Stanovi/Details/UgovoriOPrijenosuTable.js" asp-append-version="true"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
 $(document).ready(function () {
@@ -275,6 +232,7 @@ $(document).ready(function () {
     stanDetailsDatatablesAdjust(stanid);
    
 // ************************************ search in Datatables in Details styling ************************************ //
+
     let input = $('#RacunElektraTable_filter input[type="search"]');
     let filter = $('#RacunElektraTable_filter');
     setStyle(input, filter);
@@ -286,14 +244,6 @@ $(document).ready(function () {
     input = $('#RacunHoldingTable_filter input[type="search"]');
     filter = $('#RacunHoldingTable_filter');
     setStyle(input, filter);
-    
-    input = $('#UgovoriOKoristenjuTable_filter input[type="search"]');
-    filter = $('#UgovoriOKoristenjuTable_filter');
-    setStyle(input, filter);
-    
-    input = $('#UgovoriOPrijenosuTable_filter input[type="search"]');
-    filter = $('#UgovoriOPrijenosuTable_filter');
-    setStyle(input, filter); 
     
     input = $('#RacunOdsIzvrsenjaUslugeTable_filter input[type="search"]');
     filter = $('#RacunOdsIzvrsenjaUslugeTable_filter');
