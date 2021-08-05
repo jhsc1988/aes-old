@@ -269,7 +269,6 @@ namespace aes.Controllers
             return Json(StanList);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> GetRacuniForStan(int stanid)
         {
@@ -466,7 +465,7 @@ namespace aes.Controllers
                 RacuniOdsIzvrsenjeList = await RacuniOdsIzvrsenjeList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.OdsKupac.SifraKupca.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.ToString("dd.MM.yyyy").Contains(searchValue)
+                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower())
                              || x.Iznos.ToString().Contains(searchValue)
