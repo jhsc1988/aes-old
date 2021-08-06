@@ -6,18 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\OdsKupci\**" />
+    <Compile Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <Compile Remove="Views\UgovoriOKoristenju\**" />
     <Compile Remove="Views\UgovoriOPrijenosu\**" />
     <Compile Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <Compile Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <Content Remove="Views\OdsKupci\**" />
+    <Content Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <Content Remove="Views\UgovoriOKoristenju\**" />
     <Content Remove="Views\UgovoriOPrijenosu\**" />
     <Content Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <Content Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <EmbeddedResource Remove="Views\OdsKupci\**" />
+    <EmbeddedResource Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <EmbeddedResource Remove="Views\UgovoriOKoristenju\**" />
     <EmbeddedResource Remove="Views\UgovoriOPrijenosu\**" />
     <EmbeddedResource Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <EmbeddedResource Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <None Remove="Views\OdsKupci\**" />
+    <None Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <None Remove="Views\UgovoriOKoristenju\**" />
     <None Remove="Views\UgovoriOPrijenosu\**" />
     <None Remove="wwwroot\js\UgovoriOKoristenju\**" />
@@ -25,8 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\OdsKupciController.cs" />
+    <Compile Remove="Controllers\RacunOdsIzvrsenjaUslugeController.cs" />
     <Compile Remove="Controllers\UgovoriOKoristenjuController.cs" />
     <Compile Remove="Controllers\UgovoriOPrijenosuController.cs" />
+    <Compile Remove="Models\OdsKupac.cs" />
+    <Compile Remove="Models\RacunOdsIzvrsenjaUsluge.cs" />
     <Compile Remove="Models\UgovorOKoristenju.cs" />
     <Compile Remove="Models\UgovorOPrijenosu.cs" />
   </ItemGroup>

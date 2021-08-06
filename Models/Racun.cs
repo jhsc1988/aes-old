@@ -84,7 +84,7 @@ namespace aes.Models
                     _ = _context.Remove(_context.RacunElektraIzvrsenjeUsluge.FirstOrDefault(x => x.Id == id));
                     break;
                 case RacunTip.OdsIzvrsenje:
-                    _ = _context.Remove(_context.RacunOdsIzvrsenjaUsluge.FirstOrDefault(x => x.Id == id));
+                    //_ = _context.Remove(_context.RacunOdsIzvrsenjaUsluge.FirstOrDefault(x => x.Id == id));
                     break;
                 default:
                     break;

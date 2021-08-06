@@ -440,62 +440,6 @@ namespace aes.Controllers
             });
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> GetRacuniOdsIzvrsenjeForStan(int stanid)
-        {
-            // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request
-                .Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-
-            // async/await - imam overhead, ali proširujem scalability
-            var RacuniOdsIzvrsenjeList =
-                await _context.RacunOdsIzvrsenjaUsluge.Where(p => p.OdsKupac.Ods.Stan.Id == stanid).ToListAsync();
-
-            foreach (var roiu in RacuniOdsIzvrsenjeList)
-                roiu.OdsKupac = await _context.OdsKupac.FirstOrDefaultAsync(o => o.Id == roiu.OdsKupacId);
-
-            // filter
-            var totalRows = RacuniOdsIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
-                RacuniOdsIzvrsenjeList = await RacuniOdsIzvrsenjeList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.OdsKupac.SifraKupca.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower())
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue)
-                             || x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Napomena != null && x.Napomena.ToLower().Contains(searchValue))
-                    .ToDynamicListAsync<RacunOdsIzvrsenjaUsluge>();
-
-            var totalRowsAfterFiltering = RacuniOdsIzvrsenjeList.Count;
-
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            RacuniOdsIzvrsenjeList = RacuniOdsIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection)
-                .ToList();
-
-            // paging
-            RacuniOdsIzvrsenjeList =
-                RacuniOdsIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
-
-            return Json(new
-            {
-                data = RacuniOdsIzvrsenjeList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
-
-
         [HttpPost]
         public async Task<IActionResult> GetRacuniElektraIzvrsenjeForStan(int stanid)
         {
