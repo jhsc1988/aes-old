@@ -5,10 +5,12 @@
 }
 
 <div class="content-bg">
-    <div class="head-bg">
+    <div class="row head-bg justify-content-between">
         <p class="h6" style="font-size: 0.8rem;">Klasa: @Model.Klasa Naziv: @Model.Naziv</p>
+        <button class="button-add-new" id="aAddNew">
+            <i class="bi bi-plus"></i>unos novog
+        </button>
     </div>
-
     <table class="display nowrap w-100" id="DopisTable">
         <thead>
             <tr>
@@ -19,7 +21,9 @@
             </tr>
         </thead>
     </table>
-
+    <div id="AddNew" style="display:none;">
+        <partial name="_DopisiAddNew" />
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
@@ -32,6 +36,7 @@ const predmetId = @Model.Id;
 
 <script src="~/js/Dopisi/IndexDatatables.js"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
+<script src="~/js/_js_global/_addNewHideUnhide.js"></script>
 <script>
     $(document).ready(function () {
         const input = $('#DopisTable_filter input[type="search"]');

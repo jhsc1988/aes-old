@@ -1,12 +1,12 @@
 ﻿let hidden = true;
 $("#aAddNew").click(function () {
     if (hidden) {
-        $("#predmetiAddNew").show("slow");
+        $("#AddNew").show("slow");
         hidden = false;
     }
 
     else {
-        $("#predmetiAddNew").hide("slow");
+        $("#AddNew").hide("slow");
         hidden = true;
     }
 });
