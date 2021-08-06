@@ -177,7 +177,7 @@ namespace aes.Controllers
         /// </summary>
         /// <returns>Vraća dopisa u JSON obliku za server side processing</returns>
         [HttpPost]
-        public async Task<IActionResult> GetList()
+        public async Task<IActionResult> GetList(int predmetId)
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -188,7 +188,7 @@ namespace aes.Controllers
 
             // async/await - imam overhead, ali proširujem scalability
             List<Dopis> DopisList = new List<Dopis>();
-            DopisList = await _context.Dopis.ToListAsync<Dopis>();
+            DopisList = await _context.Dopis.Where(e=>e.PredmetId == predmetId).ToListAsync();
 
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (Dopis dopis in DopisList)

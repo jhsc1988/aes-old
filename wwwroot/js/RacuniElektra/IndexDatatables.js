@@ -93,7 +93,7 @@ $(document).ready(function () {
                 "data": null, "name": "elektraKupac.ugovorniRacun",
                 "render": function (data, type, row, meta) {
                     if(data.elektraKupac != null)
-                        return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                        return '<a href="ElektraKupci/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
                     return '';
                 }
             },

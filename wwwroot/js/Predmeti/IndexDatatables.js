@@ -9,7 +9,12 @@
         // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
 
-            {"data": "klasa", "name": "klasa"},
+            {
+                "data": null, "name": "klasa",
+                "render": function (data) {
+                    return '<a href="Predmeti/Details/' + data.id + '">' + data.klasa + '</a>';
+                }
+            },
             {"data": "naziv", "name": "naziv"},
         ],
         "paging": true,

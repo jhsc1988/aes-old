@@ -460,3 +460,22 @@ div.dt-buttons {
     padding-left: 10px !important;
     padding-right: 10px !important;
 }
+
+.button-add-new {
+    color: #ffffff;
+    font-size: 12px;
+    margin-top: -10px;
+    font-weight: 700;
+    transition: 0.3s;
+    border: 0;
+    background-color: transparent;
+}
+
+    .button-add-new:hover {
+        color: #e71010;
+    }
+
+    .button-add-new:focus {
+        outline: none;
+        box-shadow: none;
+    }
