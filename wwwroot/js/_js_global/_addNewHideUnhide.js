@@ -1,5 +1,4 @@
-﻿let hidden = true;
-$("#aAddNew").click(function () {
+﻿$("#aAddNew").click(function () {
     if (hidden) {
         $("#AddNew").show("slow");
         hidden = false;

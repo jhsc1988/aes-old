@@ -204,16 +204,27 @@ namespace aes.Controllers
             return Json(new { data = PredmetList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
+        public JsonResult SaveToDB(string klasa, string naziv)
         {
-            List<Predmet> PredmetList = new List<Predmet>();
-            PredmetList = await _context.Predmet.ToListAsync<Predmet>();
+            Predmet pTemp = new(_context);
+            pTemp.Klasa = klasa;
+            pTemp.Naziv = naziv;
+            _ = _context.Predmet.Add(pTemp);
+            return TrySave();
 
-            return Json(PredmetList);
         }
+        public JsonResult TrySave()
+        {
+            try
+            {
+                _ = _context.SaveChanges();
+                return new(new { success = true, Message = "Spremljeno" });
 
+            }
+            catch (DbUpdateException)
+            {
+                return new(new { success = false, Message = "Greška" });
+            }
+        }
     }
 }

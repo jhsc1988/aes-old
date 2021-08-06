@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('#PredmetiTable').DataTable({
+   table = $('#PredmetiTable').DataTable({
         "ajax": {
             "url": "/Predmeti/GetList",
             "type": "POST",

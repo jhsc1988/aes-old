@@ -13,8 +13,10 @@
             {"data": "predmet.naziv", "name": "predmet.naziv"},
             {"data": "urbroj", "name": "urbroj"},
             {
-                "data": null, "name": "datum",
-                "render": function (data, type, row) {
+                "data": "datum", "name": "datum",
+                "render": function (data) {
+                    if (data == null)
+                        return "";
                     return moment(data).format("DD.MM.YYYY")
                 }
             },

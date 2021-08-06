@@ -3,27 +3,30 @@
         <form class="row g-3 d-flex justify-content-start">
             <div class="col-md-4">
                 <label hidden class="control-label"></label>
-                <input id="dopis" class="form-control form-control-sm" placeholder="URBROJ" />
+                <input id="urbroj" class="form-control form-control-sm" placeholder="URBROJ" />
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label hidden class="form-label col-form-label-sm">Datum dopisa</label>
-                <input type="text" id="datumIzvrsenja" class="form-control form-control-sm" placeholder="Datum dopisa"
+                <input type="text" id="datumDopisa" class="form-control form-control-sm" placeholder="Datum dopisa"
                        onfocus="(this.type='date')" onblur="(this.type='text')">
             </div>
             <div class="col-md-2">
-                <button type="submit" value="Spremi" class="dt-button" id="btnSave">Spremi</button>
+                <button type="button" value="Spremi" class="dt-button" id="btnSave">Spremi</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
+    let hidden = true;
     $("#btnSave").on("click", function () {
         $.ajax({
             type: "POST",
             url: "/Dopisi/SaveToDB",
             data: {
-                klasa: $("dopis").val(),
+                predmetId: predmetId,
+                urbroj: $("#urbroj").val(),
+                datumDopisa: $("#datumDopisa").val(),
             },
             success: function (r) {
                 if (r.success) {
@@ -38,5 +41,8 @@
                 table.ajax.reload(null, false);
             }
         });
+        $("#AddNew").hide("slow");
+        $("#urbroj").val("");
+        $("#datumDopisa").val("");
     })
 </script>

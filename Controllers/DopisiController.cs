@@ -234,5 +234,28 @@ namespace aes.Controllers
             }
             return Json(DopisList);
         }
+        public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa)
+        {
+            Dopis dTemp = new(_context);
+            dTemp.PredmetId = int.Parse(predmetId);
+            dTemp.Urbroj = urbroj;
+            dTemp.Datum = DateTime.Parse(datumDopisa);
+            _ = _context.Dopis.Add(dTemp);
+            return TrySave();
+
+        }
+        public JsonResult TrySave()
+        {
+            try
+            {
+                _ = _context.SaveChanges();
+                return new(new { success = true, Message = "Spremljeno" });
+
+            }
+            catch (DbUpdateException)
+            {
+                return new(new { success = false, Message = "Greška" });
+            }
+        }
     }
 }

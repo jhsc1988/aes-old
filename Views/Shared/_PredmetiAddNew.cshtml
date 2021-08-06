@@ -10,20 +10,21 @@
                 <input id="naziv" class="form-control form-control-sm" placeholder="Naziv" />
             </div>
             <div class="col-md-2">
-                <button type="submit" value="Spremi" class="dt-button" id="btnSave">Spremi</button>
+                <button type="button" value="Spremi" class="dt-button" id="btnSave">Spremi</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
+    let hidden = true;
     $("#btnSave").on("click", function () {
         $.ajax({
             type: "POST",
             url: "/Predmeti/SaveToDB",
             data: {
-                klasa: $("klasa").val(),
-                naziv: $("naziv").val(),
+                klasa: $("#klasa").val(),
+                naziv: $("#naziv").val(),
             },
             success: function (r) {
                 if (r.success) {
@@ -38,5 +39,8 @@
                 table.ajax.reload(null, false);
             }
         });
+        $("#AddNew").hide("slow");
+        $("#klasa").val("");
+        $("#naziv").val("");
     })
 </script>
