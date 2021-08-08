@@ -15,7 +15,6 @@ namespace aes.Data
         public DbSet<aes.Models.Predmet> Predmet { get; set; }
         public DbSet<aes.Models.Dopis> Dopis { get; set; }
         public DbSet<aes.Models.RacunElektra> RacunElektra { get; set; }
-        public DbSet<aes.Models.RacunElektraObracunPotrosnje> RacunElektraObracunPotrosnje { get; set; }
         public DbSet<aes.Models.RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUsluge { get; set; }
         public DbSet<aes.Models.RacunElektraRate> RacunElektraRate { get; set; }
         public DbSet<aes.Models.RacunHolding> RacunHolding { get; set; }
