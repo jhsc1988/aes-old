@@ -479,3 +479,14 @@ div.dt-buttons {
         outline: none;
         box-shadow: none;
     }
+
+#github {
+    max-height: 100%;
+    max-width: 100%;
+    opacity: 0.3;
+    transition: 0.3s;
+}
+
+    #github:hover {
+        opacity: 0.9;
+    }
