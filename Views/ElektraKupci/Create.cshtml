@@ -46,7 +46,7 @@
     </div>
     <hr />
     <div>
-        <button onclick="location.href='@Url.Action("Index", "OdsKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+        <button onclick="location.href='@Url.Action("Index", "ElektraKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
     </div>
 </div>
 
@@ -61,13 +61,11 @@
         $(document).ready(function () {
             const input = $('#OdsTable_filter input[type="search"]');
             const filter = $('#OdsTable_filter');
-
             setStyle(input, filter); // postavljam css za searchbox
         });
 
         $("#OMM").on("change", function () {
-            let i = $('#SId').val();
-
+            let i = $('#OId').val();
             GetStanData(i); // poziv ajax f-je za notification builder
         });
     </script>
