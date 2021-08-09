@@ -270,7 +270,7 @@ namespace aes.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetRacuniForStan(int stanid)
+        public async Task<IActionResult> GetRacuniForStan(int param)
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -283,7 +283,7 @@ namespace aes.Controllers
             // async/await - imam overhead, ali proširujem scalability
             var RacunElektraList = new List<RacunElektra>();
             RacunElektraList =
-                await _context.RacunElektra.Where(p => p.ElektraKupac.Ods.Stan.Id == stanid).ToListAsync();
+                await _context.RacunElektra.Where(p => p.ElektraKupac.Ods.Stan.Id == param).ToListAsync();
 
             foreach (var re in RacunElektraList)
                 re.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == re.ElektraKupacId);
@@ -337,7 +337,7 @@ namespace aes.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> GetRacuniRateForStan(int stanid)
+        public async Task<IActionResult> GetRacuniRateForStan(int param)
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -349,7 +349,7 @@ namespace aes.Controllers
 
             // async/await - imam overhead, ali proširujem scalability
             var RacunElektraRateList =
-                await _context.RacunElektraRate.Where(p => p.ElektraKupac.Ods.Stan.Id == stanid).ToListAsync();
+                await _context.RacunElektraRate.Where(p => p.ElektraKupac.Ods.Stan.Id == param).ToListAsync();
 
             foreach (var rer in RacunElektraRateList)
                 rer.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == rer.ElektraKupacId);
@@ -389,7 +389,7 @@ namespace aes.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetHoldingRacuniForStan(int stanid)
+        public async Task<IActionResult> GetHoldingRacuniForStan(int param)
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -400,7 +400,7 @@ namespace aes.Controllers
             var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
             var racuniHoldingList =
-                await _context.RacunHolding.Where(p => p.StanId == stanid).ToListAsync();
+                await _context.RacunHolding.Where(p => p.StanId == param).ToListAsync();
 
             foreach (var rh in racuniHoldingList)
                 rh.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == rh.StanId);
@@ -441,7 +441,7 @@ namespace aes.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetRacuniElektraIzvrsenjeForStan(int stanid)
+        public async Task<IActionResult> GetRacuniElektraIzvrsenjeForStan(int param)
         {
             // server side parameters
             var start = Request.Form["start"].FirstOrDefault();
@@ -453,7 +453,7 @@ namespace aes.Controllers
 
             // async/await - imam overhead, ali proširujem scalability
             var RacuniElektraIzvrsenjeList =
-                await _context.RacunElektraIzvrsenjeUsluge.Where(p => p.ElektraKupac.Ods.Stan.Id == stanid)
+                await _context.RacunElektraIzvrsenjeUsluge.Where(p => p.ElektraKupac.Ods.Stan.Id == param)
                     .ToListAsync();
 
             foreach (var reiu in RacuniElektraIzvrsenjeList)

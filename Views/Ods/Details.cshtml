@@ -9,13 +9,13 @@
         <p class="h6" style="font-size: 0.8rem;"><strong>Detalji:</strong> Obračunsko mjerno mjesto: @Model.Omm</p>
     </div>
     <div class="space-10-10">
-        <strong>Adresa: </strong> @Model.Stan.Adresa
+        <strong> Adresa: </strong> @Model.Stan.Adresa
         <strong> Kat: </strong> @Model.Stan.Kat
-        <strong>Broj stana: </strong>@Model.Stan.BrojSTana
-        <strong>Četvrt: </strong>@Model.Stan.Četvrt
+        <strong> Broj stana: </strong>@Model.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.Stan.Četvrt
         <strong> Površina: </strong>@Model.Stan.Površina
         <strong> Korisnik: </strong>@Model.Stan.Korisnik
-        <strong>Status korištenja: </strong>@Model.Stan.StatusKorištenja
+        <strong> Status korištenja: </strong>@Model.Stan.StatusKorištenja
         <strong> Vlasništvo: </strong> @Model.Stan.Vlasništvo
     </div>
     <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
@@ -88,28 +88,26 @@
     </div>
     <div class="space-10-10">
         <button onclick="location.href='@Url.Action("Index", "Predmeti")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
-        <button onclick="location.href='@Url.Action("Edit", "Predmeti", new {id= Model.Id})'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  promijeni</button>
+        <button onclick="location.href='@Url.Action("Edit", "Predmeti", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  promijeni</button>
     </div>
 </div>
 <script>
-const stanid = @Model.StanId;
+    const racuniUrl = "/Stanovi/GetRacuniForStan";
+    const racuniRateUrl = "/Stanovi/GetRacuniRateForStan";
+    const uslugeUrl = "/Stanovi/GetRacuniElektraIzvrsenjeForStan";
+    const holdingUrl = "/Stanovi/GetHoldingRacuniForStan";
+    const param = @Model.StanId;
 </script>
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraRateTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunHoldingTable.js" asp-append-version="true"></script>
-<script src="~/js/Stanovi/Details/RacunOdsIzvrsenjaUslugeTable.js" asp-append-version="true"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
     $(document).ready(function () {
-        stanDetailsDatatablesAdjust(stanid);
-    });
-</script>
-<script>
-    $(document).ready(function () {
 
-        stanDetailsDatatablesAdjust(stanid);
+        stanDetailsDatatablesAdjust();
 
         // ************************************ search in Datatables in Details styling ************************************ //
 

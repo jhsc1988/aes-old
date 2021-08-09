@@ -1,4 +1,4 @@
-﻿function stanDetailsDatatablesAdjust(stanid) {
+﻿function stanDetailsDatatablesAdjust() {
     // table head rendering fix: 
     // https://datatables.net/forums/discussion/48422/table-header-not-displaying-correctly-initially#Comment_128514
     // https://datatables.net/examples/api/tabs_and_scrolling.html

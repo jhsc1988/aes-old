@@ -1,9 +1,9 @@
 ﻿$('#RacunElektraIzvrsenjeUslugeTable').DataTable({
     "ajax": {
-        "url": "/Stanovi/GetRacuniElektraIzvrsenjeForStan",
+        "url": uslugeUrl,
         "type": "POST",
         "datatype": "json",
-        "data": {stanid: stanid}
+        "data": {param: param}
     },
     // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
     // koristi se kao selector (nije posve jasna dokumentacija)
