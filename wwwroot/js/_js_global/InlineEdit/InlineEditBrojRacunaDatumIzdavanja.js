@@ -10,7 +10,8 @@ $(document).mousedown(function (e) {
 
         // Broj Racuna
         if (!$(e.target).is('#racun_input_clicked') && !$(e.target).is("#racun_td_clicked")) {
-            $("#racun_td_clicked").replaceWith("<td>" + racunBr + "</td>");
+            //$("#racun_td_clicked").replaceWith("<td>" + racunBr + "</td>");
+            $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='RacuniElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
             if (racunUpdated) {
                 updateDb(1, racunBr);
                 racunUpdated = false;
@@ -50,7 +51,8 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
             }
 
             $(this).attr('id', 'racun_td_clicked'); // mark this td clicked
-            racunBr = $(this).html(); // get value
+            racunBr = $(this).text(); // get value
+            
 
             // set as text input
             $(this).html("").append(
