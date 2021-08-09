@@ -3,197 +3,196 @@
     ViewData["Title"] = "Details";
 }
 <div class="content-bg">
-<div class="head-bg">
-    <p class="h6" style="font-size: 0.8rem;">id: @Model.StanId šo: @Model.SifraObjekta adresa: @Model.Adresa kat: @Model.Kat stan: @Model.BrojSTana</p>
-</div>
-<ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="stan-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Stan</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="false">Računi - elektra</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="racuni-elektra-rate-tab" data-toggle="tab" href="#racuni-elektra-rate" role="tab" aria-controls="racuni-elektra-rate" aria-selected="false">Računi - elektra - rate</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="holding-tab" data-toggle="tab" href="#holding" role="tab" aria-controls="holding" aria-selected="false">Računi - holding</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="racuni-elektra-izvrsenje-usluge-tab" data-toggle="tab" href="#racuni-elektra-izvrsenje-usluge" role="tab" aria-controls="racuni-elektra-izvrsenje-usluge" aria-selected="false">Računi Elektra - izvršenje usluge</a>
-    </li>
-</ul>
-<div class="tab-content nav-content-box" id="myTabContent">
-<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <div class="space-10-10">
-        <dl class="row font-size-11">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StanId)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StanId)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.SifraObjekta)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.SifraObjekta)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Vrsta)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Vrsta)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Adresa)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Adresa)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Kat)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Kat)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.BrojSTana)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.BrojSTana)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Naselje)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Naselje)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Četvrt)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Četvrt)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Površina)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Površina)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StatusKorištenja)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StatusKorištenja)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Korisnik)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Korisnik)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Vlasništvo)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Vlasništvo)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.DioNekretnine)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.DioNekretnine)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Sektor)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Sektor)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Status)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Status)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.VrijemeUnosa)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.VrijemeUnosa)
-            </dd>
-        </dl>
+    <div class="head-bg">
+        <p class="h6" style="font-size: 0.8rem;">id: @Model.StanId šo: @Model.SifraObjekta adresa: @Model.Adresa kat: @Model.Kat stan: @Model.BrojSTana</p>
     </div>
-</div>
-<div class="tab-pane fade space-10-10" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
-    <table class="display nowrap w-100 " id="RacunElektraTable">
-        <thead>
-        <tr>
-            <th>Broj računa</th>
-            <th>Ugovorni račun</th>
-            <th>Datum izdavanja</th>
-            <th>Iznos</th>
-            <th>Klasa plaćanja</th>
-            <th>Datum potvrde</th>
-            <th>Napomena</th>
-        </tr>
-        </thead>
-    </table>
-</div>
-<div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
-    <table class="display nowrap w-100" id="RacunElektraRateTable">
-        <thead>
-        <tr>
-            <th>Broj računa</th>
-            <th>Ugovorni račun</th>
-            <th>Razdoblje</th>
-            <th>Iznos</th>
-            <th>Klasa plaćanja</th>
-            <th>Datum potvrde</th>
-            <th>Napomena</th>
-        </tr>
-        </thead>
-    </table>
-</div>
-<div class="tab-pane fade space-10-10" id="holding" role="tabpanel" aria-labelledby="holding-tab">
-    <table class="display nowrap w-100" id="RacunHoldingTable">
-        <thead>
-        <tr>
-            <th>Broj računa</th>
-            <th>Šifra objekta</th>
-            <th>Stan ID</th>
-            <th>Datum izdavanja</th>
-            <th>Iznos</th>
-            <th>Klasa plaćanja</th>
-            <th>Datum potvrde</th>
-            <th>Napomena</th>
-        </tr>
-        </thead>
-    </table>
-</div>
-<div class="tab-pane fade space-10-10" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
-    <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
-        <thead>
-        <tr>
-            <th>Broj računa</th>
-            <th>Ugovorni račun</th>
-            <th>Datum izdavanja</th>
-            <th>Datum izvršenja</th>
-            <th>Usluga</th>
-            <th>Iznos</th>
-            <th>Klasa plaćanja</th>
-            <th>Datum potvrde</th>
-            <th>Napomena</th>
-        </tr>
-        </thead>
-    </table>
-</div>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="stan-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Stan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="false">Računi - elektra</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-rate-tab" data-toggle="tab" href="#racuni-elektra-rate" role="tab" aria-controls="racuni-elektra-rate" aria-selected="false">Računi - elektra - rate</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="holding-tab" data-toggle="tab" href="#holding" role="tab" aria-controls="holding" aria-selected="false">Računi - holding</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-izvrsenje-usluge-tab" data-toggle="tab" href="#racuni-elektra-izvrsenje-usluge" role="tab" aria-controls="racuni-elektra-izvrsenje-usluge" aria-selected="false">Računi Elektra - izvršenje usluge</a>
+        </li>
+    </ul>
+    <div class="tab-content nav-content-box" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="space-10-10">
+                <dl class="row font-size-11">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StanId)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StanId)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.SifraObjekta)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.SifraObjekta)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Vrsta)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Vrsta)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Adresa)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Adresa)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Kat)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Kat)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.BrojSTana)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.BrojSTana)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Naselje)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Naselje)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Četvrt)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Četvrt)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Površina)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Površina)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StatusKorištenja)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StatusKorištenja)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Korisnik)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Korisnik)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Vlasništvo)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Vlasništvo)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.DioNekretnine)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.DioNekretnine)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Sektor)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Sektor)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Status)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.VrijemeUnosa)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.VrijemeUnosa)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
+            <table class="display nowrap w-100 " id="RacunElektraTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
+            <table class="display nowrap w-100" id="RacunElektraRateTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Razdoblje</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="holding" role="tabpanel" aria-labelledby="holding-tab">
+            <table class="display nowrap w-100" id="RacunHoldingTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Šifra objekta</th>
+                        <th>Stan ID</th>
+                        <th>Datum izdavanja</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
+            <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Datum izvršenja</th>
+                        <th>Usluga</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="padding-bottom:10px;">
+            <button onclick="location.href='@Url.Action("Index", "Predmeti")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+        </div>
+    </div>
 </div>
 <script>
 const stanid = @Model.Id;
@@ -207,30 +206,30 @@ const stanid = @Model.Id;
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
-$(document).ready(function () {
-    
-    stanDetailsDatatablesAdjust(stanid);
-   
-// ************************************ search in Datatables in Details styling ************************************ //
+    $(document).ready(function () {
 
-    let input = $('#RacunElektraTable_filter input[type="search"]');
-    let filter = $('#RacunElektraTable_filter');
-    setStyle(input, filter);
-    
-    input = $('#RacunElektraRateTable_filter input[type="search"]');
-    filter = $('#RacunElektraRateTable_filter');
-    setStyle(input, filter);
-    
-    input = $('#RacunHoldingTable_filter input[type="search"]');
-    filter = $('#RacunHoldingTable_filter');
-    setStyle(input, filter);
-    
-    input = $('#RacunOdsIzvrsenjaUslugeTable_filter input[type="search"]');
-    filter = $('#RacunOdsIzvrsenjaUslugeTable_filter');
-    setStyle(input, filter);  
+        stanDetailsDatatablesAdjust(stanid);
 
-    input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
-    filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
-    setStyle(input, filter);
-});
+        // ************************************ search in Datatables in Details styling ************************************ //
+
+        let input = $('#RacunElektraTable_filter input[type="search"]');
+        let filter = $('#RacunElektraTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraRateTable_filter input[type="search"]');
+        filter = $('#RacunElektraRateTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunHoldingTable_filter input[type="search"]');
+        filter = $('#RacunHoldingTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunOdsIzvrsenjaUslugeTable_filter input[type="search"]');
+        filter = $('#RacunOdsIzvrsenjaUslugeTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
+        filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+        setStyle(input, filter);
+    });
 </script>

@@ -397,10 +397,11 @@ th {
     transition: 0.3s;
     border: 0;
     background-color: transparent;
+    transition: 0.3s;
 }
 
     .button-back:hover {
-        color: #343a40;
+        color: #e71010;
     }
 
     .button-back:focus {
