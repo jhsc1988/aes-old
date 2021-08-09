@@ -9,9 +9,6 @@
         // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
         // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
-            {"data": "predmet.klasa", "name": "predmet.klasa"},
-            {"data": "predmet.naziv", "name": "predmet.naziv"},
-            {"data": "urbroj", "name": "urbroj"},
             {
                 "data": "datum", "name": "datum",
                 "render": function (data) {
@@ -20,10 +17,11 @@
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
+            {"data": "urbroj", "name": "urbroj"},
         ],
         "paging": true,
         "serverSide": true,
-        "order": [[3, 'asc']], // default sort po datumu
+        "order": [[1, 'asc']], // default sort po datumu
         "bLengthChange": false,
         //"processing": true,
         "language": {
@@ -33,14 +31,7 @@
         "scrollX": true,
         "columnDefs": [
             {
-                "targets": 0, // Klasa
-                "render": $.fn.dataTable.render.ellipsis(21),
-            },
-            {
-                "targets": 1, // Naziv
-                "render": $.fn.dataTable.render.ellipsis(40),
-            }, {
-                "targets": 2, // UrBroj
+                "targets": 1, // UrBroj
                 "render": $.fn.dataTable.render.ellipsis(23),
             }
         ]
