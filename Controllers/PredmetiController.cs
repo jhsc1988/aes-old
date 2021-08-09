@@ -98,7 +98,7 @@ namespace aes.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Klasa,Naziv,VrijemeUnosa")] Predmet predmet)
+        public async Task<IActionResult> Edit(int id, Predmet predmet)
         {
             if (id != predmet.Id)
             {
