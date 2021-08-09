@@ -6,8 +6,6 @@
 
     // ************************************ DataTables definition ************************************ //
     table = selectIndexTable.DataTable({
-        dom: 'frtipB',
-        buttons: ['excelHtml5','pdfHtml5'],
         "ajax": {
             "url": "/RacunElektraIzvrsenjaUsluges/GetListCreate",
             "type": "POST",
