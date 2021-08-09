@@ -166,7 +166,7 @@ $(document).ready(function () {
                 "targets": 9, // akcija - hidden
                 "visible": false,
                 "searchable": false,
-                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button ><button type='button' class='button-add-remove' id='remove'><i class='bi bi-plus'></i>obračun</button >"
+                "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
             },
         ],
     });
