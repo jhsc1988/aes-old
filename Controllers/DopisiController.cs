@@ -236,7 +236,7 @@ namespace aes.Controllers
         }
         public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa)
         {
-            Dopis dTemp = new(_context);
+            Dopis dTemp = new();
             dTemp.PredmetId = int.Parse(predmetId);
             dTemp.Urbroj = urbroj;
             dTemp.Datum = DateTime.Parse(datumDopisa);

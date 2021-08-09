@@ -32,7 +32,7 @@ namespace aes.Controllers
         {
             _context = context;
             predmet = new(_context);
-            dopis = new(_context);
+            dopis = new();
             racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.ToList();
             elektraKupacList = _context.ElektraKupac.ToList();
             predmetList = _context.Predmet.ToList();
@@ -327,7 +327,7 @@ namespace aes.Controllers
 
         public JsonResult GetDopisiDataForFilter(int predmetId)
         {
-            return Json(dopis.GetDopisiDataForFilter(predmetId));
+            return Json(dopis.GetDopisiDataForFilter(predmetId, _context));
         }
 
         public JsonResult GetPredmetiCreate()
@@ -337,7 +337,7 @@ namespace aes.Controllers
 
         public JsonResult GetDopisiCreate(int predmetId)
         {
-            return Json(dopis.GetDopisiDataForFilter(predmetId));
+            return Json(dopis.GetDopisiDataForFilter(predmetId, _context));
         }
 
         public string GetKupci()
