@@ -17,7 +17,13 @@
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
-            {"data": "urbroj", "name": "urbroj"},
+            {
+                "data": null, "name": "urbroj",
+                "render": function (data) {
+                    return '<a href="../../Dopisi/Details/' + data.id + '">' + data.urbroj + '</a>';
+                }
+            },
+            
         ],
         "paging": true,
         "serverSide": true,
