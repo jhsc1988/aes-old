@@ -278,6 +278,7 @@ th {
     background-color: #ffffff;
     border: 1px solid #d0d0d0;
     /*box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, .15);*/
+    box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -356,7 +357,11 @@ th {
     border-bottom: solid 1px #dee2e6;
     border-left: solid 1px #dee2e6;
     border-right: solid 1px #dee2e6;
-    box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+    /*box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;*/
+    /*box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;*/
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
 .nav-tabs-style {
