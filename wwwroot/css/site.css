@@ -311,10 +311,10 @@ th {
     object-fit: contain;
 }
 
-.logo > img {
+    .logo > img {
+        max-height: 20px;
+    }
 
-    max-height: 20px;
-}
 .space-10-10 {
     padding: 10px 10px !important;
 }
@@ -499,6 +499,10 @@ div.dt-buttons {
     padding: 0px;
 }
 
-.navbar-collapse{
+.navbar-collapse {
     padding-top: 8px;
+}
+
+hr {
+    margin-bottom: 0.2rem;
 }
