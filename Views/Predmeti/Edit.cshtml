@@ -13,26 +13,24 @@
         <input type="hidden" asp-for="Id" />
         <div class="row space-10-10">
             <div class="col-md-2">
-                <div class="form-group">
-                    <label asp-for="Klasa" class="control-label"></label>
+                <div class="form-group">Klasa
                     <input asp-for="Klasa" class="form-control form-control-sm" />
                     <span asp-validation-for="Klasa" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label asp-for="Naziv" class="control-label"></label>
+            <div class="col-md-4">
+                <div class="form-group">Naziv
                     <input asp-for="Naziv" class="form-control form-control-sm" />
                     <span asp-validation-for="Naziv" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-start align-items-center padding-30">
-            <button type="submit" class="dt-button">Spremi</button>
+            <div class="row justify-content-start align-items-center padding-30">
+                <button type="submit" class="dt-button">Spremi</button>
+            </div>
         </div>
     </form>
     <hr />
-    <div class="">
+    <div>
         <button onclick="location.href='@Url.Action("Index", "Predmeti")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
     </div>
 </div>

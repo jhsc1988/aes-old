@@ -397,6 +397,7 @@ th {
     transition: 0.3s;
     border: 0;
     background-color: transparent;
+    /*text-shadow: 1px 1px 1px #dad1d1;*/
     transition: 0.3s;
 }
 
@@ -501,8 +502,4 @@ div.dt-buttons {
 
 .navbar-collapse {
     padding-top: 8px;
-}
-
-hr {
-    margin-bottom: 0.2rem;
 }
