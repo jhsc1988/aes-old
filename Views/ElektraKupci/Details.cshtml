@@ -6,20 +6,22 @@
     <div class="row head-bg justify-content-between">
         <p class="h6" style="font-size: 0.8rem;"><strong>Detalji:</strong> Ugovorni račun: @Model.UgovorniRacun</p>
     </div>
-    @*<div class="space-10-10">
-            <strong>Obračunsko mjerno mjesto: </strong> @Model.Ods.Omm
-            <strong>Adresa: </strong> @Model.Ods.Stan.Adresa
-            <strong> Kat: </strong> @Model.Ods.Stan.Kat
-            <strong>Broj stana: </strong>@Model.Ods.Stan.BrojSTana
-            <strong>Četvrt: </strong>@Model.Ods.Stan.Četvrt
-            <strong> Površina: </strong>@Model.Ods.Stan.Površina
-            <strong> Korisnik: </strong>@Model.Ods.Stan.Korisnik
-            <strong>Status korištenja: </strong>@Model.Ods.Stan.StatusKorištenja
-            <strong> Vlasništvo: </strong> @Model.Ods.Stan.Vlasništvo
-        </div>*@
+    <div>
+        <strong> Obračunsko mjerno mjesto: </strong>
+        <a href="/Ods/Details/@Model.OdsId">@Model.Ods.Omm</a>
+        <strong> ID: </strong>
+        <a href="/Stanovi/Details/@Model.Ods.Stan.StanId">@Model.Ods.Stan.StanId</a>
+        <strong> Adresa: </strong> @Model.Ods.Stan.Adresa
+        <strong> Kat: </strong> @Model.Ods.Stan.Kat
+        <strong> Broj stana: </strong>@Model.Ods.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.Ods.Stan.Četvrt
+        <strong> Površina: </strong>@Model.Ods.Stan.Površina
+        <strong> Status korištenja: </strong>@Model.Ods.Stan.StatusKorištenja
+        <strong> Vlasništvo: </strong> @Model.Ods.Stan.Vlasništvo
+    </div><hr />
     <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Mjerno mjesto</a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Ugovorni račun</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="false">Računi - elektra</a>
@@ -69,21 +71,23 @@
             </thead>
         </table>
     </div>
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
+    <div class="space-10-10">
+        <button onclick="location.href='@Url.Action("Index", "ElektraKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+        <button onclick="location.href='@Url.Action("Edit", "ElektraKupci", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  promijeni</button>
     </div>
 </div>
 <script>
-    const racuniUrl = "/Stanovi/GetRacuniForStan";
-    const stanid = @Model.Ods.Stan.StanId;
+    const racuniUrl = "/ElektraKupci/GetRacuniForStan";
+    const racuniRateUrl = "/ElektraKupci/GetRacuniRateForStan";
+    const uslugeUrl = "/ElektraKupci/GetRacuniElektraIzvrsenjeForStan";
+    const param = @Model.Id;
 </script>
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraRateTable.js" asp-append-version="true"></script>
+<script src="~/js/Stanovi/Details/RacunElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>
 <script>
     $(document).ready(function () {
-        stanDetailsDatatablesAdjust(stanid);
-        setParams("/Stanovi/GetRacuniForStan");
+        stanDetailsDatatablesAdjust();
     });
 </script>
