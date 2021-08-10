@@ -492,6 +492,7 @@ div.dt-buttons {
     }
 
 #github {
+    color: #464646;
     font-size: 30px;
     opacity: 0.3;
     transition: 0.3s;
