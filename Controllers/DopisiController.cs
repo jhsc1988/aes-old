@@ -116,6 +116,7 @@ namespace aes.Controllers
             {
                 try
                 {
+                    dopis.Predmet = _context.Predmet.FirstOrDefault(e => e.Id == dopis.PredmetId);
                     _context.Update(dopis);
                     await _context.SaveChangesAsync();
                 }

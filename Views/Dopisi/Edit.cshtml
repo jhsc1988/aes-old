@@ -11,15 +11,23 @@
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
+
+        <div hidden class="form-group" style="display: none;">
+            <label asp-for="PredmetId" class="control-label"></label>
+            <select asp-for="PredmetId" class="form-control" asp-items="ViewBag.PredmetId"></select>
+            <span asp-validation-for="PredmetId" class="text-danger"></span>
+        </div>
         <div class="row space-10-10">
             <div class="col-md-3">
-                <div class="form-group">URbroj
+                <div class="form-group">
+                    URbroj
                     <input asp-for="Urbroj" class="form-control form-control-sm" />
                     <span asp-validation-for="Urbroj" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group">Datum dopisa
+                <div class="form-group">
+                    Datum dopisa
                     <input asp-for="Datum" class="form-control form-control-sm" />
                     <span asp-validation-for="Datum" class="text-danger"></span>
                 </div>
