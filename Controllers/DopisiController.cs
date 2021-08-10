@@ -90,6 +90,7 @@ namespace aes.Controllers
             }
 
             var dopis = await _context.Dopis.FindAsync(id);
+            dopis.Predmet = _context.Predmet.FirstOrDefault(e => e.Id == dopis.PredmetId);
             if (dopis == null)
             {
                 return NotFound();
@@ -188,7 +189,7 @@ namespace aes.Controllers
 
             // async/await - imam overhead, ali proširujem scalability
             List<Dopis> DopisList = new List<Dopis>();
-            DopisList = await _context.Dopis.Where(e=>e.PredmetId == predmetId).ToListAsync();
+            DopisList = await _context.Dopis.Where(e => e.PredmetId == predmetId).ToListAsync();
 
             // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (Dopis dopis in DopisList)

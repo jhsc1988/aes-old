@@ -20,17 +20,22 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-    color: #212529;
+    color: #4c40ac;
+    font-weight: 600;
+    /*transition: 0.3s;*/
+    /*border-bottom: 1px solid transparent;*/
 }
 
     a:hover {
+        /*color: #be4f78;*/
         text-decoration: none; /*underline remove*/
+        /*border-bottom: 1px solid #322d2f;*/
     }
 
 .nav-link:hover {
     background: #e5e5e5;
     color: #212529;
-    transition: 0.5s cubic-bezier(.33, .66, .66, 1) !important;
+    /*transition: 0.5s cubic-bezier(.33, .66, .66, 1) !important;*/
     /*border-bottom: 1px solid #212529;*/
 }
 
