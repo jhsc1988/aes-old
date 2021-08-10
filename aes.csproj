@@ -168,11 +168,4 @@
     <_ContentIncludedByDefault Remove="wwwroot\particles\particles.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\js\RacuniElektraRate\FilterPredmetiDopisiConfig.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

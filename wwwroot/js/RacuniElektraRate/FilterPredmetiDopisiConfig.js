@@ -1,5 +1,8 @@
-﻿const isItForFilter = true;
-$("#selectDopis").on('change', function (e) {
+﻿const selectDopis = $("#selectDopis");
+const isItForFilter = true;
+let isItEditing = false;
+
+selectDopis.on('change', function (e) {
     e.preventDefault();
     var column = table.column(9);
     if (selectDopis.val() === "0" || selectDopis.val() === null) {
