@@ -18,25 +18,30 @@ $(document).ready(function () {
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
-            { "data": "brojRacuna", "name": "brojRacuna" },
+            {
+                "data": null, "name": "brojRacuna",
+                "render": function (data) {
+                    return '<a href="RacunElektraIzvrsenjaUsluges/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                },
+            },
 
             {
                 "data": null, "name": "elektraKupac.ugovorniRacun",
                 "render": function (data, type, row, meta) {
                     if (data.elektraKupac != null)
-                        return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                        return '<a href="ElektraKupci/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
                     return '';
                 }
             },
-            {"data": "datumIzdavanja", "name": "datumIzdavanja"},
-            {"data": "datumIzvrsenja", "name": "datumIzvrsenja"},
-            {"data": "usluga", "name": "usluga"},
+            { "data": "datumIzdavanja", "name": "datumIzdavanja" },
+            { "data": "datumIzvrsenja", "name": "datumIzvrsenja" },
+            { "data": "usluga", "name": "usluga" },
             {
                 "data": "iznos", "name": "iznos",
                 "render": $.fn.dataTable.render.number('.', ',', 2, '')
             },
-            {"data": "klasaPlacanja", "name": "klasaPlacanja"},
-            {"data": "datumPotvrde", "name": "datumPotvrde"},
+            { "data": "klasaPlacanja", "name": "klasaPlacanja" },
+            { "data": "datumPotvrde", "name": "datumPotvrde" },
             { "data": "napomena", "name": "napomena" },
             { "data": null, "name": null }, // akcija
         ],

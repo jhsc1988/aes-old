@@ -11,7 +11,12 @@
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
-            { "data": "brojRacuna", "name": "brojRacuna" },
+            {
+                "data": null, "name": "brojRacuna",
+                "render": function (data) {
+                    return '<a href="RacuniHolding/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                },
+            },
             {
                 "data": null, "name": "stan.sifraObjekta",
                 "render": function (data, type, row, meta) {
