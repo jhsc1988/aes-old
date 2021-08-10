@@ -44,6 +44,7 @@ namespace aes.Controllers
 
             var elektraKupac = await _context.ElektraKupac
                 .Include(e => e.Ods)
+                .Include(e => e.Ods.Stan)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (elektraKupac == null)
             {
@@ -90,6 +91,8 @@ namespace aes.Controllers
             }
 
             var elektraKupac = await _context.ElektraKupac.FindAsync(id);
+            //elektraKupac.Ods = _context.Ods.FirstOrDefault(e => e.Id == elektraKupac.OdsId);
+            //elektraKupac.Ods.Stan = _context.Stan.FirstOrDefault(e => e.StanId == elektraKupac.Ods.StanId);
             if (elektraKupac == null)
             {
                 return NotFound();

@@ -22,6 +22,7 @@
     <div id="AddNew" style="display:none;">
         <partial name="_DopisiAddNew" />
     </div>
+    <hr />
     <div>
         <button onclick="location.href='@Url.Action("Index", "Predmeti")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
         <button onclick="location.href='@Url.Action("Edit", "Predmeti", new {id= Model.Id})'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  promijeni</button>
