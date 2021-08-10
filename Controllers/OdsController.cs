@@ -91,6 +91,7 @@ namespace aes.Controllers
             }
 
             var ods = await _context.Ods.FindAsync(id);
+            ods.Stan = _context.Stan.FirstOrDefault(e => e.StanId == ods.StanId);
             if (ods == null)
             {
                 return NotFound();
