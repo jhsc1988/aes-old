@@ -8,16 +8,17 @@
     <div class="row head-bg justify-content-between">
         <p class="h6" style="font-size: 0.8rem;"><strong>Detalji:</strong> Obračunsko mjerno mjesto: @Model.Omm</p>
     </div>
-    <div class="space-10-10">
+    <div>
+        <strong> ID: </strong>
+        <a href="/Stanovi/Details/@Model.StanId">@Model.Stan.StanId</a>
         <strong> Adresa: </strong> @Model.Stan.Adresa
         <strong> Kat: </strong> @Model.Stan.Kat
         <strong> Broj stana: </strong>@Model.Stan.BrojSTana
         <strong> Četvrt: </strong>@Model.Stan.Četvrt
         <strong> Površina: </strong>@Model.Stan.Površina
-        <strong> Korisnik: </strong>@Model.Stan.Korisnik
         <strong> Status korištenja: </strong>@Model.Stan.StatusKorištenja
         <strong> Vlasništvo: </strong> @Model.Stan.Vlasništvo
-    </div>
+    </div><hr />
     <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Mjerno mjesto</a>
