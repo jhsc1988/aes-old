@@ -31,7 +31,7 @@ namespace aes.Controllers
         public RacuniHoldingController(ApplicationDbContext context)
         {
             _context = context;
-            predmet = new(_context);
+            predmet = new();
             dopis = new();
             racunHoldingList = _context.RacunHolding.ToList();
             stanList = _context.Stan.ToList();
@@ -287,7 +287,7 @@ namespace aes.Controllers
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(predmet.GetPredmetiDataForFilter(RacunTip.Holding));
+            return Json(predmet.GetPredmetiDataForFilter(RacunTip.Holding, _context));
         }
 
         public JsonResult GetDopisiDataForFilter(int predmetId)

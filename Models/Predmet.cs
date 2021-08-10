@@ -20,14 +20,7 @@ namespace aes.Models
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
 
-        private readonly ApplicationDbContext _context;
-
-        public Predmet(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public List<Predmet> GetPredmetiDataForFilter(RacunTip tip)
+        public List<Predmet> GetPredmetiDataForFilter(RacunTip tip, ApplicationDbContext _context)
         {
 
             List<Racun> racunList = new();

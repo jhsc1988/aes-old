@@ -206,7 +206,7 @@ namespace aes.Controllers
 
         public JsonResult SaveToDB(string klasa, string naziv)
         {
-            Predmet pTemp = new(_context);
+            Predmet pTemp = new();
             pTemp.Klasa = klasa;
             pTemp.Naziv = naziv;
             _ = _context.Predmet.Add(pTemp);

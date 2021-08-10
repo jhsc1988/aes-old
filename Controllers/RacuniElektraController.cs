@@ -31,7 +31,7 @@ namespace aes.Controllers
         public RacuniElektraController(ApplicationDbContext context)
         {
             _context = context;
-            predmet = new(_context);
+            predmet = new();
             dopis = new();
             racunElektraList = _context.RacunElektra.ToList();
             elektraKupacList = _context.ElektraKupac.ToList();
@@ -333,7 +333,7 @@ namespace aes.Controllers
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(predmet.GetPredmetiDataForFilter(RacunTip.RacunElektra));
+            return Json(predmet.GetPredmetiDataForFilter(RacunTip.RacunElektra, _context));
         }
 
         public JsonResult GetDopisiDataForFilter(int predmetId)
