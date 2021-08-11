@@ -21,10 +21,7 @@
     </div><hr />
     <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Ugovorni račun</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="false">Računi - elektra</a>
+            <a class="nav-link active" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="true">Računi - elektra</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="racuni-elektra-rate-tab" data-toggle="tab" href="#racuni-elektra-rate" role="tab" aria-controls="racuni-elektra-rate" aria-selected="false">Računi - elektra - rate</a>
@@ -35,12 +32,7 @@
     </ul>
 
     <div class="tab-content nav-content-box" id="myTabContent">
-        <div class="tab-pane fade space-10-10 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            Plaćeni računi: <br />
-            Plaćene rate: <br />
-            Plaćeni računi - izvršenje usluge: <br />
-        </div>
-        <div class="tab-pane fade space-10-10" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
+        <div class="tab-pane fade space-10-10 show active" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
             <table class="display nowrap w-100 " id="RacunElektraTable">
                 <thead>
                     <tr>
@@ -55,21 +47,38 @@
                 </thead>
             </table>
         </div>
-    </div>
-    <div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
-        <table class="display nowrap w-100" id="RacunElektraRateTable">
-            <thead>
-                <tr>
-                    <th>Broj računa</th>
-                    <th>Ugovorni račun</th>
-                    <th>Razdoblje</th>
-                    <th>Iznos</th>
-                    <th>Klasa plaćanja</th>
-                    <th>Datum potvrde</th>
-                    <th>Napomena</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
+            <table class="display nowrap w-100" id="RacunElektraRateTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Razdoblje</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
+            <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Datum izvršenja</th>
+                        <th>Usluga</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
     <div class="space-10-10">
         <button onclick="location.href='@Url.Action("Index", "ElektraKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
@@ -77,17 +86,32 @@
     </div>
 </div>
 <script>
-    const racuniUrl = "/ElektraKupci/GetRacuniForStan";
-    const racuniRateUrl = "/ElektraKupci/GetRacuniRateForStan";
-    const uslugeUrl = "/ElektraKupci/GetRacuniElektraIzvrsenjeForStan";
+    const racuniUrl = "/ElektraKupci/GetRacuniForKupac";
+    const racuniRateUrl = "/ElektraKupci/GetRacuniRateForKupac";
+    const uslugeUrl = "/ElektraKupci/GetRacuniElektraIzvrsenjeForKupac";
     const param = @Model.Id;
 </script>
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraRateTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>
+<script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
     $(document).ready(function () {
         stanDetailsDatatablesAdjust();
+
+        // ************************************ search in Datatables in Details styling ************************************ //
+
+        let input = $('#RacunElektraTable_filter input[type="search"]');
+        let filter = $('#RacunElektraTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraRateTable_filter input[type="search"]');
+        filter = $('#RacunElektraRateTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
+        filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+        setStyle(input, filter);
     });
 </script>
