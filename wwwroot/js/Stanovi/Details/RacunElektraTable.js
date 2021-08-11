@@ -10,16 +10,18 @@
     // koristi se kao selector (nije posve jasna dokumentacija)
     "columns": [
         {
-            "data": "brojRacuna", "name": "brojRacuna",
-            // "render": function (data, type, row, meta) {
-            //     return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
-            // }
+            "data": null, "name": "brojRacuna",
+            "render": function (data) {
+                return '<a href="../../RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+            },
         },
         {
-            "data": "elektraKupac.ugovorniRacun", "name": "elektraKupac.ugovorniRacun",
-            // "render": function (data, type, row, meta) {
-            //     return '<a href="RacuniElektra/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
-            // }
+            "data": null, "name": "elektraKupac.ugovorniRacun",
+            "render": function (data) {
+                if (data.elektraKupac != null)
+                    return '<a href="../../ElektraKupci/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                return '';
+            }
         },
         {"data": "datumIzdavanja", "name": "datumIzdavanja"},
         {

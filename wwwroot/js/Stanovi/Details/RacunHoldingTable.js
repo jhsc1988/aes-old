@@ -12,18 +12,18 @@
         {
             "data": null, "name": "brojRacuna",
             "render": function (data, type, row, meta) {
-                return '<a href="RacuniHolding/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                return '<a href="../../RacuniHolding/Details/' + data.id + '">' + data.brojRacuna + '</a>';
             }
         },
         {
             "data": null, "name": "stan.sifraObjekta",
             "render": function (data, type, row, meta) {
-                return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
+                return '<a href="../../Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
             }
         }, {
             "data": null, "name": "stan.stanId",
             "render": function (data, type, row, meta) {
-                return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
+                return '<a href="../../Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
             }
         },
 
