@@ -3,52 +3,68 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Edit</h1>
-
-<h4>ElektraKupac</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-
-            @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
-            @* ------------------------------------------------------------------------------------ *@
-            <div hidden style="display: none;">
-                <div class="form-group">
-                    <label asp-for="OdsId" class="control-label"></label>
-                    <select asp-for="OdsId" class="form-control" asp-items="ViewBag.OdsId"></select>
-                    <span asp-validation-for="OdsId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="VrijemeUnosa" class="control-label"></label>
-                    <input asp-for="VrijemeUnosa" class="form-control" />
-                    <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
-                </div>
-            </div>
-            @* ------------------------------------------------------------------------------------ *@
-
-            <div class="form-group">
-                <label asp-for="UgovorniRacun" class="control-label"></label>
-                <input asp-for="UgovorniRacun" class="form-control" />
-                <span asp-validation-for="UgovorniRacun" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Napomena" class="control-label"></label>
-                <input asp-for="Napomena" class="form-control" />
-                <span asp-validation-for="Napomena" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="h6" style="font-size: 0.8rem;"><strong>Uređivanje:</strong> Ugovorni račun: @Model.UgovorniRacun</p>
     </div>
-</div>
+    <div>
+        <strong> OMM: </strong>
+        <a href="/Ods/Details/@Model.Ods.Omm">@Model.Ods.Omm</a>
+        <strong> ID: </strong>
+        <a href="/Stanovi/Details/@Model.Ods.Stan.Id">@Model.Ods.Stan.StanId</a>
+        <strong> Adresa: </strong> @Model.Ods.Stan.Adresa
+        <strong> Kat: </strong> @Model.Ods.Stan.Kat
+        <strong> Broj stana: </strong>@Model.Ods.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.Ods.Stan.Četvrt
+        <strong> Površina: </strong>@Model.Ods.Stan.Površina
+        <strong> Status korištenja: </strong>@Model.Ods.Stan.StatusKorištenja
+        <strong> Vlasništvo: </strong> @Model.Ods.Stan.Vlasništvo
+    </div><hr />
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
+        @* ------------------------------------------------------------------------------------ *@
+        <div hidden style="display: none;">
+            <div class="form-group">
+                <label asp-for="OdsId" class="control-label"></label>
+                <select asp-for="OdsId" class="form-control" asp-items="ViewBag.OdsId"></select>
+                <span asp-validation-for="OdsId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VrijemeUnosa" class="control-label"></label>
+                <input asp-for="VrijemeUnosa" class="form-control" />
+                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+            </div>
+        </div>
+        @* ------------------------------------------------------------------------------------ *@
+
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="UgovorniRacun" class="control-label"></label>
+                    <input asp-for="UgovorniRacun" class="form-control form-control-sm" />
+                    <span asp-validation-for="UgovorniRacun" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Napomena" class="control-label"></label>
+                    <input asp-for="Napomena" class="form-control form-control-sm" />
+                    <span asp-validation-for="Napomena" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row justify-content-start align-items-center padding-30">
+            <button type="submit" class="dt-button">Spremi</button>
+        </div>
+    </form>
+    <hr />
+    <div>
+        <button onclick="location.href='@Url.Action("Index", "ElektraKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
+    </div>
 </div>
 
 @section Scripts {
