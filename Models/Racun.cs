@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 namespace aes.Models
@@ -121,7 +122,7 @@ namespace aes.Models
                 return false;
             }
 
-            if (!double.TryParse(iznos, out _iznos))
+            if (!double.TryParse(iznos,NumberStyles.AllowDecimalPoint, null, out _iznos))
             {
                 msg = "Iznos je neispravan";
                 return false;

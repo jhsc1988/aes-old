@@ -47,6 +47,7 @@
             "processing": "tražim...",
             "search": "", // remove search text
         },
+
         "scrollX": true,
         "columnDefs": [
             {
@@ -133,7 +134,7 @@
         var racunId = table.row($(this).parents('tr')).data().id;
         $.ajax({
             type: "POST",
-            url: "/RacunElektraIzvrsenjaUsluges/RemoveRow",
+            url: "/RacuniElektra/RemoveRow",
             data: { racunId: racunId },
             success: function (r) {
                 if (r.success) {
@@ -152,7 +153,7 @@
     $("#btnSave").on("click", function () {
         $.ajax({
             type: "POST",
-            url: "/RacunElektraIzvrsenjaUsluges/SaveToDB",
+            url: "/RacuniElektra/SaveToDB",
             data: {
                 _dopisid: data_dopis,
             },
@@ -176,7 +177,7 @@
     $("#btnDelete").on("click", function () {
         $.ajax({
             type: "POST",
-            url: "/RacunElektraIzvrsenjaUsluges/RemoveAllFromDb",
+            url: "/RacuniElektra/RemoveAllFromDb",
             success: function (r) {
                 if (r.success) {
                     alertify.success(r.message);
@@ -197,7 +198,7 @@
     function AddNew(brojRacuna, iznos, _datum, dopisId) {
         $.ajax({
             type: "POST",
-            url: "/RacunElektraIzvrsenjaUsluges/AddNewTemp",
+            url: "/RacuniElektra/AddNewTemp",
             data: {
                 brojRacuna: brojRacuna,
                 iznos: iznos,
