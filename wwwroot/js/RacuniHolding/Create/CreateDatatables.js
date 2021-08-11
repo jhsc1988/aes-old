@@ -19,7 +19,7 @@
                 "render": function (data) {
                     if (data == null)
                         return "";
-                    return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
+                    return '<a href="../../../Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
                 }
             },
             { "data": "stan.adresa", "name": "stan.adresa" },

@@ -20,7 +20,7 @@
                 "render": function (data, type, row, meta) {
                     if (data == null)
                         return "";
-                    return '<a href="Stanovi/Details/' + data.elektraKupac.ods.stan.id + '">' + data.elektraKupac.ods.stan.stanId + '</a>';
+                    return '<a href="../../../Stanovi/Details/' + data.elektraKupac.ods.stan.id + '">' + data.elektraKupac.ods.stan.stanId + '</a>';
                 }
             },
 
