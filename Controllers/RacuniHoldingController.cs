@@ -129,6 +129,13 @@ namespace aes.Controllers
             {
                 try
                 {
+                    // error fix
+                    // The instance of entity type 'RacunElektra' cannot be tracked because another
+                    // instance with the same key value for {'Id'} is already being tracked.
+                    RacunHolding rh = _context.RacunHolding.FirstOrDefault(e => e.Id == id);
+                    _context.Entry(rh).State = EntityState.Detached;
+                    _context.Entry(racunHolding).State = EntityState.Modified;
+
                     _context.Update(racunHolding);
                     await _context.SaveChangesAsync();
                 }

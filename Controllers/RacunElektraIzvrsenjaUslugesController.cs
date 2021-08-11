@@ -135,6 +135,13 @@ namespace aes.Controllers
             {
                 try
                 {
+                    // error fix
+                    // The instance of entity type 'RacunElektra' cannot be tracked because another
+                    // instance with the same key value for {'Id'} is already being tracked.
+                    RacunElektraIzvrsenjeUsluge reu = _context.RacunElektraIzvrsenjeUsluge.FirstOrDefault(e => e.Id == id);
+                    _context.Entry(reu).State = EntityState.Detached;
+                    _context.Entry(racunElektraIzvrsenjeUsluge).State = EntityState.Modified;
+
                     _context.Update(racunElektraIzvrsenjeUsluge);
                     await _context.SaveChangesAsync();
                 }
