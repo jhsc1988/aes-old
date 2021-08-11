@@ -14,7 +14,14 @@
         "columns": [
             { "data": "redniBroj", "name": "redniBroj" },
             { "data": "brojRacuna", "name": "brojRacuna" },
-            { "data": "stan.stanId", "name": "stan.stanId" },
+            {
+                "data": null, "name": "stan.stanId",
+                "render": function (data) {
+                    if (data == null)
+                        return "";
+                    return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
+                }
+            },
             { "data": "stan.adresa", "name": "stan.adresa" },
             { "data": "stan.korisnik", "name": "stan.korisnik" },
             { "data": "stan.vlasni\u0161tvo", "name": "stan.vlasništvo" },

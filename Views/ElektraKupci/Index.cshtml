@@ -7,27 +7,28 @@
     </div>
     <table class="display nowrap w-100" id="ElektraKupacTable">
         <thead>
-        <tr>
-            <th>Ugovorni račun</th>
-            <th>Mjerno mjesto</th>
-            <th>Stan ID</th>
-            <th>Šifra objekta</th>
-            <th>Adresa</th>
-            <th>Kat</th>
-            <th>Broj stana</th>
-            <th>Četvrt</th>
-            <th>Površina</th>
-            <th>Napomena(kupac)</th>
-        </tr>
+            <tr>
+                <th>Ugovorni račun</th>
+                <th>Mjerno mjesto</th>
+                <th>Stan ID</th>
+                <th>Šifra objekta</th>
+                <th>Adresa</th>
+                <th>Kat</th>
+                <th>Broj stana</th>
+                <th>Četvrt</th>
+                <th>Površina</th>
+                <th>Napomena(kupac)</th>
+            </tr>
         </thead>
     </table>
 </div>
+<script src="~/js/ExcelExportAction.js"></script>
 <script src="~/js/ElektraKupci/IndexDatatables.js"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
-$(document).ready(function () {
-    const input = $('#ElektraKupacTable_filter input[type="search"]');
-    const filter = $('#ElektraKupacTable_filter');
-    setStyle(input, filter);
-});
+    $(document).ready(function () {
+        const input = $('#ElektraKupacTable_filter input[type="search"]');
+        const filter = $('#ElektraKupacTable_filter');
+        setStyle(input, filter);
+    });
 </script>

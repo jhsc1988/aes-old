@@ -10,7 +10,7 @@
         <strong> OMM: </strong>
         <a href="/Ods/Details/@Model.OdsId">@Model.Ods.Omm</a>
         <strong> ID: </strong>
-        <a href="/Stanovi/Details/@Model.Ods.Stan.StanId">@Model.Ods.Stan.StanId</a>
+        <a href="/Stanovi/Details/@Model.Ods.Stan.Id">@Model.Ods.Stan.StanId</a>
         <strong> Adresa: </strong> @Model.Ods.Stan.Adresa
         <strong> Kat: </strong> @Model.Ods.Stan.Kat
         <strong> Broj stana: </strong>@Model.Ods.Stan.BrojSTana
@@ -92,6 +92,7 @@
     const param = @Model.Id;
 </script>
 <script src="~/js/Stanovi/Details/stanDetailsDatatablesAdjust.js" asp-append-version="true"></script>
+<script src="~/js/ExcelExportAction.js"></script>
 <script src="~/js/Stanovi/Details/RacunElektraTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraRateTable.js" asp-append-version="true"></script>
 <script src="~/js/Stanovi/Details/RacunElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>

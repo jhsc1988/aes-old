@@ -1,5 +1,20 @@
 ﻿$(document).ready(function () {
     $('#OdsTable').DataTable({
+
+        // excel
+        dom: 'frtipB',
+        "buttons": [
+            {
+                "extend": 'excel',
+                "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
+                "titleAttr": 'Excel',
+                "action": newexportaction,
+                "exportOptions": {
+                    //columns: [1, 2, 3, 4, 5, 6, 7, 10]
+                },
+            }
+        ],
+
         "ajax": {
             "url": "/Ods/GetList",
             "type": "POST",

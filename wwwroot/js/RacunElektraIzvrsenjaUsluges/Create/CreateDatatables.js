@@ -14,7 +14,14 @@
         "columns": [
             { "data": "redniBroj", "name": "redniBroj" },
             { "data": "brojRacuna", "name": "brojRacuna" },
-            { "data": "elektraKupac.ods.stan.stanId", "name": "elektraKupac.ods.stan.stanId" },
+            {
+                "data": null, "name": "elektraKupac.ods.stan.stanId",
+                "render": function (data) {
+                    if (data == null)
+                        return "";
+                    return '<a href="../../Stanovi/Details/' + data.elektraKupac.ods.stan.id + '">' + data.elektraKupac.ods.stan.stanId + '</a>';
+                }
+            },
             { "data": "elektraKupac.ods.stan.adresa", "name": "elektraKupac.ods.stan.adresa" },
             { "data": "elektraKupac.ods.stan.korisnik", "name": "elektraKupac.ods.stan.korisnik" },
             { "data": "elektraKupac.ods.stan.vlasni\u0161tvo", "name": "elektraKupac.ods.stan.vlasništvo" },

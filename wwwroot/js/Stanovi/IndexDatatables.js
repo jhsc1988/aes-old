@@ -1,21 +1,6 @@
 ﻿$(document).ready(function () {
     //$('div.dataTables_filter input').addClass('form-control form-control-sm');
     var table = $('#indexTable').DataTable({
-        dom: 'frtipB',
-        //buttons: ['excelHtml5', 'pdfHtml5'],
-
-        buttons: [{
-            extend: 'excelHtml5',
-            exportOptions: {
-                modifier: {
-                    order: 'index', // 'current', 'applied','index', 'original'
-                    page: 'all', // 'all', 'current'
-                    search: 'none' // 'none', 'applied', 'removed'
-                },
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-            }
-        },],
-
         "ajax": {
 
             "url": "/Stanovi/GetList",

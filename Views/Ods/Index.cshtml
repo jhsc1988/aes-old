@@ -7,26 +7,27 @@
     </div>
     <table class="display nowrap w-100" id="OdsTable">
         <thead>
-        <tr>
-            <th>Mjerno mjesto</th>
-            <th>Stan ID</th>
-            <th>Šifra objekta</th>
-            <th>Adresa</th>
-            <th>Kat</th>
-            <th>Broj stana</th>
-            <th>Četvrt</th>
-            <th>Površina</th>
-            <th>Napomena</th>
-        </tr>
+            <tr>
+                <th>Mjerno mjesto</th>
+                <th>Stan ID</th>
+                <th>Šifra objekta</th>
+                <th>Adresa</th>
+                <th>Kat</th>
+                <th>Broj stana</th>
+                <th>Četvrt</th>
+                <th>Površina</th>
+                <th>Napomena</th>
+            </tr>
         </thead>
     </table>
 </div>
+<script src="~/js/ExcelExportAction.js"></script>
 <script src="~/js/Ods/IndexDatatables.js"></script>
 <script src="~/js/DatatablesSearchStyle.js"></script>
 <script>
-$(document).ready(function () {
-    const input = $('#OdsTable_filter input[type="search"]');
-    const filter = $('#OdsTable_filter');
-    setStyle(input, filter);
-});
+    $(document).ready(function () {
+        const input = $('#OdsTable_filter input[type="search"]');
+        const filter = $('#OdsTable_filter');
+        setStyle(input, filter);
+    });
 </script>
