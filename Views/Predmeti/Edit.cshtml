@@ -11,15 +11,29 @@
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
+
+        @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
+        @* ------------------------------------------------------------------------------------ *@
+        <div hidden style="display: none;">
+            <div class="form-group">
+                <label asp-for="VrijemeUnosa" class="control-label"></label>
+                <input asp-for="VrijemeUnosa" class="form-control" />
+                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+            </div>
+        </div>
+        @* ------------------------------------------------------------------------------------ *@
+
         <div class="row space-10-10">
             <div class="col-md-2">
-                <div class="form-group">Klasa
+                <div class="form-group">
+                    Klasa
                     <input asp-for="Klasa" class="form-control form-control-sm" />
                     <span asp-validation-for="Klasa" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group">Naziv
+                <div class="form-group">
+                    Naziv
                     <input asp-for="Naziv" class="form-control form-control-sm" />
                     <span asp-validation-for="Naziv" class="text-danger"></span>
                 </div>
