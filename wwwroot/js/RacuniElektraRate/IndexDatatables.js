@@ -5,6 +5,20 @@ $(document).ready(function () {
 
     table = $('#IndexTable').DataTable({
 
+        // excel
+        dom: 'frtipB',
+        "buttons": [
+            {
+                "extend": 'excel',
+                "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
+                "titleAttr": 'Excel',
+                "action": newexportaction,
+                "exportOptions": {
+                    //columns: [1, 2, 3, 4, 5, 6, 7, 10]
+                },
+            }
+        ],
+
         "ajax": {
             "url": "/RacuniElektraRate/GetList",
             "type": "POST",
@@ -37,7 +51,7 @@ $(document).ready(function () {
             { "data": "datumIzdavanja", "name": "datumIzdavanja" },
             {
                 "data": "iznos", "name": "iznos",
-                "render": $.fn.dataTable.render.number('.', ',', 2, '')
+               // "render": $.fn.dataTable.render.number('.', ',', 2, '')
             },
             { "data": "klasaPlacanja", "name": "klasaPlacanja" },
             { "data": "datumPotvrde", "name": "datumPotvrde" },
