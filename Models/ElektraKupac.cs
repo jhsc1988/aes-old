@@ -7,6 +7,7 @@ namespace aes.Models
     public class ElektraKupac : Kupac
     {
         [Required]
+        [Display(Name = "Ugovorni račun")]
         [Remote(action: "UgovorniRacunValidation", controller: "ElektraKupci")]
         public long UgovorniRacun { get; set; }
 

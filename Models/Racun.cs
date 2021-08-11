@@ -15,6 +15,8 @@ namespace aes.Models
 
         [Required]
         [Remote(action: "BrojRacunaValidation", controller: "RacuniElektra")]
+        [Display(Name = "Broj računa")]
+
         [MaxLength(19)]
         public string BrojRacuna { get; set; }
 
@@ -24,21 +26,21 @@ namespace aes.Models
         public double Iznos { get; set; }
 
         // required se podrazumijeva jer nije nullable
-        [Display(Name = "Datum Izdavanja")]
+        [Display(Name = "Datum izdavanja")]
         [DataType(DataType.Date)]
-
         public DateTime? DatumIzdavanja { get; set; }
         public Dopis Dopis { get; set; }
         public int? DopisId { get; set; }
 
         [Required]
+        [Display(Name = "Redni broj")]
         public int RedniBroj { get; set; }
 
         [MaxLength(20)]
-        [Display(Name = "Klasa Plaćanja")]
+        [Display(Name = "Klasa plaćanja")]
         public string KlasaPlacanja { get; set; }
 
-        [Display(Name = "Datum Potvrde")]
+        [Display(Name = "Datum potvrde")]
         [DataType(DataType.Date)]
         public DateTime? DatumPotvrde { get; set; } // nullable mi treba za not required
 
