@@ -101,6 +101,8 @@ namespace aes.Models
             foreach (RacunElektra racunElektra in racunElektraList)
             {
                 racunElektra.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.Id == racunElektra.ElektraKupacId);
+                racunElektra.ElektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == racunElektra.ElektraKupac.OdsId);
+
                 racunElektra.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == racunElektra.DopisId);
 
                 if (racunElektra.Dopis != null)

@@ -380,5 +380,28 @@ namespace aes.Controllers
         {
             return Racun.RemoveAllFromDb(RacunTip.RacunElektra, GetUid(), _context);
         }
+
+
+
+        // TODO: delete for production  !!!!
+        // Area51
+        [HttpGet]
+        public async Task<IActionResult> GetListJSON()
+        {
+            List<RacunElektra> RacunElektraList = new List<RacunElektra>();
+            RacunElektraList = await _context.RacunElektra.ToListAsync<RacunElektra>();
+
+            var applicationDbContext = _context.RacunElektra.
+                Include(r => r.Dopis).
+                Include(r => r.ElektraKupac).
+                Include(r => r.ElektraKupac.Ods).
+                Include(r => r.ElektraKupac.Ods.Stan);
+
+            foreach (RacunElektra racunElektra in RacunElektraList)
+            {
+                racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
+            }
+            return Json(applicationDbContext.ToList());
+        }
     }
 }

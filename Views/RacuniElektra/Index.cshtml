@@ -12,7 +12,15 @@
         <thead>
             <tr>
                 <th>id</th> @* invisible *@
+
                 <th>Redni broj</th>
+
+                <th>stan_id</th> @* invisible - for excel*@
+                <th>adresa</th> @* invisible - for excel*@
+                <th>kat</th> @* invisible - for excel*@
+                <th>broj_stana</th> @* invisible - for excel*@
+                <th>povrsina</th> @* invisible - for excel*@
+                
                 <th>Broj računa</th>
                 <th>Ugovorni račun</th>
                 <th>Datum izdavanja</th>
@@ -31,6 +39,7 @@
     const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
 </script>
+<script src="~/js/ExcelExportAction.js"></script>
 <script src="~/js/RacuniElektra/IndexDatatables.js"></script>
 <script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
 <div> <partial name="Scripts/_IndexScripts" /> </div>

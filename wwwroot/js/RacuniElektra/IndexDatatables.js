@@ -3,76 +3,21 @@ let table;
 
 $(document).ready(function () {
 
-
-
-
-    /* For Export Buttons available inside jquery-datatable "server side processing" - Start
-- due to "server side processing" jquery datatble doesn't support all data to be exported
-- below function makes the datatable to export all records when "server side processing" is on */
-
-    function newexportaction(e, dt, button, config) {
-        var self = this;
-        var oldStart = dt.settings()[0]._iDisplayStart;
-        dt.one('preXhr', function (e, s, data) {
-            // Just this once, load all data from the server...
-            data.start = 0;
-            data.length = 2147483647;
-            dt.one('preDraw', function (e, settings) {
-                // Call the original action function
-                if (button[0].className.indexOf('buttons-copy') >= 0) {
-                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
-                } else if (button[0].className.indexOf('buttons-excel') >= 0) {
-                    $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
-                        $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
-                        $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
-                } else if (button[0].className.indexOf('buttons-csv') >= 0) {
-                    $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
-                        $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
-                        $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
-                } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
-                    $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
-                        $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
-                        $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
-                } else if (button[0].className.indexOf('buttons-print') >= 0) {
-                    $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
-                }
-                dt.one('preXhr', function (e, s, data) {
-                    // DataTables thinks the first item displayed is index 0, but we're not drawing that.
-                    // Set the property to what it was before exporting.
-                    settings._iDisplayStart = oldStart;
-                    data.start = oldStart;
-                });
-                // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
-                setTimeout(dt.ajax.reload, 0);
-                // Prevent rendering of the full data to the DOM
-                return false;
-            });
-        });
-        // Requery the server with the new one-time export settings
-        dt.ajax.reload();
-    };
-    //For Export Buttons available inside jquery-datatable "server side processing" - End
-
-
-
-
-
     table = $('#IndexTable').DataTable({
 
-
-
+        // excel
         dom: 'frtipB',
-
         "buttons": [
             {
                 "extend": 'excel',
                 "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
                 "titleAttr": 'Excel',
-                "action": newexportaction
-            },
+                "action": newexportaction,
+                "exportOptions": {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 10]
+                },
+            }
         ],
-
-
 
         "ajax": {
             "url": "/RacuniElektra/GetList",
@@ -88,11 +33,19 @@ $(document).ready(function () {
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
+
+            { "data": "elektraKupac.ods.stan.stanId", "name": "elektraKupac.ods.stan.stanId" },
+            { "data": "elektraKupac.ods.stan.adresa", "name": "elektraKupac.ods.stan.adresa" },
+            { "data": "elektraKupac.ods.stan.kat", "name": "elektraKupac.ods.stan.kat" },
+            { "data": "elektraKupac.ods.stan.brojSTana", "name": "elektraKupac.ods.stan.brojSTana" },
+            { "data": "elektraKupac.ods.stan.povr\u0161ina", "name": "elektraKupac.ods.stan.Površina" },
+
+
             {
                 "data": null, "name": "brojRacuna",
 
                 "render": function (data, type, row, meta) {
-                        return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                    return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
                 },
             },
             {
@@ -135,29 +88,54 @@ $(document).ready(function () {
                 "render": $.fn.dataTable.render.ellipsis(3),
             },
             {
-                "targets": 2, // BrojRacuna
+                "targets": 2, // stan id - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 3, // adresa - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 4, // kat - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 5, // broj stana - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 6, // površina - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 7, // BrojRacuna
                 "render": $.fn.dataTable.render.ellipsis(19),
             },
             {
-                "targets": 3, // UgovorniRacun
+                "targets": 8, // UgovorniRacun
                 "render": $.fn.dataTable.render.ellipsis(10),
             },
             {
-                "targets": 4, // DatumIzdavanja
+                "targets": 9, // DatumIzdavanja
                 "render": function (data, type, row) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
             {
-                "targets": 5, // Iznos
+                "targets": 10, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 6, // KlasaPlacanja
+                "targets": 11, // KlasaPlacanja
                 "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 7, // Datum potvrde
+                "targets": 12, // Datum potvrde
                 "render": function (data, type, row) {
                     if (data == null)
                         return "";
@@ -165,11 +143,11 @@ $(document).ready(function () {
                 }
             },
             {
-                "targets": 8, // Napomena
+                "targets": 13, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(30),
             },
             {
-                "targets": 9, // akcija - hidden
+                "targets": 14, // akcija - hidden
                 "visible": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
