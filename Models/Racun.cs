@@ -122,7 +122,8 @@ namespace aes.Models
                 return false;
             }
 
-            if (!double.TryParse(iznos,NumberStyles.AllowDecimalPoint, null, out _iznos))
+            // "en-US" mi treba za decimalnu tocku, decimanlna točka mi treba za Excel export
+            if (!double.TryParse(iznos, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out _iznos))
             {
                 msg = "Iznos je neispravan";
                 return false;
