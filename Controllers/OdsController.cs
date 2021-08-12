@@ -13,10 +13,15 @@ using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class OdsController : Controller
+    public class OdsController : Controller, IOdsController
     {
         private readonly ApplicationDbContext _context;
+        private List<Ods> OdsList;
 
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
         public OdsController(ApplicationDbContext context)
         {
             _context = context;
@@ -43,15 +48,10 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var ods = await _context.Ods
+            Ods ods = await _context.Ods
                 .Include(o => o.Stan)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (ods == null)
-            {
-                return NotFound();
-            }
-
-            return View(ods);
+            return ods == null ? NotFound() : View(ods);
         }
 
         // GET: Ods/Create
@@ -73,8 +73,8 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 ods.VrijemeUnosa = DateTime.Now;
-                _context.Add(ods);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(ods);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["StanId"] = new SelectList(_context.Stan, "Id", "Adresa", ods.StanId);
@@ -90,7 +90,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var ods = await _context.Ods.FindAsync(id);
+            Ods ods = await _context.Ods.FindAsync(id);
             ods.Stan = _context.Stan.FirstOrDefault(e => e.StanId == ods.StanId);
             if (ods == null)
             {
@@ -117,8 +117,8 @@ namespace aes.Controllers
             {
                 try
                 {
-                    _context.Update(ods);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(ods);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,15 +146,10 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var ods = await _context.Ods
+            Ods ods = await _context.Ods
                 .Include(o => o.Stan)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (ods == null)
-            {
-                return NotFound();
-            }
-
-            return View(ods);
+            return ods == null ? NotFound() : View(ods);
         }
 
         // POST: Ods/Delete/5
@@ -163,9 +158,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var ods = await _context.Ods.FindAsync(id);
-            _context.Ods.Remove(ods);
-            await _context.SaveChangesAsync();
+            Ods ods = await _context.Ods.FindAsync(id);
+            _ = _context.Ods.Remove(ods);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -178,44 +173,40 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> OmmValidation(int omm)
         {
-            if (omm < 10000000 || omm > 99999999)
+            if (omm is < 10000000 or > 99999999)
             {
                 return Json($"Broj obračunskog mjernog mjesta nije ispravan");
             }
-            var db = await _context.Ods.FirstOrDefaultAsync(x => x.Omm == omm);
-            if (db != null)
-            {
-                return Json($"Obračunsko mjerno mjesto {omm} već postoji.");
-            }
-            return Json(true);
+            Ods db = await _context.Ods.FirstOrDefaultAsync(x => x.Omm == omm);
+            return db != null ? Json($"Obračunsko mjerno mjesto {omm} već postoji.") : Json(true);
         }
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu obračunskih mjernih mjesta za HEP - ODS u JSON obliku za server side processing</returns>
-        [HttpPost]
-        public async Task<IActionResult> GetList()
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void GetDatatablesParamas()
         {
             // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        }
 
-            // async/await - imam overhead (povećavam latency), ali proširujem scalability
-            List<Ods> OdsList = new List<Ods>();
-            OdsList = await _context.Ods.ToListAsync<Ods>();
+        public async Task<IActionResult> GetList()
+        {
+            GetDatatablesParamas();
+
+            OdsList = await _context.Ods.ToListAsync();
 
             foreach (Ods ods in OdsList)
             {
-                ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == ods.StanId); // kod mene je ods.StanId -> Stan.Id (primarni ključ)
+                ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == ods.StanId);
             }
 
-            // filter
             int totalRows = OdsList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 OdsList = await OdsList.
                     Where(
@@ -234,32 +225,17 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = OdsList.Count;
 
-            // sorting
-            OdsList = OdsList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            OdsList = OdsList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            OdsList = OdsList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            OdsList = OdsList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Ods>();
-
-            return Json(new { data = OdsList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
-        }
-
-        // TODO: delete for production  !!!!
-        // Area 51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
-        {
-
-            List<Ods> OdsList = new List<Ods>();
-            OdsList = await _context.Ods.ToListAsync<Ods>();
-
-            foreach (Ods ods in OdsList)
+            return Json(new
             {
-                ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == ods.StanId);
-            }
-            return Json(OdsList);
+                data = OdsList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
-
-        // ************************************ get kupci for notification builder ************************************ //
 
         public JsonResult GetStanData(string sid)
         {
@@ -280,6 +256,5 @@ namespace aes.Controllers
             return Json(st);
 
         }
-
     }
 }

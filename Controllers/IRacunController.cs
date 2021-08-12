@@ -73,14 +73,14 @@ namespace aes.Controllers
         public JsonResult UpdateDbForInline(string id, string updatedColumn, string x);
 
         /// <summary>
-        /// Adds new row to RacunElektraTemp
+        /// Adds new row as temp račun - Create.cshtml
         /// </summary>
         /// <param name="brojRacuna">Broj računa</param>
         /// <param name="iznos">Iznos računa</param>
         /// <param name="date">Datum izdavanja</param>
         /// <param name="__guid">Guid // TODO: use UserID instead</param>
         /// <returns></returns>
-        //public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId);
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId);
 
         /// <summary>
         /// Moves from RacunElektraTemp to RacuniElektra table

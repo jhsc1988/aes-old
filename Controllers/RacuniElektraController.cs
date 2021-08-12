@@ -150,7 +150,7 @@ namespace aes.Controllers
                     RacunElektra re = _context.RacunElektra.FirstOrDefault(e => e.Id == id);
                     _context.Entry(re).State = EntityState.Detached;
                     _context.Entry(racunElektra).State = EntityState.Modified;
-                    
+
                     _ = _context.Update(racunElektra);
                     _ = await _context.SaveChangesAsync();
                 }
@@ -211,7 +211,7 @@ namespace aes.Controllers
         /// <summary>
         /// Validation
         /// </summary>
-        /// <param name="brojRacuna"></param>
+        /// <param name="broj računa"></param>
         /// <returns>async Task<IActionResult> (JSON)</returns>
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
@@ -249,7 +249,7 @@ namespace aes.Controllers
             racunElektraList = RacunElektra.GetList(predmetIdAsInt, dopisIdAsInt, _context);
 
             int totalRows = racunElektraList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 racunElektraList = await racunElektraList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
@@ -264,7 +264,7 @@ namespace aes.Controllers
             }
 
             int totalRowsAfterFiltering = racunElektraList.Count;
-            
+
             racunElektraList = racunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
             racunElektraList = racunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
@@ -282,7 +282,7 @@ namespace aes.Controllers
             GetDatatablesParamas();
 
             racunElektraList = RacunElektra.GetListCreateList(GetUid(), _context);
-            
+
             int totalRows = racunElektraList.Count;
             if (!string.IsNullOrEmpty(searchValue)) // filter
             {
@@ -316,7 +316,7 @@ namespace aes.Controllers
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         public string GetUid()
         {
             ClaimsPrincipal currentUser;
@@ -372,29 +372,6 @@ namespace aes.Controllers
         public JsonResult RemoveAllFromDb()
         {
             return Racun.RemoveAllFromDb(RacunTip.RacunElektra, GetUid(), _context);
-        }
-
-
-
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
-        {
-            List<RacunElektra> RacunElektraList = new List<RacunElektra>();
-            RacunElektraList = await _context.RacunElektra.ToListAsync<RacunElektra>();
-
-            var applicationDbContext = _context.RacunElektra.
-                Include(r => r.Dopis).
-                Include(r => r.ElektraKupac).
-                Include(r => r.ElektraKupac.Ods).
-                Include(r => r.ElektraKupac.Ods.Stan);
-
-            foreach (RacunElektra racunElektra in RacunElektraList)
-            {
-                racunElektra.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektra.ElektraKupacId);
-            }
-            return Json(applicationDbContext.ToList());
         }
     }
 }
