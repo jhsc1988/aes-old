@@ -25,7 +25,7 @@
             {"data": "datumIzdavanja", "name": "datumIzdavanja"},
             {
                 "data": "iznos", "name": "iznos",
-                "render": $.fn.dataTable.render.number('.', ',', 2, '')
+                //"render": $.fn.dataTable.render.number('.', ',', 2, '')
             },
 
             {"data": "klasaPlacanja", "name": "klasaPlacanja"},

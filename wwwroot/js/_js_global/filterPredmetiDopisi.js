@@ -43,13 +43,6 @@
         });
     }
 
-    /**
-     * reloads datatables
-     * */
-    function refreshWithFilteredData() {
-        $('#IndexTable').DataTable().ajax.reload();
-    }
-
     // ************************************ dopisi ************************************ //
 
     /**
@@ -111,3 +104,9 @@ $("#selectDopis").change(function () {
     refreshWithFilteredData();
 });
 
+/**
+ * reloads datatables
+ * */
+function refreshWithFilteredData() {
+    $('#IndexTable').DataTable().ajax.reload();
+}
