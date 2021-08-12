@@ -11,7 +11,6 @@
         "columns": [
             { "data": "redniBroj", "name": "redniBroj" },
             { "data": "brojRacuna", "name": "brojRacuna" },
-
             {
                 "data": null, "name": "elektraKupac.ods.stan.stanId",
                 "render": function (data) {
@@ -20,13 +19,10 @@
                     return '<a href="../../../Stanovi/Details/' + data.elektraKupac.ods.stan.id + '">' + data.elektraKupac.ods.stan.stanId + '</a>';
                 }
             },
-
             { "data": "elektraKupac.ods.stan.adresa", "name": "elektraKupac.ods.stan.adresa" },
             { "data": "elektraKupac.ods.stan.korisnik", "name": "elektraKupac.ods.stan.korisnik" },
             { "data": "elektraKupac.ods.stan.vlasni\u0161tvo", "name": "elektraKupac.ods.stan.vlasništvo" },
             { "data": "datumIzdavanja", "name": "datumIzdavanja" },
-            { "data": "datumIzvršenja", "name": "datumIzvršenja" },
-            { "data": "usluga", "name": "usluga" },
             {
                 "data": "iznos", "name": "iznos",
                 //"render": $.fn.dataTable.render.number('.', ',', 2, '')
@@ -78,34 +74,23 @@
             },
             {
                 "targets": 6, // Datum izdavanja
-                "render": function (data, type, row) {
+                "render": function (data) {
                     if (data == null)
                         return "";
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
+
             {
-                "targets": 7, // Datum izvršenja
-                "render": function (data, type, row) {
-                    if (data == null)
-                        return "";
-                    return moment(data).format("DD.MM.YYYY")
-                }
-            },
-            {
-                "targets": 8, // usluga
+                "targets": 7, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 9, // Iznos
-                "render": $.fn.dataTable.render.ellipsis(8),
-            },
-            {
-                "targets": 10, // Napomena
+                "targets": 8, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(28),
             },
             {
-                "targets": 11, // remove
+                "targets": 9, // remove
                 "orderable": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button>"
