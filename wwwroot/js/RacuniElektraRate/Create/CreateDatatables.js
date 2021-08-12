@@ -14,7 +14,7 @@
             {
                 "data": null, "name": "elektraKupac.ods.stan.stanId",
                 "render": function (data) {
-                    if (data == null)
+                    if (data == null || data.elektraKupac == null)
                         return "";
                     return '<a href="../../../Stanovi/Details/' + data.elektraKupac.ods.stan.id + '">' + data.elektraKupac.ods.stan.stanId + '</a>';
                 }

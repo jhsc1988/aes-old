@@ -14,7 +14,7 @@
             {
                 "data": null, "name": "stan.stanId",
                 "render": function (data) {
-                    if (data == null)
+                    if (data == null || data.stan == null)
                         return "";
                     return '<a href="../../../Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
                 }
