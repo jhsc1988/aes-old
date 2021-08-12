@@ -3,7 +3,7 @@
     $.each(kup, function (key, value) {
         brojRacuna = $("#brojRacuna").val();
         sifraObjekta = brojRacuna.substr(0, 8);
-        if ($('#brojRacuna').val() == sifraObjekta) {
+        if (sifraObjekta !== "" && sifraObjekta == value.SifraObjekta) {
 
             // get data
             data_stanId = value.StanId;
