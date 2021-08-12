@@ -264,6 +264,7 @@ namespace aes.Controllers
             }
 
             int totalRowsAfterFiltering = racunElektraList.Count;
+            
             racunElektraList = racunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
             racunElektraList = racunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
@@ -281,10 +282,9 @@ namespace aes.Controllers
             GetDatatablesParamas();
 
             racunElektraList = RacunElektra.GetListCreateList(GetUid(), _context);
-
-            // filter
+            
             int totalRows = racunElektraList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 racunElektraList = await racunElektraList.Where(
                         x => x.RedniBroj.ToString().Contains(searchValue)
@@ -302,11 +302,8 @@ namespace aes.Controllers
 
             int totalRowsAfterFiltering = racunElektraList.Count;
 
-            // sorting
-            racunElektraList = racunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
-
-            // paging
-            racunElektraList = racunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+            racunElektraList = racunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            racunElektraList = racunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
             return Json(new
             {

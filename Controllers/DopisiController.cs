@@ -12,9 +12,15 @@ using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class DopisiController : Controller
+    public class DopisiController : Controller, IDopisiController
     {
         private readonly ApplicationDbContext _context;
+        private List<Dopis> DopisList;
+
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
 
         public DopisiController(ApplicationDbContext context)
         {
@@ -42,15 +48,10 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var dopis = await _context.Dopis
+            Dopis dopis = await _context.Dopis
                 .Include(d => d.Predmet)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (dopis == null)
-            {
-                return NotFound();
-            }
-
-            return View(dopis);
+            return dopis == null ? NotFound() : View(dopis);
         }
 
         // GET: Dopisi/Create
@@ -72,8 +73,8 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 dopis.VrijemeUnosa = DateTime.Now;
-                _context.Add(dopis);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(dopis);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PredmetId"] = new SelectList(_context.Predmet, "Id", "Klasa", dopis.PredmetId);
@@ -89,7 +90,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var dopis = await _context.Dopis.FindAsync(id);
+            Dopis dopis = await _context.Dopis.FindAsync(id);
             dopis.Predmet = _context.Predmet.FirstOrDefault(e => e.Id == dopis.PredmetId);
             if (dopis == null)
             {
@@ -117,8 +118,8 @@ namespace aes.Controllers
                 try
                 {
                     dopis.Predmet = _context.Predmet.FirstOrDefault(e => e.Id == dopis.PredmetId);
-                    _context.Update(dopis);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(dopis);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,15 +147,10 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var dopis = await _context.Dopis
+            Dopis dopis = await _context.Dopis
                 .Include(d => d.Predmet)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (dopis == null)
-            {
-                return NotFound();
-            }
-
-            return View(dopis);
+            return dopis == null ? NotFound() : View(dopis);
         }
 
         // POST: Dopisi/Delete/5
@@ -163,9 +159,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dopis = await _context.Dopis.FindAsync(id);
-            _context.Dopis.Remove(dopis);
-            await _context.SaveChangesAsync();
+            Dopis dopis = await _context.Dopis.FindAsync(id);
+            _ = _context.Dopis.Remove(dopis);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -174,33 +170,32 @@ namespace aes.Controllers
             return _context.Dopis.Any(e => e.Id == id);
         }
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća dopisa u JSON obliku za server side processing</returns>
-        [HttpPost]
-        public async Task<IActionResult> GetList(int predmetId)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void GetDatatablesParamas()
         {
             // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        }
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<Dopis> DopisList = new List<Dopis>();
+        public async Task<IActionResult> GetList(int predmetId)
+        {
+            GetDatatablesParamas();
+
             DopisList = await _context.Dopis.Where(e => e.PredmetId == predmetId).ToListAsync();
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (Dopis dopis in DopisList)
             {
                 dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == dopis.PredmetId); // kod mene je dopis.PredmetId -> Predmet.Id (primarni ključ)
             }
 
-            // filter
             int totalRows = DopisList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 DopisList = await DopisList.
                     Where(
@@ -208,34 +203,22 @@ namespace aes.Controllers
                     || x.Predmet.Naziv.ToLower().Contains(searchValue.ToLower())
                     || x.Datum.ToString().Contains(searchValue)
                     || x.Urbroj.Contains(searchValue)).ToDynamicListAsync<Dopis>();
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
+
             int totalRowsAfterFiltering = DopisList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            DopisList = DopisList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            DopisList = DopisList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            DopisList = DopisList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            DopisList = DopisList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Dopis>();
-
-            return Json(new { data = DopisList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
-        }
-
-        // TODO: delete for production  !!!!
-        // Area51
-        [HttpGet]
-        public async Task<IActionResult> GetListJSON()
-        {
-            List<Dopis> DopisList = new List<Dopis>();
-            DopisList = await _context.Dopis.ToListAsync<Dopis>();
-
-            foreach (Dopis dopis in DopisList)
+            return Json(new
             {
-                dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == dopis.PredmetId); // kod mene je dopis.PredmetId -> Predmet.Id (primarni ključ)
-            }
-            return Json(DopisList);
+                data = DopisList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
+
         public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa)
         {
             Dopis dTemp = new();
@@ -244,15 +227,14 @@ namespace aes.Controllers
             dTemp.Datum = DateTime.Parse(datumDopisa);
             _ = _context.Dopis.Add(dTemp);
             return TrySave();
-
         }
+
         public JsonResult TrySave()
         {
             try
             {
                 _ = _context.SaveChanges();
                 return new(new { success = true, Message = "Spremljeno" });
-
             }
             catch (DbUpdateException)
             {
