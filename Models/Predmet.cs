@@ -40,9 +40,6 @@ namespace aes.Models
                 case RacunTip.ElektraIzvrsenje:
                     racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.ToList());
                     break;
-                case RacunTip.OdsIzvrsenje:
-                    //racunList.AddRange(_context.RacunOdsIzvrsenjaUsluge.ToList());
-                    break;
                 default:
                     break;
             }
