@@ -115,7 +115,7 @@
         var racunId = table.row($(this).parents('tr')).data().id;
         $.ajax({
             type: "POST",
-            url: "/RacuniElektraRate/RemoveRow",
+            url: "/RacuniHolding/RemoveRow",
             data: { racunId: racunId },
             success: function (r) {
                 if (r.success) {
