@@ -16,6 +16,7 @@ namespace aes.Models
 
         [Required]
         [Remote(action: "OmmValidation", controller: "Ods")]
+        [Display(Name = "Obračunsko mjerno mjesto")]
         public int Omm { get; set; }
 
         [MaxLength(255)]
