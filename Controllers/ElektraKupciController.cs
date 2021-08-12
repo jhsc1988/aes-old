@@ -15,6 +15,15 @@ namespace aes.Controllers
     public class ElektraKupciController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private List<ElektraKupac> ElektraKupacList;
+        private List<RacunElektra> RacunElektraList;
+        private List<RacunElektraRate> RacunElektraRateList;
+        private List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeList;
+
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
 
         public ElektraKupciController(ApplicationDbContext context)
         {
@@ -42,16 +51,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var elektraKupac = await _context.ElektraKupac
+            ElektraKupac elektraKupac = await _context.ElektraKupac
                 .Include(e => e.Ods)
                 .Include(e => e.Ods.Stan)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (elektraKupac == null)
-            {
-                return NotFound();
-            }
-
-            return View(elektraKupac);
+            return elektraKupac == null ? NotFound() : View(elektraKupac);
         }
 
         // GET: ElektraKupci/Create
@@ -73,8 +77,8 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 elektraKupac.VrijemeUnosa = DateTime.Now;
-                _context.Add(elektraKupac);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(elektraKupac);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["OdsId"] = new SelectList(_context.Ods, "Id", "Id", elektraKupac.OdsId);
@@ -90,7 +94,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var elektraKupac = await _context.ElektraKupac.FindAsync(id);
+            ElektraKupac elektraKupac = await _context.ElektraKupac.FindAsync(id);
             elektraKupac.Ods = _context.Ods.FirstOrDefault(e => e.Id == elektraKupac.OdsId);
             elektraKupac.Ods.Stan = _context.Stan.FirstOrDefault(e => e.StanId == elektraKupac.Ods.StanId);
             if (elektraKupac == null)
@@ -118,8 +122,8 @@ namespace aes.Controllers
             {
                 try
                 {
-                    _context.Update(elektraKupac);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(elektraKupac);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -147,15 +151,10 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var elektraKupac = await _context.ElektraKupac
+            ElektraKupac elektraKupac = await _context.ElektraKupac
                 .Include(e => e.Ods)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (elektraKupac == null)
-            {
-                return NotFound();
-            }
-
-            return View(elektraKupac);
+            return elektraKupac == null ? NotFound() : View(elektraKupac);
         }
 
         // POST: ElektraKupci/Delete/5
@@ -164,9 +163,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var elektraKupac = await _context.ElektraKupac.FindAsync(id);
-            _context.ElektraKupac.Remove(elektraKupac);
-            await _context.SaveChangesAsync();
+            ElektraKupac elektraKupac = await _context.ElektraKupac.FindAsync(id);
+            _ = _context.ElektraKupac.Remove(elektraKupac);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -179,20 +178,33 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> UgovorniRacunValidation(long ugovorniRacun)
         {
-            if (ugovorniRacun < 1000000000 || ugovorniRacun > 9999999999)
+            if (ugovorniRacun is < 1000000000 or > 9999999999)
             {
                 return Json($"Ugovorni račun nije ispravan");
             }
 
             // TODO: dodati uvjet za omm - vjerojatno mi treba i unique constraint
             // vidjeti i kod ostalih controllera
-            var db = await _context.ElektraKupac.FirstOrDefaultAsync(x => x.UgovorniRacun == ugovorniRacun);
+            ElektraKupac db = await _context.ElektraKupac.FirstOrDefaultAsync(x => x.UgovorniRacun == ugovorniRacun);
             if (db != null)
             {
                 return Json($"Ugovorni račun {ugovorniRacun} već postoji."); // TODO: isti kupac se teoretski moze pojaviti na drugom omm
                 // TODO: treba staviti nekakav alert da već postoji
             }
             return Json(true);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void GetDatatablesParamas()
+        {
+            // server side parameters
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
         }
 
         /// <summary>
@@ -202,27 +214,18 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
-            // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            GetDatatablesParamas();
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<ElektraKupac> ElektraKupacList = new List<ElektraKupac>();
-            ElektraKupacList = await _context.ElektraKupac.ToListAsync<ElektraKupac>();
+            ElektraKupacList = await _context.ElektraKupac.ToListAsync();
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (ElektraKupac elektraKupac in ElektraKupacList)
             {
                 elektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == elektraKupac.OdsId); // kod mene je elektraKupac.OdsId -> Ods.Id (primarni ključ)
                 elektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == elektraKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
             }
 
-            // filter
             int totalRows = ElektraKupacList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 ElektraKupacList = await ElektraKupacList.
                     Where(
@@ -239,12 +242,8 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = ElektraKupacList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            ElektraKupacList = ElektraKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
-
-            // paging
-            ElektraKupacList = ElektraKupacList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<ElektraKupac>();
+            ElektraKupacList = ElektraKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            ElektraKupacList = ElektraKupacList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
             return Json(new { data = ElektraKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
@@ -254,51 +253,49 @@ namespace aes.Controllers
 
         public async Task<IActionResult> GetRacuniForKupac(int param)
         {
-            // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            GetDatatablesParamas();
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<RacunElektra> RacunElektraList = new List<RacunElektra>();
             RacunElektraList = await _context.RacunElektra.Where(e => e.ElektraKupac.Id == param).ToListAsync();
 
-            foreach (var p in RacunElektraList)
-                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
-
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunElektra e in RacunElektraList)
+            foreach (RacunElektra p in RacunElektraList)
             {
-                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId); // kod mene je elektraKupac.OdsId -> Ods.Id (primarni ključ)
-                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
+                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
             }
 
-            // filter
+            foreach (RacunElektra e in RacunElektraList)
+            {
+                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
+                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
+            }
+
+
             int totalRows = RacunElektraList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
+            {
                 RacunElektraList = await RacunElektraList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
                              || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.Iznos.ToString().Contains(searchValue)
-                             || x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue)
-                             || x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))
+                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                             || (x.DatumPotvrde != null &&
+                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
                     .ToDynamicListAsync<RacunElektra>();
+            }
 
             int totalRowsAfterFiltering = RacunElektraList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            RacunElektraList = RacunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            RacunElektraList = RacunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            RacunElektraList = RacunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            RacunElektraList = RacunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektra>();
-
-            return Json(new { data = RacunElektraList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new
+            {
+                data = RacunElektraList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
 
 
@@ -306,107 +303,90 @@ namespace aes.Controllers
 
         public async Task<IActionResult> GetRacuniRateForKupac(int param)
         {
-            // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            GetDatatablesParamas();
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<RacunElektraRate> RacunElektraRateList = new List<RacunElektraRate>();
             RacunElektraRateList = await _context.RacunElektraRate.Where(e => e.ElektraKupac.Id == param).ToListAsync();
 
-            foreach (var p in RacunElektraRateList)
-                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
-
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunElektraRate e in RacunElektraRateList)
+            foreach (RacunElektraRate p in RacunElektraRateList)
             {
-                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId); // kod mene je elektraKupac.OdsId -> Ods.Id (primarni ključ)
-                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
+                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
             }
 
-            // filter
+            foreach (RacunElektraRate e in RacunElektraRateList)
+            {
+                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
+                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
+            }
+
+
             int totalRows = RacunElektraRateList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
+            {
                 RacunElektraRateList = await RacunElektraRateList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
                              || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.Iznos.ToString().Contains(searchValue)
-                             || x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue)
-                             || x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))
+                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                             || (x.DatumPotvrde != null &&
+                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
                     .ToDynamicListAsync<RacunElektraRate>();
+            }
 
             int totalRowsAfterFiltering = RacunElektraRateList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            RacunElektraRateList = RacunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            RacunElektraRateList = RacunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraRate>();
-
-            return Json(new { data = RacunElektraRateList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new
+            {
+                data = RacunElektraRateList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
-
-
 
 
         public async Task<IActionResult> GetRacuniElektraIzvrsenjeForKupac(int param)
         {
-            // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request
-                .Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            GetDatatablesParamas();
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeList = new List<RacunElektraIzvrsenjeUsluge>();
             RacunElektraIzvrsenjeList = await _context.RacunElektraIzvrsenjeUsluge.Where(e => e.ElektraKupac.Id == param).ToListAsync();
 
-            foreach (var p in RacunElektraIzvrsenjeList)
-                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
-
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
-            foreach (RacunElektraIzvrsenjeUsluge e in RacunElektraIzvrsenjeList)
+            foreach (RacunElektraIzvrsenjeUsluge p in RacunElektraIzvrsenjeList)
             {
-                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId); // kod mene je elektraKupac.OdsId -> Ods.Id (primarni ključ)
-                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
+                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
             }
 
-            // filter
-            var totalRows = RacunElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            foreach (RacunElektraIzvrsenjeUsluge e in RacunElektraIzvrsenjeList)
+            {
+                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
+                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
+            }
+
+            int totalRows = RacunElektraIzvrsenjeList.Count;
+            if (!string.IsNullOrEmpty(searchValue)) // filter
+            {
                 RacunElektraIzvrsenjeList = await RacunElektraIzvrsenjeList.Where(
                         x => x.BrojRacuna.Contains(searchValue)
                              || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
                              || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
                              || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower())
+                             || (x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower()))
                              || x.Iznos.ToString().Contains(searchValue)
-                             || x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue)
-                             || x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Napomena != null && x.Napomena.ToLower().Contains(searchValue))
+                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
+                             || (x.DatumPotvrde != null &&
+                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
+                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue)))
                     .ToDynamicListAsync<RacunElektraIzvrsenjeUsluge>();
+            }
 
-            var totalRowsAfterFiltering = RacunElektraIzvrsenjeList.Count;
+            int totalRowsAfterFiltering = RacunElektraIzvrsenjeList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            RacunElektraIzvrsenjeList = RacunElektraIzvrsenjeList.AsQueryable()
-                .OrderBy(sortColumnName + " " + sortDirection)
-                .ToList();
-
-            // paging
-            RacunElektraIzvrsenjeList =
-                RacunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+            RacunElektraIzvrsenjeList = RacunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            RacunElektraIzvrsenjeList = RacunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
             return Json(new
             {
