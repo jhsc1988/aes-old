@@ -1,4 +1,12 @@
-﻿/* For Export Buttons available inside jquery-datatable "server side processing" - Start
+﻿/**
+ * Stackoverflow Excel fix for server-side proccessed data
+ * @param {any} e
+ * @param {any} dt
+ * @param {any} button
+ * @param {any} config
+ */
+
+/* For Export Buttons available inside jquery-datatable "server side processing" - Start
 - due to "server side processing" jquery datatble doesn't support all data to be exported
 - below function makes the datatable to export all records when "server side processing" is on */
 

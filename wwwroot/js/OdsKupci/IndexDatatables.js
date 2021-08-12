@@ -5,30 +5,28 @@
             "type": "POST",
             "datatype": "json"
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             {
                 "data": null, "name": "sifraKupca",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="OdsKupci/Details/' + data.id + '">' + data.sifraKupca + '</a>';
                 }
             },
             {
                 "data": null, "name": "Ods.Omm",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Ods/Details/' + data.ods.id + '">' + data.ods.omm + '</a>';
                 }
             },
             {
                 "data": null, "name": "ods.stan.stanId",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Stanovi/Details/' + data.ods.stan.id + '">' + data.ods.stan.stanId + '</a>';
                 }
             },
             {
                 "data": null, "name": "ods.stan.sifraObjekta",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Stanovi/Details/' + data.ods.stan.id + '">' + data.ods.stan.sifraObjekta + '</a>';
                 }
             },

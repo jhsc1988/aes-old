@@ -6,8 +6,6 @@
             "type": "POST",
             "datatype": "json"
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
@@ -19,7 +17,7 @@
             },
             {
                 "data": null, "name": "stan.sifraObjekta",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
                 }
             }, 
@@ -65,7 +63,7 @@
             }, 
             {
                 "targets": 4, // DatumIzdavanja
-                "render": function (data, type, row) {
+                "render": function (data) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
@@ -79,7 +77,7 @@
             },
             {
                 "targets": 7, // Datum potvrde
-                "render": function (data, type, row) {
+                "render": function (data) {
                     if (data == null)
                         return "";
                     return moment(data).format("DD.MM.YYYY")

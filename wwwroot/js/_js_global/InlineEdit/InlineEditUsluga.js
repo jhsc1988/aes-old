@@ -23,8 +23,7 @@ $(document).mousedown(function (e) {
         // Usluga
         if (!$(e.target).is('#usluga_input_clicked') && !$(e.target).is("#usluga_td_clicked")) {
             $("#usluga_td_clicked").replaceWith("<td>" + usluga + "</td>"); // reset input field to td
-            // if text has changed - update db
-            if (uslugaUpdated) {
+            if (uslugaUpdated) { // if text has changed - update db
                 updateDb(8, usluga);
                 uslugaUpdated = false; // reset updated flag
             }
@@ -42,8 +41,7 @@ $(document).mousedown(function (e) {
         // Klasa plaćanja
         if (!$(e.target).is('#klasa_input_clicked') && !$(e.target).is("#klasa_td_clicked")) {
             $("#klasa_td_clicked").replaceWith("<td>" + klasaPlacanja + "</td>"); // reset input field to td
-            // if text has changed - update db
-            if (klasaPlacanjaUpdated) {
+            if (klasaPlacanjaUpdated) { // if text has changed - update db
                 updateDb(4, klasaPlacanja);
                 klasaPlacanjaUpdated = false; // reset updated flag
             }

@@ -4,6 +4,7 @@
         brojRacuna = $("#brojRacuna").val();
         ugovorniRacun = brojRacuna.substr(0, 10);
         if ($('#brojRacuna').val() == ugovorniRacun) {
+
             // get data
             data_stanId = value.Ods.StanId;
             data_adresa = value.Ods.Stan.Adresa;

@@ -5,12 +5,10 @@
             "type": "POST",
             "datatype": "json"
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             {
                 "data": null, "name": "datumObracuna",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="RacuniHolding/Details/' + data.id + '">' + moment(data).format("DD.MM.YYYY") + '</a>';
                 }
             },
@@ -19,7 +17,7 @@
             },
             {
                 "data": null, "name": "racunElektra.brojRacuna",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="RacuniElektra/Details/' + data.racunElektra.id + '">' + data.racunElektra.brojRacuna + '</a>';
                 }
             },

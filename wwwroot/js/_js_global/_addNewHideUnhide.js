@@ -1,4 +1,6 @@
-﻿$("#aAddNew").click(function () {
+﻿// ************************************ predmeti/dopisi add new event handler ************************************ //
+
+$("#aAddNew").click(function () {
     if (hidden) {
         $("#AddNew").show("slow");
         hidden = false;

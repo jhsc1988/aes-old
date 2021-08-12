@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
 
     GetPredmetiData(); // init
+
     const selectPredmet = $("#selectPredmet");
     const selectDopis = $("#selectDopis");
     let predmetiForFilter;
@@ -10,6 +11,9 @@
         dopisiForFilter = val;
     }
 
+    /**
+     * Gets predmeti data using POST
+     * */
     function GetPredmetiData() {
         $.ajax({
             type: "POST",
@@ -23,6 +27,9 @@
         });
     }
 
+    /**
+     * Draws predmeti for dropdown
+     * */
     function drawSelectPredmetOptions() {
         selectPredmet.append($('<option>', {
             value: 0,
@@ -36,8 +43,18 @@
         });
     }
 
+    /**
+     * reloads datatables
+     * */
+    function refreshWithFilteredData() {
+        $('#IndexTable').DataTable().ajax.reload();
+    }
+
     // ************************************ dopisi ************************************ //
 
+    /**
+     * Gets dopisi data using POST
+     * */
     function GetDopisiData() {
         $.ajax({
             type: "POST",
@@ -53,12 +70,16 @@
         });
     }
 
+    /**
+     * Draws dopisi for predmet
+     * */
     function drawSelectDopisOptions() {
         selectDopis.find("option").remove().end();
         selectDopis.append($('<option>', {
             value: 0,
             text: "Dopis",
         }));
+
         // if Predmet is selected (if array is empty), disable Dopisi 
         if (dopisiForFilter != null && dopisiForFilter.length === 0) {
             selectDopis.attr('disabled', 'disabled');
@@ -66,6 +87,7 @@
             $.each(dopisiForFilter, function (i, item) {
                 selectDopis.removeAttr('disabled');
                 selectDopis.append($('<option>', {
+
                     // u value atribut od option stavljam ID od predmeta
                     value: item.id,
                     text: item.urbroj,
@@ -89,6 +111,3 @@ $("#selectDopis").change(function () {
     refreshWithFilteredData();
 });
 
-function refreshWithFilteredData() {
-    $('#IndexTable').DataTable().ajax.reload();
-}

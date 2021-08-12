@@ -5,10 +5,7 @@
             "type": "POST",
             "datatype": "json"
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
-
             {
                 "data": null, "name": "klasa",
                 "render": function (data) {

@@ -23,27 +23,22 @@ $(document).ready(function () {
             "url": "/RacuniElektra/GetList",
             "type": "POST",
             "datatype": "json",
-            "data": function (d) {
+            "data": function (d) { // callback za input change
                 d.klasa = $("#selectPredmet").val();
                 d.urbroj = $("#selectDopis").val();
             }
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
-
             { "data": "elektraKupac.ods.stan.stanId", "name": "elektraKupac.ods.stan.stanId" },
             { "data": "elektraKupac.ods.stan.adresa", "name": "elektraKupac.ods.stan.adresa" },
             { "data": "elektraKupac.ods.stan.kat", "name": "elektraKupac.ods.stan.kat" },
             { "data": "elektraKupac.ods.stan.brojSTana", "name": "elektraKupac.ods.stan.brojSTana" },
             { "data": "elektraKupac.ods.stan.povr\u0161ina", "name": "elektraKupac.ods.stan.Površina" },
-
-
             {
                 "data": null, "name": "brojRacuna",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
                 },
             },
@@ -121,7 +116,7 @@ $(document).ready(function () {
             },
             {
                 "targets": 9, // DatumIzdavanja
-                "render": function (data, type, row) {
+                "render": function (data) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
@@ -135,7 +130,7 @@ $(document).ready(function () {
             },
             {
                 "targets": 12, // Datum potvrde
-                "render": function (data, type, row) {
+                "render": function (data) {
                     if (data == null)
                         return "";
                     return moment(data).format("DD.MM.YYYY")

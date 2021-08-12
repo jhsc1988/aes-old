@@ -28,21 +28,19 @@ $(document).ready(function () {
                 d.urbroj = $("#selectDopis").val();
             }
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
             {
                 "data": null, "name": "brojRacuna",
 
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                         return '<a href="RacuniElektraRate/Details/' + data.id + '">' + data.brojRacuna + '</a>';
                 },
             },
             {
                 "data": null, "name": "elektraKupac.ugovorniRacun",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     if (data.elektraKupac != null)
                         return '<a href="ElektraKupci/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
                     return '';
@@ -89,7 +87,7 @@ $(document).ready(function () {
             },
             {
                 "targets": 4, // DatumIzdavanja
-                "render": function (data, type, row) {
+                "render": function (data) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
@@ -103,7 +101,7 @@ $(document).ready(function () {
             },
             {
                 "targets": 7, // Datum potvrde
-                "render": function (data, type, row) {
+                "render": function (data) {
                     if (data == null)
                         return "";
                     return moment(data).format("DD.MM.YYYY")

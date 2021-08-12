@@ -21,8 +21,7 @@ $(document).mousedown(function (e) {
         // Klasa
         if (!$(e.target).is('#klasa_input_clicked') && !$(e.target).is("#klasa_td_clicked")) {
             $("#klasa_td_clicked").replaceWith("<td>" + klasa + "</td>"); // reset input field to td
-            // if text has changed - update db
-            if (klasaUpdated) {
+            if (klasaUpdated) { // if text has changed - update db
                 updateDb(4, klasa);
                 klasaUpdated = false; // reset updated flag
             }

@@ -10,7 +10,6 @@ $(document).mousedown(function (e) {
 
         // Broj Racuna
         if (!$(e.target).is('#racun_input_clicked') && !$(e.target).is("#racun_td_clicked")) {
-            //$("#racun_td_clicked").replaceWith("<td>" + racunBr + "</td>");
             $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='RacuniElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
             if (racunUpdated) {
                 updateDb(1, racunBr);

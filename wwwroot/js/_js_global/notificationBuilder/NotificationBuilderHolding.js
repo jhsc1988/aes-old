@@ -4,6 +4,7 @@
         brojRacuna = $("#brojRacuna").val();
         sifraObjekta = brojRacuna.substr(0, 8);
         if ($('#brojRacuna').val() == sifraObjekta) {
+
             // get data
             data_stanId = value.StanId;
             data_adresa = value.Adresa;
@@ -15,6 +16,7 @@
             data_korisnik = value.Korisnik;
             data_vlasnistvo = value.Vlasništvo;
             data_elektraKupacId = value.Id;
+
             // #stanText string builder
             $('#stanText').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
                 + '<span style="font-weight:bold;">adresa: </span>' + data_adresa + ' '

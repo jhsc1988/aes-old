@@ -1,10 +1,7 @@
 ﻿$(document).ready(function () {
 
-    // ************************************ variables ************************************ //
-
     const selectIndexTable = $('#IndexTable');
 
-    // ************************************ DataTables definition ************************************ //
     table = selectIndexTable.DataTable({
         "ajax": {
             "url": "/RacuniElektraRate/GetListCreate",

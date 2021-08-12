@@ -20,24 +20,22 @@
             "type": "POST",
             "datatype": "json"
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             {
                 "data": null, "name": "Omm",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Ods/Details/' + data.id + '">' + data.omm + '</a>';
                 }
             },
             {
                 "data": null, "name": "StanId",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
                 }
             },
             {
                 "data": null, "name": "Stan.SifraObjekta",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
                 }
             },

@@ -16,12 +16,10 @@
         ],
 
         "ajax": {
-            "url": "/ElektraKupci/GetList", // TODO: treba mi ovo u MOM kontroleru, tikvan
+            "url": "/ElektraKupci/GetList",
             "type": "POST",
             "datatype": "json"
         },
-        // name mi treba za filter u controlleru - taj se parametar pretražuje po nazivu
-        // koristi se kao selector (nije posve jasna dokumentacija)
         "columns": [
             {
                 "data": null, "name": "ugovorniRacun",

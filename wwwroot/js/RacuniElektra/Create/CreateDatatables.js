@@ -1,10 +1,7 @@
 ﻿$(document).ready(function () {
 
-    // ************************************ variables ************************************ //
-
     const selectIndexTable = $('#IndexTable');
 
-    // ************************************ DataTables definition ************************************ //
     table = selectIndexTable.DataTable({
         "ajax": {
             "url": "/RacuniElektra/GetListCreate",
@@ -17,7 +14,7 @@
 
             {
                 "data": null, "name": "elektraKupac.ods.stan.stanId",
-                "render": function (data, type, row, meta) {
+                "render": function (data) {
                     if (data == null)
                         return "";
                     return '<a href="../../../Stanovi/Details/' + data.elektraKupac.ods.stan.id + '">' + data.elektraKupac.ods.stan.stanId + '</a>';
