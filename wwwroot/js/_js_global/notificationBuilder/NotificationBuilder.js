@@ -3,7 +3,7 @@
     $.each(kup, function (key, value) {
         brojRacuna = $("#brojRacuna").val();
         ugovorniRacun = brojRacuna.substr(0, 10);
-        if ($('#brojRacuna').val() == ugovorniRacun) {
+        if (ugovorniRacun !== "" && ugovorniRacun == value.UgovorniRacun) {
 
             // get data
             data_stanId = value.Ods.StanId;
