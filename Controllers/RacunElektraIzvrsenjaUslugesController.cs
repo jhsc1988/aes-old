@@ -59,16 +59,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge
                 .Include(r => r.Dopis)
                 .Include(r => r.ElektraKupac)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (racunElektraIzvrsenjeUsluge == null)
-            {
-                return NotFound();
-            }
-
-            return View(racunElektraIzvrsenjeUsluge);
+            return racunElektraIzvrsenjeUsluge == null ? NotFound() : View(racunElektraIzvrsenjeUsluge);
         }
 
         // GET: RacunElektraIzvrsenjaUsluges/Create
@@ -90,8 +85,8 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(racunElektraIzvrsenjeUsluge);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(racunElektraIzvrsenjeUsluge);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunElektraIzvrsenjeUsluge.DopisId);
@@ -108,7 +103,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge.FindAsync(id);
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge.FindAsync(id);
             if (racunElektraIzvrsenjeUsluge == null)
             {
                 return NotFound();
@@ -142,8 +137,8 @@ namespace aes.Controllers
                     _context.Entry(reu).State = EntityState.Detached;
                     _context.Entry(racunElektraIzvrsenjeUsluge).State = EntityState.Modified;
 
-                    _context.Update(racunElektraIzvrsenjeUsluge);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(racunElektraIzvrsenjeUsluge);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -172,16 +167,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge
                 .Include(r => r.Dopis)
                 .Include(r => r.ElektraKupac)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (racunElektraIzvrsenjeUsluge == null)
-            {
-                return NotFound();
-            }
-
-            return View(racunElektraIzvrsenjeUsluge);
+            return racunElektraIzvrsenjeUsluge == null ? NotFound() : View(racunElektraIzvrsenjeUsluge);
         }
 
         // POST: RacunElektraIzvrsenjaUsluges/Delete/5
@@ -190,9 +180,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge.FindAsync(id);
-            _context.RacunElektraIzvrsenjeUsluge.Remove(racunElektraIzvrsenjeUsluge);
-            await _context.SaveChangesAsync();
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _context.RacunElektraIzvrsenjeUsluge.FindAsync(id);
+            _ = _context.RacunElektraIzvrsenjeUsluge.Remove(racunElektraIzvrsenjeUsluge);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -205,17 +195,12 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
         {
-            if (brojRacuna.Length < 19 || brojRacuna.Length > 19)
+            if (brojRacuna.Length is < 19 or > 19)
             {
                 return Json($"Broj računa nije ispravan");
             }
-
-            var db = await _context.RacunElektraIzvrsenjeUsluge.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
-            if (db != null)
-            {
-                return Json($"Račun {brojRacuna} već postoji.");
-            }
-            return Json(true);
+            RacunElektraIzvrsenjeUsluge db = await _context.RacunElektraIzvrsenjeUsluge.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
+            return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +216,6 @@ namespace aes.Controllers
             sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
         }
 
-        [HttpPost]
         public async Task<IActionResult> GetList(string klasa, string urbroj)
         {
             int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
@@ -241,15 +225,14 @@ namespace aes.Controllers
 
             racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetList(predmetIdAsInt, dopisIdAsInt, _context);
 
-            // popunjava podatke za JSON da mogu vezane podatke pregledavati u datatables
             foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge in racunElektraIzvrsenjeList)
             {
                 racunElektraIzvrsenjeUsluge.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(o => o.Id == racunElektraIzvrsenjeUsluge.ElektraKupacId);
             }
 
-            // filter
+
             int totalRows = racunElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 racunElektraIzvrsenjeList = await racunElektraIzvrsenjeList.
                     Where(
@@ -265,13 +248,16 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
 
-            // sorting
-            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraIzvrsenjeUsluge>();
-
-            return Json(new { data = racunElektraIzvrsenjeList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new
+            {
+                data = racunElektraIzvrsenjeList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
 
         public async Task<IActionResult> GetListCreate()
@@ -280,9 +266,8 @@ namespace aes.Controllers
 
             racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetListCreateList(GetUid(), _context);
 
-            // filter
             int totalRows = racunElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 racunElektraIzvrsenjeList = await racunElektraIzvrsenjeList.Where(
                         x => x.RedniBroj.ToString().Contains(searchValue)
@@ -302,11 +287,8 @@ namespace aes.Controllers
 
             int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
 
-            // sorting
-            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
-
-            // paging
-            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList();
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
             return Json(new
             {

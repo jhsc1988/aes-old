@@ -17,12 +17,12 @@ namespace aes.Controllers
         public Task<IActionResult> GetList(int predmetId);
 
         /// <summary>
-        /// Saves changes to Db
+        /// Adds new dopis to context
         /// </summary>
         /// <param name="predmetId">ID predmeta</param>
         /// <param name="urbroj">Urbroj</param>
         /// <param name="datumDopisa">datum dopisa</param>
-        /// <returns>rezultat u JSON</returns>
+        /// <returns>rezultat spremanja u JSON</returns>
         public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa);
 
         /// <summary>

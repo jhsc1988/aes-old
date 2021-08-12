@@ -53,16 +53,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunHolding = await _context.RacunHolding
+            RacunHolding racunHolding = await _context.RacunHolding
                 .Include(r => r.Dopis)
                 .Include(r => r.Stan)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (racunHolding == null)
-            {
-                return NotFound();
-            }
-
-            return View(racunHolding);
+            return racunHolding == null ? NotFound() : View(racunHolding);
         }
 
         // GET: RacuniHolding/Create
@@ -84,8 +79,8 @@ namespace aes.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(racunHolding);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(racunHolding);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DopisId"] = new SelectList(_context.Dopis, "Id", "Urbroj", racunHolding.DopisId);
@@ -102,7 +97,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunHolding = await _context.RacunHolding.FindAsync(id);
+            RacunHolding racunHolding = await _context.RacunHolding.FindAsync(id);
             if (racunHolding == null)
             {
                 return NotFound();
@@ -136,8 +131,8 @@ namespace aes.Controllers
                     _context.Entry(rh).State = EntityState.Detached;
                     _context.Entry(racunHolding).State = EntityState.Modified;
 
-                    _context.Update(racunHolding);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(racunHolding);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -166,16 +161,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunHolding = await _context.RacunHolding
+            RacunHolding racunHolding = await _context.RacunHolding
                 .Include(r => r.Dopis)
                 .Include(r => r.Stan)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (racunHolding == null)
-            {
-                return NotFound();
-            }
-
-            return View(racunHolding);
+            return racunHolding == null ? NotFound() : View(racunHolding);
         }
 
         // POST: RacuniHolding/Delete/5
@@ -258,11 +248,9 @@ namespace aes.Controllers
 
             GetDatatablesParamas();
             racunHoldingList = RacunHolding.GetListCreateList(GetUid(), _context);
-           
+
             int totalRows = racunHoldingList.Count;
-           
-            // filter
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 racunHoldingList = await racunHoldingList.
                     Where(

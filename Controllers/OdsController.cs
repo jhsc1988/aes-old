@@ -254,7 +254,6 @@ namespace aes.Controllers
 
             st = stList.FirstOrDefault(o => o.Id == idInt);
             return Json(st);
-
         }
     }
 }

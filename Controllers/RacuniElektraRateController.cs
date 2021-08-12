@@ -42,7 +42,7 @@ namespace aes.Controllers
                 e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
             }
         }
-   
+
         [Authorize]
         public IActionResult Index()
         {
@@ -89,8 +89,8 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 racunElektraRate.VrijemeUnosa = DateTime.Now;
-                _context.Add(racunElektraRate);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(racunElektraRate);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(racunElektraRate);
@@ -105,7 +105,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunElektraRate = await _context.RacunElektraRate.FindAsync(id);
+            RacunElektraRate racunElektraRate = await _context.RacunElektraRate.FindAsync(id);
             if (racunElektraRate == null)
             {
                 return NotFound();
@@ -132,8 +132,8 @@ namespace aes.Controllers
             {
                 try
                 {
-                    _context.Update(racunElektraRate);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(racunElektraRate);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,16 +162,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var racunElektraRate = await _context.RacunElektraRate
+            RacunElektraRate racunElektraRate = await _context.RacunElektraRate
                 .Include(r => r.Dopis)
                 .Include(r => r.ElektraKupac)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (racunElektraRate == null)
-            {
-                return NotFound();
-            }
-
-            return View(racunElektraRate);
+            return racunElektraRate == null ? NotFound() : View(racunElektraRate);
         }
 
         // POST: RacuniElektraRate/Delete/5
@@ -180,9 +175,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var racunElektraRate = await _context.RacunElektraRate.FindAsync(id);
-            _context.RacunElektraRate.Remove(racunElektraRate);
-            await _context.SaveChangesAsync();
+            RacunElektraRate racunElektraRate = await _context.RacunElektraRate.FindAsync(id);
+            _ = _context.RacunElektraRate.Remove(racunElektraRate);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -195,17 +190,13 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
         {
-            if (brojRacuna.Length < 19 || brojRacuna.Length > 19)
+            if (brojRacuna.Length is < 19 or > 19)
             {
                 return Json($"Broj računa nije ispravan");
             }
 
-            var db = await _context.RacunElektraRate.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
-            if (db != null)
-            {
-                return Json($"Račun {brojRacuna} već postoji.");
-            }
-            return Json(true);
+            RacunElektraRate db = await _context.RacunElektraRate.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
+            return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
 
@@ -248,13 +239,16 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = racunElektraRateList.Count;
 
-            // sorting
-            racunElektraRateList = racunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            racunElektraRateList = racunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            racunElektraRateList = racunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            racunElektraRateList = racunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<RacunElektraRate>();
-
-            return Json(new { data = racunElektraRateList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new
+            {
+                data = racunElektraRateList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
 
         public async Task<IActionResult> GetListCreate()

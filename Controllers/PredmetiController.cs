@@ -11,9 +11,15 @@ using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
-    public class PredmetiController : Controller
+    public class PredmetiController : Controller, IPredmetController
     {
         private readonly ApplicationDbContext _context;
+        private List<Predmet> PredmetList;
+
+        /// <summary>
+        /// datatables params
+        /// </summary>
+        private string start, length, searchValue, sortColumnName, sortDirection;
 
         public PredmetiController(ApplicationDbContext context)
         {
@@ -40,14 +46,9 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var predmet = await _context.Predmet
+            Predmet predmet = await _context.Predmet
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (predmet == null)
-            {
-                return NotFound();
-            }
-
-            return View(predmet);
+            return predmet == null ? NotFound() : View(predmet);
         }
 
         // GET: Predmeti/Create
@@ -68,8 +69,8 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 predmet.VrijemeUnosa = DateTime.Now;
-                _context.Add(predmet);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(predmet);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(predmet);
@@ -84,12 +85,8 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var predmet = await _context.Predmet.FindAsync(id);
-            if (predmet == null)
-            {
-                return NotFound();
-            }
-            return View(predmet);
+            Predmet predmet = await _context.Predmet.FindAsync(id);
+            return predmet == null ? NotFound() : View(predmet);
         }
 
         // POST: Predmeti/Edit/5
@@ -109,8 +106,8 @@ namespace aes.Controllers
             {
                 try
                 {
-                    _context.Update(predmet);
-                    await _context.SaveChangesAsync();
+                    _ = _context.Update(predmet);
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -137,14 +134,9 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            var predmet = await _context.Predmet
+            Predmet predmet = await _context.Predmet
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (predmet == null)
-            {
-                return NotFound();
-            }
-
-            return View(predmet);
+            return predmet == null ? NotFound() : View(predmet);
         }
 
         // POST: Predmeti/Delete/5
@@ -153,9 +145,9 @@ namespace aes.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var predmet = await _context.Predmet.FindAsync(id);
-            _context.Predmet.Remove(predmet);
-            await _context.SaveChangesAsync();
+            Predmet predmet = await _context.Predmet.FindAsync(id);
+            _ = _context.Predmet.Remove(predmet);
+            _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -164,44 +156,47 @@ namespace aes.Controllers
             return _context.Predmet.Any(e => e.Id == id);
         }
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu predmeta u JSON obliku za server side processing</returns>
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void GetDatatablesParamas()
+        {
+            // server side parameters
+            start = Request.Form["start"].FirstOrDefault();
+            length = Request.Form["length"].FirstOrDefault();
+            searchValue = Request.Form["search[value]"].FirstOrDefault();
+            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
-            // server side parameters
-            var start = Request.Form["start"].FirstOrDefault();
-            var length = Request.Form["length"].FirstOrDefault();
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            var sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            var sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            GetDatatablesParamas();
 
-            // async/await - imam overhead, ali proširujem scalability
-            List<Predmet> PredmetList = new List<Predmet>();
-            PredmetList = await _context.Predmet.ToListAsync<Predmet>();
+            PredmetList = await _context.Predmet.ToListAsync();
 
-            // filter
             int totalRows = PredmetList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue)) // filter
             {
                 PredmetList = await PredmetList.
                     Where(
                     x => x.Klasa.Contains(searchValue)
                     || x.Naziv.Contains(searchValue)).ToDynamicListAsync<Predmet>();
-                // sortiranje radi normalno za datume, neovisno o formatu ToString
             }
             int totalRowsAfterFiltering = PredmetList.Count;
 
-            // trebam System.Linq.Dynamic.Core;
-            // sorting
-            PredmetList = PredmetList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList();
+            PredmetList = PredmetList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
+            PredmetList = PredmetList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
-            // paging
-            PredmetList = PredmetList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList<Predmet>();
-
-            return Json(new { data = PredmetList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
+            return Json(new
+            {
+                data = PredmetList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
 
         public JsonResult SaveToDB(string klasa, string naziv)
@@ -211,15 +206,14 @@ namespace aes.Controllers
             pTemp.Naziv = naziv;
             _ = _context.Predmet.Add(pTemp);
             return TrySave();
-
         }
+
         public JsonResult TrySave()
         {
             try
             {
                 _ = _context.SaveChanges();
                 return new(new { success = true, Message = "Spremljeno" });
-
             }
             catch (DbUpdateException)
             {
