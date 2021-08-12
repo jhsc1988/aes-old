@@ -43,7 +43,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
 
         // Broj racuna
         if ($(e.target).is('td:nth-child(2)') && !$(e.target).is("#racun_td_clicked")) {
-            $("#racun_td_clicked").not(e.target).replaceWith("<td>" + racunBr + "</td>"); // reset input
+            $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='RacuniElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
             if (racunUpdated) {
                 updateDb(1, racunBr);
                 racunUpdated = false;
