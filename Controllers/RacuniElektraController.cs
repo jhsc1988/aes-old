@@ -220,9 +220,10 @@ namespace aes.Controllers
             {
                 return Json($"Broj računa nije ispravan");
             }
+            return Json(true);
 
-            RacunElektra db = await _context.RacunElektra.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
-            return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
+            //RacunElektra db = await _context.RacunElektra.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
+            //return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
 
