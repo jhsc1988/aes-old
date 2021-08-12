@@ -62,7 +62,7 @@ namespace aes
               {
                   _ = endpoints.MapControllerRoute(
                       name: "default",
-                      pattern: "{controller=Home}/{action=Index}/{id?}");
+                      pattern: "{controller=Stanovi}/{action=Index}/{id?}");
                   _ = endpoints.MapRazorPages();
               });
         }
