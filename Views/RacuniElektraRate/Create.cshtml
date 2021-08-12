@@ -1,6 +1,4 @@
 ﻿@model IEnumerable<aes.Models.RacunElektraRate>
-
-
 @{
     ViewData["Title"] = "Create";
 }
@@ -18,7 +16,7 @@
             <table class="display nowrap w-100" id="IndexTable">
                 <thead>
                     <tr>
-                        <th>Radni broj</th>
+                        <th>Redni broj</th>
                         <th>Broj računa</th>
                         <th>Stan ID</th>
                         <th>Adresa</th>
@@ -36,6 +34,7 @@
         <div>
             <partial name="_SaveDeleteBottomCreate" />
         </div>
+        <hr />
         <div>
             <button onclick="location.href='@Url.Action("Index", "RacuniElektraRate")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
         </div>

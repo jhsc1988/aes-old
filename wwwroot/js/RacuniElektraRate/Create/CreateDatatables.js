@@ -73,7 +73,7 @@
             },
             {
                 "targets": 6, // Datum izdavanja
-                "render": function (data, type, row) {
+                "render": function (data) {
                     if (data == null)
                         return "";
                     return moment(data).format("DD.MM.YYYY")
