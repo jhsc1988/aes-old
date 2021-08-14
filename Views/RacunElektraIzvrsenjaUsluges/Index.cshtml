@@ -27,14 +27,12 @@
         </thead>
     </table>
 </div>
-
 <script>
+    let column;
     const updateDbUrl = "/RacunElektraIzvrsenjaUsluges/updateDbForInline";
     const GetPredmetiDataForFilterUrl = "/RacunElektraIzvrsenjaUsluges/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacunElektraIzvrsenjaUsluges/GetDopisiDataForFilter";
 </script>
-
-<script src="~/js/RacunElektraIzvrsenjaUsluges/IndexDatatables.js"></script>
-<script src="~/js/RacunElektraIzvrsenjaUsluges/FilterPredmetiDopisiConfig.js"></script>
-<div> <partial name="Scripts/_IndexUslugeScripts" /> </div>
+<script src="~/js/Datatables/RacuniIndex/UslugeDatatable.js"></script>
+<div> <partial name="Scripts/Racuni/_Usluge" /> </div>
 

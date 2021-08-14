@@ -11,8 +11,18 @@
     <Compile Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <Compile Remove="Views\UgovoriOKoristenju\**" />
     <Compile Remove="Views\UgovoriOPrijenosu\**" />
+    <Compile Remove="wwwroot\js\Dopisi\**" />
+    <Compile Remove="wwwroot\js\ElektraKupci\**" />
+    <Compile Remove="wwwroot\js\OdsKupci\**" />
+    <Compile Remove="wwwroot\js\Ods\**" />
+    <Compile Remove="wwwroot\js\Predmeti\**" />
+    <Compile Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
     <Compile Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <Compile Remove="wwwroot\js\RacuniElektraRate\**" />
+    <Compile Remove="wwwroot\js\RacuniElektra\**" />
+    <Compile Remove="wwwroot\js\RacuniHolding\**" />
     <Compile Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <Compile Remove="wwwroot\js\Stanovi\**" />
     <Compile Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <Compile Remove="wwwroot\js\UgovoriOPrijenosu\**" />
     <Content Remove="Views\OdsKupci\**" />
@@ -20,8 +30,18 @@
     <Content Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <Content Remove="Views\UgovoriOKoristenju\**" />
     <Content Remove="Views\UgovoriOPrijenosu\**" />
+    <Content Remove="wwwroot\js\Dopisi\**" />
+    <Content Remove="wwwroot\js\ElektraKupci\**" />
+    <Content Remove="wwwroot\js\OdsKupci\**" />
+    <Content Remove="wwwroot\js\Ods\**" />
+    <Content Remove="wwwroot\js\Predmeti\**" />
+    <Content Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
     <Content Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <Content Remove="wwwroot\js\RacuniElektraRate\**" />
+    <Content Remove="wwwroot\js\RacuniElektra\**" />
+    <Content Remove="wwwroot\js\RacuniHolding\**" />
     <Content Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <Content Remove="wwwroot\js\Stanovi\**" />
     <Content Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <Content Remove="wwwroot\js\UgovoriOPrijenosu\**" />
     <EmbeddedResource Remove="Views\OdsKupci\**" />
@@ -29,8 +49,18 @@
     <EmbeddedResource Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <EmbeddedResource Remove="Views\UgovoriOKoristenju\**" />
     <EmbeddedResource Remove="Views\UgovoriOPrijenosu\**" />
+    <EmbeddedResource Remove="wwwroot\js\Dopisi\**" />
+    <EmbeddedResource Remove="wwwroot\js\ElektraKupci\**" />
+    <EmbeddedResource Remove="wwwroot\js\OdsKupci\**" />
+    <EmbeddedResource Remove="wwwroot\js\Ods\**" />
+    <EmbeddedResource Remove="wwwroot\js\Predmeti\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
     <EmbeddedResource Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacuniElektraRate\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacuniElektra\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacuniHolding\**" />
     <EmbeddedResource Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <EmbeddedResource Remove="wwwroot\js\Stanovi\**" />
     <EmbeddedResource Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <EmbeddedResource Remove="wwwroot\js\UgovoriOPrijenosu\**" />
     <None Remove="Views\OdsKupci\**" />
@@ -38,8 +68,18 @@
     <None Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
     <None Remove="Views\UgovoriOKoristenju\**" />
     <None Remove="Views\UgovoriOPrijenosu\**" />
+    <None Remove="wwwroot\js\Dopisi\**" />
+    <None Remove="wwwroot\js\ElektraKupci\**" />
+    <None Remove="wwwroot\js\OdsKupci\**" />
+    <None Remove="wwwroot\js\Ods\**" />
+    <None Remove="wwwroot\js\Predmeti\**" />
+    <None Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
     <None Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <None Remove="wwwroot\js\RacuniElektraRate\**" />
+    <None Remove="wwwroot\js\RacuniElektra\**" />
+    <None Remove="wwwroot\js\RacuniHolding\**" />
     <None Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <None Remove="wwwroot\js\Stanovi\**" />
     <None Remove="wwwroot\js\UgovoriOKoristenju\**" />
     <None Remove="wwwroot\js\UgovoriOPrijenosu\**" />
   </ItemGroup>
@@ -56,6 +96,13 @@
     <Compile Remove="Models\UgovorOKoristenju.cs" />
     <Compile Remove="Models\UgovorOPrijenosu.cs" />
     <Compile Remove="Models\User.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\Datatables\Details\RacunOdsIzvrsenjaUslugeTable.js" />
+    <Content Remove="wwwroot\js\Datatables\Details\UgovoriOKoristenjuTable.js" />
+    <Content Remove="wwwroot\js\Datatables\Details\UgovoriOPrijenosuTable.js" />
+    <Content Remove="wwwroot\js\_js_global\Notify.js" />
   </ItemGroup>
 
   <ItemGroup>

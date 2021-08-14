@@ -4,11 +4,26 @@ let table;
 $(document).ready(function () {
 
     table = $('#IndexTable').DataTable({
+
+        // excel
+        dom: 'frtipB',
+        "buttons": [
+            {
+                "extend": 'excel',
+                "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
+                "titleAttr": 'Excel',
+                "action": newexportaction,
+                "exportOptions": {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 10]
+                },
+            }
+        ],
+
         "ajax": {
-            "url": "/RacunElektraIzvrsenjaUsluges/GetList",
+            "url": "/RacuniElektra/GetList",
             "type": "POST",
             "datatype": "json",
-            "data": function (d) {
+            "data": function (d) { // callback za input change
                 d.klasa = $("#selectPredmet").val();
                 d.urbroj = $("#selectDopis").val();
             }
@@ -16,10 +31,15 @@ $(document).ready(function () {
         "columns": [
             { "data": "id", "name": "id" },
             { "data": "redniBroj", "name": "redniBroj" },
+            { "data": "elektraKupac.ods.stan.stanId", "name": "elektraKupac.ods.stan.stanId" },
+            { "data": "elektraKupac.ods.stan.adresa", "name": "elektraKupac.ods.stan.adresa" },
+            { "data": "elektraKupac.ods.stan.kat", "name": "elektraKupac.ods.stan.kat" },
+            { "data": "elektraKupac.ods.stan.brojSTana", "name": "elektraKupac.ods.stan.brojSTana" },
+            { "data": "elektraKupac.ods.stan.povr\u0161ina", "name": "elektraKupac.ods.stan.Površina" },
             {
                 "data": null, "name": "brojRacuna",
                 "render": function (data) {
-                    return '<a href="RacunElektraIzvrsenjaUsluges/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                    return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
                 },
             },
             {
@@ -31,8 +51,6 @@ $(document).ready(function () {
                 }
             },
             { "data": "datumIzdavanja", "name": "datumIzdavanja" },
-            { "data": "datumIzvrsenja", "name": "datumIzvrsenja" },
-            { "data": "usluga", "name": "usluga" },
             {
                 "data": "iznos", "name": "iznos",
                 //"render": $.fn.dataTable.render.number('.', ',', 2, '')
@@ -46,6 +64,7 @@ $(document).ready(function () {
         "serverSide": true,
         "order": [[2, 'asc']], // default sort po datumu
         "bLengthChange": false,
+
         //"processing": true,
         "language": {
             "processing": "tražim...",
@@ -63,38 +82,54 @@ $(document).ready(function () {
                 "render": $.fn.dataTable.render.ellipsis(3),
             },
             {
-                "targets": 2, // BrojRacuna
+                "targets": 2, // stan id - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 3, // adresa - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 4, // kat - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 5, // broj stana - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 6, // površina - hidden
+                "visible": false,
+                "searchable": false,
+            },
+            {
+                "targets": 7, // BrojRacuna
                 "render": $.fn.dataTable.render.ellipsis(19),
             },
             {
-                "targets": 3, // UgovorniRacun
+                "targets": 8, // UgovorniRacun
                 "render": $.fn.dataTable.render.ellipsis(10),
             },
             {
-                "targets": 4, // DatumIzdavanja
+                "targets": 9, // DatumIzdavanja
                 "render": function (data) {
                     return moment(data).format("DD.MM.YYYY")
                 }
             },
             {
-                "targets": 5, // DatumIzvrsenja
-                "render": function (data) {
-                    return moment(data).format("DD.MM.YYYY")
-                }
-            },
-            {
-                "targets": 6, // Usluga
-                "render": $.fn.dataTable.render.ellipsis(30),
-            }, {
-                "targets": 7, // Iznos
+                "targets": 10, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 8, // KlasaPlacanja
+                "targets": 11, // KlasaPlacanja
                 "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 9, // Datum potvrde
+                "targets": 12, // Datum potvrde
                 "render": function (data) {
                     if (data == null)
                         return "";
@@ -102,15 +137,16 @@ $(document).ready(function () {
                 }
             },
             {
-                "targets": 10, // Napomena
+                "targets": 13, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(30),
             },
             {
-                "targets": 11, // akcija - hidden
+                "targets": 14, // akcija - hidden
                 "visible": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
             },
-        ]
+        ],
     });
+    column = table.column(9);
 });

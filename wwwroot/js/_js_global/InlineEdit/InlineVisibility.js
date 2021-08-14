@@ -4,7 +4,6 @@ let isItEditing = false;
 
 selectDopis.on('change', function (e) {
     e.preventDefault();
-    var column = table.column(11);
     if (selectDopis.val() === "0" || selectDopis.val() === null) {
         column.visible(false);
         isItEditing = false;
@@ -17,7 +16,6 @@ selectDopis.on('change', function (e) {
 
 $("#selectPredmet").on('change', function (e) {
     e.preventDefault();
-    var column = table.column(11);
     if (selectDopis.val() === "0" || selectDopis.val() === null || column.visible() === true) {
         column.visible(false);
         isItEditing = false;

@@ -20,7 +20,7 @@
                 <th>kat</th> @* invisible - for excel*@
                 <th>broj_stana</th> @* invisible - for excel*@
                 <th>povrsina</th> @* invisible - for excel*@
-                
+
                 <th>Broj računa</th>
                 <th>Ugovorni račun</th>
                 <th>Datum izdavanja</th>
@@ -33,14 +33,12 @@
         </thead>
     </table>
 </div>
-
 <script>
+    let column;
     const updateDbUrl = "/RacuniElektra/updateDbForInline";
     const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";
 </script>
-<script src="~/js/ExcelExportAction.js"></script>
-<script src="~/js/RacuniElektra/IndexDatatables.js"></script>
-<script src="~/js/RacuniElektra/FilterPredmetiDopisiConfig.js"></script>
-<div> <partial name="Scripts/_IndexScripts" /> </div>
+<script src="~/js/Datatables/RacuniIndex/ElektraDatatable.js"></script>
+<div> <partial name="Scripts/Racuni/_Racuni" /> </div>
 

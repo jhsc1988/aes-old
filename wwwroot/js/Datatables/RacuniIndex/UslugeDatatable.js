@@ -4,23 +4,8 @@ let table;
 $(document).ready(function () {
 
     table = $('#IndexTable').DataTable({
-
-        // excel
-        dom: 'frtipB',
-        "buttons": [
-            {
-                "extend": 'excel',
-                "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
-                "titleAttr": 'Excel',
-                "action": newexportaction,
-                "exportOptions": {
-                    //columns: [1, 2, 3, 4, 5, 6, 7, 10]
-                },
-            }
-        ],
-
         "ajax": {
-            "url": "/RacuniHolding/GetList",
+            "url": "/RacunElektraIzvrsenjaUsluges/GetList",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
@@ -34,30 +19,32 @@ $(document).ready(function () {
             {
                 "data": null, "name": "brojRacuna",
                 "render": function (data) {
-                    return '<a href="RacuniHolding/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                    return '<a href="RacunElektraIzvrsenjaUsluges/Details/' + data.id + '">' + data.brojRacuna + '</a>';
                 },
             },
             {
-                "data": null, "name": "stan.sifraObjekta",
+                "data": null, "name": "elektraKupac.ugovorniRacun",
                 "render": function (data) {
-                    return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
+                    if (data.elektraKupac != null)
+                        return '<a href="ElektraKupci/Details/' + data.elektraKupac.id + '">' + data.elektraKupac.ugovorniRacun + '</a>';
+                    return '';
                 }
-            }, 
-
-            {"data": "datumIzdavanja", "name": "datumIzdavanja"},
+            },
+            { "data": "datumIzdavanja", "name": "datumIzdavanja" },
+            { "data": "datumIzvrsenja", "name": "datumIzvrsenja" },
+            { "data": "usluga", "name": "usluga" },
             {
                 "data": "iznos", "name": "iznos",
                 //"render": $.fn.dataTable.render.number('.', ',', 2, '')
             },
-
-            {"data": "klasaPlacanja", "name": "klasaPlacanja"},
-            {"data": "datumPotvrde", "name": "datumPotvrde"},
+            { "data": "klasaPlacanja", "name": "klasaPlacanja" },
+            { "data": "datumPotvrde", "name": "datumPotvrde" },
             { "data": "napomena", "name": "napomena" },
             { "data": null, "name": null }, // akcija
         ],
         "paging": true,
         "serverSide": true,
-        "order": [[3, 'asc']], // default sort po datumu
+        "order": [[2, 'asc']], // default sort po datumu
         "bLengthChange": false,
         //"processing": true,
         "language": {
@@ -80,9 +67,9 @@ $(document).ready(function () {
                 "render": $.fn.dataTable.render.ellipsis(19),
             },
             {
-                "targets": 3, // Šifra objekta
+                "targets": 3, // UgovorniRacun
                 "render": $.fn.dataTable.render.ellipsis(10),
-            }, 
+            },
             {
                 "targets": 4, // DatumIzdavanja
                 "render": function (data) {
@@ -90,15 +77,24 @@ $(document).ready(function () {
                 }
             },
             {
-                "targets": 5, // Iznos
+                "targets": 5, // DatumIzvrsenja
+                "render": function (data) {
+                    return moment(data).format("DD.MM.YYYY")
+                }
+            },
+            {
+                "targets": 6, // Usluga
+                "render": $.fn.dataTable.render.ellipsis(30),
+            }, {
+                "targets": 7, // Iznos
                 "render": $.fn.dataTable.render.ellipsis(8),
             },
             {
-                "targets": 6, // KlasaPlacanja
+                "targets": 8, // KlasaPlacanja
                 "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 7, // Datum potvrde
+                "targets": 9, // Datum potvrde
                 "render": function (data) {
                     if (data == null)
                         return "";
@@ -106,15 +102,16 @@ $(document).ready(function () {
                 }
             },
             {
-                "targets": 8, // Napomena
+                "targets": 10, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(30),
             },
             {
-                "targets": 9, // akcija - hidden
+                "targets": 11, // akcija - hidden
                 "visible": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button >"
             },
         ]
     });
+    column = table.column(11);
 });

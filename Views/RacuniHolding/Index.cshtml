@@ -25,13 +25,11 @@
         </thead>
     </table>
 </div>
-
 <script>
+    let column;
     const updateDbUrl = "/RacuniHolding/updateDbForInline";
     const GetPredmetiDataForFilterUrl = "/RacuniHolding/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacuniHolding/GetDopisiDataForFilter";
 </script>
-<script src="~/js/RacuniHolding/IndexDatatables.js"></script>
-<script src="~/js/ExcelExportAction.js"></script>
-<script src="~/js/RacuniHolding/FilterPredmetiDopisiConfig.js"></script>
-<div> <partial name="Scripts/_IndexScripts" /> </div>
+<script src="~/js/Datatables/RacuniIndex/HoldingDatatable.js"></script>
+<div> <partial name="Scripts/Racuni/_Racuni" /> </div>
