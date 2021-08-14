@@ -197,13 +197,9 @@ namespace aes.Controllers
         public async Task<IActionResult> GetList()
         {
             GetDatatablesParamas();
-
-            OdsList = await _context.Ods.ToListAsync();
-
-            foreach (Ods ods in OdsList)
-            {
-                ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == ods.StanId);
-            }
+            OdsList = await _context.Ods
+                .Include(e => e.Stan)
+                .ToListAsync();
 
             int totalRows = OdsList.Count;
             if (!string.IsNullOrEmpty(searchValue)) // filter

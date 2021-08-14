@@ -36,12 +36,10 @@ namespace aes.Controllers
             racunElektraList = _context.RacunElektra.ToList();
             elektraKupacList = _context.ElektraKupac.ToList();
             predmetList = _context.Predmet.ToList();
-
-            foreach (ElektraKupac e in _context.ElektraKupac.ToList())
-            {
-                e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
-                e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
-            }
+            elektraKupacList = _context.ElektraKupac
+                .Include(e => e.Ods)
+                .Include(e => e.Ods.Stan)
+                .ToList();
         }
 
         [Authorize]
@@ -216,11 +214,7 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
         {
-            if (brojRacuna.Length is < 19 or > 19) // pattern mathching syntax
-            {
-                return Json($"Broj računa nije ispravan");
-            }
-            return Json(true);
+            return brojRacuna.Length is < 19 or > 19 ? Json($"Broj računa nije ispravan") : Json(true);
 
             //RacunElektra db = await _context.RacunElektra.FirstOrDefaultAsync(x => x.BrojRacuna.Equals(brojRacuna));
             //return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);

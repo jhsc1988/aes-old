@@ -6,7 +6,7 @@
         if (ugovorniRacun !== "" && ugovorniRacun == value.UgovorniRacun) {
 
             // get data
-            data_stanId = value.Ods.StanId;
+            data_stanId = value.Ods.Stan.StanId;
             data_adresa = value.Ods.Stan.Adresa;
             data_kat = value.Ods.Stan.Kat;
             data_brojstana = value.Ods.Stan.BrojSTana;

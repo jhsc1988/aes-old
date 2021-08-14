@@ -6,6 +6,5 @@
         RacunElektraRate,
         Holding,
         ElektraIzvrsenje,
-        OdsIzvrsenje,
     }
 }

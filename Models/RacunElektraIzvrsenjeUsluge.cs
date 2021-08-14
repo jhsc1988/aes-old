@@ -1,5 +1,6 @@
 ﻿using aes.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,29 +25,25 @@ namespace aes.Models
         {
             List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList = new();
 
-            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
             {
                 racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null).ToList();
             }
 
-            if (predmetIdAsInt != 0)
+            racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.Dopis)
+                .Include(e => e.Dopis.Predmet)
+                .ToList();
+
+            if (predmetIdAsInt is not 0)
             {
                 racunElektraIzvrsenjeList = dopisIdAsInt == 0
                     ? _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
                     : _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
             }
 
-
-            foreach (RacunElektraIzvrsenjeUsluge racunElektraIzvrsenje in racunElektraIzvrsenjeList)
-            {
-                racunElektraIzvrsenje.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.Id == racunElektraIzvrsenje.ElektraKupacId);
-                racunElektraIzvrsenje.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == racunElektraIzvrsenje.DopisId);
-
-                if (racunElektraIzvrsenje.Dopis != null)
-                {
-                    racunElektraIzvrsenje.Dopis.Predmet = _context.Predmet.FirstOrDefault(o => o.Id == racunElektraIzvrsenje.Dopis.PredmetId);
-                }
-            }
             return racunElektraIzvrsenjeList;
         }
 
@@ -102,7 +99,9 @@ namespace aes.Models
             }
 
             if (!Validate(brojRacuna, iznos, datumPotvrde, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            {
                 return new(new { success = false, Message = msg });
+            }
 
             List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunElektraIzvrsenjeUsluge re = new()

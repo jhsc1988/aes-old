@@ -86,9 +86,6 @@ namespace aes.Models
                 case RacunTip.ElektraIzvrsenje:
                     _ = _context.Remove(_context.RacunElektraIzvrsenjeUsluge.FirstOrDefault(x => x.Id == id));
                     break;
-                case RacunTip.OdsIzvrsenje:
-                    //_ = _context.Remove(_context.RacunOdsIzvrsenjaUsluge.FirstOrDefault(x => x.Id == id));
-                    break;
                 default:
                     break;
             }
@@ -166,9 +163,6 @@ namespace aes.Models
                     break;
                 case RacunTip.ElektraIzvrsenje:
                     racunToUpdate = _context.RacunElektraIzvrsenjeUsluge.First(e => e.Id == idNum);
-                    break;
-                case RacunTip.OdsIzvrsenje:
-                    //racunToUpdate = _context.RacunOdsIzvrsenjaUsluge.First(e => e.Id == idNum);
                     break;
                 default:
                     break;
@@ -254,9 +248,6 @@ namespace aes.Models
                 case RacunTip.ElektraIzvrsenje:
                     racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
                     break;
-                case RacunTip.OdsIzvrsenje:
-                    //racunList.AddRange(_context.RacunOdsIzvrsenjaUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
-                    break;
                 default:
                     break;
             }
@@ -310,9 +301,6 @@ namespace aes.Models
                     break;
                 case RacunTip.ElektraIzvrsenje:
                     _context.RemoveRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
-                    break;
-                case RacunTip.OdsIzvrsenje:
-                    //_context.RemoveRange(_context.RacunOdsIzvrsenjaUsluge.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
                     break;
                 default:
                     break;

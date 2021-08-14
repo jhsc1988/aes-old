@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace aes.Models
@@ -17,7 +16,9 @@ namespace aes.Models
         {
 
             if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            {
                 return new(new { success = false, Message = msg });
+            }
 
             List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunElektra re = new()
@@ -25,7 +26,7 @@ namespace aes.Models
                 BrojRacuna = brojRacuna,
                 Iznos = _iznos,
                 DatumIzdavanja = datumIzdavanja,
-                DopisId = _dopisId == 0 ? null : _dopisId,
+                DopisId = _dopisId is 0 ? null : _dopisId,
                 CreatedByUserId = userId,
                 IsItTemp = true,
             };
@@ -67,7 +68,7 @@ namespace aes.Models
 
                 racunList.Clear();
 
-                if (e.ElektraKupac != null)
+                if (e.ElektraKupac is not null)
                 {
                     e.ElektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.ElektraKupac.OdsId);
                     e.ElektraKupac.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.ElektraKupac.Ods.StanId);
@@ -85,31 +86,25 @@ namespace aes.Models
         {
             List<RacunElektra> racunElektraList = new();
 
-            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
             {
                 racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == null).ToList();
             }
 
+            racunElektraList = _context.RacunElektra
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.Dopis)
+                .Include(e => e.Dopis.Predmet)
+                .ToList();
+
             if (predmetIdAsInt != 0)
             {
-                racunElektraList = dopisIdAsInt == 0
+                racunElektraList = dopisIdAsInt is 0
                     ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
                     : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
             }
 
-
-            foreach (RacunElektra racunElektra in racunElektraList)
-            {
-                racunElektra.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.Id == racunElektra.ElektraKupacId);
-                racunElektra.ElektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == racunElektra.ElektraKupac.OdsId);
-
-                racunElektra.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == racunElektra.DopisId);
-
-                if (racunElektra.Dopis != null)
-                {
-                    racunElektra.Dopis.Predmet = _context.Predmet.FirstOrDefault(o => o.Id == racunElektra.Dopis.PredmetId);
-                }
-            }
             return racunElektraList;
         }
     }

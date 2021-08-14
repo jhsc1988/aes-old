@@ -1,5 +1,6 @@
 ﻿using aes.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,9 @@ namespace aes.Models
         {
 
             if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            {
                 return new(new { success = false, Message = msg });
+            }
 
             List<RacunHolding> racunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunHolding re = new()
@@ -25,7 +28,7 @@ namespace aes.Models
                 BrojRacuna = brojRacuna,
                 Iznos = _iznos,
                 DatumIzdavanja = datumIzdavanja,
-                DopisId = _dopisId == 0 ? null : _dopisId,
+                DopisId = _dopisId is 0 ? null : _dopisId,
                 CreatedByUserId = userId,
                 IsItTemp = true,
             };
@@ -79,28 +82,24 @@ namespace aes.Models
         {
             List<RacunHolding> racunHoldingList = new();
 
-            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
             {
                 racunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == null).ToList();
             }
 
-            if (predmetIdAsInt != 0)
+            racunHoldingList = _context.RacunHolding
+                .Include(e => e.Stan)
+                .Include(e => e.Dopis)
+                .Include(e => e.Dopis.Predmet)
+                .ToList();
+
+            if (predmetIdAsInt is not 0)
             {
-                racunHoldingList = dopisIdAsInt == 0
+                racunHoldingList = dopisIdAsInt is 0
                     ? _context.RacunHolding.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
                     : _context.RacunHolding.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
             }
 
-            foreach (RacunHolding racunHolding in racunHoldingList)
-            {
-                racunHolding.Stan = _context.Stan.FirstOrDefault(e => e.Id == racunHolding.StanId); // kod mene je racunHolding.StanId -> Stan.Id (primarni ključ)
-                racunHolding.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == racunHolding.DopisId);
-
-                if (racunHolding.Dopis != null)
-                {
-                    racunHolding.Dopis.Predmet = _context.Predmet.FirstOrDefault(o => o.Id == racunHolding.Dopis.PredmetId);
-                }
-            }
             return racunHoldingList;
         }
     }

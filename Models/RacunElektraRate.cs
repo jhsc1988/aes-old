@@ -1,5 +1,6 @@
 ﻿using aes.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,7 +25,9 @@ namespace aes.Models
         {
 
             if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            {
                 return new(new { success = false, Message = msg });
+            }
 
             List<RacunElektraRate> RacunElektraRateList = _context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunElektraRate re = new()
@@ -92,29 +95,25 @@ namespace aes.Models
         {
             List<RacunElektraRate> RacunElektraRateList = new();
 
-            if (predmetIdAsInt == 0 && dopisIdAsInt == 0)
+            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
             {
                 RacunElektraRateList = _context.RacunElektraRate.Where(e => e.IsItTemp == null).ToList();
             }
 
-            if (predmetIdAsInt != 0)
+            RacunElektraRateList = _context.RacunElektraRate
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.Dopis)
+                .Include(e => e.Dopis.Predmet)
+                .ToList();
+
+            if (predmetIdAsInt is not 0)
             {
-                RacunElektraRateList = dopisIdAsInt == 0
+                RacunElektraRateList = dopisIdAsInt is 0
                     ? _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
                     : _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
             }
 
-
-            foreach (RacunElektraRate RacunElektraRate in RacunElektraRateList)
-            {
-                RacunElektraRate.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.Id == RacunElektraRate.ElektraKupacId);
-                RacunElektraRate.Dopis = _context.Dopis.FirstOrDefault(o => o.Id == RacunElektraRate.DopisId);
-
-                if (RacunElektraRate.Dopis != null)
-                {
-                    RacunElektraRate.Dopis.Predmet = _context.Predmet.FirstOrDefault(o => o.Id == RacunElektraRate.Dopis.PredmetId);
-                }
-            }
             return RacunElektraRateList;
         }
     }

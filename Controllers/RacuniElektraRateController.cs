@@ -33,14 +33,11 @@ namespace aes.Controllers
             predmet = new();
             dopis = new();
             racunElektraRateList = _context.RacunElektraRate.ToList();
-            elektraKupacList = _context.ElektraKupac.ToList();
             predmetList = _context.Predmet.ToList();
-
-            foreach (ElektraKupac e in _context.ElektraKupac.ToList())
-            {
-                e.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.OdsId);
-                e.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.Ods.StanId);
-            }
+            elektraKupacList = _context.ElektraKupac
+                .Include(e => e.Ods)
+                .Include(e => e.Ods.Stan)
+                .ToList();
         }
 
         [Authorize]
@@ -74,9 +71,6 @@ namespace aes.Controllers
 
             return View(applicationDbContext);
         }
-
-
-
 
         // POST: RacuniElektraRate/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

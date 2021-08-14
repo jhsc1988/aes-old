@@ -215,14 +215,10 @@ namespace aes.Controllers
         public async Task<IActionResult> GetList()
         {
             GetDatatablesParamas();
-
-            ElektraKupacList = await _context.ElektraKupac.ToListAsync();
-
-            foreach (ElektraKupac elektraKupac in ElektraKupacList)
-            {
-                elektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == elektraKupac.OdsId); // kod mene je elektraKupac.OdsId -> Ods.Id (primarni ključ)
-                elektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == elektraKupac.Ods.StanId); // hoću podatke o stanu za svaki omm, pretražuje po PK
-            }
+            ElektraKupacList = await _context.ElektraKupac
+                .Include(e => e.Ods)
+                .Include(e => e.Ods.Stan)
+                .ToListAsync();
 
             int totalRows = ElektraKupacList.Count;
             if (!string.IsNullOrEmpty(searchValue)) // filter
@@ -248,26 +244,15 @@ namespace aes.Controllers
             return Json(new { data = ElektraKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
-
-
-
         public async Task<IActionResult> GetRacuniForKupac(int param)
         {
             GetDatatablesParamas();
-
-            RacunElektraList = await _context.RacunElektra.Where(e => e.ElektraKupac.Id == param).ToListAsync();
-
-            foreach (RacunElektra p in RacunElektraList)
-            {
-                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
-            }
-
-            foreach (RacunElektra e in RacunElektraList)
-            {
-                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
-                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
-            }
-
+            RacunElektraList = await _context.RacunElektra
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
+                .Where(e => e.ElektraKupac.Id == param)
+                .ToListAsync();
 
             int totalRows = RacunElektraList.Count;
             if (!string.IsNullOrEmpty(searchValue)) // filter
@@ -298,26 +283,15 @@ namespace aes.Controllers
             });
         }
 
-
-
-
         public async Task<IActionResult> GetRacuniRateForKupac(int param)
         {
             GetDatatablesParamas();
-
-            RacunElektraRateList = await _context.RacunElektraRate.Where(e => e.ElektraKupac.Id == param).ToListAsync();
-
-            foreach (RacunElektraRate p in RacunElektraRateList)
-            {
-                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
-            }
-
-            foreach (RacunElektraRate e in RacunElektraRateList)
-            {
-                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
-                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
-            }
-
+            RacunElektraRateList = await _context.RacunElektraRate
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
+                .Where(e => e.ElektraKupac.Id == param)
+                .ToListAsync();
 
             int totalRows = RacunElektraRateList.Count;
             if (!string.IsNullOrEmpty(searchValue)) // filter
@@ -348,23 +322,15 @@ namespace aes.Controllers
             });
         }
 
-
         public async Task<IActionResult> GetRacuniElektraIzvrsenjeForKupac(int param)
         {
             GetDatatablesParamas();
-
-            RacunElektraIzvrsenjeList = await _context.RacunElektraIzvrsenjeUsluge.Where(e => e.ElektraKupac.Id == param).ToListAsync();
-
-            foreach (RacunElektraIzvrsenjeUsluge p in RacunElektraIzvrsenjeList)
-            {
-                p.ElektraKupac = await _context.ElektraKupac.FirstOrDefaultAsync(e => e.Id == p.ElektraKupacId);
-            }
-
-            foreach (RacunElektraIzvrsenjeUsluge e in RacunElektraIzvrsenjeList)
-            {
-                e.ElektraKupac.Ods = await _context.Ods.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.OdsId);
-                e.ElektraKupac.Ods.Stan = await _context.Stan.FirstOrDefaultAsync(o => o.Id == e.ElektraKupac.Ods.StanId);
-            }
+            RacunElektraIzvrsenjeList = await _context.RacunElektraIzvrsenjeUsluge
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
+                .Where(e => e.ElektraKupac.Id == param)
+                .ToListAsync();
 
             int totalRows = RacunElektraIzvrsenjeList.Count;
             if (!string.IsNullOrEmpty(searchValue)) // filter
