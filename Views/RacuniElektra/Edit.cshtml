@@ -19,81 +19,81 @@
         <strong> Vlasništvo: </strong> @Model.ElektraKupac.Ods.Stan.Vlasništvo
     </div><hr />
 
-          <form asp-action="Edit">
-              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-              <input type="hidden" asp-for="Id" />
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
 
-              @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
-              @* ------------------------------------------------------------------------------------ *@
-              <div hidden style="display: none;">
-                  <div class="form-group">
-                      <label asp-for="ElektraKupacId" class="control-label"></label>
-                      <select asp-for="ElektraKupacId" class="form-control" asp-items="ViewBag.ElektraKupacId"></select>
-                      <span asp-validation-for="ElektraKupacId" class="text-danger"></span>
-                  </div>
-                  <div class="form-group">
-                      <label asp-for="DopisId" class="control-label"></label>
-                      <select asp-for="DopisId" class="form-control" asp-items="ViewBag.DopisId"></select>
-                      <span asp-validation-for="DopisId" class="text-danger"></span>
-                  </div>
-                  <div class="form-group">
-                      <label asp-for="RedniBroj" class="control-label"></label>
-                      <input asp-for="RedniBroj" class="form-control" />
-                      <span asp-validation-for="RedniBroj" class="text-danger"></span>
-                  </div>
-                  <div class="form-group">
-                      <label asp-for="VrijemeUnosa" class="control-label"></label>
-                      <input asp-for="VrijemeUnosa" class="form-control" />
-                      <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
-                  </div>
-              </div>
-              @* ------------------------------------------------------------------------------------ *@
+        @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
+        @* ------------------------------------------------------------------------------------ *@
+        <div hidden style="display: none;">
+            <div class="form-group">
+                <label asp-for="ElektraKupacId" class="control-label"></label>
+                <select asp-for="ElektraKupacId" class="form-control" asp-items="ViewBag.ElektraKupacId"></select>
+                <span asp-validation-for="ElektraKupacId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DopisId" class="control-label"></label>
+                <select asp-for="DopisId" class="form-control" asp-items="ViewBag.DopisId"></select>
+                <span asp-validation-for="DopisId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RedniBroj" class="control-label"></label>
+                <input asp-for="RedniBroj" class="form-control" />
+                <span asp-validation-for="RedniBroj" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VrijemeUnosa" class="control-label"></label>
+                <input asp-for="VrijemeUnosa" class="form-control" />
+                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+            </div>
+        </div>
+        @* ------------------------------------------------------------------------------------ *@
 
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="form-group">
-                          <label asp-for="BrojRacuna" class="control-label"></label>
-                          <input asp-for="BrojRacuna" class="form-control form-control-sm" />
-                          <span asp-validation-for="BrojRacuna" class="text-danger"></span>
-                      </div>
-                  </div>
-                  <div class="col-md-2">
-                      <div class="form-group">
-                          <label asp-for="DatumIzdavanja" class="control-label"></label>
-                          <input asp-for="DatumIzdavanja" class="form-control form-control-sm" />
-                          <span asp-validation-for="DatumIzdavanja" class="text-danger"></span>
-                      </div>
-                  </div>
-                  <div class="col-md-1">
-                      <div class="form-group">
-                          <label asp-for="Iznos" class="control-label"></label>
-                          <input asp-for="Iznos" class="form-control form-control-sm" />
-                          <span asp-validation-for="Iznos" class="text-danger"></span>
-                      </div>
-                  </div>
-              </div>
-              <hr />
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="form-group">
-                          <label asp-for="KlasaPlacanja" class="control-label"></label>
-                          <input asp-for="KlasaPlacanja" class="form-control form-control-sm" />
-                          <span asp-validation-for="KlasaPlacanja" class="text-danger"></span>
-                      </div>
-                  </div>
-                  <div class="col-md-2">
-                      <div class="form-group">
-                          <label asp-for="DatumPotvrde" class="control-label"></label>
-                          <input asp-for="DatumPotvrde" class="form-control form-control-sm" />
-                          <span asp-validation-for="DatumPotvrde" class="text-danger"></span>
-                      </div>
-                  </div>
-              </div>
-              <hr />
-              <div class="row justify-content-start align-items-center padding-30">
-                  <button type="submit" class="dt-button">Spremi</button>
-              </div>
-          </form>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="BrojRacuna" class="control-label"></label>
+                    <input asp-for="BrojRacuna" class="form-control form-control-sm" />
+                    <span asp-validation-for="BrojRacuna" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="DatumIzdavanja" class="control-label"></label>
+                    <input asp-for="DatumIzdavanja" class="form-control form-control-sm" />
+                    <span asp-validation-for="DatumIzdavanja" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label asp-for="Iznos" class="control-label"></label>
+                    <input id="input" type="number" step ="0.01" asp-for="Iznos" class="form-control form-control-sm" />
+                    <span asp-validation-for="Iznos" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="KlasaPlacanja" class="control-label"></label>
+                    <input asp-for="KlasaPlacanja" class="form-control form-control-sm" />
+                    <span asp-validation-for="KlasaPlacanja" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="DatumPotvrde" class="control-label"></label>
+                    <input asp-for="DatumPotvrde" class="form-control form-control-sm" />
+                    <span asp-validation-for="DatumPotvrde" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row justify-content-start align-items-center padding-30">
+            <button type="submit" class="dt-button">Spremi</button>
+        </div>
+    </form>
     <hr />
     <div>
         <button onclick="location.href='@Url.Action("Index", "RacuniElektra")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak na listu</button>
