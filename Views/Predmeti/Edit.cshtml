@@ -6,7 +6,7 @@
 
 <div class="content-bg">
     <div class="row head-bg justify-content-between">
-        <p class="h6" style="font-size: 0.8rem;">Klasa: @Model.Klasa Naziv: @Model.Naziv</p>
+        <p class="pf08">Klasa: @Model.Klasa Naziv: @Model.Naziv</p>
     </div>
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -14,7 +14,7 @@
 
         @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
         @* ------------------------------------------------------------------------------------ *@
-        <div hidden style="display: none;">
+        <div hidden class="invisible">
             <div class="form-group">
                 <label asp-for="VrijemeUnosa" class="control-label"></label>
                 <input asp-for="VrijemeUnosa" class="form-control" />

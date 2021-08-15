@@ -10,7 +10,7 @@ $(document).ready(function () {
         "buttons": [
             {
                 "extend": 'excel',
-                "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
+                "text": '<i class="button-excel">Excel</i>',
                 "titleAttr": 'Excel',
                 "action": newexportaction,
                 "exportOptions": {
@@ -20,7 +20,7 @@ $(document).ready(function () {
         ],
 
         "ajax": {
-            "url": "/RacuniElektra/GetList",
+            "url": GetListUrl,
             "type": "POST",
             "datatype": "json",
             "data": function (d) { // callback za input change
@@ -39,7 +39,7 @@ $(document).ready(function () {
             {
                 "data": null, "name": "brojRacuna",
                 "render": function (data) {
-                    return '<a href="RacuniElektra/Details/' + data.id + '">' + data.brojRacuna + '</a>';
+                    return '<a href="' + racunDetailsUrl + data.id + '">' + data.brojRacuna + '</a>';
                 },
             },
             {
@@ -148,5 +148,5 @@ $(document).ready(function () {
             },
         ],
     });
-    column = table.column(9);
+    column = table.column(14);
 });

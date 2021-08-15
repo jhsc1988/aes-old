@@ -1,6 +1,6 @@
 ﻿<div class="content-bg">
     <div class="row head-bg justify-content-between">
-        <p class="col-sm-10 h6">Pregled računa - HEP - Elektra</p>
+        <p class="col-sm-10 pf08">Pregled računa - HEP - Elektra</p>
         <a class="link-head" asp-controller="RacuniElektra" asp-action="Create">
             <i class="bi bi-plus"></i>unos novih
         </a>
@@ -35,6 +35,8 @@
 </div>
 <script>
     let column;
+    const GetListUrl = "/RacuniElektra/GetList";
+    const racunDetailsUrl = "RacuniElektra/Details/";
     const updateDbUrl = "/RacuniElektra/updateDbForInline";
     const GetPredmetiDataForFilterUrl = "/RacuniElektra/GetPredmetiDataForFilter";
     const GetDopisiDataForFilterUrl = "/RacuniElektra/GetDopisiDataForFilter";

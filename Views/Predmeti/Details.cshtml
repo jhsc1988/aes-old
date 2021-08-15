@@ -1,12 +1,10 @@
 ﻿@model aes.Models.Predmet
-
 @{
     ViewData["Title"] = "Details";
 }
-
 <div class="content-bg">
     <div class="row head-bg justify-content-between">
-        <p class="h6" style="font-size: 0.8rem;">Klasa: @Model.Klasa Naziv: @Model.Naziv</p>
+        <p class="pf08">Klasa: @Model.Klasa Naziv: @Model.Naziv</p>
         <button class="button-add-new" id="aAddNew">
             <i class="bi bi-plus"></i>unos novog
         </button>
@@ -20,6 +18,7 @@
         </thead>
     </table>
     <div id="AddNew" style="display:none;">
+        @* inline style for jQuery show/hide *@
         <partial name="_DopisiAddNew" />
     </div>
     <hr />

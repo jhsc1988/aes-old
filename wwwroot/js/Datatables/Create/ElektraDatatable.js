@@ -4,7 +4,7 @@
 
     table = selectIndexTable.DataTable({
         "ajax": {
-            "url": "/RacuniElektra/GetListCreate",
+            "url": GetListCreateUrl,
             "type": "POST",
             "datatype": "json",
         },

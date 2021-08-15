@@ -10,7 +10,7 @@
         <div class="d-flex justify-content-md-center align-items-center vh-100">
             <div class="justify-content-around content-bg">
                 <div class="head-bg">
-                        <p class="h6">Login</p>
+                        <p class="pf08">Login</p>
                 </div>
                 <div class="logo-center">
                     <img src="~/logo-sm.png" alt="aes">
@@ -24,11 +24,11 @@
                                     <input asp-for="Input.Email" class="form-control form-control-sm" placeholder="e-mail"/>
                                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                                 </div>
-                                <div class="col" style="margin-top: 10px">
+                                <div class="col margin-top-10">
                                     <input asp-for="Input.Password" class="form-control form-control-sm" placeholder="password"/>
                                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                                 </div>
-                                <div class="form-group invisible" style="height: 0; margin: 4px">
+                                <div class="form-group invisible">
                                     <div class="checkbox">
                                         <label asp-for="Input.RememberMe">
                                             <input asp-for="Input.RememberMe" checked/>
@@ -36,7 +36,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group d-flex justify-content-center" style="margin-top: 10px">
+                                <div class="form-group d-flex justify-content-center margin-top-10">
                                     <button type="submit" class="btn btn-outline-dark">Log in</button>
                                 </div>
                             </form>

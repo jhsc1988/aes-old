@@ -15,15 +15,15 @@
             const data_korisnik = stan.korisnik !== null ? stan.korisnik : "-";
             const data_vlasnistvo = stan.vlasništvo !== null ? stan.vlasništvo : "-";
 
-            $('#stanText').html('<span style="font-weight:bold;"> ID: </span>' + data_stanId + ' '
-                + '<span style="font-weight:bold;">adresa: </span>' + data_adresa + ' '
-                + '<span style="font-weight:bold;">kat: </span>' + data_kat + ' '
-                + '<span style="font-weight:bold;">broj stana: </span>' + data_brojstana + ' '
-                + '<span style="font-weight:bold;">četvrt: </span>' + data_cetvrt + ' '
-                + '<span style="font-weight:bold;">površina: </span>' + data_povrsina + ' '
-                + '<span style="font-weight:bold;">status korištenja: </span>' + data_statuskoristenja + ' '
-                + '<span style="font-weight:bold;">korisnik: </span>' + data_korisnik + ' '
-                + '<span style="font-weight:bold;">vlasništvo: </span>' + data_vlasnistvo + ' '
+            $('#stanText').html('<span class="stan-text"> ID: </span>' + data_stanId + ' '
+                + '<span class="stan-text">adresa: </span>' + data_adresa + ' '
+                + '<span class="stan-text">kat: </span>' + data_kat + ' '
+                + '<span class="stan-text">broj stana: </span>' + data_brojstana + ' '
+                + '<span class="stan-text">četvrt: </span>' + data_cetvrt + ' '
+                + '<span class="stan-text">površina: </span>' + data_povrsina + ' '
+                + '<span class="stan-text">status korištenja: </span>' + data_statuskoristenja + ' '
+                + '<span class="stan-text">korisnik: </span>' + data_korisnik + ' '
+                + '<span class="stan-text">vlasništvo: </span>' + data_vlasnistvo + ' '
             )
         }
     });

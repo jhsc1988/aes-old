@@ -10,7 +10,7 @@ $(document).ready(function () {
         "buttons": [
             {
                 "extend": 'excel',
-                "text": '<i class="" style="color: green; font-style: normal;">Excel</i>',
+                "text": '<i class="button-excel">Excel</i>',
                 "titleAttr": 'Excel',
                 "action": newexportaction,
                 "exportOptions": {

@@ -5,7 +5,7 @@
 }
 <div class="content-bg">
     <div class="row head-bg justify-content-between">
-        <p class="h6" style="font-size: 0.8rem;"><strong>Uređivanje:</strong> Broj računa: @Model.BrojRacuna</p>
+        <p class="pf08"><strong>Uređivanje:</strong> Broj računa: @Model.BrojRacuna</p>
     </div>
     <div>
         <strong> ID: </strong>
@@ -25,7 +25,7 @@
 
         @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
         @* ------------------------------------------------------------------------------------ *@
-        <div hidden style="display: none;">
+        <div hidden class="invisible">
             <div class="form-group">
                 <label asp-for="StanId" class="control-label"></label>
                 <select asp-for="StanId" class="form-control" asp-items="ViewBag.StanId"></select>
