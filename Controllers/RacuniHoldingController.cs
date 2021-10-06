@@ -16,26 +16,16 @@ namespace aes.Controllers
 {
     public class RacuniHoldingController : Controller, IRacunController
     {
+        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly ApplicationDbContext _context;
-        private readonly Predmet predmet;
-        private readonly Dopis dopis;
-        private readonly List<Predmet> predmetList;
-        private readonly List<Stan> stanList;
-        private List<RacunHolding> racunHoldingList;
+        private List<RacunHolding> racunHoldingList; // rijesiti ovo interfaceom na RacunHolding
+        private DatatablesParams Params;
 
-        /// <summary>
-        /// datatables params
-        /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
-
-        public RacuniHoldingController(ApplicationDbContext context)
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs)
         {
+            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             _context = context;
-            predmet = new();
-            dopis = new();
             racunHoldingList = _context.RacunHolding.ToList();
-            stanList = _context.Stan.ToList();
-            predmetList = _context.Predmet.ToList();
         }
 
         [Authorize]
@@ -201,108 +191,58 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void GetDatatablesParamas()
+
+        public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
         {
-            // server side parameters
-            start = Request.Form["start"].FirstOrDefault();
-            length = Request.Form["length"].FirstOrDefault();
-            searchValue = Request.Form["search[value]"].FirstOrDefault();
-            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-        }
+            Params = _datatablesParamsGeneratorcs.GetParams(Request);
 
-        public async Task<IActionResult> GetList(string klasa, string urbroj)
-        {
-
-            int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
-            int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-
-            GetDatatablesParamas();
-
-            racunHoldingList = RacunHolding.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+            if (isFIltered)
+            {
+                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+                racunHoldingList = RacunHolding.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+            }
+            else
+            {
+                racunHoldingList = RacunHolding.GetListCreateList(GetUid(), _context);
+            }
 
             // filter
             int totalRows = racunHoldingList.Count;
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                racunHoldingList = await racunHoldingList.
-                    Where(
-                    x => x.BrojRacuna.Contains(searchValue)
-                    || x.Stan.SifraObjekta.ToString().Contains(searchValue)
-                    || x.Stan.StanId.ToString().Contains(searchValue)
-                    || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                    || x.Iznos.ToString().Contains(searchValue)
-                    || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunHolding>();
+                racunHoldingList = RacunHolding.GetRacunHoldingDatatablesList(Params);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
-            racunHoldingList = racunHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            racunHoldingList = racunHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
 
             return Json(new { data = racunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
-
-        public async Task<IActionResult> GetListCreate()
-        {
-
-            GetDatatablesParamas();
-            racunHoldingList = RacunHolding.GetListCreateList(GetUid(), _context);
-
-            int totalRows = racunHoldingList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                racunHoldingList = await racunHoldingList.
-                    Where(
-                    x => x.BrojRacuna.Contains(searchValue)
-                    || x.Stan.SifraObjekta.ToString().Contains(searchValue)
-                    || x.Stan.StanId.ToString().Contains(searchValue)
-                    || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                    || x.Iznos.ToString().Contains(searchValue)
-                    || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                    || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<RacunHolding>();
-            }
-            int totalRowsAfterFiltering = racunHoldingList.Count;
-            racunHoldingList = racunHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            racunHoldingList = racunHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new { data = racunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public string GetUid()
         {
             ClaimsPrincipal currentUser;
-            currentUser = User; // User postoji samo u COntrolleru
+            currentUser = User; // User postoji samo u Controlleru
             return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(predmet.GetPredmetiDataForFilter(RacunTip.Holding, _context));
+            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.Holding, _context));
         }
 
         public JsonResult GetDopisiDataForFilter(int predmetId)
         {
-            return Json(dopis.GetDopisiDataForFilter(predmetId, _context));
+            return Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         }
 
         public JsonResult GetPredmetiCreate()
         {
-            return Json(predmetList);
-        }
-
-        public JsonResult GetDopisiCreate(int predmetId)
-        {
-            return Json(dopis.GetDopisiDataForFilter(predmetId, _context));
+            return Json(_context.Predmet.ToList());
         }
 
         public string GetKupci()
         {
-            return JsonConvert.SerializeObject(stanList);
+            return JsonConvert.SerializeObject(_context.Stan.ToList());
         }
 
         public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)

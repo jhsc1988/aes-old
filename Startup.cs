@@ -1,4 +1,5 @@
 using aes.Data;
+using aes.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,9 @@ namespace aes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Dependency Injection
+            _ = services.AddScoped<IDatatablesParamsGenerator, DatatablesParamsGenerator>();
+            
             _ = services.AddDbContext<ApplicationDbContext>(options =>
                   options.UseSqlServer(
                       Configuration.GetConnectionString("DefaultConnection")));

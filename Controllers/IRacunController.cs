@@ -12,24 +12,24 @@ namespace aes.Controllers
         /// <returns>string</returns>
         public string GetUid();
 
-        /// <summary>
-        /// Gets params from Datatables which was requested by Datatables AJAX POST method
-        /// </summary>
-        public void GetDatatablesParamas();
+        ///// <summary>
+        ///// Gets params from Datatables which was requested by Datatables AJAX POST method
+        ///// </summary>
+        //public void GetDatatablesParamas();
 
-        /// <summary>
-        /// Gets list of all Racuni
-        /// </summary>
-        /// <param name="klasa"></param>
-        /// <param name="urbroj"></param>
-        /// <returns>async Task<IActionResult> (JSON)</returns>
-        public Task<IActionResult> GetList(string klasa, string urbroj);
+        ///// <summary>
+        ///// Gets list of all Racuni
+        ///// </summary>
+        ///// <param name="klasa"></param>
+        ///// <param name="urbroj"></param>
+        ///// <returns>async Task<IActionResult> (JSON)</returns>
+        //public Task<IActionResult> GetList(string klasa, string urbroj);
 
-        /// <summary>
-        /// Gets list of all Racuni with userID and IsItTemp = true
-        /// </summary>
-        /// <returns>Task<IActionResult></returns>
-        public Task<IActionResult> GetListCreate();
+        ///// <summary>
+        ///// Gets list of all Racuni with userID and IsItTemp = true
+        ///// </summary>
+        ///// <returns>Task<IActionResult></returns>
+        //public Task<IActionResult> GetListCreate();
 
         /// <summary>
         /// Gets predmeti for filtered data
@@ -50,12 +50,12 @@ namespace aes.Controllers
         /// <returns></returns>
         public JsonResult GetPredmetiCreate();
 
-        /// <summary>
-        /// Gets list of dopisi for predmet for dropdown on Create page
-        /// </summary>
-        /// <param name="predmetId">Id of Predmet</param>
-        /// <returns>JsonResult</returns>
-        public JsonResult GetDopisiCreate(int predmetId);
+        ///// <summary>
+        ///// Gets list of dopisi for predmet for dropdown on Create page
+        ///// </summary>
+        ///// <param name="predmetId">Id of Predmet</param>
+        ///// <returns>JsonResult</returns>
+        //public JsonResult GetDopisiCreate(int predmetId);
 
         /// <summary>
         /// Gets list of Kupci for notification (info) builder

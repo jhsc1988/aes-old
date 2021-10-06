@@ -302,12 +302,12 @@ namespace aes.Controllers
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(predmet.GetPredmetiDataForFilter(RacunTip.ElektraIzvrsenje, _context));
+            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.ElektraIzvrsenje, _context));
         }
 
         public JsonResult GetDopisiDataForFilter(int predmetId)
         {
-            return Json(dopis.GetDopisiDataForFilter(predmetId, _context));
+            return Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         }
 
         public JsonResult GetPredmetiCreate()
@@ -317,7 +317,7 @@ namespace aes.Controllers
 
         public JsonResult GetDopisiCreate(int predmetId)
         {
-            return Json(dopis.GetDopisiDataForFilter(predmetId, _context));
+            return GetDopisiDataForFilter(predmetId);
         }
 
         public string GetKupci()

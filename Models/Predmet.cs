@@ -20,7 +20,7 @@ namespace aes.Models
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
 
-        public List<Predmet> GetPredmetiDataForFilter(RacunTip tip, ApplicationDbContext _context)
+        public static List<Predmet> GetPredmetiDataForFilter(RacunTip tip, ApplicationDbContext _context) // todo: ovo treba brisati, u kontroleru cupam podatke, ovo je bezveze
         {
 
             List<Racun> racunList = new();

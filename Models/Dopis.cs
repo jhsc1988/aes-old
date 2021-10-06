@@ -21,12 +21,5 @@ namespace aes.Models
 
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
-
-        public List<Dopis> GetDopisiDataForFilter(int predmetId, ApplicationDbContext _context)
-        {
-            List<Dopis> dopisList = _context.Dopis.ToList();
-            return dopisList.Where(element => element.PredmetId == predmetId).ToList();
-        }
-
     }
 }

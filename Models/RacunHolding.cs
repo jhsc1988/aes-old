@@ -5,14 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
-    public class RacunHolding : Racun
+    public class RacunHolding : Racun, IRacun
     {
         public Stan Stan { get; set; }
         [Required]
         public int StanId { get; set; }
+
+        public static List<RacunHolding> RacunHoldingList { get; set; }
 
         public static JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {
@@ -101,6 +104,23 @@ namespace aes.Models
             }
 
             return racunHoldingList;
+        }
+
+        public static List<RacunHolding> GetRacunHoldingDatatablesList(DatatablesParams Params)
+        {
+            RacunHoldingList = RacunHoldingList.Where(
+                x => x.BrojRacuna.Contains(Params.SearchValue)
+                || x.Stan.SifraObjekta.ToString().Contains(Params.SearchValue)
+                || x.Stan.StanId.ToString().Contains(Params.SearchValue)
+                || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue)
+                || x.Iznos.ToString().Contains(Params.SearchValue)
+                || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
+                || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
+                || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunHolding>();
+
+            RacunHoldingList = RacunHoldingList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            RacunHoldingList = RacunHoldingList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
+            return RacunHoldingList;
         }
     }
 }
