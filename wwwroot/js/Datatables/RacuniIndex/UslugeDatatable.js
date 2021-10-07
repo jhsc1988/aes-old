@@ -9,6 +9,7 @@ $(document).ready(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.isFiltered = true;
                 d.klasa = $("#selectPredmet").val();
                 d.urbroj = $("#selectDopis").val();
             }
