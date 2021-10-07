@@ -9,22 +9,24 @@ using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
-    public class RacunHolding : Racun, IRacun
+    public class RacunHolding : Racun
     {
         public Stan Stan { get; set; }
         [Required]
         public int StanId { get; set; }
 
-        public static List<RacunHolding> RacunHoldingList { get; set; }
+        private static List<RacunHolding> RacunHoldingList { get; set; }
 
+        private static readonly IRacunWorkshop racunWorkshop = new RacunWorkshop();
         public static JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {
 
-            if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            if (!racunWorkshop.Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
             {
                 return new(new { success = false, Message = msg });
             }
 
+            // TODO: zasto ne koristim staticni clan (RacunHoldingList) za ovo ?
             List<RacunHolding> racunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunHolding re = new()
             {
@@ -46,8 +48,7 @@ namespace aes.Models
             }
 
             _ = _context.RacunHolding.Add(re);
-
-            return TrySave(_context);
+            return racunWorkshop.TrySave(_context);
         }
 
         public static List<RacunHolding> GetListCreateList(string userId, ApplicationDbContext _context)
@@ -66,13 +67,13 @@ namespace aes.Models
 
                 List<Racun> racunList = new();
                 racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == null || false).ToList());
-                e.Napomena = CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                e.Napomena = racunWorkshop.CheckIfExistsInPayed(e.BrojRacuna, racunList);
                 racunList.Clear();
 
                 racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
                 if (e.Napomena is null)
                 {
-                    e.Napomena = CheckIfExists(e.BrojRacuna, racunList);
+                    e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
                 }
 
                 racunList.Clear();
@@ -106,7 +107,7 @@ namespace aes.Models
             return racunHoldingList;
         }
 
-        public static List<RacunHolding> GetRacunHoldingDatatablesList(DatatablesParams Params)
+        public static List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params)
         {
             RacunHoldingList = RacunHoldingList.Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)
@@ -117,6 +118,8 @@ namespace aes.Models
                 || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunHolding>();
+
+            // if(Params.SortDirection)
 
             RacunHoldingList = RacunHoldingList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
             RacunHoldingList = RacunHoldingList.Skip(Params.Start).Take(Params.Length).ToList(); // paging

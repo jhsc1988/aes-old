@@ -4,9 +4,14 @@
 
     table = selectIndexTable.DataTable({
         "ajax": {
-            "url": "/RacunElektraIzvrsenjaUsluges/GetListCreate",
+            "url": "/RacunElektraIzvrsenjaUsluges/GetList",
             "type": "POST",
             "datatype": "json",
+            "data": function (d) {
+                d.isFiltered = false;
+                d.klasa = null;
+                d.urbroj = null;
+            }
         },
         "columns": [
             { "data": "redniBroj", "name": "redniBroj" },

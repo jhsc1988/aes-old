@@ -99,7 +99,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\Datatables\Create\RateDatatable.js" />
     <Content Remove="wwwroot\js\Datatables\Details\RacunOdsIzvrsenjaUslugeTable.js" />
     <Content Remove="wwwroot\js\Datatables\Details\UgovoriOKoristenjuTable.js" />
     <Content Remove="wwwroot\js\Datatables\Details\UgovoriOPrijenosuTable.js" />

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
@@ -18,13 +19,13 @@ namespace aes.Models
         [Display(Name = "Razdoblje")]
         [DataType(DataType.Date)]
         public DateTime Razdoblje { get; set; }
-
-
+        private static List<RacunElektraRate> RacunElektraRateList { get; set; }
+        private static readonly IRacunWorkshop racunWorkshop = new RacunWorkshop();
 
         public static JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {
 
-            if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            if (!racunWorkshop.Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
             {
                 return new(new { success = false, Message = msg });
             }
@@ -51,7 +52,9 @@ namespace aes.Models
 
             _ = _context.RacunElektraRate.Add(re);
 
-            return TrySave(_context);
+            // todo: trysave
+            //return TrySave(_context);
+            return null;
         }
 
         public static List<RacunElektraRate> GetListCreateList(string userId, ApplicationDbContext _context)
@@ -66,13 +69,13 @@ namespace aes.Models
 
                 List<Racun> racunList = new();
                 racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == null || false).ToList());
-                e.Napomena = CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                e.Napomena = racunWorkshop.CheckIfExistsInPayed(e.BrojRacuna, racunList);
                 racunList.Clear();
 
                 racunList.AddRange(_context.RacunElektraRate.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
                 if (e.Napomena is null)
                 {
-                    e.Napomena = CheckIfExists(e.BrojRacuna, racunList);
+                    e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
                 }
 
                 racunList.Clear();
@@ -114,6 +117,23 @@ namespace aes.Models
                     : _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
             }
 
+            return RacunElektraRateList;
+        }
+
+        public static List<RacunElektraRate> GetRacuniElektraRateForDatatables(DatatablesParams Params)
+        {
+            RacunElektraRateList = RacunElektraRateList.
+                Where(
+                x => x.BrojRacuna.Contains(Params.SearchValue)
+                || x.ElektraKupac.UgovorniRacun.ToString().Contains(Params.SearchValue)
+                || x.Razdoblje.ToString("MM.yyyy").Contains(Params.SearchValue)
+                || x.Iznos.ToString().Contains(Params.SearchValue)
+                || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
+                || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
+                || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunElektraRate>();
+
+            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            RacunElektraRateList = RacunElektraRateList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
             return RacunElektraRateList;
         }
     }

@@ -17,14 +17,16 @@ namespace aes.Controllers
     public class RacuniHoldingController : Controller, IRacunController
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IRacunWorkshop _racunWorkshop;
         private readonly ApplicationDbContext _context;
-        private List<RacunHolding> racunHoldingList; // rijesiti ovo interfaceom na RacunHolding
+        private List<RacunHolding> racunHoldingList;
         private DatatablesParams Params;
 
-        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs)
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop)
         {
-            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             _context = context;
+            _racunWorkshop = racunWorkshop;
+            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             racunHoldingList = _context.RacunHolding.ToList();
         }
 
@@ -191,7 +193,48 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+        public string GetUid()
+        {
+            ClaimsPrincipal currentUser;
+            currentUser = User;
+            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+        {
+            return Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
+        }
+        public JsonResult GetPredmetiCreate()
+        {
+            return Json(_context.Predmet.ToList());
+        }
+        public string GetKupci()
+        {
+            return JsonConvert.SerializeObject(_context.Stan.ToList());
+        }
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
+        {
+            return _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunHolding, _context);
+        }
+        public JsonResult SaveToDB(string _dopisId)
+        {
+            return _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunHolding, _context);
+        }
+        public JsonResult RemoveRow(string racunId)
+        {
+            return _racunWorkshop.RemoveRow(racunId, _context.RacunHolding, _context);
+        }
+        public JsonResult RemoveAllFromDb()
+        {
+            return _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunHolding, _context);
+        }
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
+        {
+            return new JsonResult(RacunHolding.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        }
+        public JsonResult GetPredmetiDataForFilter()
+        {
+            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.Holding, _context));
+        }
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
         {
             Params = _datatablesParamsGeneratorcs.GetParams(Request);
@@ -207,67 +250,20 @@ namespace aes.Controllers
                 racunHoldingList = RacunHolding.GetListCreateList(GetUid(), _context);
             }
 
-            // filter
             int totalRows = racunHoldingList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue))
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                racunHoldingList = RacunHolding.GetRacunHoldingDatatablesList(Params);
+                racunHoldingList = RacunHolding.GetRacuniHoldingForDatatables(Params);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
 
-            return Json(new { data = racunHoldingList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
-        }
-
-        public string GetUid()
-        {
-            ClaimsPrincipal currentUser;
-            currentUser = User; // User postoji samo u Controlleru
-            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
-
-        public JsonResult GetPredmetiDataForFilter()
-        {
-            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.Holding, _context));
-        }
-
-        public JsonResult GetDopisiDataForFilter(int predmetId)
-        {
-            return Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
-        }
-
-        public JsonResult GetPredmetiCreate()
-        {
-            return Json(_context.Predmet.ToList());
-        }
-
-        public string GetKupci()
-        {
-            return JsonConvert.SerializeObject(_context.Stan.ToList());
-        }
-
-        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
-        {
-            return Racun.UpdateDbForInline(RacunTip.Holding, id, updatedColumn, x, _context);
-        }
-
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
-        {
-            return new JsonResult(RacunHolding.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
-        }
-
-        public JsonResult SaveToDB(string _dopisId)
-        {
-            return Racun.SaveToDb(RacunTip.Holding, GetUid(), _dopisId, _context);
-        }
-
-        public JsonResult RemoveRow(string racunId)
-        {
-            return Racun.RemoveRow(RacunTip.Holding, racunId, _context);
-        }
-
-        public JsonResult RemoveAllFromDb()
-        {
-            return Racun.RemoveAllFromDb(RacunTip.Holding, GetUid(), _context);
+            return Json(new
+            {
+                data = racunHoldingList,
+                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
+                recordsTotal = totalRows,
+                recordsFiltered = totalRowsAfterFiltering
+            });
         }
     }
 }

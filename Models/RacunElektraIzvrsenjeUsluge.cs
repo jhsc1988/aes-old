@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
@@ -20,7 +21,8 @@ namespace aes.Models
 
         [Display(Name = "Datum izvršenja")]
         public DateTime DatumIzvrsenja { get; set; }
-
+        private static List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList { get; set; }
+        private static readonly IRacunWorkshop racunWorkshop = new RacunWorkshop();
         public static List<RacunElektraIzvrsenjeUsluge> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
             List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList = new();
@@ -59,13 +61,13 @@ namespace aes.Models
 
                 List<Racun> racunList = new();
                 racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null || false).ToList());
-                e.Napomena = CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                e.Napomena = racunWorkshop.CheckIfExistsInPayed(e.BrojRacuna, racunList);
                 racunList.Clear();
 
                 racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
                 if (e.Napomena is null)
                 {
-                    e.Napomena = CheckIfExists(e.BrojRacuna, racunList);
+                    e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
                 }
 
                 racunList.Clear();
@@ -98,7 +100,7 @@ namespace aes.Models
                 datumIzvrsenjaDT = DateTime.Parse(datumIzvrsenja);
             }
 
-            if (!Validate(brojRacuna, iznos, datumPotvrde, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            if (!racunWorkshop.Validate(brojRacuna, iznos, datumPotvrde, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
             {
                 return new(new { success = false, Message = msg });
             }
@@ -126,7 +128,29 @@ namespace aes.Models
             }
             _ = _context.RacunElektraIzvrsenjeUsluge.Add(re);
 
-            return TrySave(_context);
+            // todo: trysave
+            //return TrySave(_context);
+            return null;
         }
+
+        public static List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params)
+        {
+            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.
+                Where(
+                x => x.BrojRacuna.Contains(Params.SearchValue)
+                || x.ElektraKupac.UgovorniRacun.ToString().Contains(Params.SearchValue)
+                || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue)
+                || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(Params.SearchValue)
+                || (x.Usluga != null && x.Usluga.ToLower().Contains(Params.SearchValue.ToLower()))
+                || x.Iznos.ToString().Contains(Params.SearchValue)
+                || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
+                || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
+                || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue))).ToDynamicList<RacunElektraIzvrsenjeUsluge>();
+
+            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
+            return RacunElektraIzvrsenjeUslugeList;
+        }
+
     }
 }

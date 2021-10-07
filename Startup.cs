@@ -24,7 +24,8 @@ namespace aes
         {
             // Dependency Injection
             _ = services.AddScoped<IDatatablesParamsGenerator, DatatablesParamsGenerator>();
-            
+            _ = services.AddScoped<IRacunWorkshop, RacunWorkshop>();
+
             _ = services.AddDbContext<ApplicationDbContext>(options =>
                   options.UseSqlServer(
                       Configuration.GetConnectionString("DefaultConnection")));
