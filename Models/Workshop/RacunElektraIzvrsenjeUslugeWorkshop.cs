@@ -109,10 +109,9 @@ namespace aes.Models
             return racunElektraIzvrsenjeList;
         }
 
-        public List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params, ApplicationDbContext _context)
+        public List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunElektraIzvrsenjeUsluge> CreateRacuniElektraIzvrsenjeUslugeList)
         {
-            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null || e.IsItTemp == false).ToList();
-            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList
+            CreateRacuniElektraIzvrsenjeUslugeList = CreateRacuniElektraIzvrsenjeUslugeList
             .Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)
                 || x.ElektraKupac.UgovorniRacun.ToString().Contains(Params.SearchValue)
@@ -124,7 +123,7 @@ namespace aes.Models
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue)))
             .ToDynamicList<RacunElektraIzvrsenjeUsluge>();
-            return RacunElektraIzvrsenjeUslugeList;
+            return CreateRacuniElektraIzvrsenjeUslugeList;
         }
     }
 }

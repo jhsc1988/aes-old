@@ -275,7 +275,7 @@ namespace aes.Controllers
             int totalRows = racunElektraList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                racunElektraList = _racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context);
+                racunElektraList = _racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, racunElektraList);
             }
             int totalRowsAfterFiltering = racunElektraList.Count;
 

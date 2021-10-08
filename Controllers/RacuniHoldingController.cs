@@ -255,7 +255,7 @@ namespace aes.Controllers
             int totalRows = racunHoldingList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                racunHoldingList = _racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context);
+                racunHoldingList = _racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
 

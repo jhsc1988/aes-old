@@ -12,6 +12,6 @@ namespace aes.Models
         JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context);
         List<RacunElektra> GetListCreateList(string userId, ApplicationDbContext _context);
         List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context);
-        List<RacunElektra> GetRacuniElektraForDatatables(DatatablesParams Params, ApplicationDbContext _context);
+        List<RacunElektra> GetRacuniElektraForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunElektra> CreateRacuniElektraList);
     }
 }

@@ -90,10 +90,9 @@ namespace aes.Models
             return racunHoldingList;
         }
 
-        public List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params, ApplicationDbContext _context)
+        public List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
         {
-            List<RacunHolding> RacunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == null || e.IsItTemp == false).ToList();
-            RacunHoldingList = RacunHoldingList.Where(
+            CreateRRacuniHoldingList = CreateRRacuniHoldingList.Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)
                 || x.Stan.SifraObjekta.ToString().Contains(Params.SearchValue)
                 || x.Stan.StanId.ToString().Contains(Params.SearchValue)
@@ -102,7 +101,7 @@ namespace aes.Models
                 || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunHolding>();
-            return RacunHoldingList;
+            return CreateRRacuniHoldingList;
         }
     }
 }
