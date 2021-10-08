@@ -14,6 +14,5 @@ namespace aes.Models
         public Stan Stan { get; set; }
         [Required]
         public int StanId { get; set; }
-
     }
 }

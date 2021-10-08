@@ -18,14 +18,16 @@ namespace aes.Controllers
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly IRacunWorkshop _racunWorkshop;
+        private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
         private readonly ApplicationDbContext _context;
         private List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList;
         private DatatablesParams Params;
 
-        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop)
+        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
+            _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
             _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.ToList();
 
@@ -217,27 +219,24 @@ namespace aes.Controllers
         }
         public JsonResult SaveToDB(string _dopisId)
         {
-            return _racunWorkshop.SaveToDb( GetUid(), _dopisId, _context.RacunElektraIzvrsenjeUsluge,_context);
+            return _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektraIzvrsenjeUsluge, _context);
         }
         public JsonResult RemoveRow(string racunId)
         {
             return _racunWorkshop.RemoveRow(racunId, _context.RacunElektraIzvrsenjeUsluge, _context);
         }
-
         public JsonResult RemoveAllFromDb()
         {
             return _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektraIzvrsenjeUsluge, _context);
         }
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja, string usluga, string dopisId)
         {
-            return new JsonResult(RacunElektraIzvrsenjeUsluge.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
+            return new JsonResult(_racunElektraIzvrsenjeUslugeWorkshop.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
         }
-
         public JsonResult GetPredmetiDataForFilter()
         {
             return Json(Predmet.GetPredmetiDataForFilter(RacunTip.ElektraIzvrsenje, _context));
         }
-
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
         {
 
@@ -247,17 +246,17 @@ namespace aes.Controllers
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+                racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
             else
             {
-                racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetListCreateList(GetUid(), _context);
+                racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetListCreateList(GetUid(), _context);
             }
 
             int totalRows = racunElektraIzvrsenjeList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                racunElektraIzvrsenjeList = RacunElektraIzvrsenjeUsluge.GetRacunElektraIzvrsenjeUslugeForDatatables(Params);
+                racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params);
             }
             int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
 
