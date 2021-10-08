@@ -251,6 +251,9 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = racunElektraRateList.Count;
 
+            racunElektraRateList = racunElektraRateList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            racunElektraRateList = racunElektraRateList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
+
             return Json(new
             {
                 data = racunElektraRateList,

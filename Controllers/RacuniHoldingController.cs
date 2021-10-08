@@ -257,6 +257,10 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
 
+            // todo: if(Params.SortDirection) - da maknem ovaj AsQueryable dependency
+            racunHoldingList = racunHoldingList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            racunHoldingList = racunHoldingList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
+
             return Json(new
             {
                 data = racunHoldingList,

@@ -96,28 +96,18 @@ namespace aes.Models
 
         public static List<RacunElektraRate> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
-            List<RacunElektraRate> RacunElektraRateList = new();
-
-            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
-            {
-                RacunElektraRateList = _context.RacunElektraRate.Where(e => e.IsItTemp == null).ToList();
-            }
-
-            RacunElektraRateList = _context.RacunElektraRate
+            IQueryable<RacunElektraRate> RacunElektraRateList = predmetIdAsInt is 0 && dopisIdAsInt is 0
+                ? _context.RacunElektraRate.Where(e => e.IsItTemp == null)
+                : dopisIdAsInt is 0
+                    ? _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                    : _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+            return RacunElektraRateList
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
                 .Include(e => e.Dopis)
                 .Include(e => e.Dopis.Predmet)
                 .ToList();
-
-            if (predmetIdAsInt is not 0)
-            {
-                RacunElektraRateList = dopisIdAsInt is 0
-                    ? _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
-                    : _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
-            }
-
-            return RacunElektraRateList;
         }
 
         public static List<RacunElektraRate> GetRacuniElektraRateForDatatables(DatatablesParams Params)
@@ -132,8 +122,6 @@ namespace aes.Models
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunElektraRate>();
 
-            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            RacunElektraRateList = RacunElektraRateList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
             return RacunElektraRateList;
         }
     }

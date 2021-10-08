@@ -25,28 +25,18 @@ namespace aes.Models
         private static readonly IRacunWorkshop racunWorkshop = new RacunWorkshop();
         public static List<RacunElektraIzvrsenjeUsluge> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
-            List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList = new();
-
-            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
-            {
-                racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null).ToList();
-            }
-
-            racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge
+            IQueryable<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList = predmetIdAsInt is 0
+                ? _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null)
+                : dopisIdAsInt == 0
+                    ? _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                    : _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+            return racunElektraIzvrsenjeList
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
                 .Include(e => e.Dopis)
                 .Include(e => e.Dopis.Predmet)
                 .ToList();
-
-            if (predmetIdAsInt is not 0)
-            {
-                racunElektraIzvrsenjeList = dopisIdAsInt == 0
-                    ? _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
-                    : _context.RacunElektraIzvrsenjeUsluge.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
-            }
-
-            return racunElektraIzvrsenjeList;
         }
 
         public static List<RacunElektraIzvrsenjeUsluge> GetListCreateList(string userId, ApplicationDbContext _context)
@@ -146,9 +136,6 @@ namespace aes.Models
                 || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue))).ToDynamicList<RacunElektraIzvrsenjeUsluge>();
-
-            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
             return RacunElektraIzvrsenjeUslugeList;
         }
 

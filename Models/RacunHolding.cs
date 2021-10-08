@@ -84,27 +84,17 @@ namespace aes.Models
 
         public static List<RacunHolding> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
-            List<RacunHolding> racunHoldingList = new();
 
-            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
-            {
-                racunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == null).ToList();
-            }
-
-            racunHoldingList = _context.RacunHolding
+            IQueryable<RacunHolding> racunHoldingList = predmetIdAsInt is 0
+                ? _context.RacunHolding.Where(e => e.IsItTemp == null)
+                : dopisIdAsInt is 0
+                    ? _context.RacunHolding.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                    : _context.RacunHolding.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+            return racunHoldingList
                 .Include(e => e.Stan)
                 .Include(e => e.Dopis)
                 .Include(e => e.Dopis.Predmet)
                 .ToList();
-
-            if (predmetIdAsInt is not 0)
-            {
-                racunHoldingList = dopisIdAsInt is 0
-                    ? _context.RacunHolding.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
-                    : _context.RacunHolding.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
-            }
-
-            return racunHoldingList;
         }
 
         public static List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params)
@@ -118,11 +108,6 @@ namespace aes.Models
                 || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunHolding>();
-
-            // if(Params.SortDirection)
-
-            RacunHoldingList = RacunHoldingList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            RacunHoldingList = RacunHoldingList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
             return RacunHoldingList;
         }
     }

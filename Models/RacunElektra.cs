@@ -87,28 +87,18 @@ namespace aes.Models
 
         public static List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
-            List<RacunElektra> racunElektraList = new();
-
-            if (predmetIdAsInt is 0 && dopisIdAsInt is 0)
-            {
-                racunElektraList = _context.RacunElektra.Where(e => e.IsItTemp == null).ToList();
-            }
-
-            racunElektraList = _context.RacunElektra
+            IQueryable<RacunElektra> racunElektraList = predmetIdAsInt is 0
+                ? _context.RacunElektra.Where(e => e.IsItTemp == null)
+                : dopisIdAsInt is 0
+                    ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                    : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+            return racunElektraList
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
+                .Include(e=> e.ElektraKupac.Ods.Stan)
                 .Include(e => e.Dopis)
                 .Include(e => e.Dopis.Predmet)
-                .ToList();
-
-            if (predmetIdAsInt is not 0)
-            {
-                racunElektraList = dopisIdAsInt is 0
-                    ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt).ToList()
-                    : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt).ToList();
-            }
-
-            return racunElektraList;
+                .ToList(); 
         }
 
         public static List<RacunElektra> GetRacuniElektraForDatatables(DatatablesParams Params)
@@ -123,9 +113,6 @@ namespace aes.Models
                                  x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                              || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower())))
                     .ToDynamicList<RacunElektra>();
-
-            RacuniElektraList = RacuniElektraList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            RacuniElektraList = RacuniElektraList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
             return RacuniElektraList;
         }
     }

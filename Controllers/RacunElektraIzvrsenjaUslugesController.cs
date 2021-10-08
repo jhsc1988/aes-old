@@ -261,6 +261,9 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
 
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
+
             return Json(new
             {
                 data = racunElektraIzvrsenjeList,

@@ -208,7 +208,6 @@ namespace aes.Controllers
             //return db != null ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -277,6 +276,9 @@ namespace aes.Controllers
                 racunElektraList = RacunElektra.GetRacuniElektraForDatatables(Params);
             }
             int totalRowsAfterFiltering = racunElektraList.Count;
+
+            racunElektraList = racunElektraList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            racunElektraList = racunElektraList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
 
             return Json(new
             {
