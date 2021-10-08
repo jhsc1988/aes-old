@@ -90,9 +90,9 @@ namespace aes.Models
             return racunHoldingList;
         }
 
-        public List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params)
+        public List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params, ApplicationDbContext _context)
         {
-            List<RacunHolding> RacunHoldingList = new();
+            List<RacunHolding> RacunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == null || e.IsItTemp == false).ToList();
             RacunHoldingList = RacunHoldingList.Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)
                 || x.Stan.SifraObjekta.ToString().Contains(Params.SearchValue)

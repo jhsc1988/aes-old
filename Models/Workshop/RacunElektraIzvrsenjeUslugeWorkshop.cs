@@ -109,9 +109,9 @@ namespace aes.Models
             return racunElektraIzvrsenjeList;
         }
 
-        public List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params)
+        public List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params, ApplicationDbContext _context)
         {
-            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = new();
+            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeUslugeList = _context.RacunElektraIzvrsenjeUsluge.Where(e => e.IsItTemp == null || e.IsItTemp == false).ToList();
             RacunElektraIzvrsenjeUslugeList = RacunElektraIzvrsenjeUslugeList
             .Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)

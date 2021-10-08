@@ -98,9 +98,9 @@ namespace aes.Models
                 .ToList();
         }
 
-        public List<RacunElektra> GetRacuniElektraForDatatables(DatatablesParams Params)
+        public List<RacunElektra> GetRacuniElektraForDatatables(DatatablesParams Params, ApplicationDbContext _context)
         {
-            List<RacunElektra> RacuniElektraList = new();
+            List<RacunElektra> RacuniElektraList = _context.RacunElektra.Where(e => e.IsItTemp == null || e.IsItTemp == false).ToList();
             RacuniElektraList = RacuniElektraList.Where(
                        x => x.BrojRacuna.Contains(Params.SearchValue)
                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(Params.SearchValue)

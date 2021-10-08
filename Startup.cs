@@ -27,6 +27,8 @@ namespace aes
             _ = services.AddScoped<IRacunWorkshop, RacunWorkshop>();
             _ = services.AddScoped<IRacunHoldingWorkshop, RacunHoldingWorkshop>();
             _ = services.AddScoped<IRacunElektraWorkshop, RacunElektraWorkshop>();
+            _ = services.AddScoped<IRacunElektraRateWorkshop, RacunElektraRateWorkshop>();
+            _ = services.AddScoped<IRacunElektraIzvrsenjeUslugeWorkshop, RacunElektraIzvrsenjeUslugeWorkshop>();
 
             _ = services.AddDbContext<ApplicationDbContext>(options =>
                   options.UseSqlServer(

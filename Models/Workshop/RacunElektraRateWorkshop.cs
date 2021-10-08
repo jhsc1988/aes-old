@@ -97,9 +97,9 @@ namespace aes.Models
             return RacunElektraRateList;
         }
 
-        public List<RacunElektraRate> GetRacuniElektraRateForDatatables(DatatablesParams Params)
+        public List<RacunElektraRate> GetRacuniElektraRateForDatatables(DatatablesParams Params, ApplicationDbContext _context)
         {
-            List<RacunElektraRate> RacunElektraRateList = new();
+            List<RacunElektraRate> RacunElektraRateList = _context.RacunElektraRate.Where(e => e.IsItTemp == null || e.IsItTemp == false).ToList();
             RacunElektraRateList = RacunElektraRateList
                 .Where(
                     x => x.BrojRacuna.Contains(Params.SearchValue)
@@ -108,7 +108,8 @@ namespace aes.Models
                     || x.Iznos.ToString().Contains(Params.SearchValue)
                     || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
                     || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunElektraRate>();
+                    || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower())))
+                .ToDynamicList<RacunElektraRate>();
             return RacunElektraRateList;
         }
     }

@@ -249,7 +249,7 @@ namespace aes.Controllers
             int totalRows = racunElektraRateList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                racunElektraRateList = _racunElektraRateWorkshop.GetListCreateList(GetUid(), _context);
+                racunElektraRateList = _racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context);
             }
             int totalRowsAfterFiltering = racunElektraRateList.Count;
 
