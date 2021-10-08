@@ -18,14 +18,16 @@ namespace aes.Controllers
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly IRacunWorkshop _racunWorkshop;
+        private readonly IRacunHoldingWorkshop _racunHoldingWorkshop;
         private readonly ApplicationDbContext _context;
         private List<RacunHolding> racunHoldingList;
         private DatatablesParams Params;
 
-        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop)
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop, IRacunHoldingWorkshop racunHoldingWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
+            _racunHoldingWorkshop = racunHoldingWorkshop;
             _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             racunHoldingList = _context.RacunHolding.ToList();
         }
@@ -229,7 +231,7 @@ namespace aes.Controllers
         }
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
         {
-            return new JsonResult(RacunHolding.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+            return new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         }
         public JsonResult GetPredmetiDataForFilter()
         {
@@ -243,17 +245,17 @@ namespace aes.Controllers
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunHoldingList = RacunHolding.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+                racunHoldingList = _racunHoldingWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
             else
             {
-                racunHoldingList = RacunHolding.GetListCreateList(GetUid(), _context);
+                racunHoldingList = _racunHoldingWorkshop.GetListCreateList(GetUid(), _context);
             }
 
             int totalRows = racunHoldingList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                racunHoldingList = RacunHolding.GetRacuniHoldingForDatatables(Params);
+                racunHoldingList = _racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
 

@@ -52,9 +52,7 @@ namespace aes.Models
 
             _ = _context.RacunElektraRate.Add(re);
 
-            // todo: trysave
-            //return TrySave(_context);
-            return null;
+            return racunWorkshop.TrySave(_context);
         }
 
         public static List<RacunElektraRate> GetListCreateList(string userId, ApplicationDbContext _context)
@@ -121,7 +119,6 @@ namespace aes.Models
                 || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(Params.SearchValue))
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunElektraRate>();
-
             return RacunElektraRateList;
         }
     }

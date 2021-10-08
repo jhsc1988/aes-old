@@ -118,9 +118,7 @@ namespace aes.Models
             }
             _ = _context.RacunElektraIzvrsenjeUsluge.Add(re);
 
-            // todo: trysave
-            //return TrySave(_context);
-            return null;
+            return racunWorkshop.TrySave(_context);
         }
 
         public static List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params)
