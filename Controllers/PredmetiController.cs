@@ -13,17 +13,21 @@ namespace aes.Controllers
 {
     public class PredmetiController : Controller, IPredmetController
     {
+        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly ApplicationDbContext _context;
+        private readonly IPredmetWorkshop _predmetWorkshop;
         private List<Predmet> PredmetList;
+        private DatatablesParams Params;
 
         /// <summary>
         /// datatables params
         /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
 
-        public PredmetiController(ApplicationDbContext context)
+        public PredmetiController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
+            _predmetWorkshop = predmetWorkshop;
+            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
         }
 
         // GET: Predmeti
@@ -159,36 +163,31 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void GetDatatablesParamas()
+        public JsonResult SaveToDB(string klasa, string naziv)
         {
-            // server side parameters
-            start = Request.Form["start"].FirstOrDefault();
-            length = Request.Form["length"].FirstOrDefault();
-            searchValue = Request.Form["search[value]"].FirstOrDefault();
-            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            return _predmetWorkshop.SaveToDB(klasa, naziv, _context);
         }
-
+        public JsonResult TrySave()
+        {
+            return _predmetWorkshop.TrySave(_context);
+        }
 
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
-            GetDatatablesParamas();
+            Params = _datatablesParamsGeneratorcs.GetParams(Request);
 
             PredmetList = await _context.Predmet.ToListAsync();
 
             int totalRows = PredmetList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                PredmetList = await PredmetList.
-                    Where(
-                    x => x.Klasa.Contains(searchValue)
-                    || x.Naziv.Contains(searchValue)).ToDynamicListAsync<Predmet>();
+                _predmetWorkshop.GetPredmetiForDatatables(Params, PredmetList);
             }
             int totalRowsAfterFiltering = PredmetList.Count;
 
-            PredmetList = PredmetList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            PredmetList = PredmetList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
+            PredmetList = PredmetList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            PredmetList = PredmetList.Skip(Convert.ToInt32(Params.Start)).Take(Convert.ToInt32(Params.Length)).ToList(); // paging
 
             return Json(new
             {
@@ -197,28 +196,6 @@ namespace aes.Controllers
                 recordsTotal = totalRows,
                 recordsFiltered = totalRowsAfterFiltering
             });
-        }
-
-        public JsonResult SaveToDB(string klasa, string naziv)
-        {
-            Predmet pTemp = new();
-            pTemp.Klasa = klasa;
-            pTemp.Naziv = naziv;
-            _ = _context.Predmet.Add(pTemp);
-            return TrySave();
-        }
-
-        public JsonResult TrySave()
-        {
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Spremljeno" });
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = false, Message = "Greška" });
-            }
         }
     }
 }

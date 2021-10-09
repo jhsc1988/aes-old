@@ -15,15 +15,16 @@ namespace aes.Controllers
 {
     public class OdsController : Controller, IOdsController
     {
+        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IOdsWorkshop _odsWorkshop;
         private readonly ApplicationDbContext _context;
+        private DatatablesParams Params;
         private List<Ods> OdsList;
 
-        /// <summary>
-        /// datatables params
-        /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
-        public OdsController(ApplicationDbContext context)
+        public OdsController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IOdsWorkshop odsWorkshop)
         {
+            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _odsWorkshop = odsWorkshop;
             _context = context;
         }
 
@@ -184,45 +185,22 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void GetDatatablesParamas()
-        {
-            // server side parameters
-            start = Request.Form["start"].FirstOrDefault();
-            length = Request.Form["length"].FirstOrDefault();
-            searchValue = Request.Form["search[value]"].FirstOrDefault();
-            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-        }
-
         public async Task<IActionResult> GetList()
         {
-            GetDatatablesParamas();
+            Params = _datatablesParamsGeneratorcs.GetParams(Request);
             OdsList = await _context.Ods
                 .Include(e => e.Stan)
                 .ToListAsync();
 
             int totalRows = OdsList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                OdsList = await OdsList.
-                    Where(
-                    x => x.Omm.ToString().Contains(searchValue)
-                    || x.Stan.StanId.ToString().Contains(searchValue)
-                    || x.Stan.SifraObjekta.ToString().Contains(searchValue)
-                    || (x.Stan.Adresa != null && x.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Stan.Kat != null && x.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Stan.BrojSTana != null && x.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Stan.Četvrt != null && x.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Stan.Površina.ToString().Contains(searchValue)
-                    || (x.Stan.StatusKorištenja != null && x.Stan.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Stan.Korisnik != null && x.Stan.Korisnik.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Stan.Vlasništvo != null && x.Stan.Vlasništvo.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<Ods>();
+                _ = _odsWorkshop.GetStanoviForDatatables(Params, OdsList);
             }
             int totalRowsAfterFiltering = OdsList.Count;
 
-            OdsList = OdsList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            OdsList = OdsList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
+            OdsList = OdsList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
+            OdsList = OdsList.Skip(Convert.ToInt32(Params.Start)).Take(Convert.ToInt32(Params.Length)).ToList(); // paging
 
             return Json(new
             {
@@ -235,21 +213,7 @@ namespace aes.Controllers
 
         public JsonResult GetStanData(string sid)
         {
-            int idInt;
-            if (sid != null)
-            {
-                idInt = int.Parse(sid);
-            }
-            else
-            {
-                return Json(new { success = false, Message = "Greška, prazan id" });
-            }
-
-            Stan st = new();
-            List<Stan> stList = _context.Stan.ToList();
-
-            st = stList.FirstOrDefault(o => o.Id == idInt);
-            return Json(st);
+            return _odsWorkshop.GetStanData(sid, _context);
         }
     }
 }

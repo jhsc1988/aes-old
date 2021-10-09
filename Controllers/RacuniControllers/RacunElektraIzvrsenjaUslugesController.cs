@@ -17,18 +17,21 @@ namespace aes.Controllers
     public class RacunElektraIzvrsenjaUslugesController : Controller, IRacunController
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunWorkshop _racunWorkshop;
         private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
         private readonly ApplicationDbContext _context;
         private List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList;
         private DatatablesParams Params;
 
-        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop)
+        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+            IRacunWorkshop racunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
             _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _predmetWorkshop = predmetWorkshop;
             racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.ToList();
 
         }
@@ -235,7 +238,7 @@ namespace aes.Controllers
         }
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.ElektraIzvrsenje, _context));
+            return Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraIzvrsenjeUsluge, _context));
         }
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
         {

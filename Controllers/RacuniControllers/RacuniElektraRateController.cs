@@ -18,16 +18,19 @@ namespace aes.Controllers
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly IRacunWorkshop _racunWorkshop;
+        private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
         private readonly ApplicationDbContext _context;
         private List<RacunElektraRate> racunElektraRateList;
         private DatatablesParams Params;
 
-        public RacuniElektraRateController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop)
+        public RacuniElektraRateController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+            IRacunWorkshop racunWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _racunElektraRateWorkshop = racunElektraRateWorkshop;
+            _predmetWorkshop = predmetWorkshop;
             _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             racunElektraRateList = _context.RacunElektraRate.ToList();
         }
@@ -229,7 +232,7 @@ namespace aes.Controllers
         }
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.RacunElektraRate, _context));
+            return Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraRate, _context));
         }
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
         {

@@ -19,42 +19,6 @@ namespace aes.Models
 
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
-
-        public static List<Predmet> GetPredmetiDataForFilter(RacunTip tip, ApplicationDbContext _context) // todo: ovo treba brisati, u kontroleru cupam podatke, ovo je bezveze
-        {
-
-            List<Racun> racunList = new();
-            List<Predmet> predmetiList = new();
-
-            switch (tip)
-            {
-                case RacunTip.RacunElektra:
-                    racunList.AddRange(_context.RacunElektra.ToList());
-                    break;
-                case RacunTip.RacunElektraRate:
-                    racunList.AddRange(_context.RacunElektraRate.ToList());
-                    break;
-                case RacunTip.Holding:
-                    racunList.AddRange(_context.RacunHolding.ToList());
-                    break;
-                case RacunTip.ElektraIzvrsenje:
-                    racunList.AddRange(_context.RacunElektraIzvrsenjeUsluge.ToList());
-                    break;
-                default:
-                    break;
-            }
-
-            foreach (Racun e in racunList)
-            {
-                e.Dopis = _context.Dopis.FirstOrDefault(x => e.DopisId == x.Id);
-                if (e.Dopis != null)
-                {
-                    predmetiList.Add(_context.Predmet.FirstOrDefault(x => e.Dopis.PredmetId == x.Id));
-                }
-            }
-            return predmetiList.Distinct().ToList();
-        }
-
     }
 }
 

@@ -18,18 +18,21 @@ namespace aes.Controllers
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly IRacunWorkshop _racunWorkshop;
+        private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunHoldingWorkshop _racunHoldingWorkshop;
         private readonly ApplicationDbContext _context;
         private List<RacunHolding> racunHoldingList;
         private DatatablesParams Params;
 
-        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop, IRacunHoldingWorkshop racunHoldingWorkshop)
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+            IRacunWorkshop racunWorkshop, IRacunHoldingWorkshop racunHoldingWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
+            _predmetWorkshop = predmetWorkshop;
             _racunHoldingWorkshop = racunHoldingWorkshop;
             _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
-            racunHoldingList = _context.RacunHolding.ToList();
+            racunHoldingList = _context.RacunHolding.ToList(); // todo: jel trebam tu vuc podatke ili u metodama ?
         }
 
         [Authorize]
@@ -235,7 +238,7 @@ namespace aes.Controllers
         }
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.Holding, _context));
+            return Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunHolding, _context));
         }
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
         {

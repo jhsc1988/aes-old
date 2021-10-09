@@ -18,16 +18,19 @@ namespace aes.Controllers
     {
         private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
         private readonly IRacunWorkshop _racunWorkshop;
+        private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunElektraWorkshop _racunElektraWorkshop;
         private readonly ApplicationDbContext _context;
         private List<RacunElektra> racunElektraList;
         private DatatablesParams Params;
 
-        public RacuniElektraController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IRacunWorkshop racunWorkshop, IRacunElektraWorkshop racunElektraWorkshop)
+        public RacuniElektraController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+            IRacunWorkshop racunWorkshop, IRacunElektraWorkshop racunElektraWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _racunElektraWorkshop = racunElektraWorkshop;
+            _predmetWorkshop = predmetWorkshop;
             _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
             racunElektraList = _context.RacunElektra.ToList();
         }
@@ -48,6 +51,9 @@ namespace aes.Controllers
             }
 
             RacunElektra racunElektra = await _context.RacunElektra
+                .Include(r => r.ElektraKupac)
+                .Include(r => r.ElektraKupac.Ods)
+                .Include(r => r.ElektraKupac.Ods.Stan)
                 .Include(r => r.Dopis)
                 .Include(r => r.ElektraKupac)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -100,7 +106,14 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            RacunElektra racunElektra = await _context.RacunElektra.FindAsync(id);
+            RacunElektra racunElektra = await _context.RacunElektra
+                .Include(r => r.ElektraKupac)
+                .Include(r => r.ElektraKupac.Ods)
+                .Include(r => r.ElektraKupac.Ods.Stan)
+                .Include(r => r.Dopis)
+                .Include(r => r.ElektraKupac)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (racunElektra == null)
             {
                 return NotFound();
@@ -135,7 +148,8 @@ namespace aes.Controllers
                     // error fix
                     // The instance of entity type 'RacunElektra' cannot be tracked because another
                     // instance with the same key value for {'Id'} is already being tracked.
-                    RacunElektra re = _context.RacunElektra.FirstOrDefault(e => e.Id == id);
+                    RacunElektra re = _context.RacunElektra
+                        .FirstOrDefault(e => e.Id == id);
                     _context.Entry(re).State = EntityState.Detached;
                     _context.Entry(racunElektra).State = EntityState.Modified;
 
@@ -254,7 +268,7 @@ namespace aes.Controllers
 
         public JsonResult GetPredmetiDataForFilter()
         {
-            return Json(Predmet.GetPredmetiDataForFilter(RacunTip.RacunElektra, _context));
+            return Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektra, _context));
         }
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj)
         {

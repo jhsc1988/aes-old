@@ -5,12 +5,12 @@ namespace aes.Controllers
 {
     internal interface IPredmetController
     {
-        public void GetDatatablesParamas();
+        //public void GetDatatablesParamas();
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu predmeta u JSON obliku za server side processing</returns>
+        ///// <summary>
+        ///// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
+        ///// </summary>
+        ///// <returns>Vraća listu predmeta u JSON obliku za server side processing</returns>
         public Task<IActionResult> GetList();
 
         /// <summary>
