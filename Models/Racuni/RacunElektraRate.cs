@@ -9,12 +9,8 @@ using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
-    public class RacunElektraRate : Racun
+    public class RacunElektraRate : Elektra
     {
-        public ElektraKupac ElektraKupac { get; set; }
-        [Required]
-        public int? ElektraKupacId { get; set; }
-
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Razdoblje")]
         [DataType(DataType.Date)]

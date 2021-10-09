@@ -8,9 +8,7 @@ using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
-    public class RacunElektra : Racun
+    public class RacunElektra : Elektra
     {
-        public ElektraKupac ElektraKupac { get; set; }
-        public int? ElektraKupacId { get; set; }
     }
 }

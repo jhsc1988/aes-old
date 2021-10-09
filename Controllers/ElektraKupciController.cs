@@ -227,64 +227,52 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = ElektraKupacList.Count;
             return _datatablesGenerator.SortingPaging(ElektraKupacList, Params, Request, totalRows, totalRowsAfterFiltering);
-
         }
 
-        public async Task<IActionResult> GetRacuniForKupac(int param)
+        public JsonResult GetRacuniForKupac(int param)
         {
             Params = _datatablesGenerator.GetParams(Request);
-            RacunElektraList = await _context.RacunElektra
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Id == param)
-                .ToListAsync();
-
+            RacunElektraList = GetRacuniFromDb(_context.RacunElektra, param);
             int totalRows = RacunElektraList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
                 RacunElektraList = _racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, RacunElektraList);
             }
-
-            int totalRowsAfterFiltering = RacunElektraList.Count;
-            return _datatablesGenerator.SortingPaging(RacunElektraList, Params, Request, totalRows, totalRowsAfterFiltering);
+            return _datatablesGenerator.SortingPaging(RacunElektraList, Params, Request, totalRows, RacunElektraList.Count);
         }
 
-        public async Task<IActionResult> GetRacuniRateForKupac(int param)
+        public JsonResult GetRacuniRateForKupac(int param)
         {
             Params = _datatablesGenerator.GetParams(Request);
-            RacunElektraRateList = await _context.RacunElektraRate
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Id == param)
-                .ToListAsync();
+            RacunElektraRateList = GetRacuniFromDb(_context.RacunElektraRate, param);
             int totalRows = RacunElektraRateList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
                 RacunElektraRateList = _racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, RacunElektraRateList);
             }
-            int totalRowsAfterFiltering = RacunElektraRateList.Count;
-            return _datatablesGenerator.SortingPaging(RacunElektraRateList, Params, Request, totalRows, totalRowsAfterFiltering);
+            return _datatablesGenerator.SortingPaging(RacunElektraRateList, Params, Request, totalRows, RacunElektraRateList.Count);
         }
 
-        public async Task<IActionResult> GetRacuniElektraIzvrsenjeForKupac(int param)
+        public JsonResult GetRacuniElektraIzvrsenjeForKupac(int param)
         {
             Params = _datatablesGenerator.GetParams(Request);
-            RacunElektraIzvrsenjeList = await _context.RacunElektraIzvrsenjeUsluge
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Id == param)
-                .ToListAsync();
-
+            RacunElektraIzvrsenjeList = GetRacuniFromDb(_context.RacunElektraIzvrsenjeUsluge, param);
             int totalRows = RacunElektraIzvrsenjeList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
                 RacunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, RacunElektraIzvrsenjeList);
             }
-            int totalRowsAfterFiltering = RacunElektraIzvrsenjeList.Count;
-            return _datatablesGenerator.SortingPaging(RacunElektraIzvrsenjeList, Params, Request, totalRows, totalRowsAfterFiltering);
+            return _datatablesGenerator.SortingPaging(RacunElektraIzvrsenjeList, Params, Request, totalRows, RacunElektraIzvrsenjeList.Count);
+        }
+
+        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param) where T : Elektra
+        {
+            return modelcontext
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
+                .Where(e => e.ElektraKupac.Id == param)
+                .ToList();
         }
     }
 }

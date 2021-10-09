@@ -9,12 +9,8 @@ using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
-    public class RacunElektraIzvrsenjeUsluge : Racun
+    public class RacunElektraIzvrsenjeUsluge : Elektra
     {
-        public ElektraKupac ElektraKupac { get; set; }
-        [Required]
-        public int ElektraKupacId { get; set; }
-
         [MaxLength(64)]
         public string Usluga { get; set; }
 
