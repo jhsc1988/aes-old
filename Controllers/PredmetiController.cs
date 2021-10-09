@@ -13,7 +13,7 @@ namespace aes.Controllers
 {
     public class PredmetiController : Controller, IPredmetController
     {
-        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
         private readonly IPredmetWorkshop _predmetWorkshop;
         private List<Predmet> PredmetList;
@@ -23,11 +23,11 @@ namespace aes.Controllers
         /// datatables params
         /// </summary>
 
-        public PredmetiController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IPredmetWorkshop predmetWorkshop)
+        public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _predmetWorkshop = predmetWorkshop;
-            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _datatablesGenerator = datatablesParamsGeneratorcs;
         }
 
         // GET: Predmeti
@@ -175,27 +175,17 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
-            Params = _datatablesParamsGeneratorcs.GetParams(Request);
+            Params = _datatablesGenerator.GetParams(Request);
 
             PredmetList = await _context.Predmet.ToListAsync();
 
             int totalRows = PredmetList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                _predmetWorkshop.GetPredmetiForDatatables(Params, PredmetList);
+                PredmetList = _predmetWorkshop.GetPredmetiForDatatables(Params, PredmetList);
             }
             int totalRowsAfterFiltering = PredmetList.Count;
-
-            PredmetList = PredmetList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            PredmetList = PredmetList.Skip(Convert.ToInt32(Params.Start)).Take(Convert.ToInt32(Params.Length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = PredmetList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _datatablesGenerator.SortingPaging(PredmetList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

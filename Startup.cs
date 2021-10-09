@@ -23,7 +23,7 @@ namespace aes
         public void ConfigureServices(IServiceCollection services)
         {
             // Dependency Injection
-            _ = services.AddScoped<IDatatablesParamsGenerator, DatatablesParamsGenerator>();
+            _ = services.AddScoped<IDatatablesGenerator, DatatablesGenerator>();
             _ = services.AddScoped<IRacunWorkshop, RacunWorkshop>();
             _ = services.AddScoped<IRacunHoldingWorkshop, RacunHoldingWorkshop>();
             _ = services.AddScoped<IRacunElektraWorkshop, RacunElektraWorkshop>();
@@ -31,6 +31,7 @@ namespace aes
             _ = services.AddScoped<IRacunElektraIzvrsenjeUslugeWorkshop, RacunElektraIzvrsenjeUslugeWorkshop>();
             _ = services.AddScoped<IPredmetWorkshop, PredmetWorkshop>();
             _ = services.AddScoped<IOdsWorkshop, OdsWorkshop>();
+            _ = services.AddScoped<IElektraKupacWorkshop, ElektraKupacWorkshop>();
 
             _ = services.AddDbContext<ApplicationDbContext>(options =>
                   options.UseSqlServer(

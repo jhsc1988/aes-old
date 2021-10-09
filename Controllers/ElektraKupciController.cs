@@ -14,20 +14,30 @@ namespace aes.Controllers
 {
     public class ElektraKupciController : Controller
     {
+        private readonly IDatatablesGenerator _datatablesGenerator;
+        private readonly IElektraKupacWorkshop _elektraKupacWorkshop;
+        private readonly IRacunElektraWorkshop _racunElektraWorkshop;
+        private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
+        private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
+
         private readonly ApplicationDbContext _context;
+        private DatatablesParams Params;
+
         private List<ElektraKupac> ElektraKupacList;
         private List<RacunElektra> RacunElektraList;
         private List<RacunElektraRate> RacunElektraRateList;
         private List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeList;
 
-        /// <summary>
-        /// datatables params
-        /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
-
-        public ElektraKupciController(ApplicationDbContext context)
+        public ElektraKupciController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs,
+            IElektraKupacWorkshop elektraKupacWorkshop, IRacunElektraWorkshop racunElektraWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop,
+            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop)
         {
             _context = context;
+            _racunElektraWorkshop = racunElektraWorkshop;
+            _racunElektraRateWorkshop = racunElektraRateWorkshop;
+            _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
+            _datatablesGenerator = datatablesParamsGeneratorcs;
+            _elektraKupacWorkshop = elektraKupacWorkshop;
         }
 
         // GET: ElektraKupci
@@ -197,16 +207,6 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void GetDatatablesParamas()
-        {
-            // server side parameters
-            start = Request.Form["start"].FirstOrDefault();
-            length = Request.Form["length"].FirstOrDefault();
-            searchValue = Request.Form["search[value]"].FirstOrDefault();
-            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-        }
-
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
@@ -214,39 +214,25 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<IActionResult> GetList()
         {
-            GetDatatablesParamas();
+            Params = _datatablesGenerator.GetParams(Request);
             ElektraKupacList = await _context.ElektraKupac
                 .Include(e => e.Ods)
                 .Include(e => e.Ods.Stan)
                 .ToListAsync();
 
             int totalRows = ElektraKupacList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                ElektraKupacList = await ElektraKupacList.
-                    Where(
-                    x => x.UgovorniRacun.ToString().Contains(searchValue)
-                    || x.Ods.Omm.ToString().Contains(searchValue)
-                    || x.Ods.Stan.StanId.ToString().Contains(searchValue)
-                    || x.Ods.Stan.SifraObjekta.ToString().Contains(searchValue)
-                    || (x.Ods.Stan.Adresa != null && x.Ods.Stan.Adresa.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Ods.Stan.Kat != null && x.Ods.Stan.Kat.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Ods.Stan.BrojSTana != null && x.Ods.Stan.BrojSTana.ToLower().Contains(searchValue.ToLower()))
-                    || (x.Ods.Stan.Četvrt != null && x.Ods.Stan.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                    || x.Ods.Stan.Površina.ToString().Contains(searchValue)
-                    || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower()))).ToDynamicListAsync<ElektraKupac>();
+                ElektraKupacList = _elektraKupacWorkshop.GetKupciForDatatables(Params, ElektraKupacList);
             }
             int totalRowsAfterFiltering = ElektraKupacList.Count;
+            return _datatablesGenerator.SortingPaging(ElektraKupacList, Params, Request, totalRows, totalRowsAfterFiltering);
 
-            ElektraKupacList = ElektraKupacList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            ElektraKupacList = ElektraKupacList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new { data = ElektraKupacList, draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()), recordsTotal = totalRows, recordsFiltered = totalRowsAfterFiltering });
         }
 
         public async Task<IActionResult> GetRacuniForKupac(int param)
         {
-            GetDatatablesParamas();
+            Params = _datatablesGenerator.GetParams(Request);
             RacunElektraList = await _context.RacunElektra
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
@@ -255,76 +241,36 @@ namespace aes.Controllers
                 .ToListAsync();
 
             int totalRows = RacunElektraList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                RacunElektraList = await RacunElektraList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<RacunElektra>();
+                RacunElektraList = _racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, RacunElektraList);
             }
 
             int totalRowsAfterFiltering = RacunElektraList.Count;
-
-            RacunElektraList = RacunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            RacunElektraList = RacunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = RacunElektraList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _datatablesGenerator.SortingPaging(RacunElektraList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
 
         public async Task<IActionResult> GetRacuniRateForKupac(int param)
         {
-            GetDatatablesParamas();
+            Params = _datatablesGenerator.GetParams(Request);
             RacunElektraRateList = await _context.RacunElektraRate
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
                 .Include(e => e.ElektraKupac.Ods.Stan)
                 .Where(e => e.ElektraKupac.Id == param)
                 .ToListAsync();
-
             int totalRows = RacunElektraRateList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                RacunElektraRateList = await RacunElektraRateList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<RacunElektraRate>();
+                RacunElektraRateList = _racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, RacunElektraRateList);
             }
-
             int totalRowsAfterFiltering = RacunElektraRateList.Count;
-
-            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            RacunElektraRateList = RacunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = RacunElektraRateList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _datatablesGenerator.SortingPaging(RacunElektraRateList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
 
         public async Task<IActionResult> GetRacuniElektraIzvrsenjeForKupac(int param)
         {
-            GetDatatablesParamas();
+            Params = _datatablesGenerator.GetParams(Request);
             RacunElektraIzvrsenjeList = await _context.RacunElektraIzvrsenjeUsluge
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
@@ -333,34 +279,12 @@ namespace aes.Controllers
                 .ToListAsync();
 
             int totalRows = RacunElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                RacunElektraIzvrsenjeList = await RacunElektraIzvrsenjeList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || (x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower()))
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue)))
-                    .ToDynamicListAsync<RacunElektraIzvrsenjeUsluge>();
+                RacunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, RacunElektraIzvrsenjeList);
             }
-
             int totalRowsAfterFiltering = RacunElektraIzvrsenjeList.Count;
-
-            RacunElektraIzvrsenjeList = RacunElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            RacunElektraIzvrsenjeList = RacunElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = RacunElektraIzvrsenjeList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _datatablesGenerator.SortingPaging(RacunElektraIzvrsenjeList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

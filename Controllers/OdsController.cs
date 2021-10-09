@@ -15,15 +15,15 @@ namespace aes.Controllers
 {
     public class OdsController : Controller, IOdsController
     {
-        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly IOdsWorkshop _odsWorkshop;
         private readonly ApplicationDbContext _context;
         private DatatablesParams Params;
         private List<Ods> OdsList;
 
-        public OdsController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, IOdsWorkshop odsWorkshop)
+        public OdsController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, IOdsWorkshop odsWorkshop)
         {
-            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _datatablesGenerator = datatablesParamsGeneratorcs;
             _odsWorkshop = odsWorkshop;
             _context = context;
         }
@@ -187,7 +187,7 @@ namespace aes.Controllers
 
         public async Task<IActionResult> GetList()
         {
-            Params = _datatablesParamsGeneratorcs.GetParams(Request);
+            Params = _datatablesGenerator.GetParams(Request);
             OdsList = await _context.Ods
                 .Include(e => e.Stan)
                 .ToListAsync();
@@ -195,20 +195,10 @@ namespace aes.Controllers
             int totalRows = OdsList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                _ = _odsWorkshop.GetStanoviForDatatables(Params, OdsList);
+                OdsList = _odsWorkshop.GetStanoviForDatatables(Params, OdsList);
             }
             int totalRowsAfterFiltering = OdsList.Count;
-
-            OdsList = OdsList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            OdsList = OdsList.Skip(Convert.ToInt32(Params.Start)).Take(Convert.ToInt32(Params.Length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = OdsList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _datatablesGenerator.SortingPaging(OdsList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
 
         public JsonResult GetStanData(string sid)

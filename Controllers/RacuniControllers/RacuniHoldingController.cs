@@ -16,7 +16,7 @@ namespace aes.Controllers
 {
     public class RacuniHoldingController : Controller, IRacunController
     {
-        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IDatatablesGenerator _datatablesParamsGenerator;
         private readonly IRacunWorkshop _racunWorkshop;
         private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunHoldingWorkshop _racunHoldingWorkshop;
@@ -24,14 +24,14 @@ namespace aes.Controllers
         private List<RacunHolding> racunHoldingList;
         private DatatablesParams Params;
 
-        public RacuniHoldingController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, 
             IRacunWorkshop racunWorkshop, IRacunHoldingWorkshop racunHoldingWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _predmetWorkshop = predmetWorkshop;
             _racunHoldingWorkshop = racunHoldingWorkshop;
-            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _datatablesParamsGenerator = datatablesParamsGeneratorcs;
             racunHoldingList = _context.RacunHolding.ToList(); // todo: jel trebam tu vuc podatke ili u metodama ?
         }
 
@@ -242,7 +242,7 @@ namespace aes.Controllers
         }
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
         {
-            Params = _datatablesParamsGeneratorcs.GetParams(Request);
+            Params = _datatablesParamsGenerator.GetParams(Request);
 
             if (isFIltered)
             {
@@ -261,18 +261,8 @@ namespace aes.Controllers
                 racunHoldingList = _racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
+            return _datatablesParamsGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);
 
-            // todo: if(Params.SortDirection) - da maknem ovaj AsQueryable dependency
-            racunHoldingList = racunHoldingList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            racunHoldingList = racunHoldingList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
-
-            return Json(new
-            {
-                data = racunHoldingList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
         }
     }
 }

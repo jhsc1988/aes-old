@@ -16,7 +16,7 @@ namespace aes.Controllers
 {
     public class RacuniElektraRateController : Controller, IRacunController
     {
-        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly IRacunWorkshop _racunWorkshop;
         private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
@@ -24,14 +24,14 @@ namespace aes.Controllers
         private List<RacunElektraRate> racunElektraRateList;
         private DatatablesParams Params;
 
-        public RacuniElektraRateController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+        public RacuniElektraRateController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, 
             IRacunWorkshop racunWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _racunElektraRateWorkshop = racunElektraRateWorkshop;
             _predmetWorkshop = predmetWorkshop;
-            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _datatablesGenerator = datatablesParamsGeneratorcs;
             racunElektraRateList = _context.RacunElektraRate.ToList();
         }
 
@@ -236,7 +236,7 @@ namespace aes.Controllers
         }
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
         {
-            Params = _datatablesParamsGeneratorcs.GetParams(Request);
+            Params = _datatablesGenerator.GetParams(Request);
 
             if (IsFiltered)
             {
@@ -256,16 +256,8 @@ namespace aes.Controllers
             }
             int totalRowsAfterFiltering = racunElektraRateList.Count;
 
-            racunElektraRateList = racunElektraRateList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            racunElektraRateList = racunElektraRateList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
+            return _datatablesGenerator.SortingPaging(racunElektraRateList, Params, Request, totalRows, totalRowsAfterFiltering);
 
-            return Json(new
-            {
-                data = racunElektraRateList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
         }
     }
 }

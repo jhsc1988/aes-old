@@ -16,7 +16,7 @@ namespace aes.Controllers
 {
     public class RacunElektraIzvrsenjaUslugesController : Controller, IRacunController
     {
-        private readonly IDatatablesParamsGenerator _datatablesParamsGeneratorcs;
+        private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunWorkshop _racunWorkshop;
         private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
@@ -24,13 +24,13 @@ namespace aes.Controllers
         private List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList;
         private DatatablesParams Params;
 
-        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesParamsGenerator datatablesParamsGeneratorcs, 
+        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, 
             IRacunWorkshop racunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
-            _datatablesParamsGeneratorcs = datatablesParamsGeneratorcs;
+            _datatablesGenerator = datatablesParamsGeneratorcs;
             _predmetWorkshop = predmetWorkshop;
             racunElektraIzvrsenjeList = _context.RacunElektraIzvrsenjeUsluge.ToList();
 
@@ -243,7 +243,7 @@ namespace aes.Controllers
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
         {
 
-            Params = _datatablesParamsGeneratorcs.GetParams(Request);
+            Params = _datatablesGenerator.GetParams(Request);
 
             if (IsFiltered)
             {
@@ -262,17 +262,7 @@ namespace aes.Controllers
                 racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, racunElektraIzvrsenjeList);
             }
             int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
-
-            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting
-            racunElektraIzvrsenjeList = racunElektraIzvrsenjeList.Skip(Params.Start).Take(Params.Length).ToList(); // paging
-
-            return Json(new
-            {
-                data = racunElektraIzvrsenjeList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _datatablesGenerator.SortingPaging(racunElektraIzvrsenjeList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }
