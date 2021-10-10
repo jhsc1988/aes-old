@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -19,11 +18,10 @@ namespace aes.Controllers
         private readonly IOdsWorkshop _odsWorkshop;
         private readonly ApplicationDbContext _context;
         private DatatablesParams Params;
-        private List<Ods> OdsList;
 
-        public OdsController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, IOdsWorkshop odsWorkshop)
+        public OdsController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IOdsWorkshop odsWorkshop)
         {
-            _datatablesGenerator = datatablesParamsGeneratorcs;
+            _datatablesGenerator = datatablesGenerator;
             _odsWorkshop = odsWorkshop;
             _context = context;
         }
@@ -185,15 +183,16 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        public JsonResult GetStanData(string sid) => _odsWorkshop.GetStanData(sid, _context);
         public async Task<IActionResult> GetList()
         {
             Params = _datatablesGenerator.GetParams(Request);
-            OdsList = await _context.Ods
+            List<Ods> OdsList = await _context.Ods
                 .Include(e => e.Stan)
                 .ToListAsync();
 
             int totalRows = OdsList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue))
             {
                 OdsList = _odsWorkshop.GetStanoviForDatatables(Params, OdsList);
             }
@@ -201,9 +200,5 @@ namespace aes.Controllers
             return _datatablesGenerator.SortingPaging(OdsList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
 
-        public JsonResult GetStanData(string sid)
-        {
-            return _odsWorkshop.GetStanData(sid, _context);
-        }
     }
 }

@@ -24,15 +24,14 @@ namespace aes.Controllers
         private List<RacunElektra> racunElektraList;
         private DatatablesParams Params;
 
-        public RacuniElektraController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, 
+        public RacuniElektraController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, 
             IRacunWorkshop racunWorkshop, IRacunElektraWorkshop racunElektraWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _racunElektraWorkshop = racunElektraWorkshop;
             _predmetWorkshop = predmetWorkshop;
-            _datatablesGenerator = datatablesParamsGeneratorcs;
-            racunElektraList = _context.RacunElektra.ToList();
+            _datatablesGenerator = datatablesGenerator;
         }
 
         [Authorize]
@@ -227,54 +226,19 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public string GetUid()
-        {
-            ClaimsPrincipal currentUser;
-            currentUser = User;
-            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
-        public JsonResult GetDopisiDataForFilter(int predmetId)
-        {
-            return Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
-        }
-        public JsonResult GetPredmetiCreate()
-        {
-            return Json(_context.Predmet.ToList());
-        }
-        public string GetKupci()
-        {
-            return JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
-        }
-        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
-        {
-            return _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektra, _context);
-        }
-        public JsonResult SaveToDB(string _dopisId)
-        {
-            return _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektra, _context);
-        }
-        public JsonResult RemoveRow(string racunId)
-        {
-            return _racunWorkshop.RemoveRow(racunId, _context.RacunElektra, _context);
-        }
-        public JsonResult RemoveAllFromDb()
-        {
-            return _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektra, _context);
-        }
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
-        {
-            return new JsonResult(_racunElektraWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
-        }
-
-        public JsonResult GetPredmetiDataForFilter()
-        {
-            return Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektra, _context));
-        }
+        public string GetUid() => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        public JsonResult GetDopisiDataForFilter(int predmetId) => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
+        public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
+        public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x) => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektra, _context);
+        public JsonResult SaveToDB(string _dopisId) => _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektra, _context);
+        public JsonResult RemoveRow(string racunId) => _racunWorkshop.RemoveRow(racunId, _context.RacunElektra, _context);
+        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektra, _context);
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunElektraWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektra, _context));
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj)
         {
-
             Params = _datatablesGenerator.GetParams(Request);
-
             if (isFiltered)
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);

@@ -102,5 +102,6 @@ namespace aes.Controllers
         /// </summary>
         /// <returns>JsonResult</returns>
         public JsonResult RemoveAllFromDb();
+        JsonResult GetList(bool isFIltered, string klasa, string urbroj);
     }
 }

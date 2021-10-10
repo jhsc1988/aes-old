@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -16,7 +15,7 @@ namespace aes.Controllers
 {
     public class RacuniHoldingController : Controller, IRacunController
     {
-        private readonly IDatatablesGenerator _datatablesParamsGenerator;
+        private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly IRacunWorkshop _racunWorkshop;
         private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunHoldingWorkshop _racunHoldingWorkshop;
@@ -24,15 +23,14 @@ namespace aes.Controllers
         private List<RacunHolding> racunHoldingList;
         private DatatablesParams Params;
 
-        public RacuniHoldingController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, 
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, 
             IRacunWorkshop racunWorkshop, IRacunHoldingWorkshop racunHoldingWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _racunWorkshop = racunWorkshop;
             _predmetWorkshop = predmetWorkshop;
             _racunHoldingWorkshop = racunHoldingWorkshop;
-            _datatablesParamsGenerator = datatablesParamsGeneratorcs;
-            racunHoldingList = _context.RacunHolding.ToList(); // todo: jel trebam tu vuc podatke ili u metodama ?
+            _datatablesGenerator = datatablesGenerator;
         }
 
         [Authorize]
@@ -198,51 +196,19 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public string GetUid()
-        {
-            ClaimsPrincipal currentUser;
-            currentUser = User;
-            return currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
-        public JsonResult GetDopisiDataForFilter(int predmetId)
-        {
-            return Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
-        }
-        public JsonResult GetPredmetiCreate()
-        {
-            return Json(_context.Predmet.ToList());
-        }
-        public string GetKupci()
-        {
-            return JsonConvert.SerializeObject(_context.Stan.ToList());
-        }
-        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
-        {
-            return _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunHolding, _context);
-        }
-        public JsonResult SaveToDB(string _dopisId)
-        {
-            return _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunHolding, _context);
-        }
-        public JsonResult RemoveRow(string racunId)
-        {
-            return _racunWorkshop.RemoveRow(racunId, _context.RacunHolding, _context);
-        }
-        public JsonResult RemoveAllFromDb()
-        {
-            return _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunHolding, _context);
-        }
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
-        {
-            return new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
-        }
-        public JsonResult GetPredmetiDataForFilter()
-        {
-            return Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunHolding, _context));
-        }
+        public string GetUid() => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        public JsonResult GetDopisiDataForFilter(int predmetId) => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
+        public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
+        public string GetKupci() => JsonConvert.SerializeObject(_context.Stan.ToList());
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x) => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunHolding, _context);
+        public JsonResult SaveToDB(string _dopisId) => _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunHolding, _context);
+        public JsonResult RemoveRow(string racunId) => _racunWorkshop.RemoveRow(racunId, _context.RacunHolding, _context);
+        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunHolding, _context);
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunHolding, _context));
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
         {
-            Params = _datatablesParamsGenerator.GetParams(Request);
+            Params = _datatablesGenerator.GetParams(Request);
 
             if (isFIltered)
             {
@@ -261,7 +227,7 @@ namespace aes.Controllers
                 racunHoldingList = _racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
-            return _datatablesParamsGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);
+            return _datatablesGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);
 
         }
     }

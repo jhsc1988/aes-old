@@ -16,18 +16,13 @@ namespace aes.Controllers
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
         private readonly IPredmetWorkshop _predmetWorkshop;
-        private List<Predmet> PredmetList;
         private DatatablesParams Params;
 
-        /// <summary>
-        /// datatables params
-        /// </summary>
-
-        public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, IPredmetWorkshop predmetWorkshop)
+        public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _predmetWorkshop = predmetWorkshop;
-            _datatablesGenerator = datatablesParamsGeneratorcs;
+            _datatablesGenerator = datatablesGenerator;
         }
 
         // GET: Predmeti
@@ -163,22 +158,12 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public JsonResult SaveToDB(string klasa, string naziv)
-        {
-            return _predmetWorkshop.SaveToDB(klasa, naziv, _context);
-        }
-        public JsonResult TrySave()
-        {
-            return _predmetWorkshop.TrySave(_context);
-        }
-
-        [HttpPost]
+        public JsonResult SaveToDB(string klasa, string naziv) => _predmetWorkshop.SaveToDB(klasa, naziv, _context);
+        public JsonResult TrySave() => _predmetWorkshop.TrySave(_context);
         public async Task<IActionResult> GetList()
         {
             Params = _datatablesGenerator.GetParams(Request);
-
-            PredmetList = await _context.Predmet.ToListAsync();
-
+            List<Predmet> PredmetList = await _context.Predmet.ToListAsync();
             int totalRows = PredmetList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
