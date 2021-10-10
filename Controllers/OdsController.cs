@@ -17,7 +17,6 @@ namespace aes.Controllers
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly IOdsWorkshop _odsWorkshop;
         private readonly ApplicationDbContext _context;
-        private DatatablesParams Params;
 
         public OdsController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IOdsWorkshop odsWorkshop)
         {
@@ -185,20 +184,7 @@ namespace aes.Controllers
 
         public JsonResult GetStanData(string sid) => _odsWorkshop.GetStanData(sid, _context);
         public async Task<IActionResult> GetList()
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            List<Ods> OdsList = await _context.Ods
-                .Include(e => e.Stan)
-                .ToListAsync();
-
-            int totalRows = OdsList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue))
-            {
-                OdsList = _odsWorkshop.GetStanoviForDatatables(Params, OdsList);
-            }
-            int totalRowsAfterFiltering = OdsList.Count;
-            return _datatablesGenerator.SortingPaging(OdsList, Params, Request, totalRows, totalRowsAfterFiltering);
-        }
+            => await _odsWorkshop.GetList(_datatablesGenerator, _context, Request, _odsWorkshop);
 
     }
 }

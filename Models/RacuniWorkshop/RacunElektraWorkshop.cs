@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -89,16 +90,10 @@ namespace aes.Models
                 : dopisIdAsInt is 0
                     ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
                     : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
-            return racunElektraList
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Include(e => e.Dopis)
-                .Include(e => e.Dopis.Predmet)
-                .ToList();
+            return racunWorkshop.GetRacuniFromDb(_context.RacunElektra);
         }
 
-        public List<RacunElektra> GetRacuniElektraForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunElektra> CreateRacuniElektraList)
+        public List<RacunElektra> GetRacuniElektraForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunElektra> CreateRacuniElektraList)
         {
             CreateRacuniElektraList = CreateRacuniElektraList.Where(
                        x => x.BrojRacuna.Contains(Params.SearchValue)
@@ -111,6 +106,31 @@ namespace aes.Models
                             || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower())))
                    .ToDynamicList<RacunElektra>();
             return CreateRacuniElektraList;
+        }
+
+        public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
+    ApplicationDbContext _context, HttpRequest Request, IRacunElektraWorkshop racunElektraWorkshop, string Uid)
+        {
+            List<RacunElektra> racunElektraList;
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            if (isFiltered)
+            {
+                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+                racunElektraList = racunElektraWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+            }
+            else
+            {
+                racunElektraList = racunElektraWorkshop.GetListCreateList(Uid, _context);
+            }
+
+            int totalRows = racunElektraList.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
+            {
+                racunElektraList = racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, racunElektraList);
+            }
+            int totalRowsAfterFiltering = racunElektraList.Count;
+            return datatablesGenerator.SortingPaging(racunElektraList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

@@ -15,24 +15,19 @@ namespace aes.Controllers
     public class ElektraKupciController : Controller
     {
         private readonly IDatatablesGenerator _datatablesGenerator;
+        private readonly IRacunWorkshop _racunWorkshop;
         private readonly IElektraKupacWorkshop _elektraKupacWorkshop;
         private readonly IRacunElektraWorkshop _racunElektraWorkshop;
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
         private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
-
         private readonly ApplicationDbContext _context;
-        private DatatablesParams Params;
-
-        private List<ElektraKupac> ElektraKupacList;
-        private List<RacunElektra> RacunElektraList;
-        private List<RacunElektraRate> RacunElektraRateList;
-        private List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeList;
 
         public ElektraKupciController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs,
             IElektraKupacWorkshop elektraKupacWorkshop, IRacunElektraWorkshop racunElektraWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop,
-            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop)
+            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IRacunWorkshop racunWorkshop)
         {
             _context = context;
+            _racunWorkshop = racunWorkshop;
             _racunElektraWorkshop = racunElektraWorkshop;
             _racunElektraRateWorkshop = racunElektraRateWorkshop;
             _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
@@ -207,72 +202,16 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// <summary>
-        /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
-        /// </summary>
-        /// <returns>Vraća listu kupaca Elektre u JSON obliku za server side processing</returns>
-        [HttpPost]
         public async Task<IActionResult> GetList()
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            ElektraKupacList = await _context.ElektraKupac
-                .Include(e => e.Ods)
-                .Include(e => e.Ods.Stan)
-                .ToListAsync();
-
-            int totalRows = ElektraKupacList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                ElektraKupacList = _elektraKupacWorkshop.GetKupciForDatatables(Params, ElektraKupacList);
-            }
-            int totalRowsAfterFiltering = ElektraKupacList.Count;
-            return _datatablesGenerator.SortingPaging(ElektraKupacList, Params, Request, totalRows, totalRowsAfterFiltering);
-        }
+            => await _elektraKupacWorkshop.GetList(_datatablesGenerator, _context, Request, _elektraKupacWorkshop);
 
         public JsonResult GetRacuniForKupac(int param)
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            RacunElektraList = GetRacuniFromDb(_context.RacunElektra, param);
-            int totalRows = RacunElektraList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                RacunElektraList = _racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, RacunElektraList);
-            }
-            return _datatablesGenerator.SortingPaging(RacunElektraList, Params, Request, totalRows, RacunElektraList.Count);
-        }
+            => _elektraKupacWorkshop.GetRacuniForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraWorkshop);
 
         public JsonResult GetRacuniRateForKupac(int param)
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            RacunElektraRateList = GetRacuniFromDb(_context.RacunElektraRate, param);
-            int totalRows = RacunElektraRateList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                RacunElektraRateList = _racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, RacunElektraRateList);
-            }
-            return _datatablesGenerator.SortingPaging(RacunElektraRateList, Params, Request, totalRows, RacunElektraRateList.Count);
-        }
+            => _elektraKupacWorkshop.GetRacuniRateForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraRateWorkshop);
 
         public JsonResult GetRacuniElektraIzvrsenjeForKupac(int param)
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            RacunElektraIzvrsenjeList = GetRacuniFromDb(_context.RacunElektraIzvrsenjeUsluge, param);
-            int totalRows = RacunElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                RacunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, RacunElektraIzvrsenjeList);
-            }
-            return _datatablesGenerator.SortingPaging(RacunElektraIzvrsenjeList, Params, Request, totalRows, RacunElektraIzvrsenjeList.Count);
-        }
-
-        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param) where T : Elektra
-        {
-            return modelcontext
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Id == param)
-                .ToList();
-        }
+            => _elektraKupacWorkshop.GetRacuniElektraIzvrsenjeForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraIzvrsenjeUslugeWorkshop);
     }
 }

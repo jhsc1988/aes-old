@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -109,7 +110,7 @@ namespace aes.Models
             return racunElektraIzvrsenjeList;
         }
 
-        public List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunElektraIzvrsenjeUsluge> CreateRacuniElektraIzvrsenjeUslugeList)
+        public List<RacunElektraIzvrsenjeUsluge> GetRacunElektraIzvrsenjeUslugeForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunElektraIzvrsenjeUsluge> CreateRacuniElektraIzvrsenjeUslugeList)
         {
             CreateRacuniElektraIzvrsenjeUslugeList = CreateRacuniElektraIzvrsenjeUslugeList
             .Where(
@@ -124,6 +125,30 @@ namespace aes.Models
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue)))
             .ToDynamicList<RacunElektraIzvrsenjeUsluge>();
             return CreateRacuniElektraIzvrsenjeUslugeList;
+        }
+
+        public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
+ApplicationDbContext _context, HttpRequest Request, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, string Uid)
+        {
+            List<RacunElektraIzvrsenjeUsluge> racuniElektraIzvrsenjeUslugeList;
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            if (isFiltered)
+            {
+                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+                racuniElektraIzvrsenjeUslugeList = racunElektraIzvrsenjeUslugeWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+            }
+            else
+            {
+                racuniElektraIzvrsenjeUslugeList = racunElektraIzvrsenjeUslugeWorkshop.GetListCreateList(Uid, _context);
+            }
+            int totalRows = racuniElektraIzvrsenjeUslugeList.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
+            {
+                racuniElektraIzvrsenjeUslugeList = racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, racuniElektraIzvrsenjeUslugeList);
+            }
+            int totalRowsAfterFiltering = racuniElektraIzvrsenjeUslugeList.Count;
+            return datatablesGenerator.SortingPaging(racuniElektraIzvrsenjeUslugeList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

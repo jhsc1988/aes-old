@@ -1,5 +1,7 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +28,7 @@ namespace aes.Models
             return new JsonResult(stan);
         }
 
-        public List<Ods> GetStanoviForDatatables(DatatablesParams Params, List<Ods> OdsList)
+        public List<Ods> GetStanoviForDatatables(IDatatablesParams Params, List<Ods> OdsList)
         {
             return OdsList
                 .Where(
@@ -42,6 +44,23 @@ namespace aes.Models
                     || (x.Stan.Korisnik != null && x.Stan.Korisnik.ToLower().Contains(Params.SearchValue.ToLower()))
                     || (x.Stan.Vlasništvo != null && x.Stan.Vlasništvo.ToLower().Contains(Params.SearchValue.ToLower()))
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<Ods>();
+        }
+
+        public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
+    HttpRequest Request, IOdsWorkshop odsWorkshop)
+        {
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            List<Ods> OdsList = await _context.Ods
+                .Include(e => e.Stan)
+                .ToListAsync();
+
+            int totalRows = OdsList.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue))
+            {
+                OdsList = odsWorkshop.GetStanoviForDatatables(Params, OdsList);
+            }
+            int totalRowsAfterFiltering = OdsList.Count;
+            return datatablesGenerator.SortingPaging(OdsList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

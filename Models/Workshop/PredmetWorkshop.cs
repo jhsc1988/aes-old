@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,7 +25,7 @@ namespace aes.Models
             }
             return predmetiList.Distinct().ToList();
         }
-        public List<Predmet> GetPredmetiForDatatables(DatatablesParams Params, List<Predmet> predmetList)
+        public List<Predmet> GetPredmetiForDatatables(IDatatablesParams Params, List<Predmet> predmetList)
         {
             return predmetList
                     .Where(
@@ -39,7 +40,7 @@ namespace aes.Models
             _ = _context.Predmet.Add(pTemp);
             return TrySave(_context);
         }
-        public JsonResult TrySave(ApplicationDbContext _context)
+        public static JsonResult TrySave(ApplicationDbContext _context)
         {
             try
             {
@@ -50,6 +51,19 @@ namespace aes.Models
             {
                 return new(new { success = false, Message = "Greška" });
             }
+        }
+        public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
+            HttpRequest Request, IPredmetWorkshop predmetWorkshop)
+        {
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            List<Predmet> PredmetList = await _context.Predmet.ToListAsync();
+            int totalRows = PredmetList.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue))
+            {
+                PredmetList = predmetWorkshop.GetPredmetiForDatatables(Params, PredmetList);
+            }
+            int totalRowsAfterFiltering = PredmetList.Count;
+            return datatablesGenerator.SortingPaging(PredmetList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

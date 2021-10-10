@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,5 +20,7 @@ namespace aes.Models
         JsonResult TrySave(ApplicationDbContext context);
         JsonResult TryDelete(ApplicationDbContext _context);
         JsonResult RemoveAllFromDb<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
+        List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra;
+        ElektraKupac GetKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac;
     }
 }

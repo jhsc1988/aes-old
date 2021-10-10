@@ -9,7 +9,7 @@ namespace aes.Models
 {
     public interface IDatatablesGenerator
     {
-        DatatablesParams GetParams(HttpRequest request);
-        JsonResult SortingPaging<T>(List<T> racuni, DatatablesParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering);
+        IDatatablesParams GetParams(HttpRequest request);
+        JsonResult SortingPaging<T>(List<T> list, IDatatablesParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering);
     }
 }

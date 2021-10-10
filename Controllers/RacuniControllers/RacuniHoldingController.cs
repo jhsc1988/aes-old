@@ -20,10 +20,8 @@ namespace aes.Controllers
         private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunHoldingWorkshop _racunHoldingWorkshop;
         private readonly ApplicationDbContext _context;
-        private List<RacunHolding> racunHoldingList;
-        private DatatablesParams Params;
 
-        public RacuniHoldingController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, 
+        public RacuniHoldingController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
             IRacunWorkshop racunWorkshop, IRacunHoldingWorkshop racunHoldingWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
@@ -207,28 +205,6 @@ namespace aes.Controllers
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunHolding, _context));
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-
-            if (isFIltered)
-            {
-                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
-                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunHoldingList = _racunHoldingWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
-            }
-            else
-            {
-                racunHoldingList = _racunHoldingWorkshop.GetListCreateList(GetUid(), _context);
-            }
-
-            int totalRows = racunHoldingList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                racunHoldingList = _racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
-            }
-            int totalRowsAfterFiltering = racunHoldingList.Count;
-            return _datatablesGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);
-
-        }
+            => _racunHoldingWorkshop.GetList(isFIltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunHoldingWorkshop, GetUid());
     }
 }

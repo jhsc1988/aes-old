@@ -8,13 +8,13 @@ namespace aes.Controllers
         /// <summary>
         /// Gets params from Datatables which was requested by Datatables AJAX POST method
         /// </summary>
-        public void GetDatatablesParamas();
+        //public void GetDatatablesParamas();
 
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
         /// <returns>Vraća dopisa u JSON obliku za server side processing</returns>
-        public Task<IActionResult> GetList(int predmetId);
+        public JsonResult GetList(int predmetId);
 
         /// <summary>
         /// Adds new dopis to context

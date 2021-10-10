@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public class DatatablesParams
+    public class IDatatablesParams
     {
         public int Start { get; set; }
         public int Length { get; set; }

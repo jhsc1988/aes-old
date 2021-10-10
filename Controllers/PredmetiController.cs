@@ -16,7 +16,6 @@ namespace aes.Controllers
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
         private readonly IPredmetWorkshop _predmetWorkshop;
-        private DatatablesParams Params;
 
         public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IPredmetWorkshop predmetWorkshop)
         {
@@ -159,18 +158,8 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public JsonResult SaveToDB(string klasa, string naziv) => _predmetWorkshop.SaveToDB(klasa, naziv, _context);
-        public JsonResult TrySave() => _predmetWorkshop.TrySave(_context);
+        public JsonResult TrySave() => PredmetWorkshop.TrySave(_context);
         public async Task<IActionResult> GetList()
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            List<Predmet> PredmetList = await _context.Predmet.ToListAsync();
-            int totalRows = PredmetList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                PredmetList = _predmetWorkshop.GetPredmetiForDatatables(Params, PredmetList);
-            }
-            int totalRowsAfterFiltering = PredmetList.Count;
-            return _datatablesGenerator.SortingPaging(PredmetList, Params, Request, totalRows, totalRowsAfterFiltering);
-        }
+            => await _predmetWorkshop.GetList(_datatablesGenerator, _context, Request, _predmetWorkshop);
     }
 }

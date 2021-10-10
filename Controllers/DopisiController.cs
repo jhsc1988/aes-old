@@ -14,16 +14,14 @@ namespace aes.Controllers
 {
     public class DopisiController : Controller, IDopisiController
     {
+        private readonly IDatatablesGenerator _datatablesGenerator;
+        private readonly IDopisWorkshop _dopisWorkshop;
         private readonly ApplicationDbContext _context;
-        private List<Dopis> DopisList;
 
-        /// <summary>
-        /// datatables params
-        /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
-
-        public DopisiController(ApplicationDbContext context)
+        public DopisiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IDopisWorkshop dopisWorkshop)
         {
+            _dopisWorkshop = dopisWorkshop;
+            _datatablesGenerator = datatablesGenerator;
             _context = context;
         }
 
@@ -173,73 +171,10 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void GetDatatablesParamas()
-        {
-            // server side parameters
-            start = Request.Form["start"].FirstOrDefault();
-            length = Request.Form["length"].FirstOrDefault();
-            searchValue = Request.Form["search[value]"].FirstOrDefault();
-            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-        }
+        public JsonResult GetList(int predmetId) => _dopisWorkshop.GetList(_datatablesGenerator, _context, Request, predmetId);
 
-        public async Task<IActionResult> GetList(int predmetId)
-        {
-            GetDatatablesParamas();
+        public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa) => _dopisWorkshop.SaveToDB(predmetId, urbroj, datumDopisa, _context);
 
-            DopisList = await _context.Dopis.Where(e => e.PredmetId == predmetId).ToListAsync();
-
-            foreach (Dopis dopis in DopisList)
-            {
-                dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(o => o.Id == dopis.PredmetId); // kod mene je dopis.PredmetId -> Predmet.Id (primarni ključ)
-            }
-
-            int totalRows = DopisList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                DopisList = await DopisList.
-                    Where(
-                    x => x.Predmet.Klasa.Contains(searchValue)
-                    || x.Predmet.Naziv.ToLower().Contains(searchValue.ToLower())
-                    || x.Datum.ToString().Contains(searchValue)
-                    || x.Urbroj.Contains(searchValue)).ToDynamicListAsync<Dopis>();
-            }
-
-            int totalRowsAfterFiltering = DopisList.Count;
-
-            DopisList = DopisList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            DopisList = DopisList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = DopisList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
-
-        public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa)
-        {
-            Dopis dTemp = new();
-            dTemp.PredmetId = int.Parse(predmetId);
-            dTemp.Urbroj = urbroj;
-            dTemp.Datum = DateTime.Parse(datumDopisa);
-            _ = _context.Dopis.Add(dTemp);
-            return TrySave();
-        }
-
-        public JsonResult TrySave()
-        {
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Spremljeno" });
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = false, Message = "Greška" });
-            }
-        }
+        public JsonResult TrySave() => PredmetWorkshop.TrySave(_context);
     }
 }

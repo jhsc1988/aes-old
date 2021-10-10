@@ -1,5 +1,6 @@
 using aes.Data;
 using aes.Models;
+using aes.Models.Workshop;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,7 @@ namespace aes
         public void ConfigureServices(IServiceCollection services)
         {
             // Dependency Injection
-            _ = services.AddScoped<IDatatablesGenerator, DatatablesGenerator>();
+            _ = services.AddScoped<IDatatablesGenerator, DatatablesParams>();
             _ = services.AddScoped<IRacunWorkshop, RacunWorkshop>();
             _ = services.AddScoped<IRacunHoldingWorkshop, RacunHoldingWorkshop>();
             _ = services.AddScoped<IRacunElektraWorkshop, RacunElektraWorkshop>();
@@ -32,6 +33,8 @@ namespace aes
             _ = services.AddScoped<IPredmetWorkshop, PredmetWorkshop>();
             _ = services.AddScoped<IOdsWorkshop, OdsWorkshop>();
             _ = services.AddScoped<IElektraKupacWorkshop, ElektraKupacWorkshop>();
+            _ = services.AddScoped<IStanoviWorkshop, StanoviWorkshop>();
+            _ = services.AddScoped<IDopisWorkshop, DopisWorkshop>();
 
             _ = services.AddDbContext<ApplicationDbContext>(options =>
                   options.UseSqlServer(

@@ -21,8 +21,6 @@ namespace aes.Controllers
         private readonly IPredmetWorkshop _predmetWorkshop;
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
         private readonly ApplicationDbContext _context;
-        private List<RacunElektraRate> racunElektraRateList;
-        private DatatablesParams Params;
 
         public RacuniElektraRateController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, 
             IRacunWorkshop racunWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop, IPredmetWorkshop predmetWorkshop)
@@ -201,27 +199,6 @@ namespace aes.Controllers
         public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektraRate, _context);
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunElektraRateWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraRate, _context));
-        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            if (IsFiltered)
-            {
-                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
-                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunElektraRateList = _racunElektraRateWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
-            }
-            else
-            {
-                racunElektraRateList = _racunElektraRateWorkshop.GetListCreateList(GetUid(), _context);
-            }
-
-            int totalRows = racunElektraRateList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue))
-            {
-                racunElektraRateList = _racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, racunElektraRateList);
-            }
-            int totalRowsAfterFiltering = racunElektraRateList.Count;
-            return _datatablesGenerator.SortingPaging(racunElektraRateList, Params, Request, totalRows, totalRowsAfterFiltering);
-        }
+        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj) => _racunElektraRateWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunElektraRateWorkshop, GetUid());
     }
 }

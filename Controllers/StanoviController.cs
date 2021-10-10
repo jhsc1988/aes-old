@@ -13,20 +13,29 @@ namespace aes.Controllers
 {
     public class StanoviController : Controller, IStanController
     {
+        private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
-        private List<Stan> StanList;
-        private List<RacunElektra> RacunElektraList;
-        private List<RacunElektraRate> RacunElektraRateList;
-        private List<RacunHolding> racuniHoldingList;
-        private List<RacunElektraIzvrsenjeUsluge> RacuniElektraIzvrsenjeList;
+        private readonly IStanoviWorkshop _stanoviWorkshop;
+        private readonly IRacunWorkshop _racunWorkshop;
+        private readonly IRacunElektraWorkshop _racunElektraWorkshop;
+        private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
+        private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
+        private readonly IRacunHoldingWorkshop _racunHoldingWorkshop;
+        private readonly IElektraKupacWorkshop _elektraKupacWorkshop;
 
-        /// <summary>
-        /// datatables params
-        /// </summary>
-        private string start, length, searchValue, sortColumnName, sortDirection;
-
-        public StanoviController(ApplicationDbContext context)
+        public StanoviController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
+            IStanoviWorkshop stanoviWorkshop, IRacunWorkshop racunWorkshop, IRacunElektraWorkshop racunElektraWorkshop,
+            IRacunElektraRateWorkshop racunElektraRateWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop,
+            IRacunHoldingWorkshop racunHoldingWorkshop, IElektraKupacWorkshop elektraKupacWorkshop)
         {
+            _datatablesGenerator = datatablesGenerator;
+            _stanoviWorkshop = stanoviWorkshop;
+            _racunWorkshop = racunWorkshop;
+            _racunElektraRateWorkshop = racunElektraRateWorkshop;
+            _racunElektraWorkshop = racunElektraWorkshop;
+            _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
+            _racunHoldingWorkshop = racunHoldingWorkshop;
+            _elektraKupacWorkshop = elektraKupacWorkshop;
             _context = context;
         }
 
@@ -168,255 +177,27 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void GetDatatablesParamas()
+        public JsonResult GetList()
         {
-            // server side parameters
-            start = Request.Form["start"].FirstOrDefault();
-            length = Request.Form["length"].FirstOrDefault();
-            searchValue = Request.Form["search[value]"].FirstOrDefault();
-            sortColumnName = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            sortDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            return _stanoviWorkshop.GetList(false,_datatablesGenerator, Request, _context);
         }
 
-        public async Task<IActionResult> GetList()
+        public JsonResult GetListFiltered()
         {
-
-            GetDatatablesParamas();
-            StanList = _context.Stan.ToList();
-
-            int totalRows = StanList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                StanList = await StanList.Where(
-                        x => x.StanId.ToString().Contains(searchValue)
-                             || x.SifraObjekta.ToString().Contains(searchValue)
-                             || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))
-                             || (x.BrojSTana != null && x.BrojSTana.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Četvrt != null && x.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                             || x.Površina.ToString().Contains(searchValue)
-                             || (x.StatusKorištenja != null &&
-                             x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<Stan>();
-            }
-
-            int totalRowsAfterFiltering = StanList.Count;
-
-            StanList = StanList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            StanList = StanList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = StanList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
-
-        public async Task<IActionResult> GetListFiltered()
-        {
-            GetDatatablesParamas();
-
-            StanList = await _context.Stan.Where(p => !_context.Ods.Any(o => o.StanId == p.Id)).ToListAsync();
-
-            int totalRows = StanList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                StanList = await StanList.Where(
-                        x => x.StanId.ToString().Contains(searchValue)
-                             || x.SifraObjekta.ToString().Contains(searchValue)
-                             || (x.Adresa != null && x.Adresa.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Kat != null && x.Kat.ToLower().Contains(searchValue.ToLower()))
-                             || (x.BrojSTana != null && x.BrojSTana.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Četvrt != null && x.Četvrt.ToLower().Contains(searchValue.ToLower()))
-                             || x.Površina.ToString().Contains(searchValue)
-                             || (x.StatusKorištenja != null &&
-                             x.StatusKorištenja.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Korisnik != null && x.Korisnik.ToLower().Contains(searchValue.ToLower()))
-                             || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<Stan>();
-            }
-
-            int totalRowsAfterFiltering = StanList.Count;
-
-            StanList = StanList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            StanList = StanList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = StanList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
+            return _stanoviWorkshop.GetList(true, _datatablesGenerator, Request, _context);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // for Details page
+        // Details page
 
-        [HttpPost]
-        public async Task<IActionResult> GetRacuniForStan(int param)
-        {
-            GetDatatablesParamas();
+        public JsonResult GetRacuniForStan(int param)
+            => _stanoviWorkshop.GetRacuniForStan(_racunWorkshop, _context.ElektraKupac, _elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraWorkshop, _context, param);
+        public JsonResult GetRacuniRateForStan(int param)
+            => _stanoviWorkshop.GetRacuniRateForStan(_racunWorkshop, _context.ElektraKupac, _elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraRateWorkshop, _context, param);
+        public JsonResult GetRacuniElektraIzvrsenjeForStan(int param)
+            => _stanoviWorkshop.GetRacuniElektraIzvrsenjeForStan(_racunWorkshop, _context.ElektraKupac, _elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraIzvrsenjeUslugeWorkshop, _context, param);
+        public JsonResult GetHoldingRacuniForStan(int param)
+            => _racunHoldingWorkshop.GetList(false, null, null, _datatablesGenerator, _context, Request, _racunHoldingWorkshop, null, param);
 
-            RacunElektraList = await _context.RacunElektra
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Ods.Stan.Id == param)
-                .ToListAsync();
-
-            int totalRows = RacunElektraList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                RacunElektraList = await RacunElektraList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<RacunElektra>();
-            }
-
-            int totalRowsAfterFiltering = RacunElektraList.Count;
-
-            RacunElektraList = RacunElektraList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            RacunElektraList = RacunElektraList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = RacunElektraList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
-
-        public async Task<IActionResult> GetRacuniRateForStan(int param)
-        {
-
-            GetDatatablesParamas();
-            RacunElektraRateList = await _context.RacunElektraRate
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Ods.Stan.Id == param)
-                .ToListAsync();
-
-            int totalRows = RacunElektraRateList.Count; // filter
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                RacunElektraRateList = await RacunElektraRateList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.Razdoblje.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<RacunElektraRate>();
-            }
-
-            int totalRowsAfterFiltering = RacunElektraRateList.Count;
-
-
-            RacunElektraRateList = RacunElektraRateList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            RacunElektraRateList = RacunElektraRateList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = RacunElektraRateList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
-
-        public async Task<IActionResult> GetHoldingRacuniForStan(int param)
-        {
-            GetDatatablesParamas();
-            racuniHoldingList = await _context.RacunHolding
-                .Include(e => e.Stan)
-                .Where(e => e.StanId == param)
-                .ToListAsync();
-
-            int totalRows = racuniHoldingList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                racuniHoldingList = await racuniHoldingList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.Stan.SifraObjekta.ToString().Contains(searchValue)
-                             || x.Stan.StanId.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue.ToLower())))
-                    .ToDynamicListAsync<RacunHolding>();
-            }
-
-            int totalRowsAfterFiltering = racuniHoldingList.Count;
-
-            racuniHoldingList = racuniHoldingList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            racuniHoldingList = racuniHoldingList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = racuniHoldingList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
-
-        public async Task<IActionResult> GetRacuniElektraIzvrsenjeForStan(int param)
-        {
-            GetDatatablesParamas();
-            RacuniElektraIzvrsenjeList = await _context.RacunElektraIzvrsenjeUsluge
-                .Include(e => e.ElektraKupac)
-                .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
-                .Where(e => e.ElektraKupac.Ods.Stan.Id == param)
-                .ToListAsync();
-
-            int totalRows = RacuniElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(searchValue)) // filter
-            {
-                RacuniElektraIzvrsenjeList = await RacuniElektraIzvrsenjeList.Where(
-                        x => x.BrojRacuna.Contains(searchValue)
-                             || x.ElektraKupac.UgovorniRacun.ToString().Contains(searchValue)
-                             || x.DatumIzdavanja.Value.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || x.DatumIzvrsenja.ToString("dd.MM.yyyy").Contains(searchValue)
-                             || (x.Usluga != null && x.Usluga.ToLower().Contains(searchValue.ToLower()))
-                             || x.Iznos.ToString().Contains(searchValue)
-                             || (x.KlasaPlacanja != null && x.KlasaPlacanja.Contains(searchValue))
-                             || (x.DatumPotvrde != null &&
-                             x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(searchValue))
-                             || (x.Napomena != null && x.Napomena.ToLower().Contains(searchValue)))
-                    .ToDynamicListAsync<RacunElektraIzvrsenjeUsluge>();
-            }
-
-            int totalRowsAfterFiltering = RacuniElektraIzvrsenjeList.Count;
-
-            RacuniElektraIzvrsenjeList = RacuniElektraIzvrsenjeList.AsQueryable().OrderBy(sortColumnName + " " + sortDirection).ToList(); // sorting
-            RacuniElektraIzvrsenjeList = RacuniElektraIzvrsenjeList.Skip(Convert.ToInt32(start)).Take(Convert.ToInt32(length)).ToList(); // paging
-
-            return Json(new
-            {
-                data = RacuniElektraIzvrsenjeList,
-                draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-                recordsTotal = totalRows,
-                recordsFiltered = totalRowsAfterFiltering
-            });
-        }
     }
 }

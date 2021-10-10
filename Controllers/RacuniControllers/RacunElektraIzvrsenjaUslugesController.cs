@@ -20,10 +20,8 @@ namespace aes.Controllers
         private readonly IRacunWorkshop _racunWorkshop;
         private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
         private readonly ApplicationDbContext _context;
-        private List<RacunElektraIzvrsenjeUsluge> racunElektraIzvrsenjeList;
-        private DatatablesParams Params;
 
-        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs, 
+        public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs,
             IRacunWorkshop racunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
@@ -205,26 +203,7 @@ namespace aes.Controllers
         public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektraIzvrsenjeUsluge, _context);
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja, string usluga, string dopisId) => new JsonResult(_racunElektraIzvrsenjeUslugeWorkshop.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraIzvrsenjeUsluge, _context));
-        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
-        {
-            Params = _datatablesGenerator.GetParams(Request);
-            if (IsFiltered)
-            {
-                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
-                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
-            }
-            else
-            {
-                racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetListCreateList(GetUid(), _context);
-            }
-            int totalRows = racunElektraIzvrsenjeList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                racunElektraIzvrsenjeList = _racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, racunElektraIzvrsenjeList);
-            }
-            int totalRowsAfterFiltering = racunElektraIzvrsenjeList.Count;
-            return _datatablesGenerator.SortingPaging(racunElektraIzvrsenjeList, Params, Request, totalRows, totalRowsAfterFiltering);
-        }
+        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj) 
+            => _racunElektraIzvrsenjeUslugeWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunElektraIzvrsenjeUslugeWorkshop, GetUid());
     }
 }

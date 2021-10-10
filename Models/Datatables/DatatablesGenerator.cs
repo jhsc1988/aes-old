@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public class DatatablesGenerator : IDatatablesGenerator
+    public class DatatablesParams : IDatatablesGenerator
     {
-        public DatatablesParams GetParams(HttpRequest request)
+        public IDatatablesParams GetParams(HttpRequest request)
         {
-            return new DatatablesParams
+            return new IDatatablesParams
             {
                 Start = int.Parse(request.Form["start"].FirstOrDefault()),
                 Length = int.Parse(request.Form["length"].FirstOrDefault()),
@@ -22,7 +22,7 @@ namespace aes.Models
                 SortDirection = request.Form["order[0][dir]"].FirstOrDefault(),
             };
         }
-        public JsonResult SortingPaging<T>(List<T> data, DatatablesParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering)
+        public JsonResult SortingPaging<T>(List<T> data, IDatatablesParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering)
         {
             // todo: if(Params.SortDirection) - da maknem ovaj AsQueryable dependency
             data = data.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection).ToList(); // sorting

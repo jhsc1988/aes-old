@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -198,6 +199,29 @@ namespace aes.Models
         {
             _context.RemoveRange(_modelcontext.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
             return TryDelete(_context);
+        }
+
+        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra => param switch
+        {
+            not 0 => modelcontext
+                            .Include(e => e.ElektraKupac)
+                            .Include(e => e.ElektraKupac.Ods)
+                            .Include(e => e.ElektraKupac.Ods.Stan)
+                            .Where(e => e.ElektraKupac.Id == param)
+                            .ToList(),
+            _ => modelcontext
+                    .Include(e => e.ElektraKupac)
+                    .Include(e => e.ElektraKupac.Ods)
+                    .Include(e => e.ElektraKupac.Ods.Stan)
+                    .ToList()
+        };
+
+        public ElektraKupac GetKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac
+        {
+            return modelcontext
+                .Include(e => e.Ods)
+                .Include(e => e.Ods.Stan)
+                .FirstOrDefault(e => e.Ods.Stan.Id == param);
         }
     }
 }

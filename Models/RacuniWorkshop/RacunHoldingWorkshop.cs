@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,7 +21,6 @@ namespace aes.Models
                 return new(new { success = false, Message = msg });
             }
 
-            // TODO: zasto ne koristim staticni clan (RacunHoldingList) za ovo ?
             List<RacunHolding> racunHoldingList = _context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList();
             RacunHolding re = new()
             {
@@ -36,10 +36,7 @@ namespace aes.Models
             racunHoldingList.Add(re);
 
             int rbr = 1;
-            foreach (RacunHolding e in racunHoldingList)
-            {
-                e.RedniBroj = rbr++;
-            }
+            foreach (RacunHolding e in racunHoldingList) e.RedniBroj = rbr++;
 
             _ = _context.RacunHolding.Add(re);
             return racunWorkshop.TrySave(_context);
@@ -66,12 +63,8 @@ namespace aes.Models
             int rbr = 1;
             foreach (RacunHolding e in racunHoldingList)
             {
-
                 e.Stan = _context.Stan.FirstOrDefault(o => o.SifraObjekta == long.Parse(e.BrojRacuna.Substring(0, 8)));
-                if (e.Stan == null)
-                {
-                    e.Napomena = "Šifra objekta ne postoji";
-                }
+                if (e.Stan == null) e.Napomena = "Šifra objekta ne postoji";
 
                 List<Racun> racunList = new();
                 racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == null || false).ToList());
@@ -79,10 +72,7 @@ namespace aes.Models
                 racunList.Clear();
 
                 racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
-                if (e.Napomena is null)
-                {
-                    e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
-                }
+                if (e.Napomena is null) e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
 
                 racunList.Clear();
                 e.RedniBroj = rbr++;
@@ -90,7 +80,7 @@ namespace aes.Models
             return racunHoldingList;
         }
 
-        public List<RacunHolding> GetRacuniHoldingForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
+        public List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
         {
             return CreateRRacuniHoldingList.Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)
@@ -102,5 +92,38 @@ namespace aes.Models
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunHolding>();
         }
+
+        public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
+            ApplicationDbContext _context, HttpRequest Request, IRacunHoldingWorkshop racunHoldingWorkshop, string Uid, int param = 0)
+        {
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            List<RacunHolding> racunHoldingList;
+            if (isFiltered)
+            {
+                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+                racunHoldingList = racunHoldingWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+            }
+            else
+            {
+                racunHoldingList = racunHoldingWorkshop.GetListCreateList(Uid, _context);
+            }
+            if (param is not 0)
+            {
+                racunHoldingList = _context.RacunHolding
+                    .Include(e => e.Stan)
+                    .Where(e => e.StanId == param)
+                    .ToList();
+            }
+            int totalRows = racunHoldingList.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue))
+            {
+                racunHoldingList = racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
+            }
+            int totalRowsAfterFiltering = racunHoldingList.Count;
+            return datatablesGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);
+        }
+
+
     }
 }

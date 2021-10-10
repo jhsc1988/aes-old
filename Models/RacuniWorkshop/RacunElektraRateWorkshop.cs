@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -97,7 +98,7 @@ namespace aes.Models
             return RacunElektraRateList;
         }
 
-        public List<RacunElektraRate> GetRacuniElektraRateForDatatables(DatatablesParams Params, ApplicationDbContext _context, List<RacunElektraRate> CreateRacuniElektraRateList)
+        public List<RacunElektraRate> GetRacuniElektraRateForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunElektraRate> CreateRacuniElektraRateList)
         {
             CreateRacuniElektraRateList = CreateRacuniElektraRateList
                 .Where(
@@ -110,6 +111,30 @@ namespace aes.Models
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower())))
                 .ToDynamicList<RacunElektraRate>();
             return CreateRacuniElektraRateList;
+        }
+        public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
+ApplicationDbContext _context, HttpRequest Request, IRacunElektraRateWorkshop racunElektraRateWorkshop, string Uid)
+        {
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            List<RacunElektraRate> racunElektraRateList;
+            if (isFiltered)
+            {
+                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+                racunElektraRateList = racunElektraRateWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+            }
+            else
+            {
+                racunElektraRateList = racunElektraRateWorkshop.GetListCreateList(Uid, _context);
+            }
+
+            int totalRows = racunElektraRateList.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue))
+            {
+                racunElektraRateList = racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, racunElektraRateList);
+            }
+            int totalRowsAfterFiltering = racunElektraRateList.Count;
+            return datatablesGenerator.SortingPaging(racunElektraRateList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }
