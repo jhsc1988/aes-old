@@ -28,7 +28,7 @@ namespace aes.Models
             return new JsonResult(stan);
         }
 
-        public List<Ods> GetStanoviForDatatables(IDatatablesParams Params, List<Ods> OdsList)
+        private List<Ods> GetStanoviForDatatables(IDatatablesParams Params, List<Ods> OdsList)
         {
             return OdsList
                 .Where(

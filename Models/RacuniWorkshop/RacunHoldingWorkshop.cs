@@ -80,7 +80,7 @@ namespace aes.Models
             return racunHoldingList;
         }
 
-        public List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
+        private List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
         {
             return CreateRRacuniHoldingList.Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)

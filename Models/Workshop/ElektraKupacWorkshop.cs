@@ -12,7 +12,7 @@ namespace aes.Models
 {
     public class ElektraKupacWorkshop : IElektraKupacWorkshop
     {
-        public List<ElektraKupac> GetKupciForDatatables(IDatatablesParams Params, List<ElektraKupac> ElektraKupacList)
+        private List<ElektraKupac> GetKupciForDatatables(IDatatablesParams Params, List<ElektraKupac> ElektraKupacList)
         {
             return ElektraKupacList
                 .Where(

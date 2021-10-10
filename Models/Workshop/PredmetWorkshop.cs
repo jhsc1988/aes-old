@@ -25,7 +25,7 @@ namespace aes.Models
             }
             return predmetiList.Distinct().ToList();
         }
-        public List<Predmet> GetPredmetiForDatatables(IDatatablesParams Params, List<Predmet> predmetList)
+        private List<Predmet> GetPredmetiForDatatables(IDatatablesParams Params, List<Predmet> predmetList)
         {
             return predmetList
                     .Where(

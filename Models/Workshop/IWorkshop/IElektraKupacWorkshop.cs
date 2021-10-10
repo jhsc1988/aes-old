@@ -10,7 +10,7 @@ namespace aes.Models
 {
     public interface IElektraKupacWorkshop
     {
-        List<ElektraKupac> GetKupciForDatatables(IDatatablesParams Params, List<ElektraKupac> ElektraKupacList);
+        // List<ElektraKupac> GetKupciForDatatables(IDatatablesParams Params, List<ElektraKupac> ElektraKupacList);
         JsonResult GetRacuniForKupac(int param, IDatatablesGenerator datatablesGenerator, HttpRequest Request, IRacunWorkshop racunWorkshop, ApplicationDbContext _context, IRacunElektraWorkshop racunElektraWorkshop);
         JsonResult GetRacuniRateForKupac(int param, IDatatablesGenerator datatablesGenerator, HttpRequest Request, IRacunWorkshop racunWorkshop, ApplicationDbContext _context, IRacunElektraRateWorkshop racunElektraRateWorkshop);
         JsonResult GetRacuniElektraIzvrsenjeForKupac(int param, IDatatablesGenerator datatablesGenerator, HttpRequest Request, IRacunWorkshop racunWorkshop, ApplicationDbContext _context, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeWorkshop);

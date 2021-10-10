@@ -12,7 +12,7 @@ namespace aes.Models
 {
     public class StanoviWorkshop : IStanoviWorkshop
     {
-        public List<Stan> GetStanoviForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<Stan> stanList)
+        private List<Stan> GetStanoviForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<Stan> stanList)
         {
             return stanList.Where(
                                 x => x.StanId.ToString().Contains(Params.SearchValue)
