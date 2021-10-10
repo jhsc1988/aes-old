@@ -53,14 +53,14 @@ namespace aes.Models
             }
         }
         public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
-            HttpRequest Request, IPredmetWorkshop predmetWorkshop)
+            HttpRequest Request)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<Predmet> PredmetList = await _context.Predmet.ToListAsync();
             int totalRows = PredmetList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                PredmetList = predmetWorkshop.GetPredmetiForDatatables(Params, PredmetList);
+                PredmetList = GetPredmetiForDatatables(Params, PredmetList);
             }
             int totalRowsAfterFiltering = PredmetList.Count;
             return datatablesGenerator.SortingPaging(PredmetList, Params, Request, totalRows, totalRowsAfterFiltering);

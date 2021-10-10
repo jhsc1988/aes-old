@@ -47,7 +47,7 @@ namespace aes.Models
         }
 
         public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
-    HttpRequest Request, IOdsWorkshop odsWorkshop)
+    HttpRequest Request)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<Ods> OdsList = await _context.Ods
@@ -57,7 +57,7 @@ namespace aes.Models
             int totalRows = OdsList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                OdsList = odsWorkshop.GetStanoviForDatatables(Params, OdsList);
+                OdsList = GetStanoviForDatatables(Params, OdsList);
             }
             int totalRowsAfterFiltering = OdsList.Count;
             return datatablesGenerator.SortingPaging(OdsList, Params, Request, totalRows, totalRowsAfterFiltering);

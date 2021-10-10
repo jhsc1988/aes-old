@@ -29,7 +29,7 @@ namespace aes.Models
         }
 
         public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
-            HttpRequest Request, IElektraKupacWorkshop elektraKupacWorkshop)
+            HttpRequest Request)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<ElektraKupac> ElektraKupacList = await _context.ElektraKupac
@@ -40,7 +40,7 @@ namespace aes.Models
             int totalRows = ElektraKupacList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                ElektraKupacList = elektraKupacWorkshop.GetKupciForDatatables(Params, ElektraKupacList);
+                ElektraKupacList = GetKupciForDatatables(Params, ElektraKupacList);
             }
             int totalRowsAfterFiltering = ElektraKupacList.Count;
             return datatablesGenerator.SortingPaging(ElektraKupacList, Params, Request, totalRows, totalRowsAfterFiltering);

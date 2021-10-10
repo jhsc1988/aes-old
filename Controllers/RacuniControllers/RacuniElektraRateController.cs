@@ -22,7 +22,7 @@ namespace aes.Controllers
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
         private readonly ApplicationDbContext _context;
 
-        public RacuniElektraRateController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, 
+        public RacuniElektraRateController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
             IRacunWorkshop racunWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
@@ -199,6 +199,6 @@ namespace aes.Controllers
         public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektraRate, _context);
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunElektraRateWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraRate, _context));
-        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj) => _racunElektraRateWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunElektraRateWorkshop, GetUid());
+        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj) => _racunElektraRateWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
     }
 }

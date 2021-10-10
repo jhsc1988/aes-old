@@ -205,6 +205,6 @@ namespace aes.Controllers
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunHolding, _context));
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
-            => _racunHoldingWorkshop.GetList(isFIltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunHoldingWorkshop, GetUid());
+            => _racunHoldingWorkshop.GetList(isFIltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
     }
 }

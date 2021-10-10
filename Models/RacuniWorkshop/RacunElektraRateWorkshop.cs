@@ -113,7 +113,7 @@ namespace aes.Models
             return CreateRacuniElektraRateList;
         }
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-ApplicationDbContext _context, HttpRequest Request, IRacunElektraRateWorkshop racunElektraRateWorkshop, string Uid)
+ApplicationDbContext _context, HttpRequest Request, string Uid)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<RacunElektraRate> racunElektraRateList;
@@ -121,17 +121,17 @@ ApplicationDbContext _context, HttpRequest Request, IRacunElektraRateWorkshop ra
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunElektraRateList = racunElektraRateWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+                racunElektraRateList = GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
             else
             {
-                racunElektraRateList = racunElektraRateWorkshop.GetListCreateList(Uid, _context);
+                racunElektraRateList = GetListCreateList(Uid, _context);
             }
 
             int totalRows = racunElektraRateList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                racunElektraRateList = racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, racunElektraRateList);
+                racunElektraRateList = GetRacuniElektraRateForDatatables(Params, _context, racunElektraRateList);
             }
             int totalRowsAfterFiltering = racunElektraRateList.Count;
             return datatablesGenerator.SortingPaging(racunElektraRateList, Params, Request, totalRows, totalRowsAfterFiltering);

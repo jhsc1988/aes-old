@@ -203,7 +203,7 @@ namespace aes.Controllers
         public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektraIzvrsenjeUsluge, _context);
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja, string usluga, string dopisId) => new JsonResult(_racunElektraIzvrsenjeUslugeWorkshop.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraIzvrsenjeUsluge, _context));
-        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj) 
-            => _racunElektraIzvrsenjeUslugeWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunElektraIzvrsenjeUslugeWorkshop, GetUid());
+        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
+            => _racunElektraIzvrsenjeUslugeWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
     }
 }

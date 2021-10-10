@@ -109,7 +109,7 @@ namespace aes.Models
         }
 
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-    ApplicationDbContext _context, HttpRequest Request, IRacunElektraWorkshop racunElektraWorkshop, string Uid)
+    ApplicationDbContext _context, HttpRequest Request,  string Uid)
         {
             List<RacunElektra> racunElektraList;
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
@@ -117,17 +117,17 @@ namespace aes.Models
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunElektraList = racunElektraWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+                racunElektraList = GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
             else
             {
-                racunElektraList = racunElektraWorkshop.GetListCreateList(Uid, _context);
+                racunElektraList = GetListCreateList(Uid, _context);
             }
 
             int totalRows = racunElektraList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
             {
-                racunElektraList = racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, racunElektraList);
+                racunElektraList = GetRacuniElektraForDatatables(Params, _context, racunElektraList);
             }
             int totalRowsAfterFiltering = racunElektraList.Count;
             return datatablesGenerator.SortingPaging(racunElektraList, Params, Request, totalRows, totalRowsAfterFiltering);

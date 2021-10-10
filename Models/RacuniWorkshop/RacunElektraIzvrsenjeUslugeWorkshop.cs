@@ -128,7 +128,7 @@ namespace aes.Models
         }
 
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-ApplicationDbContext _context, HttpRequest Request, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, string Uid)
+ApplicationDbContext _context, HttpRequest Request, string Uid)
         {
             List<RacunElektraIzvrsenjeUsluge> racuniElektraIzvrsenjeUslugeList;
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
@@ -136,16 +136,16 @@ ApplicationDbContext _context, HttpRequest Request, IRacunElektraIzvrsenjeUsluge
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racuniElektraIzvrsenjeUslugeList = racunElektraIzvrsenjeUslugeWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+                racuniElektraIzvrsenjeUslugeList = GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
             else
             {
-                racuniElektraIzvrsenjeUslugeList = racunElektraIzvrsenjeUslugeWorkshop.GetListCreateList(Uid, _context);
+                racuniElektraIzvrsenjeUslugeList = GetListCreateList(Uid, _context);
             }
             int totalRows = racuniElektraIzvrsenjeUslugeList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
+            if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                racuniElektraIzvrsenjeUslugeList = racunElektraIzvrsenjeUslugeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, racuniElektraIzvrsenjeUslugeList);
+                racuniElektraIzvrsenjeUslugeList = GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, racuniElektraIzvrsenjeUslugeList);
             }
             int totalRowsAfterFiltering = racuniElektraIzvrsenjeUslugeList.Count;
             return datatablesGenerator.SortingPaging(racuniElektraIzvrsenjeUslugeList, Params, Request, totalRows, totalRowsAfterFiltering);

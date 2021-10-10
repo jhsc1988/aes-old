@@ -203,7 +203,7 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public async Task<IActionResult> GetList()
-            => await _elektraKupacWorkshop.GetList(_datatablesGenerator, _context, Request, _elektraKupacWorkshop);
+            => await _elektraKupacWorkshop.GetList(_datatablesGenerator, _context, Request);
 
         public JsonResult GetRacuniForKupac(int param)
             => _elektraKupacWorkshop.GetRacuniForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraWorkshop);

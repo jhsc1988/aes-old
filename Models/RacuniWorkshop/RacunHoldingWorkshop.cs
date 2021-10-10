@@ -94,7 +94,7 @@ namespace aes.Models
         }
 
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-            ApplicationDbContext _context, HttpRequest Request, IRacunHoldingWorkshop racunHoldingWorkshop, string Uid, int param = 0)
+            ApplicationDbContext _context, HttpRequest Request, string Uid, int param = 0)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<RacunHolding> racunHoldingList;
@@ -102,11 +102,11 @@ namespace aes.Models
             {
                 int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunHoldingList = racunHoldingWorkshop.GetList(predmetIdAsInt, dopisIdAsInt, _context);
+                racunHoldingList = GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
             else
             {
-                racunHoldingList = racunHoldingWorkshop.GetListCreateList(Uid, _context);
+                racunHoldingList = GetListCreateList(Uid, _context);
             }
             if (param is not 0)
             {
@@ -118,7 +118,7 @@ namespace aes.Models
             int totalRows = racunHoldingList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                racunHoldingList = racunHoldingWorkshop.GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
+                racunHoldingList = GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
             return datatablesGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);

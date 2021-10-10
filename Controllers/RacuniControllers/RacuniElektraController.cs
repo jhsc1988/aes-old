@@ -234,6 +234,6 @@ namespace aes.Controllers
         public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektra, _context);
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunElektraWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektra, _context));
-        public JsonResult GetList(bool isFiltered, string klasa, string urbroj) => _racunElektraWorkshop.GetList(isFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, _racunElektraWorkshop, GetUid());
+        public JsonResult GetList(bool isFiltered, string klasa, string urbroj) => _racunElektraWorkshop.GetList(isFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
     }
 }

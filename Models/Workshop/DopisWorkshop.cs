@@ -22,7 +22,7 @@ namespace aes.Models.Workshop
                     || x.Urbroj.Contains(Params.SearchValue)).ToDynamicList<Dopis>();
         }
         public JsonResult GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
-HttpRequest Request, int predmetId)
+            HttpRequest Request, int predmetId)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<Dopis> DopisList = _context.Dopis

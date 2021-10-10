@@ -19,6 +19,6 @@ namespace aes.Models
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
         /// <returns>Vraća listu kupaca Elektre u JSON obliku za server side processing</returns>
-        Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request, IElektraKupacWorkshop elektraKupacWorkshop);
+        Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request);
     }
 }

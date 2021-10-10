@@ -184,7 +184,7 @@ namespace aes.Controllers
 
         public JsonResult GetStanData(string sid) => _odsWorkshop.GetStanData(sid, _context);
         public async Task<IActionResult> GetList()
-            => await _odsWorkshop.GetList(_datatablesGenerator, _context, Request, _odsWorkshop);
+            => await _odsWorkshop.GetList(_datatablesGenerator, _context, Request);
 
     }
 }

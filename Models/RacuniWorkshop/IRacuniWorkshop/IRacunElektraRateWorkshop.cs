@@ -14,6 +14,6 @@ namespace aes.Models
         List<RacunElektraRate> GetListCreateList(string userId, ApplicationDbContext _context);
         List<RacunElektraRate> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context);
         List<RacunElektraRate> GetRacuniElektraRateForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunElektraRate> CreateRacuniElektraRateList);
-        JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request, IRacunElektraRateWorkshop racunElektraRateWorkshop, string Uid);
+        JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request, string Uid);
     }
 }

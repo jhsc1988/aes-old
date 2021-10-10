@@ -14,6 +14,6 @@ namespace aes.Models
         List<RacunHolding> GetListCreateList(string userId, ApplicationDbContext _context);
         List<RacunHolding> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context);
         List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRacuniHoldingList);
-        JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request, IRacunHoldingWorkshop racunHoldingWorkshop, string Uid, int param = 0);
+        JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request, string Uid, int param = 0);
     }
 }

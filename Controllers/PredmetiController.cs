@@ -160,6 +160,6 @@ namespace aes.Controllers
         public JsonResult SaveToDB(string klasa, string naziv) => _predmetWorkshop.SaveToDB(klasa, naziv, _context);
         public JsonResult TrySave() => PredmetWorkshop.TrySave(_context);
         public async Task<IActionResult> GetList()
-            => await _predmetWorkshop.GetList(_datatablesGenerator, _context, Request, _predmetWorkshop);
+            => await _predmetWorkshop.GetList(_datatablesGenerator, _context, Request);
     }
 }
