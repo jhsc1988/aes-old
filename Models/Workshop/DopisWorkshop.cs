@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace aes.Models.Workshop
 {
-    public class DopisWorkshop : IDopisWorkshop
+    public class DopisWorkshop : Workshop, IDopisWorkshop
     {
         private static List<Dopis> GetDopisiForDatatables(IDatatablesParams Params, List<Dopis> DopisList)
         {
@@ -45,7 +44,7 @@ namespace aes.Models.Workshop
             dTemp.Urbroj = urbroj;
             dTemp.Datum = DateTime.Parse(datumDopisa);
             _ = _context.Dopis.Add(dTemp);
-            return PredmetWorkshop.TrySave(_context);
+            return TrySave(_context, false);
         }
 
     }

@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
-namespace aes.Models
+namespace aes.Models.Workshop
 {
-    public class PredmetWorkshop : IPredmetWorkshop
+    public class PredmetWorkshop : Workshop, IPredmetWorkshop
     {
         public List<Predmet> GetPredmetiDataForFilter<T>(DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
         {
@@ -38,20 +37,9 @@ namespace aes.Models
             pTemp.Klasa = klasa;
             pTemp.Naziv = naziv;
             _ = _context.Predmet.Add(pTemp);
-            return TrySave(_context);
+            return TrySave(_context, false);
         }
-        public static JsonResult TrySave(ApplicationDbContext _context)
-        {
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Spremljeno" });
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = false, Message = "Greška" });
-            }
-        }
+
         public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
             HttpRequest Request)
         {

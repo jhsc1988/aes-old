@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -12,7 +11,7 @@ namespace aes.Models
 {
     public class ElektraKupacWorkshop : IElektraKupacWorkshop
     {
-        private List<ElektraKupac> GetKupciForDatatables(IDatatablesParams Params, List<ElektraKupac> ElektraKupacList)
+        private static List<ElektraKupac> GetKupciForDatatables(IDatatablesParams Params, List<ElektraKupac> ElektraKupacList)
         {
             return ElektraKupacList
                 .Where(
@@ -46,43 +45,38 @@ namespace aes.Models
             return datatablesGenerator.SortingPaging(ElektraKupacList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
 
-        public JsonResult GetRacuniElektraIzvrsenjeForKupac(int param, IDatatablesGenerator datatablesGenerator,
-            HttpRequest Request, IRacunWorkshop racunWorkshop, ApplicationDbContext _context, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeWorkshop)
+        public JsonResult GetRacuniForKupac<T>(int param, IDatatablesGenerator datatablesGenerator,
+    HttpRequest Request, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext) where T : Elektra
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
-            List<RacunElektraIzvrsenjeUsluge> RacunElektraIzvrsenjeList = racunWorkshop.GetRacuniFromDb(_context.RacunElektraIzvrsenjeUsluge, param);
-            int totalRows = RacunElektraIzvrsenjeList.Count;
+            List<T> list = workshop.GetRacuniFromDb(modelcontext, param);
+            int totalRows = list.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                RacunElektraIzvrsenjeList = racunElektraIzvrsenjeWorkshop.GetRacunElektraIzvrsenjeUslugeForDatatables(Params, _context, RacunElektraIzvrsenjeList);
+                switch (list)
+                {
+                    case List<RacunElektra>:
+                        list = new RacunElektraWorkshop().GetRacuniElektraForDatatables(Params, list as List<RacunElektra>) as List<T>;
+                        break;
+                    case List<RacunElektraRate>:
+                        list = new RacunElektraRateWorkshop().GetRacuniElektraRateForDatatables(Params, list as List<RacunElektraRate>) as List<T>;
+                        break;
+                    case List<RacunElektraIzvrsenjeUsluge>:
+                        list = new RacunElektraIzvrsenjeUslugeWorkshop().GetRacunElektraIzvrsenjeUslugeForDatatables(Params, list as List<RacunElektraIzvrsenjeUsluge>) as List<T>;
+                        break;
+                    default:
+                        break;
+                }
             }
-            return datatablesGenerator.SortingPaging(RacunElektraIzvrsenjeList, Params, Request, totalRows, RacunElektraIzvrsenjeList.Count);
+            return datatablesGenerator.SortingPaging(list, Params, Request, totalRows, list.Count);
         }
 
-        public JsonResult GetRacuniForKupac(int param, IDatatablesGenerator datatablesGenerator,
-            HttpRequest Request, IRacunWorkshop racunWorkshop, ApplicationDbContext _context, IRacunElektraWorkshop racunElektraWorkshop)
+        public ElektraKupac GetElektraKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac
         {
-            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
-            List<RacunElektra> RacunElektraList = racunWorkshop.GetRacuniFromDb(_context.RacunElektra, param);
-            int totalRows = RacunElektraList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue))
-            {
-                RacunElektraList = racunElektraWorkshop.GetRacuniElektraForDatatables(Params, _context, RacunElektraList);
-            }
-            return datatablesGenerator.SortingPaging(RacunElektraList, Params, Request, totalRows, RacunElektraList.Count);
-        }
-
-        public JsonResult GetRacuniRateForKupac(int param, IDatatablesGenerator datatablesGenerator,
-            HttpRequest Request, IRacunWorkshop racunWorkshop, ApplicationDbContext _context, IRacunElektraRateWorkshop racunElektraRateWorkshop)
-        {
-            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
-            List<RacunElektraRate> RacunElektraRateList = racunWorkshop.GetRacuniFromDb(_context.RacunElektraRate, param);
-            int totalRows = RacunElektraRateList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue))
-            {
-                RacunElektraRateList = racunElektraRateWorkshop.GetRacuniElektraRateForDatatables(Params, _context, RacunElektraRateList);
-            }
-            return datatablesGenerator.SortingPaging(RacunElektraRateList, Params, Request, totalRows, RacunElektraRateList.Count);
+            return modelcontext
+                .Include(e => e.Ods)
+                .Include(e => e.Ods.Stan)
+                .FirstOrDefault(e => e.Ods.Stan.Id == param);
         }
     }
 }

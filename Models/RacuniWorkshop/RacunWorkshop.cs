@@ -6,13 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Claims;
 
 
-namespace aes.Models
+namespace aes.Models.Workshop
 {
-    public class RacunWorkshop : IRacunWorkshop
+    public class RacunWorkshop : Workshop, IRacunWorkshop
     {
         /// <summary>
         /// Columns in Index - columns definitions for inline editor
@@ -38,7 +37,7 @@ namespace aes.Models
         {
             int id = int.Parse(racunId);
             _ = _context.Remove(_modelcontext.FirstOrDefault(x => x.Id == id));
-            return TryDelete(_context);
+            return TrySave(_context, true);
         }
 
         public bool Validate(string brojRacuna, string iznos, string date, string dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja)
@@ -82,7 +81,7 @@ namespace aes.Models
                     if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null) racunToUpdate.DatumPotvrde = null;
                     break;
                 case Columns.datumPotvrde:
-                    if (racunToUpdate.KlasaPlacanja is null)return new(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
+                    if (racunToUpdate.KlasaPlacanja is null) return new(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
                     else racunToUpdate.DatumPotvrde = DateTime.Parse(x);
                     break;
                 case Columns.napomena:
@@ -97,7 +96,7 @@ namespace aes.Models
                 default:
                     break;
             }
-            return TrySave(_context);
+            return TrySave(_context, false);
         }
         public JsonResult SaveToDb<T>(string userId, string _dopisId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
         {
@@ -110,40 +109,15 @@ namespace aes.Models
                 e.IsItTemp = null;
                 e.DopisId = dopisId;
             }
-            return TrySave(_context);
-        }
-        public JsonResult TrySave(ApplicationDbContext context)
-        {
-            try
-            {
-                _ = context.SaveChanges();
-                return new(new { success = true, Message = "Spremljeno" });
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = false, Message = "Greška" });
-            }
-        }
-        public JsonResult TryDelete(ApplicationDbContext _context)
-        {
-            try
-            {
-                _ = _context.SaveChanges();
-                return new(new { success = true, Message = "Obrisano" });
-
-            }
-            catch (DbUpdateException)
-            {
-                return new(new { success = false, Message = "Greška" });
-            }
+            return TrySave(_context, false);
         }
         public JsonResult RemoveAllFromDbTemp<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
         {
             _context.RemoveRange(_modelcontext.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
-            return TryDelete(_context);
+            return TrySave(_context, true);
         }
 
-        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra 
+        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra
         => param switch
         {
             not 0 => modelcontext
@@ -158,14 +132,91 @@ namespace aes.Models
                     .Include(e => e.ElektraKupac.Ods.Stan)
                     .ToList()
         };
-        public ElektraKupac GetElektraKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac
-        {
-            return modelcontext
-                .Include(e => e.Ods)
-                .Include(e => e.Ods.Stan)
-                .FirstOrDefault(e => e.Ods.Stan.Id == param);
-        }
         public string GetUid(ClaimsPrincipal User) => User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+        public List<T> GetListCreateList<T>(string userId, ApplicationDbContext _context, DbSet<T> modelcontext) where T : Elektra
+        {
+            List<T> list = modelcontext.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
+
+            int rbr = 1;
+            foreach (Elektra e in list)
+            {
+                e.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
+
+                List<Racun> racunList = new();
+                racunList.AddRange(modelcontext.Where(e => e.IsItTemp == null || false).ToList());
+                e.Napomena = CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                racunList.Clear();
+
+                racunList.AddRange(modelcontext.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
+                if (e.Napomena is null)
+                {
+                    e.Napomena = CheckIfExists(e.BrojRacuna, racunList);
+                }
+
+                racunList.Clear();
+
+                if (e.ElektraKupac != null)
+                {
+                    e.ElektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.ElektraKupac.OdsId);
+                    e.ElektraKupac.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.ElektraKupac.Ods.StanId);
+                }
+                else
+                {
+                    e.Napomena = "kupac ne postoji";
+                }
+                e.RedniBroj = rbr++;
+            }
+            return list;
+        }
+
+        public JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
+ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra
+        {
+            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
+            List<T> list;
+            if (isFiltered)
+            {
+                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
+                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
+                list = GetList(predmetIdAsInt, dopisIdAsInt, modelcontext);
+            }
+            else
+            {
+                list = workshop.GetListCreateList(Uid, _context, modelcontext);
+            }
+
+            int totalRows = list.Count;
+            if (!string.IsNullOrEmpty(Params.SearchValue))
+            {
+                switch (list)
+                {
+                    case List<RacunElektra>:
+                        list = new RacunElektraWorkshop().GetRacuniElektraForDatatables(Params, list as List<RacunElektra>) as List<T>;
+                        break;
+                    case List<RacunElektraRate>:
+                        list = new RacunElektraRateWorkshop().GetRacuniElektraRateForDatatables(Params, list as List<RacunElektraRate>) as List<T>;
+                        break;
+                    case List<RacunElektraIzvrsenjeUsluge>:
+                        list = new RacunElektraIzvrsenjeUslugeWorkshop().GetRacunElektraIzvrsenjeUslugeForDatatables(Params, list as List<RacunElektraIzvrsenjeUsluge>) as List<T>;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            int totalRowsAfterFiltering = list.Count;
+            return datatablesGenerator.SortingPaging(list, Params, Request, totalRows, totalRowsAfterFiltering);
+        }
+        public List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, DbSet<T> modelcontext) where T : Elektra
+        {
+            IQueryable<T> RacunElektraRateList = predmetIdAsInt is 0 && dopisIdAsInt is 0
+                ? modelcontext.Where(e => e.IsItTemp == null)
+                : dopisIdAsInt is 0
+                    ? modelcontext.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                    : modelcontext.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+            return GetRacuniFromDb(modelcontext);
+        }
     }
 }
 

@@ -1,15 +1,14 @@
 ﻿using aes.Data;
+using aes.Models.Workshop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public interface IPredmetWorkshop
+    public interface IPredmetWorkshop : IWorkshop
     {
         JsonResult SaveToDB(string klasa, string naziv, ApplicationDbContext _context);
         //JsonResult TrySave(ApplicationDbContext _context);

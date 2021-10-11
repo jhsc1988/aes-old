@@ -1,16 +1,15 @@
 ﻿using aes.Data;
+using aes.Models.Workshop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public interface IRacunWorkshop
+    public interface IRacunWorkshop : IWorkshop
     {
         string CheckIfExists(string brojRacuna, List<Racun> racunList);
         string CheckIfExistsInPayed(string brojRacuna, List<Racun> racunList);
@@ -18,11 +17,16 @@ namespace aes.Models
         bool Validate(string brojRacuna, string iznos, string date, string dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja);
         JsonResult UpdateDbForInline<T>(string racunId, string updatedColumn, string x, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
         JsonResult SaveToDb<T>(string userId, string _dopisId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
-        JsonResult TrySave(ApplicationDbContext context);
-        JsonResult TryDelete(ApplicationDbContext _context);
         JsonResult RemoveAllFromDbTemp<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
         List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra;
-        ElektraKupac GetElektraKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac;
         string GetUid(ClaimsPrincipal User);
+        //List<Racun> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext context);
+        List<T> GetListCreateList<T>(string uid, ApplicationDbContext context, DbSet<T> modelcontext) where T : Elektra;
+        JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra;
+        List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, DbSet<T> modelcontext) where T : Elektra;
+        //List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext context) where T : Racun;
+        //List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context);
+        //List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context) where T : Racun;
+
     }
 }

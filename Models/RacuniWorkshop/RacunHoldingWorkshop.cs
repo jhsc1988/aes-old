@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using aes.Models.Workshop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,17 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public class RacunHoldingWorkshop : IRacunHoldingWorkshop
+    public class RacunHoldingWorkshop : RacunWorkshop, IRacunHoldingWorkshop
     {
-        private static readonly IRacunWorkshop racunWorkshop = new RacunWorkshop();
-
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {
-            if (!racunWorkshop.Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
             {
                 return new(new { success = false, Message = msg });
             }
@@ -39,7 +37,7 @@ namespace aes.Models
             foreach (RacunHolding e in racunHoldingList) e.RedniBroj = rbr++;
 
             _ = _context.RacunHolding.Add(re);
-            return racunWorkshop.TrySave(_context);
+            return TrySave(_context, false);
         }
         public List<RacunHolding> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
@@ -65,18 +63,18 @@ namespace aes.Models
 
                 List<Racun> racunList = new();
                 racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == null || false).ToList());
-                e.Napomena = racunWorkshop.CheckIfExistsInPayed(e.BrojRacuna, racunList);
+                e.Napomena = CheckIfExistsInPayed(e.BrojRacuna, racunList);
                 racunList.Clear();
 
                 racunList.AddRange(_context.RacunHolding.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
-                if (e.Napomena is null) e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
+                if (e.Napomena is null) e.Napomena = CheckIfExists(e.BrojRacuna, racunList);
 
                 racunList.Clear();
                 e.RedniBroj = rbr++;
             }
             return racunHoldingList;
         }
-        private List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
+        private static List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, List<RacunHolding> CreateRRacuniHoldingList)
         {
             return CreateRRacuniHoldingList.Where(
                 x => x.BrojRacuna.Contains(Params.SearchValue)
@@ -111,7 +109,7 @@ namespace aes.Models
             int totalRows = racunHoldingList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
-                racunHoldingList = GetRacuniHoldingForDatatables(Params, _context, racunHoldingList);
+                racunHoldingList = GetRacuniHoldingForDatatables(Params, racunHoldingList);
             }
             int totalRowsAfterFiltering = racunHoldingList.Count;
             return datatablesGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);

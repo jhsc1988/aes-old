@@ -1,10 +1,10 @@
 ﻿using aes.Data;
 using aes.Models;
+using aes.Models.Workshop;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -16,11 +16,14 @@ namespace aes.Controllers
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
         private readonly IPredmetWorkshop _predmetWorkshop;
+        private readonly IWorkshop _workshop;
 
-        public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IPredmetWorkshop predmetWorkshop)
+        public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
+            IPredmetWorkshop predmetWorkshop, IWorkshop workshop)
         {
             _context = context;
             _predmetWorkshop = predmetWorkshop;
+            _workshop = workshop;
             _datatablesGenerator = datatablesGenerator;
         }
 
@@ -158,7 +161,7 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public JsonResult SaveToDB(string klasa, string naziv) => _predmetWorkshop.SaveToDB(klasa, naziv, _context);
-        public JsonResult TrySave() => PredmetWorkshop.TrySave(_context);
+        //public JsonResult TrySave() => _workshop.TrySave(_context, false); // todo: ja mislim da mi ovo uopce ne treba ovdje
         public async Task<IActionResult> GetList()
             => await _predmetWorkshop.GetList(_datatablesGenerator, _context, Request);
     }

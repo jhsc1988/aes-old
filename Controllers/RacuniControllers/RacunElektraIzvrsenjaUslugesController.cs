@@ -203,6 +203,6 @@ namespace aes.Controllers
             => new JsonResult(_racunElektraIzvrsenjeUslugeWorkshop.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraIzvrsenjeUsluge, _context));
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
-            => _racunElektraIzvrsenjeUslugeWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
+            => _racunElektraIzvrsenjeUslugeWorkshop.GetListMe(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, _racunWorkshop, _context.RacunElektraIzvrsenjeUsluge, Request, GetUid());
     }
 }

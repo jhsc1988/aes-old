@@ -1,22 +1,20 @@
 ﻿using aes.Data;
+using aes.Models.Workshop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public class RacunElektraWorkshop : IRacunElektraWorkshop
+    public class RacunElektraWorkshop : RacunWorkshop, IRacunElektraWorkshop
     {
-        private static readonly IRacunWorkshop racunWorkshop = new RacunWorkshop();
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {
 
-            if (!racunWorkshop.Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
+            if (!Validate(brojRacuna, iznos, date, dopisId, out string msg, out double _iznos, out int _dopisId, out DateTime? datumIzdavanja))
             {
                 return new(new { success = false, Message = msg });
             }
@@ -43,57 +41,19 @@ namespace aes.Models
 
             _ = _context.RacunElektra.Add(re);
 
-            return racunWorkshop.TrySave(_context);
+            return TrySave(_context, false);
         }
+        //public List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
+        //{
+        //    IQueryable<RacunElektra> racunElektraList = predmetIdAsInt is 0
+        //        ? _context.RacunElektra.Where(e => e.IsItTemp == null)
+        //        : dopisIdAsInt is 0
+        //            ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+        //            : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+        //    return GetRacuniFromDb(_context.RacunElektra);
+        //}
 
-        public List<RacunElektra> GetListCreateList(string userId, ApplicationDbContext _context)
-        {
-            List<RacunElektra> racunElektraList = _context.RacunElektra.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
-
-            int rbr = 1;
-            foreach (RacunElektra e in racunElektraList)
-            {
-
-                e.ElektraKupac = _context.ElektraKupac.FirstOrDefault(o => o.UgovorniRacun == long.Parse(e.BrojRacuna.Substring(0, 10)));
-
-                List<Racun> racunList = new();
-                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == null || false).ToList());
-                e.Napomena = racunWorkshop.CheckIfExistsInPayed(e.BrojRacuna, racunList);
-                racunList.Clear();
-
-                racunList.AddRange(_context.RacunElektra.Where(e => e.IsItTemp == true && e.CreatedByUserId == userId).ToList());
-                if (e.Napomena is null)
-                {
-                    e.Napomena = racunWorkshop.CheckIfExists(e.BrojRacuna, racunList);
-                }
-
-                racunList.Clear();
-
-                if (e.ElektraKupac is not null)
-                {
-                    e.ElektraKupac.Ods = _context.Ods.FirstOrDefault(o => o.Id == e.ElektraKupac.OdsId);
-                    e.ElektraKupac.Ods.Stan = _context.Stan.FirstOrDefault(o => o.Id == e.ElektraKupac.Ods.StanId);
-                }
-                else
-                {
-                    e.Napomena = "kupac ne postoji";
-                }
-                e.RedniBroj = rbr++;
-            }
-            return racunElektraList;
-        }
-
-        public List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
-        {
-            IQueryable<RacunElektra> racunElektraList = predmetIdAsInt is 0
-                ? _context.RacunElektra.Where(e => e.IsItTemp == null)
-                : dopisIdAsInt is 0
-                    ? _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
-                    : _context.RacunElektra.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
-            return racunWorkshop.GetRacuniFromDb(_context.RacunElektra);
-        }
-
-        public List<RacunElektra> GetRacuniElektraForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunElektra> CreateRacuniElektraList)
+        public List<RacunElektra> GetRacuniElektraForDatatables(IDatatablesParams Params, List<RacunElektra> CreateRacuniElektraList)
         {
             CreateRacuniElektraList = CreateRacuniElektraList.Where(
                        x => x.BrojRacuna.Contains(Params.SearchValue)
@@ -106,31 +66,6 @@ namespace aes.Models
                             || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower())))
                    .ToDynamicList<RacunElektra>();
             return CreateRacuniElektraList;
-        }
-
-        public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-    ApplicationDbContext _context, HttpRequest Request,  string Uid)
-        {
-            List<RacunElektra> racunElektraList;
-            IDatatablesParams Params = datatablesGenerator.GetParams(Request);
-            if (isFiltered)
-            {
-                int predmetIdAsInt = klasa is null ? 0 : int.Parse(klasa);
-                int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
-                racunElektraList = GetList(predmetIdAsInt, dopisIdAsInt, _context);
-            }
-            else
-            {
-                racunElektraList = GetListCreateList(Uid, _context);
-            }
-
-            int totalRows = racunElektraList.Count;
-            if (!string.IsNullOrEmpty(Params.SearchValue)) // filter
-            {
-                racunElektraList = GetRacuniElektraForDatatables(Params, _context, racunElektraList);
-            }
-            int totalRowsAfterFiltering = racunElektraList.Count;
-            return datatablesGenerator.SortingPaging(racunElektraList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -15,7 +14,6 @@ namespace aes.Controllers
     public class ElektraKupciController : Controller
     {
         private readonly IDatatablesGenerator _datatablesGenerator;
-        private readonly IRacunWorkshop _racunWorkshop;
         private readonly IElektraKupacWorkshop _elektraKupacWorkshop;
         private readonly IRacunElektraWorkshop _racunElektraWorkshop;
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
@@ -24,10 +22,9 @@ namespace aes.Controllers
 
         public ElektraKupciController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs,
             IElektraKupacWorkshop elektraKupacWorkshop, IRacunElektraWorkshop racunElektraWorkshop, IRacunElektraRateWorkshop racunElektraRateWorkshop,
-            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IRacunWorkshop racunWorkshop)
+            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop)
         {
             _context = context;
-            _racunWorkshop = racunWorkshop;
             _racunElektraWorkshop = racunElektraWorkshop;
             _racunElektraRateWorkshop = racunElektraRateWorkshop;
             _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
@@ -206,12 +203,12 @@ namespace aes.Controllers
             => await _elektraKupacWorkshop.GetList(_datatablesGenerator, _context, Request);
 
         public JsonResult GetRacuniForKupac(int param)
-            => _elektraKupacWorkshop.GetRacuniForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraWorkshop);
+            => _elektraKupacWorkshop.GetRacuniForKupac(param, _datatablesGenerator, Request, _context, _racunElektraWorkshop, _context.RacunElektra);
 
         public JsonResult GetRacuniRateForKupac(int param)
-            => _elektraKupacWorkshop.GetRacuniRateForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraRateWorkshop);
+            => _elektraKupacWorkshop.GetRacuniForKupac(param, _datatablesGenerator, Request, _context, _racunElektraRateWorkshop, _context.RacunElektraRate);
 
         public JsonResult GetRacuniElektraIzvrsenjeForKupac(int param)
-            => _elektraKupacWorkshop.GetRacuniElektraIzvrsenjeForKupac(param, _datatablesGenerator, Request, _racunWorkshop, _context, _racunElektraIzvrsenjeUslugeWorkshop);
+            => _elektraKupacWorkshop.GetRacuniForKupac(param, _datatablesGenerator, Request, _context, _racunElektraIzvrsenjeUslugeWorkshop, _context.RacunElektraIzvrsenjeUsluge);
     }
 }

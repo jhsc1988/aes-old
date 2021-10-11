@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -18,7 +17,8 @@ namespace aes.Controllers
         private readonly IDopisWorkshop _dopisWorkshop;
         private readonly ApplicationDbContext _context;
 
-        public DopisiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator, IDopisWorkshop dopisWorkshop)
+        public DopisiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
+            IDopisWorkshop dopisWorkshop)
         {
             _dopisWorkshop = dopisWorkshop;
             _datatablesGenerator = datatablesGenerator;
@@ -172,9 +172,8 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public JsonResult GetList(int predmetId) => _dopisWorkshop.GetList(_datatablesGenerator, _context, Request, predmetId);
-
         public JsonResult SaveToDB(string predmetId, string urbroj, string datumDopisa) => _dopisWorkshop.SaveToDB(predmetId, urbroj, datumDopisa, _context);
 
-        public JsonResult TrySave() => PredmetWorkshop.TrySave(_context);
+        //public JsonResult TrySave() => _dopisWorkshop.TrySave(_context, false);
     }
 }

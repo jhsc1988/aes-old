@@ -1,14 +1,11 @@
 ﻿using aes.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Models
 {
-    public interface IRacunHoldingWorkshop
+    public interface IRacunHoldingWorkshop : IRacunWorkshop
     {
         JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context);
         List<RacunHolding> GetListCreateList(string userId, ApplicationDbContext _context);

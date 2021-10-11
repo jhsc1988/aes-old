@@ -190,19 +190,19 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public string GetUid() => _racunWorkshop.GetUid(User);
-        public JsonResult GetDopisiDataForFilter(int predmetId) 
+        public JsonResult GetDopisiDataForFilter(int predmetId)
             => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
         public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
-        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x) 
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
             => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektraRate, _context);
         public JsonResult SaveToDB(string _dopisId) => _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektraRate, _context);
         public JsonResult RemoveRow(string racunId) => _racunWorkshop.RemoveRow(racunId, _context.RacunElektraRate, _context);
         public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDbTemp(GetUid(), _context.RacunElektraRate, _context);
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) 
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
             => new JsonResult(_racunElektraRateWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraRate, _context));
-        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj) 
-            => _racunElektraRateWorkshop.GetList(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
+        public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
+            => _racunElektraRateWorkshop.GetListMe(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, _racunWorkshop, _context.RacunElektraRate, Request, GetUid());
     }
 }

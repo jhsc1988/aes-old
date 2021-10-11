@@ -25,6 +25,6 @@ namespace aes.Controllers
         /// Saves changes to db
         /// </summary>
         /// <returns>rezultat u JSON</returns>
-        public JsonResult TrySave();
+        //public JsonResult TrySave();
     }
 }
