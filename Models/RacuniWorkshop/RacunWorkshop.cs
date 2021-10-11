@@ -133,8 +133,6 @@ namespace aes.Models.Workshop
                     .ToList()
         };
         public string GetUid(ClaimsPrincipal User) => User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-
         public List<T> GetListCreateList<T>(string userId, ApplicationDbContext _context, DbSet<T> modelcontext) where T : Elektra
         {
             List<T> list = modelcontext.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
@@ -170,9 +168,8 @@ namespace aes.Models.Workshop
             }
             return list;
         }
-
         public JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra
+            ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<T> list;

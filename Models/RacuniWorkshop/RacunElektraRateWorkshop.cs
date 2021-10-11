@@ -43,17 +43,6 @@ namespace aes.Models
 
             return TrySave(_context, false);
         }
-
-        //public List<RacunElektraRate> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
-        //{
-        //    IQueryable<RacunElektraRate> RacunElektraRateList = predmetIdAsInt is 0 && dopisIdAsInt is 0
-        //        ? _context.RacunElektraRate.Where(e => e.IsItTemp == null)
-        //        : dopisIdAsInt is 0
-        //            ? _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
-        //            : _context.RacunElektraRate.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
-        //    return GetRacuniFromDb(_context.RacunElektraRate);
-        //}
-
         public List<RacunElektraRate> GetRacuniElektraRateForDatatables(IDatatablesParams Params, List<RacunElektraRate> CreateRacuniElektraRateList)
         {
             CreateRacuniElektraRateList = CreateRacuniElektraRateList

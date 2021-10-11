@@ -39,9 +39,7 @@ namespace aes.Models.Workshop
             _ = _context.Predmet.Add(pTemp);
             return TrySave(_context, false);
         }
-
-        public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
-            HttpRequest Request)
+        public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<Predmet> PredmetList = await _context.Predmet.ToListAsync();

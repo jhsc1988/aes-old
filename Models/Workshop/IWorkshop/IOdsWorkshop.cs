@@ -12,6 +12,5 @@ namespace aes.Models
     {
         Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request);
         JsonResult GetStanData(string sid, ApplicationDbContext _context);
-        // List<Ods> GetStanoviForDatatables(IDatatablesParams Params, List<Ods> OdsList);
     }
 }

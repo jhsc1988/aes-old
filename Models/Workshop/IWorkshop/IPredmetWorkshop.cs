@@ -11,8 +11,6 @@ namespace aes.Models
     public interface IPredmetWorkshop : IWorkshop
     {
         JsonResult SaveToDB(string klasa, string naziv, ApplicationDbContext _context);
-        //JsonResult TrySave(ApplicationDbContext _context);
-        // List<Predmet> GetPredmetiForDatatables(IDatatablesParams Params, List<Predmet> PredmetiList);
         List<Predmet> GetPredmetiDataForFilter<T>(DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
         Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request);
     }

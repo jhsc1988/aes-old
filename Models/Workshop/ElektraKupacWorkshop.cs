@@ -46,7 +46,7 @@ namespace aes.Models
         }
 
         public JsonResult GetRacuniForKupac<T>(int param, IDatatablesGenerator datatablesGenerator,
-    HttpRequest Request, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext) where T : Elektra
+            HttpRequest Request, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext) where T : Elektra
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<T> list = workshop.GetRacuniFromDb(modelcontext, param);
@@ -70,7 +70,6 @@ namespace aes.Models
             }
             return datatablesGenerator.SortingPaging(list, Params, Request, totalRows, list.Count);
         }
-
         public ElektraKupac GetElektraKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac
         {
             return modelcontext

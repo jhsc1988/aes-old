@@ -26,7 +26,6 @@ namespace aes.Models
             Stan stan = _context.Stan.FirstOrDefault(o => o.Id == idInt);
             return new JsonResult(stan);
         }
-
         private List<Ods> GetStanoviForDatatables(IDatatablesParams Params, List<Ods> OdsList)
         {
             return OdsList
@@ -45,8 +44,7 @@ namespace aes.Models
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<Ods>();
         }
 
-        public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context,
-    HttpRequest Request)
+        public async Task<IActionResult> GetList(IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, HttpRequest Request)
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<Ods> OdsList = await _context.Ods

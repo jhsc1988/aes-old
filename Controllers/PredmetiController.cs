@@ -161,7 +161,6 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public JsonResult SaveToDB(string klasa, string naziv) => _predmetWorkshop.SaveToDB(klasa, naziv, _context);
-        //public JsonResult TrySave() => _workshop.TrySave(_context, false); // todo: ja mislim da mi ovo uopce ne treba ovdje
         public async Task<IActionResult> GetList()
             => await _predmetWorkshop.GetList(_datatablesGenerator, _context, Request);
     }

@@ -20,13 +20,9 @@ namespace aes.Models
         JsonResult RemoveAllFromDbTemp<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
         List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra;
         string GetUid(ClaimsPrincipal User);
-        //List<Racun> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext context);
         List<T> GetListCreateList<T>(string uid, ApplicationDbContext context, DbSet<T> modelcontext) where T : Elektra;
         JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra;
         List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, DbSet<T> modelcontext) where T : Elektra;
-        //List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext context) where T : Racun;
-        //List<RacunElektra> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context);
-        //List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context) where T : Racun;
 
     }
 }
