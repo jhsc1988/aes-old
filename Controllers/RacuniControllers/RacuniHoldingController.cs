@@ -194,15 +194,17 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public string GetUid() => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        public string GetUid() => _racunWorkshop.GetUid(User);
         public JsonResult GetDopisiDataForFilter(int predmetId) => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
         public string GetKupci() => JsonConvert.SerializeObject(_context.Stan.ToList());
-        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x) => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunHolding, _context);
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x) 
+            => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunHolding, _context);
         public JsonResult SaveToDB(string _dopisId) => _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunHolding, _context);
         public JsonResult RemoveRow(string racunId) => _racunWorkshop.RemoveRow(racunId, _context.RacunHolding, _context);
-        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunHolding, _context);
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDbTemp(GetUid(), _context.RacunHolding, _context);
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) 
+            => new JsonResult(_racunHoldingWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunHolding, _context));
         public JsonResult GetList(bool isFIltered, string klasa, string urbroj)
             => _racunHoldingWorkshop.GetList(isFIltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());

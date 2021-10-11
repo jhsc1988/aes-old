@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Models
@@ -19,8 +20,9 @@ namespace aes.Models
         JsonResult SaveToDb<T>(string userId, string _dopisId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
         JsonResult TrySave(ApplicationDbContext context);
         JsonResult TryDelete(ApplicationDbContext _context);
-        JsonResult RemoveAllFromDb<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
+        JsonResult RemoveAllFromDbTemp<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun;
         List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra;
-        ElektraKupac GetKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac;
+        ElektraKupac GetElektraKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac;
+        string GetUid(ClaimsPrincipal User);
     }
 }

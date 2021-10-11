@@ -41,7 +41,6 @@ namespace aes.Models
             _ = _context.RacunHolding.Add(re);
             return racunWorkshop.TrySave(_context);
         }
-
         public List<RacunHolding> GetList(int predmetIdAsInt, int dopisIdAsInt, ApplicationDbContext _context)
         {
             IQueryable<RacunHolding> racunHoldingList = predmetIdAsInt is 0
@@ -55,11 +54,9 @@ namespace aes.Models
                 .Include(e => e.Dopis.Predmet)
                 .ToList();
         }
-
         public List<RacunHolding> GetListCreateList(string userId, ApplicationDbContext _context)
         {
             List<RacunHolding> racunHoldingList = _context.RacunHolding.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true).ToList();
-
             int rbr = 1;
             foreach (RacunHolding e in racunHoldingList)
             {
@@ -79,7 +76,6 @@ namespace aes.Models
             }
             return racunHoldingList;
         }
-
         private List<RacunHolding> GetRacuniHoldingForDatatables(IDatatablesParams Params, ApplicationDbContext _context, List<RacunHolding> CreateRRacuniHoldingList)
         {
             return CreateRRacuniHoldingList.Where(
@@ -92,7 +88,6 @@ namespace aes.Models
                 || (x.DatumPotvrde != null && x.DatumPotvrde.Value.ToString("dd.MM.yyyy").Contains(Params.SearchValue))
                 || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower()))).ToDynamicList<RacunHolding>();
         }
-
         public JsonResult GetList(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
             ApplicationDbContext _context, HttpRequest Request, string Uid, int param = 0)
         {
@@ -104,10 +99,8 @@ namespace aes.Models
                 int dopisIdAsInt = urbroj is null ? 0 : int.Parse(urbroj);
                 racunHoldingList = GetList(predmetIdAsInt, dopisIdAsInt, _context);
             }
-            else
-            {
-                racunHoldingList = GetListCreateList(Uid, _context);
-            }
+            else racunHoldingList = GetListCreateList(Uid, _context);
+
             if (param is not 0)
             {
                 racunHoldingList = _context.RacunHolding
@@ -123,7 +116,5 @@ namespace aes.Models
             int totalRowsAfterFiltering = racunHoldingList.Count;
             return datatablesGenerator.SortingPaging(racunHoldingList, Params, Request, totalRows, totalRowsAfterFiltering);
         }
-
-
     }
 }

@@ -37,7 +37,7 @@ namespace aes.Models
             IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
             IRacunElektraWorkshop racunElektraWorkshop, ApplicationDbContext context, int param)
         {
-            ElektraKupac elektraKupac = racunWorkshop.GetKupacForStanId(context.ElektraKupac, param);
+            ElektraKupac elektraKupac = racunWorkshop.GetElektraKupacForStanId(context.ElektraKupac, param);
             if (elektraKupac is not null) param = elektraKupac.Id;
             return elektraKupacWorkshop.GetRacuniForKupac(param, datatablesGenerator, Request, racunWorkshop, context, racunElektraWorkshop);
         }
@@ -45,15 +45,15 @@ namespace aes.Models
             IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
             IRacunElektraRateWorkshop racunElektraRateWorkshop, ApplicationDbContext context, int param)
         {
-            ElektraKupac elektraKupac = racunWorkshop.GetKupacForStanId(context.ElektraKupac, param);
+            ElektraKupac elektraKupac = racunWorkshop.GetElektraKupacForStanId(context.ElektraKupac, param);
             if (elektraKupac is not null) param = elektraKupac.Id;
             return elektraKupacWorkshop.GetRacuniRateForKupac(param, datatablesGenerator, Request, racunWorkshop, context, racunElektraRateWorkshop);
         }
         public JsonResult GetRacuniElektraIzvrsenjeForStan(IRacunWorkshop racunWorkshop,
-    IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
-    IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, ApplicationDbContext context, int param)
+            IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
+            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, ApplicationDbContext context, int param)
         {
-            ElektraKupac elektraKupac = racunWorkshop.GetKupacForStanId(context.ElektraKupac, param);
+            ElektraKupac elektraKupac = racunWorkshop.GetElektraKupacForStanId(context.ElektraKupac, param);
             if (elektraKupac is not null) param = elektraKupac.Id;
             return elektraKupacWorkshop.GetRacuniElektraIzvrsenjeForKupac(param, datatablesGenerator, Request, racunWorkshop, context, racunElektraIzvrsenjeUslugeWorkshop);
         }
@@ -63,16 +63,13 @@ namespace aes.Models
             List<Stan> StanList;
             if(IsFiltered) StanList = context.Stan.Where(p => !context.Ods.Any(o => o.StanId == p.Id)).ToList();
             else StanList = context.Stan.ToList();
-
             int totalRows = StanList.Count;
             if (!string.IsNullOrEmpty(Params.SearchValue))
             {
                 StanList = GetStanoviForDatatables(Params, context, StanList);
             }
-
             int totalRowsAfterFiltering = StanList.Count;
             return datatablesGenerator.SortingPaging(StanList, Params, Request, totalRows, totalRowsAfterFiltering);
-
         }
     }
 }

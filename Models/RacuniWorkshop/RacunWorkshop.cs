@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
+
 
 namespace aes.Models
 {
@@ -43,48 +45,18 @@ namespace aes.Models
         {
             _iznos = 0; datumIzdavanja = null; msg = null; DateTime dt;
 
-            if (!int.TryParse(dopisId, out _dopisId))
-            {
-                msg = "Dopis ID je neispravan";
-                return false;
-            }
-
-            if (brojRacuna == null)
-            {
-                msg = "Broj računa je obavezan";
-                return false;
-            }
-
-            if (date == null)
-            {
-                msg = "Datum izdavanja je obavezan";
-                return false;
-            }
-            else if (!DateTime.TryParse(date, out dt))
-            {
-                msg = "Datum izdavanja je obavezan";
-                return false;
-            }
+            if (!int.TryParse(dopisId, out _dopisId)) { msg = "Dopis ID je neispravan"; return false; }
+            if (brojRacuna == null) { msg = "Broj računa je obavezan"; return false; }
+            if (date == null) { msg = "Datum izdavanja je obavezan"; return false; }
+            else if (!DateTime.TryParse(date, out dt)) { msg = "Datum izdavanja je obavezan"; return false; }
 
             // "en-US" mi treba za decimalnu tocku, decimanlna točka mi treba za Excel export
-            if (!double.TryParse(iznos, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out _iznos))
-            {
-                msg = "Iznos je neispravan";
-                return false;
-            }
-
-            if (double.Parse(iznos) <= 0)
-            {
-                msg = "Iznos mora biti veći od 0 kn";
-                return false;
-            }
+            if (!double.TryParse(iznos, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out _iznos)) { msg = "Iznos je neispravan"; return false; }
+            if (double.Parse(iznos) <= 0) { msg = "Iznos mora biti veći od 0 kn"; return false; }
 
             datumIzdavanja = dt;
             return true;
         }
-
-
-
         public JsonResult UpdateDbForInline<T>(string racunId, string updatedColumn, string x, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
         {
             int idNum = int.Parse(racunId);
@@ -95,44 +67,24 @@ namespace aes.Models
             switch (column)
             {
                 case Columns.racun:
-                    if (x.Length < 10)
-                    {
-                        return new(new { success = false, Message = "Broj računa nije ispravan!" });
-                    }
-                    if (!x.Substring(0, 10).Equals(racunToUpdate.BrojRacuna.Substring(0, 10)))
-                    {
-                        return new(new { success = false, Message = "Pogrešan broj računa - ugovorni računi ne smije se razlikovati!" });
-                    }
+                    if (x.Length < 10) return new(new { success = false, Message = "Broj računa nije ispravan!" });
+                    if (!x.Substring(0, 10).Equals(racunToUpdate.BrojRacuna.Substring(0, 10))) return new(new { success = false, Message = "Pogrešan broj računa - ugovorni računi ne smije se razlikovati!" });
                     racunToUpdate.BrojRacuna = x;
                     break;
-
                 case Columns.datumIzdavanja:
                     racunToUpdate.DatumIzdavanja = DateTime.Parse(x);
                     break;
-
                 case Columns.iznos:
                     racunToUpdate.Iznos = double.Parse(x);
                     break;
-
                 case Columns.klasa:
                     racunToUpdate.KlasaPlacanja = x;
-                    if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null)
-                    {
-                        racunToUpdate.DatumPotvrde = null;
-                    }
+                    if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null) racunToUpdate.DatumPotvrde = null;
                     break;
-
                 case Columns.datumPotvrde:
-                    if (racunToUpdate.KlasaPlacanja is null)
-                    {
-                        return new(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
-                    }
-                    else
-                    {
-                        racunToUpdate.DatumPotvrde = DateTime.Parse(x);
-                    }
+                    if (racunToUpdate.KlasaPlacanja is null)return new(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
+                    else racunToUpdate.DatumPotvrde = DateTime.Parse(x);
                     break;
-
                 case Columns.napomena:
                     racunToUpdate.Napomena = x;
                     break;
@@ -147,28 +99,19 @@ namespace aes.Models
             }
             return TrySave(_context);
         }
-
         public JsonResult SaveToDb<T>(string userId, string _dopisId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
         {
             List<Racun> racunList = new();
             int dopisId = int.Parse(_dopisId);
-
-            if (dopisId is 0)
-            {
-                return new(new { success = false, Message = "Nije odabran dopis!" });
-            }
-
+            if (dopisId is 0) return new(new { success = false, Message = "Nije odabran dopis!" });
             racunList.AddRange(_modelcontext.Where(e => e.IsItTemp == true && e.CreatedByUserId.Equals(userId)).ToList());
-
             foreach (Racun e in racunList)
             {
                 e.IsItTemp = null;
                 e.DopisId = dopisId;
             }
             return TrySave(_context);
-
         }
-
         public JsonResult TrySave(ApplicationDbContext context)
         {
             try
@@ -194,14 +137,14 @@ namespace aes.Models
                 return new(new { success = false, Message = "Greška" });
             }
         }
-
-        public JsonResult RemoveAllFromDb<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
+        public JsonResult RemoveAllFromDbTemp<T>(string userId, DbSet<T> _modelcontext, ApplicationDbContext _context) where T : Racun
         {
             _context.RemoveRange(_modelcontext.Where(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true));
             return TryDelete(_context);
         }
 
-        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra => param switch
+        public List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra 
+        => param switch
         {
             not 0 => modelcontext
                             .Include(e => e.ElektraKupac)
@@ -215,14 +158,14 @@ namespace aes.Models
                     .Include(e => e.ElektraKupac.Ods.Stan)
                     .ToList()
         };
-
-        public ElektraKupac GetKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac
+        public ElektraKupac GetElektraKupacForStanId<T>(DbSet<T> modelcontext, int param) where T : ElektraKupac
         {
             return modelcontext
                 .Include(e => e.Ods)
                 .Include(e => e.Ods.Stan)
                 .FirstOrDefault(e => e.Ods.Stan.Id == param);
         }
+        public string GetUid(ClaimsPrincipal User) => User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }
 

@@ -224,16 +224,20 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public string GetUid() => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        public JsonResult GetDopisiDataForFilter(int predmetId) => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
+        public string GetUid() => _racunWorkshop.GetUid(User);
+        public JsonResult GetDopisiDataForFilter(int predmetId)
+            => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
         public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
-        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x) => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektra, _context);
+        public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
+            => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektra, _context);
         public JsonResult SaveToDB(string _dopisId) => _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektra, _context);
         public JsonResult RemoveRow(string racunId) => _racunWorkshop.RemoveRow(racunId, _context.RacunElektra, _context);
-        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDb(GetUid(), _context.RacunElektra, _context);
-        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId) => new JsonResult(_racunElektraWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
+        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDbTemp(GetUid(), _context.RacunElektra, _context);
+        public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId)
+            => new JsonResult(_racunElektraWorkshop.AddNewTemp(brojRacuna, iznos, date, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektra, _context));
-        public JsonResult GetList(bool isFiltered, string klasa, string urbroj) => _racunElektraWorkshop.GetList(isFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
+        public JsonResult GetList(bool isFiltered, string klasa, string urbroj)
+            => _racunElektraWorkshop.GetList(isFiltered, klasa, urbroj, _datatablesGenerator, _context, Request, GetUid());
     }
 }
