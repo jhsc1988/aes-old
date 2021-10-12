@@ -21,7 +21,7 @@ namespace aes.Models
         List<T> GetRacuniFromDb<T>(DbSet<T> modelcontext, int param = 0) where T : Elektra;
         string GetUid(ClaimsPrincipal User);
         List<T> GetListCreateList<T>(string uid, ApplicationDbContext context, DbSet<T> modelcontext) where T : Elektra;
-        JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra;
+        JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator, ApplicationDbContext _context, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra;
         List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, DbSet<T> modelcontext) where T : Elektra;
 
     }

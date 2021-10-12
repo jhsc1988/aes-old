@@ -17,15 +17,13 @@ namespace aes.Controllers
     {
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly IPredmetWorkshop _predmetWorkshop;
-        private readonly IRacunWorkshop _racunWorkshop;
         private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
         private readonly ApplicationDbContext _context;
 
         public RacunElektraIzvrsenjaUslugesController(ApplicationDbContext context, IDatatablesGenerator datatablesParamsGeneratorcs,
-            IRacunWorkshop racunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IPredmetWorkshop predmetWorkshop)
+            IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
-            _racunWorkshop = racunWorkshop;
             _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
             _datatablesGenerator = datatablesParamsGeneratorcs;
             _predmetWorkshop = predmetWorkshop;
@@ -190,19 +188,19 @@ namespace aes.Controllers
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public string GetUid() => _racunWorkshop.GetUid(User);
+        public string GetUid() => _racunElektraIzvrsenjeUslugeWorkshop.GetUid(User);
         public JsonResult GetDopisiDataForFilter(int predmetId) => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
         public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
         public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
-            => _racunWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektraIzvrsenjeUsluge, _context);
-        public JsonResult SaveToDB(string _dopisId) => _racunWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektraIzvrsenjeUsluge, _context);
-        public JsonResult RemoveRow(string racunId) => _racunWorkshop.RemoveRow(racunId, _context.RacunElektraIzvrsenjeUsluge, _context);
-        public JsonResult RemoveAllFromDb() => _racunWorkshop.RemoveAllFromDbTemp(GetUid(), _context.RacunElektraIzvrsenjeUsluge, _context);
+            => _racunElektraIzvrsenjeUslugeWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektraIzvrsenjeUsluge, _context);
+        public JsonResult SaveToDB(string _dopisId) => _racunElektraIzvrsenjeUslugeWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektraIzvrsenjeUsluge, _context);
+        public JsonResult RemoveRow(string racunId) => _racunElektraIzvrsenjeUslugeWorkshop.RemoveRow(racunId, _context.RacunElektraIzvrsenjeUsluge, _context);
+        public JsonResult RemoveAllFromDb() => _racunElektraIzvrsenjeUslugeWorkshop.RemoveAllFromDbTemp(GetUid(), _context.RacunElektraIzvrsenjeUsluge, _context);
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja, string usluga, string dopisId)
-            => new JsonResult(_racunElektraIzvrsenjeUslugeWorkshop.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
+            => new(_racunElektraIzvrsenjeUslugeWorkshop.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, GetUid(), _context));
         public JsonResult GetPredmetiDataForFilter() => Json(_predmetWorkshop.GetPredmetiDataForFilter(_context.RacunElektraIzvrsenjeUsluge, _context));
         public JsonResult GetList(bool IsFiltered, string klasa, string urbroj)
-            => _racunElektraIzvrsenjeUslugeWorkshop.GetListMe(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, _racunWorkshop, _context.RacunElektraIzvrsenjeUsluge, Request, GetUid());
+            => _racunElektraIzvrsenjeUslugeWorkshop.GetListMe(IsFiltered, klasa, urbroj, _datatablesGenerator, _context, _context.RacunElektraIzvrsenjeUsluge, Request, GetUid());
     }
 }

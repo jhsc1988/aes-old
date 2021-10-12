@@ -103,5 +103,6 @@ namespace aes.Controllers
         /// <returns>JsonResult</returns>
         public JsonResult RemoveAllFromDb();
         JsonResult GetList(bool isFIltered, string klasa, string urbroj);
+        //JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId);
     }
 }

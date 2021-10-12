@@ -169,7 +169,7 @@ namespace aes.Models.Workshop
             return list;
         }
         public JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
-            ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra
+            ApplicationDbContext _context, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<T> list;
@@ -181,7 +181,7 @@ namespace aes.Models.Workshop
             }
             else
             {
-                list = workshop.GetListCreateList(Uid, _context, modelcontext);
+                list = GetListCreateList(Uid, _context, modelcontext);
             }
 
             int totalRows = list.Count;

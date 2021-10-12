@@ -12,6 +12,7 @@ namespace aes.Models
 {
     public class RacunElektraIzvrsenjeUslugeWorkshop : RacunWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop
     {
+
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string datumPotvrde, string datumIzvrsenja, string usluga, string dopisId, string userId, ApplicationDbContext _context)
         {
             DateTime datumIzvrsenjaDT = new();
