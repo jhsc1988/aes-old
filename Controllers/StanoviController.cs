@@ -16,7 +16,6 @@ namespace aes.Controllers
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
         private readonly IStanoviWorkshop _stanoviWorkshop;
-        private readonly IRacunWorkshop _racunWorkshop;
         private readonly IRacunElektraWorkshop _racunElektraWorkshop;
         private readonly IRacunElektraRateWorkshop _racunElektraRateWorkshop;
         private readonly IRacunElektraIzvrsenjeUslugeWorkshop _racunElektraIzvrsenjeUslugeWorkshop;
@@ -24,13 +23,12 @@ namespace aes.Controllers
         private readonly IElektraKupacWorkshop _elektraKupacWorkshop;
 
         public StanoviController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
-            IStanoviWorkshop stanoviWorkshop, IRacunWorkshop racunWorkshop, IRacunElektraWorkshop racunElektraWorkshop,
+            IStanoviWorkshop stanoviWorkshop, IRacunElektraWorkshop racunElektraWorkshop,
             IRacunElektraRateWorkshop racunElektraRateWorkshop, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop,
             IRacunHoldingWorkshop racunHoldingWorkshop, IElektraKupacWorkshop elektraKupacWorkshop)
         {
             _datatablesGenerator = datatablesGenerator;
             _stanoviWorkshop = stanoviWorkshop;
-            _racunWorkshop = racunWorkshop;
             _racunElektraRateWorkshop = racunElektraRateWorkshop;
             _racunElektraWorkshop = racunElektraWorkshop;
             _racunElektraIzvrsenjeUslugeWorkshop = racunElektraIzvrsenjeUslugeWorkshop;
@@ -179,7 +177,7 @@ namespace aes.Controllers
 
         public JsonResult GetList()
         {
-            return _stanoviWorkshop.GetList(false,_datatablesGenerator, Request, _context);
+            return _stanoviWorkshop.GetList(false, _datatablesGenerator, Request, _context);
         }
 
         public JsonResult GetListFiltered()
@@ -191,11 +189,11 @@ namespace aes.Controllers
         // Details page
 
         public JsonResult GetRacuniForStan(int param)
-            => _stanoviWorkshop.GetRacuniForStan(_racunWorkshop, _elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraWorkshop, _context, param);
+            => _stanoviWorkshop.GetRacuniForStan(_elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraWorkshop, _context, param);
         public JsonResult GetRacuniRateForStan(int param)
-            => _stanoviWorkshop.GetRacuniRateForStan(_racunWorkshop,  _elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraRateWorkshop, _context, param);
+            => _stanoviWorkshop.GetRacuniRateForStan(_elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraRateWorkshop, _context, param);
         public JsonResult GetRacuniElektraIzvrsenjeForStan(int param)
-            => _stanoviWorkshop.GetRacuniElektraIzvrsenjeForStan(_racunWorkshop, _elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraIzvrsenjeUslugeWorkshop, _context, param);
+            => _stanoviWorkshop.GetRacuniElektraIzvrsenjeForStan(_elektraKupacWorkshop, Request, _datatablesGenerator, _racunElektraIzvrsenjeUslugeWorkshop, _context, param);
         public JsonResult GetHoldingRacuniForStan(int param)
             => _racunHoldingWorkshop.GetList(false, null, null, _datatablesGenerator, _context, Request, null, param);
 

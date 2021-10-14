@@ -8,11 +8,6 @@ namespace aes.Controllers
     internal interface IStanController
     {
         /// <summary>
-        /// Gets params from Datatables which was requested by Datatables AJAX POST method
-        /// </summary>
-        //public void GetDatatablesParamas();
-
-        /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka
         /// </summary>
         /// <returns>Vraća filtriranu listu stanova u JSON obliku za server side processing</returns>

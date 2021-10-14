@@ -25,7 +25,7 @@ namespace aes
         {
             // Dependency Injection
             _ = services.AddScoped<IDatatablesGenerator, DatatablesParams>();
-            _ = services.AddScoped<IRacunWorkshop, RacunWorkshop>();
+            //_ = services.AddScoped<IRacunWorkshop, RacunWorkshop>();
             _ = services.AddScoped<IRacunHoldingWorkshop, RacunHoldingWorkshop>();
             _ = services.AddScoped<IRacunElektraWorkshop, RacunElektraWorkshop>();
             _ = services.AddScoped<IRacunElektraRateWorkshop, RacunElektraRateWorkshop>();

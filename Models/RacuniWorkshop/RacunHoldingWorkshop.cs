@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using aes.Models.RacuniWorkshop.IRacuniWorkshop;
 using aes.Models.Workshop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ using System.Linq.Dynamic.Core;
 
 namespace aes.Models
 {
-    public class RacunHoldingWorkshop : RacunWorkshop, IRacunHoldingWorkshop
+    public class RacunHoldingWorkshop : RacuniElektraIRateWorkshop, IRacunHoldingWorkshop
     {
         public JsonResult AddNewTemp(string brojRacuna, string iznos, string date, string dopisId, string userId, ApplicationDbContext _context)
         {

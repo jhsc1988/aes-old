@@ -16,14 +16,12 @@ namespace aes.Controllers
         private readonly IDatatablesGenerator _datatablesGenerator;
         private readonly ApplicationDbContext _context;
         private readonly IPredmetWorkshop _predmetWorkshop;
-        private readonly IWorkshop _workshop;
 
         public PredmetiController(ApplicationDbContext context, IDatatablesGenerator datatablesGenerator,
-            IPredmetWorkshop predmetWorkshop, IWorkshop workshop)
+            IPredmetWorkshop predmetWorkshop)
         {
             _context = context;
             _predmetWorkshop = predmetWorkshop;
-            _workshop = workshop;
             _datatablesGenerator = datatablesGenerator;
         }
 

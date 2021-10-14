@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using aes.Models.RacuniWorkshop.IRacuniWorkshop;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ namespace aes.Models
         }
 
         public JsonResult GetRacuniForKupac<T>(int param, IDatatablesGenerator datatablesGenerator,
-            HttpRequest Request, ApplicationDbContext _context, IRacunWorkshop workshop, DbSet<T> modelcontext) where T : Elektra
+            HttpRequest Request, ApplicationDbContext _context, IRacuniElektraIRateWorkshop workshop, DbSet<T> modelcontext) where T : Elektra
         {
             IDatatablesParams Params = datatablesGenerator.GetParams(Request);
             List<T> list = workshop.GetRacuniFromDb(modelcontext, param);

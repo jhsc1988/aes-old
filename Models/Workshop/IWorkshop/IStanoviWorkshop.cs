@@ -13,8 +13,8 @@ namespace aes.Models
     {
         List<Stan> GetFilteredListForOds(IDatatablesParams Params, ApplicationDbContext _context);
         JsonResult GetList(bool IsFiltered, IDatatablesGenerator datatablesGenerator, HttpRequest Request, ApplicationDbContext context);
-        JsonResult GetRacuniElektraIzvrsenjeForStan(IRacunWorkshop racunWorkshop, IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, ApplicationDbContext context, int param);
-        JsonResult GetRacuniForStan(IRacunWorkshop racunWorkshop, IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator, IRacunElektraWorkshop racunElektraWorkshop, ApplicationDbContext context, int param);
-        JsonResult GetRacuniRateForStan(IRacunWorkshop racunWorkshop, IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator, IRacunElektraRateWorkshop racunElektraRateWorkshop, ApplicationDbContext context, int param);
+        JsonResult GetRacuniElektraIzvrsenjeForStan(IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator, IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, ApplicationDbContext context, int param);
+        JsonResult GetRacuniForStan(IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator, IRacunElektraWorkshop racunElektraWorkshop, ApplicationDbContext context, int param);
+        JsonResult GetRacuniRateForStan(IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator, IRacunElektraRateWorkshop racunElektraRateWorkshop, ApplicationDbContext context, int param);
     }
 }

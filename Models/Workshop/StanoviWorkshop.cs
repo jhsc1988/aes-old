@@ -10,8 +10,7 @@ namespace aes.Models
     public class StanoviWorkshop : IStanoviWorkshop
     {
         private static List<Stan> GetStanoviForDatatables(IDatatablesParams Params, List<Stan> stanList)
-        {
-            return stanList.Where(
+            => stanList.Where(
                                 x => x.StanId.ToString().Contains(Params.SearchValue)
                                     || x.SifraObjekta.ToString().Contains(Params.SearchValue)
                                     || (x.Adresa != null && x.Adresa.ToLower().Contains(Params.SearchValue.ToLower()))
@@ -24,30 +23,26 @@ namespace aes.Models
                                     || (x.Korisnik != null && x.Korisnik.ToLower().Contains(Params.SearchValue.ToLower()))
                                     || (x.Vlasništvo != null && x.Vlasništvo.ToLower().Contains(Params.SearchValue.ToLower())))
                             .ToDynamicList<Stan>();
-        }
         public List<Stan> GetFilteredListForOds(IDatatablesParams Params, ApplicationDbContext _context)
         {
             List<Stan> StanList = _context.Stan.Where(p => !_context.Ods.Any(o => o.StanId == p.Id)).ToList();
             return GetStanoviForDatatables(Params, StanList);
         }
-        public JsonResult GetRacuniForStan(IRacunWorkshop racunWorkshop,
-            IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
+        public JsonResult GetRacuniForStan(IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
             IRacunElektraWorkshop racunElektraWorkshop, ApplicationDbContext context, int param)
         {
             ElektraKupac elektraKupac = elektraKupacWorkshop.GetElektraKupacForStanId(context.ElektraKupac, param);
             if (elektraKupac is not null) param = elektraKupac.Id;
             return elektraKupacWorkshop.GetRacuniForKupac(param, datatablesGenerator, Request, context, racunElektraWorkshop, context.RacunElektra);
         }
-        public JsonResult GetRacuniRateForStan(IRacunWorkshop racunWorkshop,
-            IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
+        public JsonResult GetRacuniRateForStan(IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
             IRacunElektraRateWorkshop racunElektraRateWorkshop, ApplicationDbContext context, int param)
         {
             ElektraKupac elektraKupac = elektraKupacWorkshop.GetElektraKupacForStanId(context.ElektraKupac, param);
             if (elektraKupac is not null) param = elektraKupac.Id;
             return elektraKupacWorkshop.GetRacuniForKupac(param, datatablesGenerator, Request, context, racunElektraRateWorkshop, context.RacunElektraRate);
         }
-        public JsonResult GetRacuniElektraIzvrsenjeForStan(IRacunWorkshop racunWorkshop,
-            IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
+        public JsonResult GetRacuniElektraIzvrsenjeForStan(IElektraKupacWorkshop elektraKupacWorkshop, HttpRequest Request, IDatatablesGenerator datatablesGenerator,
             IRacunElektraIzvrsenjeUslugeWorkshop racunElektraIzvrsenjeUslugeWorkshop, ApplicationDbContext context, int param)
         {
             ElektraKupac elektraKupac = elektraKupacWorkshop.GetElektraKupacForStanId(context.ElektraKupac, param);

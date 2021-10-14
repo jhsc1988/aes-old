@@ -5,8 +5,6 @@ namespace aes.Controllers
 {
     internal interface IOdsController
     {
-        //public void GetDatatablesParamas();
-
         /// <summary>
         /// Server side processing - učitavanje, filtriranje, paging, sortiranje podataka iz baze
         /// </summary>
