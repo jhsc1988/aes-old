@@ -14,6 +14,7 @@ namespace aes.Models
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Razdoblje")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime Razdoblje { get; set; }
     }
 }

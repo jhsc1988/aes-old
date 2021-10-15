@@ -88,7 +88,11 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            RacunHolding racunHolding = await _context.RacunHolding.FindAsync(id);
+            RacunHolding racunHolding = await _context.RacunHolding
+                .Include(r => r.Dopis)
+                .Include(r => r.Stan)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (racunHolding == null)
             {
                 return NotFound();

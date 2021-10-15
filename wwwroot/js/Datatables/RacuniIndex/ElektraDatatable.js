@@ -3,8 +3,8 @@ let table;
 
 $(document).ready(function () {
 
-    table = $('#IndexTable').DataTable({
-
+    initComplete: table = $('#IndexTable').DataTable({
+       
         // excel
         dom: 'frtipB',
         "buttons": [

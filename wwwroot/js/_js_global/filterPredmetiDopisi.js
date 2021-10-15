@@ -1,4 +1,7 @@
-﻿$(document).ready(function () {
+﻿var initialLoad = true; // fix za dvostruko citanje iz GetList prilikom prvog ucitavanja
+                        // StackOverflow
+
+$(document).ready(function () {
 
     GetPredmetiData(); // init
 
@@ -21,7 +24,7 @@
             success: function (predmeti) {
                 predmetiForFilter = predmeti;
                 drawSelectPredmetOptions();
-                if (isItForFilter)
+                if (isItForFilter && initialLoad)
                     refreshWithFilteredData();
             }
         });
@@ -97,6 +100,7 @@
         dopisiForFilter = null; // reset dopisi
         GetDopisiData();
     });
+    initialLoad = false;
 });
 
 $("#selectDopis").change(function () {

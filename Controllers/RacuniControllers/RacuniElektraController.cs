@@ -226,7 +226,7 @@ namespace aes.Controllers
         public JsonResult GetDopisiDataForFilter(int predmetId)
             => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
-        public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
+        public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.Include(e => e.Ods).Include(e => e.Ods.Stan).ToList());
         public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
             => _racunElektraWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektra, _context);
         public JsonResult SaveToDB(string _dopisId) => _racunElektraWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektra, _context);

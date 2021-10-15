@@ -15,6 +15,8 @@ namespace aes.Models
         public string Usluga { get; set; }
 
         [Display(Name = "Datum izvršenja")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime DatumIzvrsenja { get; set; }
     }
 }

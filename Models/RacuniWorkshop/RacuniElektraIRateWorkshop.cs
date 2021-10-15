@@ -14,12 +14,17 @@ namespace aes.Models.RacuniWorkshop.IRacuniWorkshop
     {
         public List<T> GetList<T>(int predmetIdAsInt, int dopisIdAsInt, DbSet<T> modelcontext) where T : Elektra
         {
+            // todo: RacunElektraRateList ne saljem u GetRacuniFromDb -> vraca mi cijelu listu racuna, ne filtrira po predmetu
             IQueryable<T> RacunElektraRateList = predmetIdAsInt is 0 && dopisIdAsInt is 0
                 ? modelcontext.Where(e => e.IsItTemp == null)
                 : dopisIdAsInt is 0
                     ? modelcontext.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
                     : modelcontext.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
-            return GetRacuniFromDb(modelcontext);
+            return RacunElektraRateList
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
+                .ToList();
         }
         public JsonResult GetListMe<T>(bool isFiltered, string klasa, string urbroj, IDatatablesGenerator datatablesGenerator,
 ApplicationDbContext _context, DbSet<T> modelcontext, HttpRequest Request, string Uid) where T : Elektra

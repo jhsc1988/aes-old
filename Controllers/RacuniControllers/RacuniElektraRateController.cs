@@ -46,6 +46,9 @@ namespace aes.Controllers
             }
 
             RacunElektraRate racunElektraRate = await _context.RacunElektraRate
+                .Include(r => r.ElektraKupac)
+                .Include(r => r.ElektraKupac.Ods)
+                .Include(r => r.ElektraKupac.Ods.Stan)
                 .Include(r => r.Dopis)
                 .Include(r => r.ElektraKupac)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -89,7 +92,14 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            RacunElektraRate racunElektraRate = await _context.RacunElektraRate.FindAsync(id);
+            RacunElektraRate racunElektraRate = await _context.RacunElektraRate
+                .Include(r => r.ElektraKupac)
+                .Include(r => r.ElektraKupac.Ods)
+                .Include(r => r.ElektraKupac.Ods.Stan)
+                .Include(r => r.Dopis)
+                .Include(r => r.ElektraKupac)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (racunElektraRate == null)
             {
                 return NotFound();
@@ -191,7 +201,7 @@ namespace aes.Controllers
         public JsonResult GetDopisiDataForFilter(int predmetId)
             => Json(_context.Dopis.Where(element => element.PredmetId == predmetId).ToList());
         public JsonResult GetPredmetiCreate() => Json(_context.Predmet.ToList());
-        public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.ToList());
+        public string GetKupci() => JsonConvert.SerializeObject(_context.ElektraKupac.Include(e => e.Ods).Include(e => e.Ods.Stan).ToList());
         public JsonResult UpdateDbForInline(string id, string updatedColumn, string x)
             => _racunElektraRateWorkshop.UpdateDbForInline(id, updatedColumn, x, _context.RacunElektraRate, _context);
         public JsonResult SaveToDB(string _dopisId) => _racunElektraRateWorkshop.SaveToDb(GetUid(), _dopisId, _context.RacunElektraRate, _context);

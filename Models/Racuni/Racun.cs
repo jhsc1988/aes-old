@@ -29,6 +29,7 @@ namespace aes.Models
         // required se podrazumijeva jer nije nullable
         [Display(Name = "Datum izdavanja")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? DatumIzdavanja { get; set; }
         public Dopis Dopis { get; set; }
         public int? DopisId { get; set; }
@@ -43,6 +44,7 @@ namespace aes.Models
 
         [Display(Name = "Datum potvrde")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? DatumPotvrde { get; set; } // nullable mi treba za not required
 
         [Display(Name = "Vrijeme unosa")]
