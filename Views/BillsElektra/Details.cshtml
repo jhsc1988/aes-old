@@ -1,0 +1,82 @@
+﻿@using aes.Models.Racuni
+@model Tuple<RacunElektra, ObracunPotrosnje>
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08"><strong>Detalji:</strong> Račun broj: @Model.Item1.BrojRacuna</p>
+    </div>
+    <div>
+        <strong> ID: </strong>
+        <a href="/Apartments/Details/@Model.Item1.ElektraKupac.Ods.Stan.Id">@Model.Item1.ElektraKupac.Ods.Stan.StanId</a>
+        <strong> Adresa: </strong> @Model.Item1.ElektraKupac.Ods.Stan.Adresa
+        <strong> Kat: </strong> @Model.Item1.ElektraKupac.Ods.Stan.Kat
+        <strong> Broj stana: </strong>@Model.Item1.ElektraKupac.Ods.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.Item1.ElektraKupac.Ods.Stan.Četvrt
+        <strong> Površina: </strong>@Model.Item1.ElektraKupac.Ods.Stan.Površina.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR")) m2
+        <strong> Status korištenja: </strong>@Model.Item1.ElektraKupac.Ods.Stan.StatusKorištenja
+        <strong> Vlasništvo: </strong> @Model.Item1.ElektraKupac.Ods.Stan.Vlasništvo
+    </div><hr />
+    <div>
+        <strong> @Html.DisplayNameFor(model => model.Item1.BrojRacuna): </strong> @Html.DisplayFor(model => model.Item1.BrojRacuna)
+        <strong>@Html.DisplayNameFor(model => model.Item1.ElektraKupac.UgovorniRacun): </strong>
+        <a href="/ElektraCustomers/Details/@Model.Item1.ElektraKupacId">@Html.DisplayFor(model => model.Item1.ElektraKupac.UgovorniRacun)</a>
+        <strong>@Html.DisplayNameFor(model => model.Item1.ElektraKupac.Ods.Omm): </strong>
+        <a href="/Ods/Details/@Model.Item1.ElektraKupac.OdsId">@Html.DisplayFor(model => model.Item1.ElektraKupac.Ods.Omm)</a>
+        <strong>@Html.DisplayNameFor(model => model.Item1.DatumIzdavanja): </strong>
+        @Html.DisplayFor(model => model.Item1.DatumIzdavanja)
+        <strong>@Html.DisplayNameFor(model => model.Item1.Iznos): </strong>
+        @Html.Raw(Model.Item1.Iznos.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR"))):
+        <strong>@Html.DisplayNameFor(model => model.Item1.Dopis.Predmet): </strong>
+        <a href="/CaseFiles/Details/@Model.Item1.Dopis.PredmetId">@Html.DisplayFor(model => model.Item1.Dopis.Predmet.Klasa)</a>
+        <strong>@Html.DisplayNameFor(model => model.Item1.Dopis): </strong>
+        <a href="/Letters/Details/@Model.Item1.DopisId">@Html.DisplayFor(model => model.Item1.Dopis.Urbroj)</a>
+        <strong>@Html.DisplayNameFor(model => model.Item1.RedniBroj): </strong>
+        @Html.DisplayFor(model => model.Item1.RedniBroj)
+        <strong>@Html.DisplayNameFor(model => model.Item1.KlasaPlacanja): </strong>
+        @Html.DisplayFor(model => model.Item1.KlasaPlacanja)
+        <strong>@Html.DisplayNameFor(model => model.Item1.DatumPotvrde): </strong>
+        @Html.DisplayFor(model => model.Item1.DatumPotvrde)
+        <strong>@Html.DisplayNameFor(model => model.Item1.Napomena): </strong>
+        @Html.DisplayFor(model => model.Item1.Napomena)
+        <hr />
+        <div class="content-bg">
+            <div class="row head-bg justify-content-between">
+                <p class="pf08">Potrošnja</p>
+                <button class="button-add-new" id="aAddNew">
+                    <i class="bi bi-plus"></i>unos novog
+                </button>
+            </div>
+            <table class="display nowrap w-100" id="IndexTable">
+                <thead>
+                    <tr>
+                        <th>Broj Brojila</th>
+                        <th>Tarfina stavka</th>
+                        <th>Datum od</th>
+                        <th>Datum do</th>
+                        <th>Stanje od</th>
+                        <th>Stanje do</th>
+                        <th>Akcija</th>
+                    </tr>
+                </thead>
+            </table>
+            <partial name="_ObrPartial" model="@Model.Item2" />
+        </div>
+    </div>
+    <hr />
+    <div>
+        <button onclick="location.href='@Url.Action("Index", "BillsElektra")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+        <button onclick="location.href='@Url.Action("Edit", "BillsElektra", new { id = Model.Item1.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  uredi</button>
+        <button onclick="location.href='@Url.Action("Delete", "BillsElektra", new { id = Model.Item1.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-x"></i>  briši</button>
+    </div>
+</div>
+
+<script>
+    const billId = @Model.Item1.Id;
+    let hidden = true;
+</script>
+<script src="~/js/_js_global/ExcelExportAction.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/ObracunPotrosnje.js" asp-append-version="true"></script>
+<script src="~/js/_js_global/_addNewHideUnhide.js"></script>

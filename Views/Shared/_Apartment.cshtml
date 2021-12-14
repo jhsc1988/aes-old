@@ -1,0 +1,28 @@
+﻿<table class="display nowrap w-100" id="_StanTable">
+    <thead>
+        <tr>
+            <th>Stan ID</th>
+            <th>Šifra objekta</th>
+            <th>Adresa</th>
+            <th>Kat</th>
+            <th>Broj stana</th>
+            <th>Četvrt</th>
+            <th>Površina</th>
+            <th>Status korištenja</th>
+            <th>Korisnik</th>
+            <th>Vlasništvo</th>
+            <th>Akcija</th>
+        </tr>
+    </thead>
+</table>
+<script src="~/js/Datatables/Create/OdsDatatable.js"></script>
+<script>
+    function setInputData(id, stanid) {
+        $('#SId').val(id);
+        $('#StanId').val(stanid);
+
+        GetStanData(id); // poziv ajax f-je za notification builder
+    };
+</script>
+
+

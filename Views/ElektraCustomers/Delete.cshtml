@@ -1,0 +1,38 @@
+﻿@model aes.Models.ElektraKupac
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08"><strong>Detalji:</strong> Ugovorni račun: @Model.UgovorniRacun</p>
+    </div>
+    <h4>Jeste li sigurni da želite obrisati ovo mjerno mjesto ?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UgovorniRacun)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UgovorniRacun)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ods.Omm)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/Ods/Details/@Model.OdsId">@Html.DisplayFor(model => model.Ods.Omm)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Napomena)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Napomena)
+        </dd>
+    </dl>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button onclick="location.href='@Url.Action("Details", "ElektraCustomers", new { id = Model.Id })'" type='button' class='button-back'><i class='bi bi-arrow-left'></i>  povratak na detalje</button>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
+</div>

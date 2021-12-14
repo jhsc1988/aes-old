@@ -1,0 +1,70 @@
+﻿@model aes.Models.ElektraKupac
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="pf08">Pregled kupaca - HEP - Elektra</p>
+    </div>
+    <div>
+        <partial name="_ElektraCustomers" />
+    </div>
+    <hr />
+    <div class="row col-sm-auto">
+        <label class="form-label col-form-label-sm side-padding-10" id="stanText"> </label>
+    </div>
+    <form asp-action="Create">
+        <div class="side-padding-10" style="width:60%;">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="invisible" hidden>
+                    <label hidden asp-for="OdsId" class="control-label"></label>
+                    <input type="hidden" asp-for="OdsId" id="OId" readonly class="form-control form-control-sm" />
+                    <span asp-validation-for="OdsId" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label" hidden></label>
+                    <input id="OMM" readonly class="form-control form-control-sm" placeholder="OMM" />
+                </div>
+                <div class="col-md-4">
+                    <label hidden asp-for="UgovorniRacun" class="control-label"></label>
+                    <input asp-for="UgovorniRacun" class="form-control form-control-sm" placeholder="Ugovorni račun" />
+                    <span asp-validation-for="UgovorniRacun" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label hidden asp-for="Napomena" class="control-label"></label>
+                    <input asp-for="Napomena" class="form-control form-control-sm" placeholder="Napomena" />
+                    <span asp-validation-for="Napomena" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class=" row side-padding-10">
+            <div class="side-padding-10">
+                <button onclick="location.href='@Url.Action("Index", "ElektraCustomers")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+                <button type="submit" value="Spremi" class="btn btn-dark">Spremi</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+ 
+   @*<script src="~/js/_js_global/ExcelExportAction.js"></script>*@
+    <script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+    <script src="~/js/_js_global/notificationBuilder/NotificationBuilderKupacAndOds.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const input = $('#OdsTable_filter input[type="search"]');
+            const filter = $('#OdsTable_filter');
+            setStyle(input, filter); // postavljam css za searchbox
+        });
+
+        $("#OMM").on("change", function () {
+            let i = $('#OId').val();
+            GetStanData(i); // poziv ajax f-je za notification builder
+        });
+    </script>
+}

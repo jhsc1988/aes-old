@@ -1,0 +1,148 @@
+﻿@using Microsoft.AspNetCore.Mvc.RazorPages
+@using Microsoft.AspNetCore.Http
+@using aes.Controllers
+@using aes.Repository.IRepository
+
+@inject IApartmentUpdateRepository apartmentUpdateRepository;
+@{
+    ApartmentUpdate apartmentUpdateData = apartmentUpdateRepository.getLatest();
+
+    string dateOfData = null;
+    string apartmentUpdateDataUpdateBegan = null;
+    string apartmentUpdateDataUpdateEnded = null;
+
+    if (apartmentUpdateData is not null)
+    {
+        dateOfData = apartmentUpdateRepository.getLatestSuccessfulUpdate().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
+        apartmentUpdateDataUpdateBegan = apartmentUpdateData.UpdateBegan.ToString("dd.MM.yyyy HH:mm:ss");
+        apartmentUpdateDataUpdateEnded = apartmentUpdateData.UpdateEnded != null ? ((DateTime)apartmentUpdateData.UpdateEnded).ToString("dd.MM.yyyy HH:mm:ss") : null;
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - aes</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!--jQuery-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!--DataTables-->
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.23/kt-2.6.1/r-2.2.7/sc-2.0.3/datatables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.23/kt-2.6.1/r-2.2.7/sc-2.0.3/datatables.min.css" />
+    <!--DataTables plugins-->
+    <script src="https://cdn.datatables.net/plug-ins/1.10.22/dataRender/ellipsis.js"></script>
+    <!--Date and time plugins-->
+    <script src="//cdn.datatables.net/plug-ins/1.10.19/dataRender/datetime.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+    <!--BootStrap icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" />
+
+
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
+                <div class="container">
+                    <div class="logo" asp-controller="Home" asp-action="Index">
+                        <img src="~/logo-sm.png" alt="aes">
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark h6" asp-area="" asp-controller="Apartments" asp-action="">Stanovi</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kupci<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="ElektraCustomers" asp-action="">Kupci - Elektra</a>
+                                    </li>
+                                    <li class="dropdown-divider"></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="Ods" asp-action="">ODS - mjerna mjesta</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Računi<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsElektra" asp-action="">Elektra - obračuni</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsElektraAdvances" asp-action="">Elektra - rate</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsElektraServices" asp-action="">Elektra - izvršenja usluge</a>
+                                    </li>
+                                    <li class="dropdown-divider"></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsHolding" asp-action="">Holding</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark h6" asp-area="" asp-controller="CaseFiles" asp-action="">Predmeti</a>
+                            </li>
+                        </ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <footer class="border-top footer text-muted">
+            <div class="row container justify-content-between align-items-center">
+                &copy; 2021 - aes - Jasmin Husić
+                @if (apartmentUpdateData is not null)
+                {
+                    <div class="" style="font-size: 0.7rem;">
+                        <strong>stanje podataka:</strong> @dateOfData,
+                        <strong>update start:</strong> @apartmentUpdateDataUpdateBegan,
+                        <strong>end:</strong> @apartmentUpdateDataUpdateEnded,
+                        <strong>init by:</strong> @apartmentUpdateData.ExecutedBy
+                    </div>
+                }
+                <div class="row justify-content-center align-items-center">
+                    <a id="github" href="https://github.com/jhsc1988/aes">
+                        <i class="bi bi-github"></i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+        <div class="container footer-bottom">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else if (!User.Identity.IsAuthenticated)
+    {
+        <main>
+            @RenderBody()
+        </main>
+    }
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,108 @@
+﻿@model aes.Models.Stan
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Stan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label hidden asp-for="StanId" class="control-label"></label>
+                <input asp-for="StanId" class="form-control" placeholder="Stan ID"/>
+                <span asp-validation-for="StanId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="SifraObjekta" class="control-label"></label>
+                <input asp-for="SifraObjekta" class="form-control" placeholder="Šifra objekta"/>
+                <span asp-validation-for="SifraObjekta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Vrsta" class="control-label"></label>
+                <input asp-for="Vrsta" class="form-control" placeholder="Vrsta" />
+                <span asp-validation-for="Vrsta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Adresa" class="control-label"></label>
+                <input asp-for="Adresa" class="form-control" placeholder="Adresa"/>
+                <span asp-validation-for="Adresa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Kat" class="control-label"></label>
+                <input asp-for="Kat" class="form-control" placeholder="Kat"/>
+                <span asp-validation-for="Kat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="BrojSTana" class="control-label"></label>
+                <input asp-for="BrojSTana" class="form-control" placeholder="Broj stana"/>
+                <span asp-validation-for="BrojSTana" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Naselje" class="control-label"></label>
+                <input asp-for="Naselje" class="form-control" placeholder="Naselje"/>
+                <span asp-validation-for="Naselje" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Četvrt" class="control-label"></label>
+                <input asp-for="Četvrt" class="form-control" placeholder="Četvrt"/>
+                <span asp-validation-for="Četvrt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Površina" class="control-label"></label>
+                <input asp-for="Površina" class="form-control" placeholder="Površina"/>
+                <span asp-validation-for="Površina" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="StatusKorištenja" class="control-label"></label>
+                <input asp-for="StatusKorištenja" class="form-control" placeholder="Status korištenja"/>
+                <span asp-validation-for="StatusKorištenja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Korisnik" class="control-label"></label>
+                <input asp-for="Korisnik" class="form-control" placeholder="Korisnik"/>
+                <span asp-validation-for="Korisnik" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Vlasništvo" class="control-label"></label>
+                <input asp-for="Vlasništvo" class="form-control" placeholder="Vlasništvo"/>
+                <span asp-validation-for="Vlasništvo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="DioNekretnine" class="control-label"></label>
+                <input asp-for="DioNekretnine" class="form-control" placeholder="Dio nekretnine"/>
+                <span asp-validation-for="DioNekretnine" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Sektor" class="control-label"></label>
+                <input asp-for="Sektor" class="form-control" placeholder="Sektor"/>
+                <span asp-validation-for="Sektor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" placeholder="Status"/>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label hidden asp-for="VrijemeUnosa" class="control-label"></label>
+                <input asp-for="VrijemeUnosa" class="form-control" placeholder="Vrijeme unosa"/>
+                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

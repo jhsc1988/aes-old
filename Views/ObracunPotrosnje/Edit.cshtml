@@ -1,0 +1,97 @@
+﻿@model aes.Models.Racuni.ObracunPotrosnje
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08">Obračun potrošnje: @Model.BrojBrojila Naziv: </p>
+    </div>
+
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
+        @* ------------------------------------------------------------------------------------ *@
+
+        <div hidden class="form-group">
+            <label asp-for="RacunElektraId" class="control-label"></label>
+            <select asp-for="RacunElektraId" class="form-control form-control-sm" asp-items="ViewBag.RacunElektraId"></select>
+            <span asp-validation-for="RacunElektraId" class="text-danger"></span>
+        </div>
+        @* ------------------------------------------------------------------------------------ *@
+
+        <div style="display:inline-block; width: 20%">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group space-10-10">
+                        <label asp-for="BrojBrojila" class="control-label"></label>
+                        <input asp-for="BrojBrojila" class="form-control form-control-sm" />
+                        <span asp-validation-for="BrojBrojila" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group space-10-10">
+                        <label asp-for="DatumOd" class="control-label"></label>
+                        <input asp-for="DatumOd" class="form-control form-control-sm" />
+                        <span asp-validation-for="DatumOd" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group space-10-10">
+                        <label asp-for="StanjeOd" class="control-label"></label>
+                        <input asp-for="StanjeOd" class="form-control form-control-sm" />
+                        <span asp-validation-for="StanjeOd" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:inline-block; width: 20%">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group space-10-10">
+                        <label asp-for="TarifnaStavkaId" class="control-label"></label>
+                        <select asp-for="TarifnaStavkaId" class="form-control form-control-sm" asp-items="ViewBag.TarifnaStavkaId"></select>
+                        <span asp-validation-for="TarifnaStavkaId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group space-10-10">
+                        <label asp-for="DatumDo" class="control-label"></label>
+                        <input asp-for="DatumDo" class="form-control form-control-sm" />
+                        <span asp-validation-for="DatumDo" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group space-10-10">
+                        <label asp-for="StanjeDo" class="control-label"></label>
+                        <input asp-for="StanjeDo" class="form-control form-control-sm" />
+                        <span asp-validation-for="StanjeDo" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+
+        <button onclick="location.href='@Url.Action("Details", "BillsElektra", new { id = Model.RacunElektraId })'" type='button' class='button-back'><i class='bi bi-arrow-left'></i>  povratak na detalje</button>
+        <button onclick="location.href='@Url.Action("Delete", "ObracunPotrosnje", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-x"></i>  briši</button>
+        <button type="submit" class="btn btn-dark" style="margin-left: 10px;">Spremi</button>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

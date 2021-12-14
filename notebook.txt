@@ -1,0 +1,88 @@
+Entity Framework/Linq to SQL: Skip & Take
+
+public IEnumerable<Store> ListStores(Expression<Func<Store, string>> sort, bool desc, int page, int pageSize, out int totalRecords)
+{
+    List<Store> stores = new List<Store>();
+    using (var context = new TectonicEntities())
+    {
+        totalRecords = context.Stores.Count();
+        int skipRows = (page - 1) * pageSize;
+        if (desc)
+            stores = context.Stores.OrderByDescending(sort).Skip(skipRows).Take(pageSize).ToList();
+        else
+            stores = context.Stores.OrderBy(sort).Skip(skipRows).Take(pageSize).ToList();
+    }
+    return stores;
+}
+
+
+                                    // todo --------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                    // NOTE: iznos je double, pa string, pa opet double
+                                    // TODO: treba vidjeti je li jeftinije napraviti insert u string
+                                    // todo: na add new temp - iznos ne smije biti prazan - ovdje broj računa ne smije biti prazan
+                                    // TODO: ASYNC/AWAIT samo za _context - svaki request u ASP.NET obrađuje jedan thread Task.Run zapravo usporava .NET !!!
+                                    // todo: urediti delete page
+                                    // todo: puca na search i sort
+
+                                    // done --------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                    // done: https://localhost:44387/ElektraCustomers/Edit/1 ne radi link na omm
+                                    // DONE: dodati i predmete koji su A/A
+                                    // done: za create - spremi - dopisi samo koji su prazni (nemaju ni jedan plaćeni račun)
+                                    // done: za popis računa - filter - predmeti koji imaju bar jedan dopis i nije prazan, i dopisi po kojima postoje neki plaćeni računi
+                                    // done: na edit niti details računa nemam napomenu
+                                    // done: datum računa na stan - računi imam invalid date
+
+predmet (spis predmeta) - case file
+
+
+repository pattern + unity of work
+spremanje računa - ako odaberem dopis spremit ce praznu tablicu računa
+isključiti excel za stanove
+riješiti tablice Create za ostale račune (za sada je samo složen računi Elektra)
+excel upload za sve račune
+code cleanup
+
+error handling gdje treba (za alert) - u principu, trebaju mi samo gdje se pozivaju
+ajax fjunkcije
+
+popraviti file upload
+stan info riješiti kao i https://localhost:44387/ElektraCustomers/Details/30
+	- podaci u headeru kao i omm...
+postaviti [HttpPost] u svim kontrolerima
+
+features todo:
+
+promijeniti nazive metoda i varijabli - mora biti ljepse opisano, vidjeti za konvenciju imenovanja lokalnih varijabli
+sve List<> (koje mogu) prebaciti u IEnumerable - navodno je brži
+1. za račun - dodavanje obračuna potrošnje
+2. za stan - dodavanje preuzimanja
+3. kratki opis za dopise
+4. za dopis - računi koji su plačeni po dopisu
+5. za editiranje računa koji su plaćeni - postaviti ih kao temp, edit, i onda spremiti
+role, kasnije i user management
+6. kreiranje excel datoteke na server-side strani, i download javascriptom
+Illoger
+
+nečistoće:
+
+dopis - predmet odnos (predmet je dio dopisa, a trebalo bi biti obrnuto)
+notification builder u javascriptu je cirkus
+nije rest
+
+
+
+
+
+
+
+            IQueryable<Elektra> Bills = predmetIdAsInt is 0 && dopisIdAsInt is 0
+                ? BillsContext.Bills.Where(e => e.IsItTemp == null)
+                : dopisIdAsInt is 0
+                ? BillsContext.Bills.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt)
+                : BillsContext.Bills.Where(x => x.Dopis.Predmet.Id == predmetIdAsInt && x.Dopis.Id == dopisIdAsInt);
+
+            return Bills
+                .Include(e => e.ElektraKupac)
+                .Include(e => e.ElektraKupac.Ods)
+                .Include(e => e.ElektraKupac.Ods.Stan)
+                .ToList();

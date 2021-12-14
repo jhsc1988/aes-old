@@ -1,0 +1,14 @@
+﻿@* scripts for Create pages for Racuni *@
+
+<script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+<script src="~/js/_js_global/filterPredmetiDopisi.js"></script>
+<script src="~/js/Datatables/Create/CreateFns.js"></script>
+<script src=~/js/alertify/alertify.min.js></script>
+<link rel=stylesheet href=~/js/alertify/css/alertify.css>
+<script>
+    $(document).ready(function () {
+        const input = $('#IndexTable_filter input[type="search"]');
+        const filter = $('#IndexTable_filter');
+        setStyle(input, filter);
+    });
+</script>

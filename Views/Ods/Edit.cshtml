@@ -1,0 +1,74 @@
+﻿@model aes.Models.Ods
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08"><strong>Uređivanje:</strong> Obračunsko mjerno mjesto: @Model.Omm</p>
+    </div>
+    <div>
+        <strong> ID: </strong>
+        <a href="/Apartments/Details/@Model.Stan.StanId">@Model.Stan.StanId</a>
+        <strong> Adresa: </strong> @Model.Stan.Adresa
+        <strong> Kat: </strong> @Model.Stan.Kat
+        <strong> Broj stana: </strong>@Model.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.Stan.Četvrt
+        <strong> Površina: </strong>@Model.Stan.Površina.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR")) m2
+        <strong> Status korištenja: </strong>@Model.Stan.StatusKorištenja
+        <strong> Vlasništvo: </strong> @Model.Stan.Vlasništvo
+    </div>
+    <hr />
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
+        @* ------------------------------------------------------------------------------------ *@
+        <div hidden class="invisible">
+            <div class="form-group">
+                <label asp-for="VrijemeUnosa" class="control-label"></label>
+                <input asp-for="VrijemeUnosa" class="form-control" />
+                <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+            </div>
+        </div>
+        @* ------------------------------------------------------------------------------------ *@
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group space-10-10">
+                    <label asp-for="Omm" class="control-label"></label>
+                    <input readonly asp-for="Omm" class="form-control form-control-sm" />
+                    <span asp-validation-for="Omm" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group space-10-10">
+                    <label asp-for="StanId" class="control-label"></label>
+                    <input asp-for="StanId" class="form-control form-control-sm" />
+                    <span asp-validation-for="StanId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group space-10-10">
+                    <label asp-for="Napomena" class="control-label"></label>
+                    <input asp-for="Napomena" class="form-control form-control-sm" />
+                    <span asp-validation-for="Napomena" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div>
+            <button onclick="location.href='@Url.Action("Details", "Ods", new { id = Model.Id })'" type='button' class='button-back'><i class='bi bi-arrow-left'></i>  povratak na detalje</button>
+            <button onclick="location.href='@Url.Action("Delete", "Ods", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-x"></i>  briši</button>
+            <button type="submit" class="btn btn-dark" style="margin-left: 10px;">Spremi</button>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

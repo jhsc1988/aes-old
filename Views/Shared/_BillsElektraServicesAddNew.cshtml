@@ -1,0 +1,57 @@
+﻿<form class="row g-3 d-flex">
+    <div class="col-sm-2" ></div>
+    <div class="col-sm-6" @*style="width:20%"*@>
+        <div class="row justify-content-center" @*style="width: 50%;"*@>
+            <div class="col-md-4">
+                <label hidden class="form-label col-form-label-sm">Broj Računa</label>
+                <input type="text" id="brojRacuna" class="form-control form-control-sm" placeholder="broj računa"
+                       maxlength="19">
+            </div>
+            <div class="col-md-3">
+                <label hidden class="form-label col-form-label-sm">Datum izdavanja</label>
+                <input type="text" id="datumIzdavanja" class="form-control form-control-sm" placeholder="Datum izdavanja"
+                       onfocus="(this.type='date')" onblur="setDatumIzdavanjaTextIfEmpty()" @{/*trik za pokazivanje placeholdera*/}>
+            </div>
+            <div class="col-md-4">
+                <label hidden class="form-label col-form-label-sm">Iznos</label>
+                <input type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$" id="iznos" class="form-control form-control-sm"
+                       placeholder="Iznos">
+            </div>
+        </div>
+        <div style="margin-top:15px;"></div>
+        <div class="row justify-content-center" @*style="width: 50%;"*@>
+            <div class="col-md-4">
+                <label hidden class="form-label col-form-label-sm">Usluga</label>
+                <input type="text" id="usluga" class="form-control form-control-sm" placeholder="Usluga">
+            </div>
+            <div class="col-md-3">
+                <label hidden class="form-label col-form-label-sm">Datum izvršenja</label>
+                <input type="text" id="datumIzvrsenja" class="form-control form-control-sm" placeholder="Datum izvršenja"
+                       onfocus="(this.type='date')" onblur="setDatumIzvrsenjaTextIfEmpty()">
+            </div>
+        </div>
+    </div>
+    <div class="col justify-content-start" @*style="width: 40%;"*@>
+        <br />
+        <button type="button" id="btnAdd" class="btn btn-dark">
+            <i class="bi bi-plus"></i>dodaj
+        </button>
+    </div>
+    @*<div class="col"></div>*@
+</form>
+<div class="row justify-content-center">
+    <label class="form-label col-form-label-sm" id="stanText"> </label>
+</div>
+<hr />
+<script>
+    function setDatumIzdavanjaTextIfEmpty() {
+        if (document.getElementById("datumIzdavanja").value == "") {
+            document.getElementById('datumIzdavanja').type = 'text';
+        }
+    }
+    function setDatumIzvrsenjaTextIfEmpty() {
+        if (document.getElementById("datumIzvrsenja").value == "") {
+            document.getElementById('datumIzvrsenja').type = 'text';
+        }
+    }
+</script>

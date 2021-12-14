@@ -1,0 +1,104 @@
+﻿@using aes.Models.Racuni
+@model RacunElektraIzvrsenjeUsluge
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08"><strong>Brisanje:</strong> Račun broj: @Model.BrojRacuna</p>
+    </div>
+    <div>
+        <strong> ID: </strong>
+        <a href="/Apartments/Details/@Model.ElektraKupac.Ods.Stan.Id">@Model.ElektraKupac.Ods.Stan.StanId</a>
+        <strong> Adresa: </strong> @Model.ElektraKupac.Ods.Stan.Adresa
+        <strong> Kat: </strong> @Model.ElektraKupac.Ods.Stan.Kat
+        <strong> Broj stana: </strong>@Model.ElektraKupac.Ods.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.ElektraKupac.Ods.Stan.Četvrt
+        <strong> Površina: </strong>@Model.ElektraKupac.Ods.Stan.Površina.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR")) m2
+        <strong> Status korištenja: </strong>@Model.ElektraKupac.Ods.Stan.StatusKorištenja
+        <strong> Vlasništvo: </strong> @Model.ElektraKupac.Ods.Stan.Vlasništvo
+    </div><hr />
+    <h4>Jeste li sigurni da želite obrisati ovaj račun ?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BrojRacuna)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BrojRacuna)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ElektraKupac.UgovorniRacun)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/ElektraCustomers/Details/@Model.ElektraKupacId">@Html.DisplayFor(model => model.ElektraKupac.UgovorniRacun)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ElektraKupac.Ods.Omm)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/Ods/Details/@Model.ElektraKupac.OdsId">@Html.DisplayFor(model => model.ElektraKupac.Ods.Omm)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DatumIzdavanja)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DatumIzdavanja)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DatumIzvrsenja)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DatumIzvrsenja)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Usluga)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Usluga)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Iznos)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.Iznos.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR")))
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Dopis.Predmet.Klasa)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/CaseFiles/Details/@Model.Dopis.PredmetId">@Html.DisplayFor(model => model.Dopis.Predmet.Klasa)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Dopis)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/Letters/Details/@Model.DopisId">@Html.DisplayFor(model => model.Dopis.Urbroj)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RedniBroj)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RedniBroj)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.KlasaPlacanja)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.KlasaPlacanja)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DatumPotvrde)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DatumPotvrde)
+        </dd>
+    </dl>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button onclick="location.href='@Url.Action("Details", "BillsElektraServices", new { id = Model.Id })'" type='button' class='button-back'><i class='bi bi-arrow-left'></i>  povratak na detalje</button>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
+</div>

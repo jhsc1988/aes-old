@@ -1,0 +1,59 @@
+﻿@using aes.Models.Racuni
+@model ObracunPotrosnje
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div class="row side-padding-10 d-flex justify-content-center">
+    <form asp-action="CreateObracunPotrosnje">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @* atributi su potrebni za bind - ne trbam ih vidljive, samo da povuće i zapiše podatke *@
+        @* ------------------------------------------------------------------------------------ *@
+
+        <div hidden class="invisible">
+
+            <div class="form-group">
+                <label asp-for="RacunElektraId" class="control-label"></label>
+                <select asp-for="RacunElektraId" class="form-control form-control-sm" asp-items="ViewBag.RacunElektraId"></select>
+            </div>
+        </div>
+        @* ------------------------------------------------------------------------------------ *@
+
+        <div class="row" id="AddNew" style="display:none;">
+            <div class="form-group space-10-10">
+                <label asp-for="BrojBrojila" class="control-label"></label>
+                <input asp-for="BrojBrojila" class="form-control form-control-sm"  placeholder="Broj brojila"/>
+                <span asp-validation-for="BrojBrojila" class="text-danger"></span>
+            </div>
+            <div class="form-group space-10-10">
+                <label asp-for="TarifnaStavkaId" class="control-label"></label>
+                <select asp-for="TarifnaStavkaId" class="form-control form-control-sm" asp-items="ViewBag.TarifnaStavkaId"></select>
+            </div>
+            <div class="form-group space-10-10">
+                <label asp-for="DatumOd" class="control-label"></label>
+                <input asp-for="DatumOd" class="form-control form-control-sm" />
+                <span asp-validation-for="DatumOd" class="text-danger"></span>
+            </div>
+            <div class="form-group space-10-10">
+                <label asp-for="StanjeOd" class="control-label"></label>
+                <input asp-for="StanjeOd" class="form-control form-control-sm" />
+                <span asp-validation-for="StanjeOd" class="text-danger"></span>
+            </div>
+            <div class="form-group space-10-10">
+                <label asp-for="DatumDo" class="control-label"></label>
+                <input asp-for="DatumDo" class="form-control form-control-sm" />
+                <span asp-validation-for="DatumDo" class="text-danger"></span>
+            </div>
+            <div class="form-group space-10-10">
+                <label asp-for="StanjeDo" class="control-label"></label>
+                <input asp-for="StanjeDo" class="form-control form-control-sm" />
+                <span asp-validation-for="StanjeDo" class="text-danger"></span>
+            </div>
+            <div class="form-group space-10-10 align-self-center">
+                <input type="submit" value="Create" class="btn btn-dark" />
+            </div>
+        </div>
+    </form>
+</div>

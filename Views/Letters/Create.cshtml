@@ -1,0 +1,49 @@
+﻿@model aes.Models.Dopis
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="pf08">Dopis - kreiraj novog</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="PredmetId" class="control-label"></label>
+                    <select asp-for="PredmetId" class ="form-control" asp-items="ViewBag.PredmetId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Urbroj" class="control-label"></label>
+                    <input asp-for="Urbroj" class="form-control" />
+                    <span asp-validation-for="Urbroj" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Datum" class="control-label"></label>
+                    <input asp-for="Datum" class="form-control" />
+                    <span asp-validation-for="Datum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VrijemeUnosa" class="control-label"></label>
+                    <input asp-for="VrijemeUnosa" class="form-control" />
+                    <span asp-validation-for="VrijemeUnosa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

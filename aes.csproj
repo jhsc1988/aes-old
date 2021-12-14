@@ -1,0 +1,245 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>aspnet-aes-242996AE-1571-44CC-8F1D-277880C8E74C</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\OdsKupci\**" />
+    <Compile Remove="Views\RacunElektraObracuniPotrosnje\**" />
+    <Compile Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
+    <Compile Remove="Views\UgovoriOKoristenju\**" />
+    <Compile Remove="Views\UgovoriOPrijenosu\**" />
+    <Compile Remove="wwwroot\js\Dopisi\**" />
+    <Compile Remove="wwwroot\js\ElektraKupci\**" />
+    <Compile Remove="wwwroot\js\OdsKupci\**" />
+    <Compile Remove="wwwroot\js\Ods\**" />
+    <Compile Remove="wwwroot\js\Predmeti\**" />
+    <Compile Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
+    <Compile Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <Compile Remove="wwwroot\js\RacuniElektraRate\**" />
+    <Compile Remove="wwwroot\js\RacuniElektra\**" />
+    <Compile Remove="wwwroot\js\RacuniHolding\**" />
+    <Compile Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <Compile Remove="wwwroot\js\Stanovi\**" />
+    <Compile Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <Compile Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <Content Remove="Views\OdsKupci\**" />
+    <Content Remove="Views\RacunElektraObracuniPotrosnje\**" />
+    <Content Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
+    <Content Remove="Views\UgovoriOKoristenju\**" />
+    <Content Remove="Views\UgovoriOPrijenosu\**" />
+    <Content Remove="wwwroot\js\Dopisi\**" />
+    <Content Remove="wwwroot\js\ElektraKupci\**" />
+    <Content Remove="wwwroot\js\OdsKupci\**" />
+    <Content Remove="wwwroot\js\Ods\**" />
+    <Content Remove="wwwroot\js\Predmeti\**" />
+    <Content Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
+    <Content Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <Content Remove="wwwroot\js\RacuniElektraRate\**" />
+    <Content Remove="wwwroot\js\RacuniElektra\**" />
+    <Content Remove="wwwroot\js\RacuniHolding\**" />
+    <Content Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <Content Remove="wwwroot\js\Stanovi\**" />
+    <Content Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <Content Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <EmbeddedResource Remove="Views\OdsKupci\**" />
+    <EmbeddedResource Remove="Views\RacunElektraObracuniPotrosnje\**" />
+    <EmbeddedResource Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
+    <EmbeddedResource Remove="Views\UgovoriOKoristenju\**" />
+    <EmbeddedResource Remove="Views\UgovoriOPrijenosu\**" />
+    <EmbeddedResource Remove="wwwroot\js\Dopisi\**" />
+    <EmbeddedResource Remove="wwwroot\js\ElektraKupci\**" />
+    <EmbeddedResource Remove="wwwroot\js\OdsKupci\**" />
+    <EmbeddedResource Remove="wwwroot\js\Ods\**" />
+    <EmbeddedResource Remove="wwwroot\js\Predmeti\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacuniElektraRate\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacuniElektra\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacuniHolding\**" />
+    <EmbeddedResource Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <EmbeddedResource Remove="wwwroot\js\Stanovi\**" />
+    <EmbeddedResource Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <EmbeddedResource Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+    <None Remove="Views\OdsKupci\**" />
+    <None Remove="Views\RacunElektraObracuniPotrosnje\**" />
+    <None Remove="Views\RacunOdsIzvrsenjaUsluge\**" />
+    <None Remove="Views\UgovoriOKoristenju\**" />
+    <None Remove="Views\UgovoriOPrijenosu\**" />
+    <None Remove="wwwroot\js\Dopisi\**" />
+    <None Remove="wwwroot\js\ElektraKupci\**" />
+    <None Remove="wwwroot\js\OdsKupci\**" />
+    <None Remove="wwwroot\js\Ods\**" />
+    <None Remove="wwwroot\js\Predmeti\**" />
+    <None Remove="wwwroot\js\RacunElektraIzvrsenjaUsluges\**" />
+    <None Remove="wwwroot\js\RacunElektraObracuniPotrosnje\**" />
+    <None Remove="wwwroot\js\RacuniElektraRate\**" />
+    <None Remove="wwwroot\js\RacuniElektra\**" />
+    <None Remove="wwwroot\js\RacuniHolding\**" />
+    <None Remove="wwwroot\js\RacunOdsIzvrsenjaUsluge\**" />
+    <None Remove="wwwroot\js\Stanovi\**" />
+    <None Remove="wwwroot\js\UgovoriOKoristenju\**" />
+    <None Remove="wwwroot\js\UgovoriOPrijenosu\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\OdsKupciController.cs" />
+    <Compile Remove="Controllers\RacunElektraObracuniPotrosnjeController.cs" />
+    <Compile Remove="Controllers\RacunOdsIzvrsenjaUslugeController.cs" />
+    <Compile Remove="Controllers\UgovoriOKoristenjuController.cs" />
+    <Compile Remove="Controllers\UgovoriOPrijenosuController.cs" />
+    <Compile Remove="Models\OdsKupac.cs" />
+    <Compile Remove="Models\RacunElektraObracunPotrosnje.cs" />
+    <Compile Remove="Models\RacunOdsIzvrsenjaUsluge.cs" />
+    <Compile Remove="Models\UgovorOKoristenju.cs" />
+    <Compile Remove="Models\UgovorOPrijenosu.cs" />
+    <Compile Remove="Models\User.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\Datatables\Details\RacunOdsIzvrsenjaUslugeTable.js" />
+    <Content Remove="wwwroot\js\Datatables\Details\UgovoriOKoristenjuTable.js" />
+    <Content Remove="wwwroot\js\Datatables\Details\UgovoriOPrijenosuTable.js" />
+    <Content Remove="wwwroot\js\_js_global\Notify.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+    <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.6.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.bootstrap.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.bootstrap4.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.bootstrap4.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.foundation.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.foundation.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.jqueryui.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.jqueryui.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.semanticui.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\dataTables.semanticui.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\jquery.dataTables.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\css\jquery.dataTables.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\images\sort_asc.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\images\sort_asc_disabled.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\images\sort_both.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\images\sort_desc.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\images\sort_desc_disabled.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.bootstrap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.bootstrap.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.bootstrap4.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.bootstrap4.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.foundation.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.foundation.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.jqueryui.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.jqueryui.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.semanticui.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\dataTables.semanticui.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\jquery.dataTables.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\DataTables-1.10.23\js\jquery.dataTables.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bootstrap.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bootstrap4.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bootstrap4.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bootstrap5.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bootstrap5.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bulma.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.bulma.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.dataTables.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.dataTables.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.foundation.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.foundation.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.jqueryui.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.jqueryui.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.semanticui.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\css\colReorder.semanticui.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bootstrap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bootstrap.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bootstrap4.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bootstrap4.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bootstrap5.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bootstrap5.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bulma.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.bulma.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.dataTables.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.dataTables.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.foundation.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.foundation.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.jqueryui.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.jqueryui.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.semanticui.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\colReorder.semanticui.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\dataTables.colReorder.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\ColReorder-1.5.4\js\dataTables.colReorder.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bootstrap.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bootstrap4.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bootstrap4.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bootstrap5.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bootstrap5.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bulma.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.bulma.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.dataTables.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.dataTables.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.foundation.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.foundation.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.jqueryui.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.jqueryui.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.semanticui.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\css\responsive.semanticui.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\dataTables.responsive.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\dataTables.responsive.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bootstrap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bootstrap.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bootstrap4.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bootstrap4.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bootstrap5.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bootstrap5.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bulma.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.bulma.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.dataTables.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.dataTables.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.foundation.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.foundation.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.jqueryui.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.jqueryui.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.semanticui.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\datatables\Responsive-2.2.9\js\responsive.semanticui.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\particles\js\app.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\particles\js\lib\stats.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\particles\css\style.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\particles\particles.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\particles\particles.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploaded\" />
+  </ItemGroup>
+
+</Project>
