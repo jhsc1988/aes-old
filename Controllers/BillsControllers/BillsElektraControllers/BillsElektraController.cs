@@ -232,7 +232,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 return Json($"Broj računa nije ispravan");
             }
 
-            if (brojRacuna.Length >= 10 && !brojRacuna[..10].Equals(racunElektraEdit.RacunElektra.BrojRacuna[..10]))
+            if (racunElektraEdit != null && brojRacuna.Length >= 10 && !brojRacuna[..10].Equals(racunElektraEdit.RacunElektra.BrojRacuna[..10]))
             {
                 return Json($"Ugovorni račun unutar broja računa ne smije se razlikovati");
             }
