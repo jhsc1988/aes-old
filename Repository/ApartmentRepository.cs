@@ -4,7 +4,6 @@ using aes.Repository.IRepository;
 using aes.Repository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace aes.Repository
@@ -19,15 +18,16 @@ namespace aes.Repository
 
         public async Task<IEnumerable<Stan>> GetApartments()
         {
-            // HACK: apartment id 25265 : dummy entity
+            // HACK: apartment id: dummy entity
             return await _unitOfWork.Apartment.Find(e => e.Id != 25265);
         }
 
         public async Task<IEnumerable<Stan>> GetApartmentsWithoutODSOmm()
         {
-            IEnumerable<Stan> apartmentList = _context.Stan
+            IEnumerable<Stan> apartmentList = await _context.Stan
                 .FromSqlRaw("select * from Stan where Id not in (select StanId from Ods)")
-                .ToList();
+                .ToListAsync();
+
             return apartmentList;
         }
     }
