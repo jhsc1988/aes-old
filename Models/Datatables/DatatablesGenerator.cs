@@ -11,8 +11,8 @@ namespace aes.Models.Datatables
     {
         public DTParams GetParams(HttpRequest request)
         {
-            
-            DTParams d = new DTParams
+
+            DTParams dtParams = new()
             {
                 Start = int.Parse(request.Form["start"].FirstOrDefault()),
                 Length = int.Parse(request.Form["length"].FirstOrDefault()),
@@ -20,12 +20,12 @@ namespace aes.Models.Datatables
                 SortColumnName = request.Form["columns[" + request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault(),
                 SortDirection = request.Form["order[0][dir]"].FirstOrDefault(),
             };
-            return d;
+
+            return dtParams;
         }
         public JsonResult SortingPaging<T>(IEnumerable<T> data, DTParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering)
         {
-            // todo: if(Params.SortDirection) - da maknem ovaj AsQueryable dependency
-            var v = Params.SortColumnName + " " + Params.SortDirection;
+            // TODO: if(Params.SortDirection) - da maknem ovaj AsQueryable dependency
             data = data.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection); // sorting
             data = data.Skip(Convert.ToInt32(Params.Start)).Take(Convert.ToInt32(Params.Length)); // paging
 
