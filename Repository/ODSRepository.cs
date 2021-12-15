@@ -16,7 +16,7 @@ namespace aes.Repository
         {
             return await _context.Ods
                 .Include(e => e.Stan)
-                .Where(e => e.Id != 5402) // hack: ods id : dummy entity
+                .Where(e => e.Id != 5402) // HACK: ods id : dummy entity
                 .ToListAsync();
         }
         public async Task<IEnumerable<TBill>> GetBillsForOmm<TBill>(int stanId) where TBill : Elektra
@@ -34,22 +34,6 @@ namespace aes.Repository
             ods.Stan = await _context.Stan
                 .FirstOrDefaultAsync(e => e.Id == ods.StanId);
             return ods;
-        }
-
-        public async Task<IEnumerable<Ods>> Populate(IEnumerable<Ods> odsList)
-        {
-            foreach (Ods item in odsList)
-            {
-                item.Stan = await _context.Stan.FirstOrDefaultAsync(e => e.Id == item.StanId);
-            }
-            return odsList;
-        }
-
-        public async Task<Ods> FindExact(int omm)
-        {
-            return await _context.Ods
-                .Where(e => e.Omm == omm)
-                .FirstOrDefaultAsync();
         }
     }
 
