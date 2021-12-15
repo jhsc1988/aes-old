@@ -1,3 +1,3 @@
 # aes
 
-Završni rad - work in progress
+Alat za evidenciju, kontrolu i plaćanje računa režijskih troškova za stanove u imovini i vlasništvu Grada Zagreba 
