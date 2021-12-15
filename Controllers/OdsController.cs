@@ -180,10 +180,9 @@ namespace aes.Controllers
 
         [Authorize]
         [HttpPost]
-        // todo: GetStanDataForKupci - preimenovati - stan data for omm
-        public async Task<JsonResult> GetStanDataForKupci(string OdsId)
+        public async Task<JsonResult> GetStanDataForOmm(string OdsId)
         {
-            return await _odsService.GetStanDataForKupci(OdsId);
+            return await _odsService.GetStanDataForOmm(OdsId);
         }
 
         [Authorize]

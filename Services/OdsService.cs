@@ -36,8 +36,7 @@ namespace aes.Services
             return new JsonResult(stan);
         }
 
-        // todo: GetStanDataForKupci - preimenovati - stan data for omm
-        public async Task<JsonResult> GetStanDataForKupci(string OdsId)
+        public async Task<JsonResult> GetStanDataForOmm(string OdsId)
         {
             int OdsIdInt;
             if (OdsId is not null)

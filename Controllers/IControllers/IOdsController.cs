@@ -7,6 +7,6 @@ namespace aes.Controllers.IControllers
     {
         public Task<IActionResult> GetList();
         Task<JsonResult> GetStanData(string sid);
-        Task<JsonResult> GetStanDataForKupci(string OdsId);
+        Task<JsonResult> GetStanDataForOmm(string OdsId);
     }
 }
