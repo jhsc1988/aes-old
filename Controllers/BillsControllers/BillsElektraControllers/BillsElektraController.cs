@@ -76,9 +76,8 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
 
         // GET: BillsElektra/Create
         [Authorize]
-        public IActionResult CreateAsync() // todo: treba vidjeti sto ovaj CreateAsync tocno radi
+        public IActionResult CreateAsync()
         {
-            //List<RacunElektra> applicationDbContext = await _context.RacunElektra.ToListAsync();
             return View(new RacunElektra());
         }
 
@@ -132,7 +131,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 _c.UnitOfWork.BillsElektraEdit.Add(racunElektraEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -404,8 +403,8 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(obracunPotrosnje);
-                await _context.SaveChangesAsync();
+                _ = _context.Add(obracunPotrosnje);
+                _ = await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", obracunPotrosnje.RacunElektraId);
