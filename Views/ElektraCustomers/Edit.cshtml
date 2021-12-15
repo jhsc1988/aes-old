@@ -40,7 +40,7 @@
             <div class="col-md-3">
                 <div class="form-group space-10-10">
                     <label asp-for="UgovorniRacun" class="control-label"></label>
-                    <input readonly asp-for="UgovorniRacun" class="form-control form-control-sm" />
+                    <input disabled="disabled" asp-for="UgovorniRacun" class="form-control form-control-sm" />
                     <span asp-validation-for="UgovorniRacun" class="text-danger"></span>
                 </div>
             </div>
@@ -73,5 +73,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
