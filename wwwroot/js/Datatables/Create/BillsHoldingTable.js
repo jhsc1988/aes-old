@@ -3,6 +3,7 @@
     const selectIndexTable = $('#IndexTable');
 
     table = selectIndexTable.DataTable({
+
         "ajax": {
             "url": "/BillsHolding/GetList",
             "type": "POST",
@@ -41,6 +42,14 @@
                 }
             },
             {
+                "data": null, "name": "stan.statusKorištenja",
+                "render": function (data) {
+                    if (data.stan == null || data.stanId == 25265)
+                        return "";
+                    return data.stan.statusKorištenja;
+                }
+            },
+            {
                 "data": null, "name": "stan.vlasništvo",
                 "render": function (data) {
                     if (data.stan == null || data.stanId == 25265)
@@ -48,7 +57,6 @@
                     return data.stan.vlasništvo;
                 }
             },
-
             { "data": "datumIzdavanja", "name": "datumIzdavanja" },
             {
                 "data": "iznos", "name": "iznos",
@@ -90,11 +98,15 @@
                 "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 5, // Vlasništvo
+                "targets": 5, // Status korištenja
+                "render": $.fn.dataTable.render.ellipsis(8),
+            },
+            {
+                "targets": 6, // Vlasništvo
                 "render": $.fn.dataTable.render.ellipsis(10),
             },
             {
-                "targets": 6, // Datum izdavanja
+                "targets": 7, // Datum izdavanja
                 "render": function (data, type, row) {
                     if (data == null)
                         return "";
@@ -102,15 +114,15 @@
                 }
             },
             {
-                "targets": 7, // Iznos
+                "targets": 8, // Iznos
                 "render": $.fn.dataTable.render.number('.', ',', 2, '', ' kn'),
             },
             {
-                "targets": 8, // Napomena
-                "render": $.fn.dataTable.render.ellipsis(28),
+                "targets": 9, // Napomena
+                "render": $.fn.dataTable.render.ellipsis(20),
             },
             {
-                "targets": 9, // remove
+                "targets": 10, // remove
                 "orderable": false,
                 "searchable": false,
                 "defaultContent": "<button type='button' class='button-add-remove' id='remove'><i class='bi bi-x'></i>briši</button>"
