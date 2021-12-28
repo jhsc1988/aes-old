@@ -24,7 +24,7 @@ namespace aes.Repository
             return await _context.Set<TBill>()
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan)
+                .Include(e => e.ElektraKupac.Ods.Stan) // todo: trebam li ovo ?
                 .Where(e => e.ElektraKupac.Ods.StanId == stanId && e.IsItTemp != true)
                 .ToListAsync();
         }
