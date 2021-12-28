@@ -58,9 +58,11 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
 
             RacunElektra racunElektra = await _c.UnitOfWork.BillsElektra.IncludeAll((int)id);
 
+            ObracunPotrosnje lastObracunForRacun = await _c.UnitOfWork.ObracunPotrosnje.GetLastForRacunId((int)id);
+
             ObracunPotrosnje obracunPotrosnje = new()
             {
-                Id = racunElektra.Id,
+                RacunElektraId = racunElektra.Id,
                 BrojBrojila = 0,
                 DatumOd = DateTime.Now,
                 DatumDo = DateTime.Now,
@@ -69,8 +71,29 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 TarifnaStavka = new TarifnaStavka(),
             };
 
-            Tuple<RacunElektra, ObracunPotrosnje> tupleModel = new(racunElektra, obracunPotrosnje);
+            if (lastObracunForRacun is not null)
+            {
+                obracunPotrosnje = lastObracunForRacun;
+            }
 
+            else
+            {
+
+                IEnumerable<ObracunPotrosnje> obracuniPotrosnjeForUgovorniRacun = await _c.UnitOfWork.ObracunPotrosnje.GetObracunForUgovorniRacun(racunElektra.ElektraKupac.UgovorniRacun);
+
+                if (obracuniPotrosnjeForUgovorniRacun.Any())
+                {
+                    obracunPotrosnje = (await _c.UnitOfWork.ObracunPotrosnje.GetObracunForUgovorniRacun(racunElektra.ElektraKupac.UgovorniRacun)).ToList()[0];
+                    obracunPotrosnje.Id = 0;
+                    obracunPotrosnje.RacunElektraId = racunElektra.Id;
+                    obracunPotrosnje.DatumOd = obracunPotrosnje.DatumDo.AddDays(1);
+                    obracunPotrosnje.DatumDo = obracunPotrosnje.DatumOd.AddMonths(1);
+                    obracunPotrosnje.StanjeOd = obracunPotrosnje.StanjeDo;
+                    obracunPotrosnje.StanjeDo = obracunPotrosnje.StanjeOd;
+                }
+            }
+
+            Tuple<RacunElektra, ObracunPotrosnje> tupleModel = new(racunElektra, obracunPotrosnje);
             return racunElektra == null ? NotFound() : View(tupleModel);
         }
 
@@ -405,7 +428,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
             {
                 _ = _context.Add(obracunPotrosnje);
                 _ = await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = obracunPotrosnje.RacunElektraId });
             }
             ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", obracunPotrosnje.RacunElektraId);
             ViewData["TarifnaStavkaId"] = new SelectList(_context.TarifnaStavka, "Id", "Id", obracunPotrosnje.TarifnaStavkaId);

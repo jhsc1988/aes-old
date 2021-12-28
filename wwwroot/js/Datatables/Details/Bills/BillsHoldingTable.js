@@ -58,7 +58,9 @@ $(document).ready(function () {
             },
             {
                 "targets": 1, // DatumIzdavanja
-                "render": function (data, type, row) {
+                "render": function (data) {
+                    if (data == null)
+                        return "";
                     return moment(data).format("DD.MM.YYYY")
                 }
             },

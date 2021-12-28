@@ -499,3 +499,7 @@ button.accept-policy {
     background-color: #2b2b2b;
     text-align: center;
 }
+
+.redClass{
+    background-color: red;
+}

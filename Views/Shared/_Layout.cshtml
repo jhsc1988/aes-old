@@ -110,15 +110,17 @@
             </nav>
         </header>
         <footer class="border-top footer text-muted">
-            <div class="row container justify-content-between align-items-center">
+            <div class="d-flex row container justify-content-between align-items-center">
                 &copy; 2021 - aes - Jasmin Husić
                 @if (apartmentUpdateData is not null)
                 {
-                    <div class="" style="font-size: 0.7rem;">
-                        <strong>stanje podataka:</strong> @dateOfData,
-                        <strong>update start:</strong> @apartmentUpdateDataUpdateBegan,
-                        <strong>end:</strong> @apartmentUpdateDataUpdateEnded,
-                        <strong>init by:</strong> @apartmentUpdateData.ExecutedBy
+                    <div style="font-size: 0.7rem;">
+                        <div class="row">
+                            <div class=" col d-flex "><strong>stanje podataka:</strong> @dateOfData,</div>
+                            <div class=" col d-flex "><strong>update start:</strong> @apartmentUpdateDataUpdateBegan,</div>
+                            <div class=" col d-flex "><strong>end:</strong> @apartmentUpdateDataUpdateEnded,</div>
+                            <div class=" col d-flex "><strong>init by:</strong> @apartmentUpdateData.ExecutedBy</div>
+                        </div>
                     </div>
                 }
                 <div class="row justify-content-center align-items-center">

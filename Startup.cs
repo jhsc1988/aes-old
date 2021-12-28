@@ -78,7 +78,6 @@ namespace aes
             _ = services.AddScoped<IBillsHoldingUploadService, BillsHoldingUploadService>();
 
             // bills common services
-            _ = services.AddScoped<IBillsValidationService, BillsValidationService>();
             _ = services.AddScoped<IBillsCheckService, BillsCheckService>();
 
 

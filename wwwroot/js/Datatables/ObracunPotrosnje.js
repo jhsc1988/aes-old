@@ -22,7 +22,7 @@ $(document).ready(function () {
         "paging": true,
         "serverSide": true,
         //"order": [[2, 'asc']], // default sort po datumu
-        "order": [[1, "desc"],[2, "asc"]],
+        "order": [[0, "desc"]],
         "bLengthChange": false,
 
         //"processing": true,
