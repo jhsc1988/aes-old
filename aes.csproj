@@ -239,6 +239,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\js\_js_global\global\" />
     <Folder Include="wwwroot\Uploaded\" />
   </ItemGroup>
 
