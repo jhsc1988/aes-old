@@ -9,6 +9,5 @@ namespace aes.CommonDependecies
         IBillsTempEditorService BillsTempEditorService { get; }
         IService Service { get; }
         IBillsCheckService BillsCheckService { get; }
-        IBillsValidationService BillsValidationService { get; }
     }
 }

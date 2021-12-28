@@ -10,18 +10,16 @@ namespace aes.CommonDependecies
         public IBillsInlineEditorService BillsInlineEditorService { get; }
         public IBillsTempEditorService BillsTempEditorService { get; }
         public IBillsCheckService BillsCheckService { get; }
-        public IBillsValidationService BillsValidationService { get; }
         public IService Service { get; }
 
         public BillsCommonDependecies(IDatatablesGenerator datatablesGenerator, IDatatablesSearch datatablesSearch, IUnitOfWork unitOfWork,
             IBillsInlineEditorService billsInlineEditorService, IBillsTempEditorService billsTempEditorService, IService service,
-            IBillsCheckService billsCheckService, IBillsValidationService billsValidationService)
+            IBillsCheckService billsCheckService)
             : base(datatablesGenerator, datatablesSearch, unitOfWork)
         {
             BillsInlineEditorService = billsInlineEditorService;
             BillsTempEditorService = billsTempEditorService;
             BillsCheckService = billsCheckService;
-            BillsValidationService = billsValidationService;
             Service = service;
         }
     }
