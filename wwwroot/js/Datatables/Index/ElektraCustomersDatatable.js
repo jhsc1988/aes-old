@@ -1,19 +1,19 @@
 ﻿$(document).ready(function () {
     $('#ElektraKupacTable').DataTable({
 
-        //// excel
-        //dom: 'frtipB',
-        //"buttons": [
-        //    {
-        //        "extend": 'excel',
-        //        "text": '<i class="button-excel">Excel</i>',
-        //        "titleAttr": 'Excel',
-        //        "action": newexportaction,
-        //        "exportOptions": {
-        //            //columns: [1, 2, 3, 4, 5, 6, 7, 10]
-        //        },
-        //    }
-        //],
+        // excel
+        dom: 'frtipB',
+        "buttons": [
+            {
+                "extend": 'excel',
+                "text": '<i class="button-excel">Excel</i>',
+                "titleAttr": 'Excel',
+                "action": newexportaction,
+                "exportOptions": {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                },
+            }
+        ],
 
         "ajax": {
             "url": "/ElektraCustomers/GetList",
@@ -53,6 +53,9 @@
                 "data": "ods.stan.povr\u0161ina", "name": "ods.stan.Površina",
                 "render": $.fn.dataTable.render.number('.', ',', 2, '')
             },
+            { "data": "ods.stan.korisnik", "name": "ods.stan.korisnik" },
+            { "data": "ods.stan.statusKorištenja", "name": "ods.stan.statusKorištenja" },
+
             { "data": "napomena", "name": "Napomena" },
             { "data": "vrijemeUnosa", "name": "vrijemeUnosa" } // invisible, used for ordering
         ],
@@ -104,11 +107,19 @@
                 "render": $.fn.dataTable.render.number(' ', ',', 2, '', ' m2'),
             },
             {
-                "targets": 9, // Napomena
+                "targets": 9, // Korisnik
+                "render": $.fn.dataTable.render.ellipsis(20),
+            },
+            {
+                "targets": 10, // Status korištenja
+                "render": $.fn.dataTable.render.ellipsis(10),
+            },
+            {
+                "targets": 11, // Napomena
                 "render": $.fn.dataTable.render.ellipsis(40)
             },
             {
-                "targets": 10, // akcija - hidden
+                "targets": 12, // akcija - hidden
                 "visible": false,
                 "searchable": false,
             },
