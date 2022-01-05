@@ -32,7 +32,7 @@
 function GetStanDataForKupci(odsId) {
     $.ajax({
         type: "POST",
-        url: "/Ods/GetStanDataForKupci",
+        url: "/Ods/GetStanDataForOmm",
         data: { OdsId: odsId },
         success: function (ods) {
 
