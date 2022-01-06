@@ -116,7 +116,7 @@ namespace aes.Controllers.BillsControllers
                 _c.UnitOfWork.BillsHoldingEdit.Add(racunHoldingEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -156,6 +156,12 @@ namespace aes.Controllers.BillsControllers
                         throw;
                     }
                 }
+                finally
+                {
+                    _c.UnitOfWork.BillsHoldingEdit.RemoveRange(await _c.UnitOfWork.BillsHoldingEdit.Find(e => e.EditingByUserId.Equals(_c.Service.GetUid(User))));
+                    _ = await _c.UnitOfWork.Complete();
+                }
+
                 return racunHolding.IsItTemp == true ? RedirectToAction("Create") : RedirectToAction(nameof(Index));
             }
             ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Letter.GetAll(), "Id", "Urbroj", racunHolding.DopisId);
