@@ -34,13 +34,11 @@
         </div>
         @* ------------------------------------------------------------------------------------ *@
 
-@*        // TODO: ovaj disabled="disabled" napravi krs i lom
-        vrijednost nije submitana, treba staviti novi atribut u bazu, IsItEditing (bool)*@
         <div class="row">
             <div class="col-md-3">
                 <div  class="form-group space-10-10">
                     <label asp-for="Omm" class="control-label"></label>
-                    <input disabled="disabled" asp-for="Omm" class="form-control form-control-sm" />
+                    <input readonly asp-for="Omm" class="form-control form-control-sm" />
                     <span asp-validation-for="Omm" class="text-danger"></span>
                 </div>
             </div>

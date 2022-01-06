@@ -25,5 +25,7 @@ namespace aes.Models
 
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; } // nullable mi treba za not required
+
+        public bool IsEditing { get; set; }
     }
 }

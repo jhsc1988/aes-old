@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
@@ -82,6 +83,24 @@ namespace aes.Controllers
             {
                 return NotFound();
             }
+
+            try
+            {
+                OdsEdit odsEdit = new()
+                {
+                    Ods = ods,
+                    EditingByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    EditTime = DateTime.Now,
+                };
+
+                _c.UnitOfWork.OdsEdit.Add(odsEdit);
+                _ = await _c.UnitOfWork.Complete();
+            }
+            catch (Exception)
+            {
+
+            }
+
             ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Apartment.GetAll(), "Id", "Adresa", ods.StanId);
             return View(ods);
         }
@@ -115,6 +134,11 @@ namespace aes.Controllers
                     {
                         throw;
                     }
+                }
+                finally
+                {
+                    _c.UnitOfWork.OdsEdit.RemoveRange(await _c.UnitOfWork.OdsEdit.Find(e => e.EditingByUserId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))));
+                    _ = await _c.UnitOfWork.Complete();
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -159,9 +183,16 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> OmmValidation(int omm)
         {
+            OdsEdit odsEdit = await _c.UnitOfWork.OdsEdit.GetLastOdsEdit(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             if (omm is < 10000000 or > 99999999)
             {
                 return Json($"Broj obračunskog mjernog mjesta nije ispravan");
+            }
+
+            if (odsEdit is not null && omm == odsEdit.Ods.Omm)
+            {
+                return Json(true);
             }
 
             Ods db = await _c.UnitOfWork.Ods.FindExact(x => x.Omm == omm);
