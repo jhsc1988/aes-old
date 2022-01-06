@@ -26,6 +26,8 @@ namespace aes.Repository.UnitOfWork
         public ILetterRepository Letter { get; private set; }
         public IApartmentUpdateRepository ApartmentUpdate { get; private set; }
         public IObracunPotrosnjeRepository ObracunPotrosnje { get; private set; }
+        public IOdsEditRepository OdsEdit { get; private set; }
+        public IElektraCustomerEditRepository ElektraCustomerEdit { get; private set; }
         public UnitOfWork(ApplicationDbContext context)
         {
 
@@ -45,6 +47,8 @@ namespace aes.Repository.UnitOfWork
             BillsElektraAdvancesEdit = new BillsElektraAdvancesEditRepository(_context);
             BillsElektraServicesEdit = new BillsElektraServicesEditRepository(_context);
             ObracunPotrosnje = new ObracunPotrosnjeRepository(_context);
+            OdsEdit = new OdsEditRepository(_context);
+            ElektraCustomerEdit = new ElektraCustomerEditRepository(_context);
         }
 
         public async Task<int> Complete()

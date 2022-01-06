@@ -23,6 +23,8 @@ namespace aes.Repository.UnitOfWork
         IBillsElektraAdvancesEditRepository BillsElektraAdvancesEdit { get; }
         IBillsElektraServicesEditRepository BillsElektraServicesEdit { get; }
         IObracunPotrosnjeRepository ObracunPotrosnje { get; }
+        IOdsEditRepository OdsEdit { get; }
+        IElektraCustomerEditRepository ElektraCustomerEdit { get; }
 
         Task<int> Complete();
     }
