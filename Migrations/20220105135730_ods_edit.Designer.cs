@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aes.Data;
 
@@ -11,9 +12,10 @@ using aes.Data;
 namespace aes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220105135730_ods_edit")]
+    partial class ods_edit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,30 +110,6 @@ namespace aes.Migrations
                     b.HasIndex("OdsId");
 
                     b.ToTable("ElektraKupac");
-                });
-
-            modelBuilder.Entity("aes.Models.ElektraKupacEdit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("EditTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EditingByUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ElektraKupacId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ElektraKupacId");
-
-                    b.ToTable("ElektraKupacEdit");
                 });
 
             modelBuilder.Entity("aes.Models.Ods", b =>
@@ -904,15 +882,6 @@ namespace aes.Migrations
                         .IsRequired();
 
                     b.Navigation("Ods");
-                });
-
-            modelBuilder.Entity("aes.Models.ElektraKupacEdit", b =>
-                {
-                    b.HasOne("aes.Models.ElektraKupac", "ElektraKupac")
-                        .WithMany()
-                        .HasForeignKey("ElektraKupacId");
-
-                    b.Navigation("ElektraKupac");
                 });
 
             modelBuilder.Entity("aes.Models.Ods", b =>
