@@ -154,6 +154,11 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                         throw;
                     }
                 }
+                finally
+                {
+                    _c.UnitOfWork.BillsElektraServicesEdit.RemoveRange(await _c.UnitOfWork.BillsElektraServicesEdit.Find(e => e.EditingByUserId.Equals(_c.Service.GetUid(User))));
+                    _ = await _c.UnitOfWork.Complete();
+                }
 
                 return racunElektraIzvrsenjeUsluge.IsItTemp == true ? RedirectToAction("Create") : RedirectToAction(nameof(Index));
             }
