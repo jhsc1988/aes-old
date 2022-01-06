@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace aes.Controllers
@@ -83,6 +84,24 @@ namespace aes.Controllers
             {
                 return NotFound();
             }
+
+            try
+            {
+                ElektraKupacEdit elektraKupacEdit = new()
+                {
+                    ElektraKupac = elektraKupac,
+                    EditingByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    EditTime = DateTime.Now,
+                };
+
+                _c.UnitOfWork.ElektraCustomerEdit.Add(elektraKupacEdit);
+                _ = await _c.UnitOfWork.Complete();
+            }
+            catch (Exception)
+            {
+
+            }
+
             ViewData["OdsId"] = new SelectList(await _c.UnitOfWork.Ods.GetAll(), "Id", "Id", elektraKupac.OdsId);
             return View(elektraKupac);
         }
@@ -117,6 +136,12 @@ namespace aes.Controllers
                         throw;
                     }
                 }
+                finally
+                {
+                    _c.UnitOfWork.ElektraCustomerEdit.RemoveRange(await _c.UnitOfWork.ElektraCustomerEdit.Find(e => e.EditingByUserId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier))));
+                    _ = await _c.UnitOfWork.Complete();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["OdsId"] = new SelectList(await _c.UnitOfWork.Ods.GetAll(), "Id", "Id", elektraKupac.OdsId);
@@ -161,9 +186,17 @@ namespace aes.Controllers
         [HttpGet]
         public async Task<IActionResult> UgovorniRacunValidation(long ugovorniRacun)
         {
+
+            ElektraKupacEdit elektraKupacEdit = await _c.UnitOfWork.ElektraCustomerEdit.GetLastElektraKupacEdit(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             if (ugovorniRacun is < 1000000000 or > 9999999999)
             {
                 return Json($"Ugovorni račun nije ispravan");
+            }
+
+            if (elektraKupacEdit is not null && ugovorniRacun == elektraKupacEdit.ElektraKupac.UgovorniRacun)
+            {
+                return Json(true);
             }
 
             ElektraKupac db = await _c.UnitOfWork.ElektraCustomer.FindExact(ugovorniRacun);
