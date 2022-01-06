@@ -27,5 +27,7 @@ namespace aes.Data
         public DbSet<ApartmentUpdate> ApartmentUpdate { get; set; }
         public DbSet<TarifnaStavka> TarifnaStavka { get; set; }
         public DbSet<ObracunPotrosnje> ObracunPotrosnje { get; set; }
+        public DbSet<OdsEdit> OdsEdit { get; set; }
+        public DbSet<ElektraKupacEdit> ElektraKupacEdit { get; set; }
     }
 }
