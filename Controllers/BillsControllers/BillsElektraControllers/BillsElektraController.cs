@@ -198,6 +198,11 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                         throw;
                     }
                 }
+                finally
+                {
+                    _c.UnitOfWork.BillsElektraEdit.RemoveRange(await _c.UnitOfWork.BillsElektraEdit.Find(e => e.EditingByUserId.Equals(_c.Service.GetUid(User))));
+                    _ = await _c.UnitOfWork.Complete();
+                }
 
                 return racunElektra.IsItTemp == true ? RedirectToAction("Create") : RedirectToAction(nameof(Index));
             }
