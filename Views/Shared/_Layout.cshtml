@@ -5,7 +5,7 @@
 
 @inject IApartmentUpdateRepository apartmentUpdateRepository;
 @{
-    ApartmentUpdate apartmentUpdateData = apartmentUpdateRepository.getLatest();
+    ApartmentUpdate apartmentUpdateData = apartmentUpdateRepository.GetLatest();
 
     string dateOfData = null;
     string apartmentUpdateDataUpdateBegan = null;
@@ -13,7 +13,7 @@
 
     if (apartmentUpdateData is not null)
     {
-        dateOfData = apartmentUpdateRepository.getLatestSuccessfulUpdate().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
+        dateOfData = apartmentUpdateRepository.GetLatestSuccessfulUpdate().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
         apartmentUpdateDataUpdateBegan = apartmentUpdateData.UpdateBegan.ToString("dd.MM.yyyy HH:mm:ss");
         apartmentUpdateDataUpdateEnded = apartmentUpdateData.UpdateEnded != null ? ((DateTime)apartmentUpdateData.UpdateEnded).ToString("dd.MM.yyyy HH:mm:ss") : null;
     }

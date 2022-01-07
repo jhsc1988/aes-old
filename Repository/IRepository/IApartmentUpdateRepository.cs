@@ -4,7 +4,7 @@ namespace aes.Repository.IRepository
 {
     public interface IApartmentUpdateRepository : IRepository<ApartmentUpdate>
     {
-        ApartmentUpdate getLatest();
-        ApartmentUpdate getLatestSuccessfulUpdate();
+        ApartmentUpdate GetLatest();
+        ApartmentUpdate GetLatestSuccessfulUpdate();
     }
 }

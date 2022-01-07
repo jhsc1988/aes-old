@@ -9,14 +9,14 @@ namespace aes.Repository
     {
         public ApartmentUpdateRepository(ApplicationDbContext context) : base(context) { }
 
-        public ApartmentUpdate getLatest()
+        public ApartmentUpdate GetLatest()
         {
             return _context.ApartmentUpdate
                     .OrderByDescending(e => e.UpdateBegan)
                     .FirstOrDefault();
         }
 
-        public ApartmentUpdate getLatestSuccessfulUpdate()
+        public ApartmentUpdate GetLatestSuccessfulUpdate()
         {
             return _context.ApartmentUpdate
                 .OrderByDescending(e => e.DateOfData)

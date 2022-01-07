@@ -1,16 +1,16 @@
 ﻿using aes.Models;
 using aes.Repository.UnitOfWork;
+using aes.Services.IServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic.FileIO;
+using Serilog;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualBasic.FileIO;
-using aes.Services.IServices;
-using Serilog;
 
 namespace aes.Services
 {
@@ -32,7 +32,7 @@ namespace aes.Services
             string _loggerTemplate = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName + ", " + "User: " + userName + ", " + "msg: ";
 
             {
-                ApartmentUpdate apartmentUpdate = _unitOfWork.ApartmentUpdate.getLatest();
+                ApartmentUpdate apartmentUpdate = _unitOfWork.ApartmentUpdate.GetLatest();
                 if (apartmentUpdate is not null && apartmentUpdate.UpdateComplete == false && apartmentUpdate.Interrupted == false)
                 {
 
@@ -116,7 +116,7 @@ namespace aes.Services
                             txt = reader.ReadFields(); // skip 12 lines
                         }
 
-                        ApartmentUpdate lastSuccessful = _unitOfWork.ApartmentUpdate.getLatestSuccessfulUpdate();
+                        ApartmentUpdate lastSuccessful = _unitOfWork.ApartmentUpdate.GetLatestSuccessfulUpdate();
                         DateTime? dateTimeOfData = DateTime.TryParse(txt[4], culture, dateStyle, out DateTime date) ? date : null;
                         DateTime now = DateTime.Now;
 
