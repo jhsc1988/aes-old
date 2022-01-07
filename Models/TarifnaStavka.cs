@@ -1,4 +1,4 @@
-﻿namespace aes.Models.Racuni
+﻿namespace aes.Models
 {
     public class TarifnaStavka
     {

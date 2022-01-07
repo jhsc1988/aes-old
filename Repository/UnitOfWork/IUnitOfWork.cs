@@ -1,5 +1,4 @@
-﻿using aes.Repository.BillsRepositories;
-using aes.Repository.BillsRepositories.IBillsRepository;
+﻿using aes.Repository.BillsRepositories.IBillsRepository;
 using aes.Repository.IRepository;
 using System;
 using System.Threading.Tasks;

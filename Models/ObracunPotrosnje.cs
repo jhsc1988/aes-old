@@ -1,7 +1,8 @@
-﻿using System;
+﻿using aes.Models.Racuni;
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace aes.Models.Racuni
+namespace aes.Models
 {
     public class ObracunPotrosnje
     {
@@ -15,12 +16,12 @@ namespace aes.Models.Racuni
 
         [Display(Name = "Tarifa")]
         public int TarifnaStavkaId { get; set; }
-        
+
         [Display(Name = "Datum od")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime DatumOd { get; set; }
-        
+
         [Display(Name = "Datum do")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]

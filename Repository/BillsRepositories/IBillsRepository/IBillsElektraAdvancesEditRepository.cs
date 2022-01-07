@@ -2,7 +2,7 @@
 using aes.Repository.IRepository;
 using System.Threading.Tasks;
 
-namespace aes.Repository.BillsRepositories
+namespace aes.Repository.BillsRepositories.IBillsRepository
 {
     public interface IBillsElektraAdvancesEditRepository : IRepository<RacunElektraRateEdit>
     {

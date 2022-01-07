@@ -1,11 +1,11 @@
 ﻿using aes.Data;
 using aes.Models.Racuni;
-using aes.Repository.BillsRepositories;
+using aes.Repository.BillsRepositories.IBillsRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace aes.Repository
+namespace aes.Repository.BillsRepositories
 {
     public class BillsElektraEditRepository : Repository<RacunElektraEdit>, IBillsElektraEditRepository
     {
