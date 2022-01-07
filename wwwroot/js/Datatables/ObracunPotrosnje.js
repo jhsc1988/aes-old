@@ -21,7 +21,6 @@ $(document).ready(function () {
         ],
         "paging": true,
         "serverSide": true,
-        //"order": [[2, 'asc']], // default sort po datumu
         "order": [[0, "desc"]],
         "bLengthChange": false,
 
