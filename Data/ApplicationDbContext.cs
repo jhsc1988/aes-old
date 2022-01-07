@@ -2,8 +2,6 @@
 using aes.Models.Racuni;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 
 namespace aes.Data
 {
