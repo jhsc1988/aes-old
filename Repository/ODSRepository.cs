@@ -16,7 +16,7 @@ namespace aes.Repository
         {
             return await _context.Ods
                 .Include(e => e.Stan)
-                .Where(e => e.Id != 5402) // HACK: ods id : dummy entity
+                .Where(e => e.Id != 5402) // HACK: dummy entity
                 .ToListAsync();
         }
         public async Task<IEnumerable<TBill>> GetBillsForOmm<TBill>(int stanId) where TBill : Elektra
@@ -24,7 +24,6 @@ namespace aes.Repository
             return await _context.Set<TBill>()
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
-                .Include(e => e.ElektraKupac.Ods.Stan) // todo: trebam li ovo ?
                 .Where(e => e.ElektraKupac.Ods.StanId == stanId && e.IsItTemp != true)
                 .ToListAsync();
         }
