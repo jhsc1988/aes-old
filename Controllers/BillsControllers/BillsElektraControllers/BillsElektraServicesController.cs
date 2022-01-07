@@ -113,7 +113,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 _c.UnitOfWork.BillsElektraServicesEdit.Add(racunElektraIzvrsenjeUslugeEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -346,7 +346,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 ? await _billsElektraServicesService.GetList(_billsElektraServicesService.ParseCaseFile(klasa), _billsElektraServicesService.ParseLetter(urbroj))
                 : await _billsElektraServicesService.GetCreateBills(_c.Service.GetUid(User));
 
-            return await new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
+            return new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacunElektraIzvrsenjeUslugeForDatatables);
         }
 

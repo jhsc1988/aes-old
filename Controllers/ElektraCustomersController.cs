@@ -212,7 +212,7 @@ namespace aes.Controllers
         {
             IEnumerable<ElektraKupac> list = await _c.UnitOfWork.ElektraCustomer.GetAllCustomers();
 
-            return await new DatatablesService<ElektraKupac>().GetData(Request, list,
+            return new DatatablesService<ElektraKupac>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetElektraCustomersForDatatables);
         }
 
@@ -222,7 +222,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunElektra> list = await _c.UnitOfWork.BillsElektra.GetRacuniForCustomer(param);
 
-            return await new DatatablesService<RacunElektra>().GetData(Request, list,
+            return new DatatablesService<RacunElektra>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraForDatatables);
         }
 
@@ -232,7 +232,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunElektraRate> list = await _c.UnitOfWork.BillsElektraAdvances.GetRacuniForCustomer(param);
 
-            return await new DatatablesService<RacunElektraRate>().GetData(Request, list,
+            return new DatatablesService<RacunElektraRate>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraRateForDatatables);
         }
 
@@ -242,7 +242,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunElektraIzvrsenjeUsluge> list = await _c.UnitOfWork.BillsElektraServices.GetRacuniForCustomer(param);
 
-            return await new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
+            return new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacunElektraIzvrsenjeUslugeForDatatables);
         }
     }

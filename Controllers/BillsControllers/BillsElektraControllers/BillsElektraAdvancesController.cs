@@ -114,7 +114,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 _c.UnitOfWork.BillsElektraAdvancesEdit.Add(racunElektraRateEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -363,7 +363,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 ? await _billsElektraAdvancesService.GetList(_billsElektraAdvancesService.ParseCaseFile(klasa), _billsElektraAdvancesService.ParseLetter(urbroj))
                 : await _billsElektraAdvancesService.GetCreateBills(_c.Service.GetUid(User));
 
-            return await new DatatablesService<RacunElektraRate>().GetData(Request, list,
+            return new DatatablesService<RacunElektraRate>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraRateForDatatables);
         }
 

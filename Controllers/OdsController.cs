@@ -222,7 +222,7 @@ namespace aes.Controllers
         {
             IEnumerable<Ods> list = await _c.UnitOfWork.Ods.GetAllOds();
 
-            return await new DatatablesService<Ods>().GetData(Request, list,
+            return new DatatablesService<Ods>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetStanoviOdsForDatatables);
         }
     }

@@ -30,7 +30,7 @@ namespace aes.Services.BillsServices.BillsElektraServices.BillsElektraAdvances
                 return new(new { success = false, Message = "U tablici ne može biti više od 500 računa!" });
             }
 
-            double _iznos = double.Parse(iznos);
+            decimal _iznos = decimal.Parse(iznos);
             DateTime? _razdoblje = razdoblje is not null ? DateTime.Parse(razdoblje) : null;
 
             RacunElektraRate re = new()
@@ -113,13 +113,13 @@ namespace aes.Services.BillsServices.BillsElektraServices.BillsElektraAdvances
                 else
                 {
                     IEnumerable<RacunElektraRate> bills = await _c.UnitOfWork.BillsElektraAdvances.GetRacuniForCustomer((int)e.ElektraKupacId);
-                    e.Napomena = await _c.BillsCheckService.CheckIfExistsInPayed(e.BrojRacuna, bills);
+                    e.Napomena = _c.BillsCheckService.CheckIfExistsInPayed(e.BrojRacuna, bills);
                 }
 
                 if (e.Napomena is null)
                 {
                     IEnumerable<RacunElektraRate> tempBills = await _c.UnitOfWork.BillsElektraAdvances.Find(item => item.IsItTemp == true && item.CreatedByUserId == userId && item.ElektraKupacId == e.ElektraKupacId);
-                    e.Napomena = await _c.BillsCheckService.CheckIfExistsInTemp(e.BrojRacuna, tempBills);
+                    e.Napomena = _c.BillsCheckService.CheckIfExistsInTemp(e.BrojRacuna, tempBills);
                 }
 
                 _ = await _c.UnitOfWork.BillsElektraAdvances.Update(e);

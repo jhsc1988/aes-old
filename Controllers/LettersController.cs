@@ -163,7 +163,7 @@ namespace aes.Controllers
         {
             IEnumerable<Dopis> list = await _c.UnitOfWork.Letter.GetLettersForCaseFile(predmetId);
 
-            return await new DatatablesService<Dopis>().GetData(Request, list,
+            return new DatatablesService<Dopis>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetLettersForDatatables);
         }
 

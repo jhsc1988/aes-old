@@ -361,7 +361,7 @@ namespace aes.Controllers.BillsControllers
                 ? await _racunHoldingService.GetList(_racunHoldingService.ParseCaseFile(klasa), _racunHoldingService.ParseLetter(urbroj))
                 : await _racunHoldingService.GetCreateBills(_c.Service.GetUid(User));
 
-            return await new DatatablesService<RacunHolding>().GetData(Request, list,
+            return new DatatablesService<RacunHolding>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniHoldingForDatatables);
         }
 

@@ -161,7 +161,7 @@ namespace aes.Controllers
         {
             IEnumerable<Predmet> list = await _c.UnitOfWork.CaseFile.GetAll();
 
-            return await new DatatablesService<Predmet>().GetData(Request, list,
+            return new DatatablesService<Predmet>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetPredmetiForDatatables);
         }
     }

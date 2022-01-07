@@ -43,7 +43,7 @@ namespace aes.Services.BillsServices
                     break;
                 case Columns.iznos:
                     string iznosNumeric = new(x.Where(char.IsDigit).ToArray());
-                    billToUpdate.Iznos = double.Parse(iznosNumeric);
+                    billToUpdate.Iznos = decimal.Parse(iznosNumeric);
                     break;
                 case Columns.klasa:
                     billToUpdate.KlasaPlacanja = x;

@@ -30,7 +30,7 @@ namespace aes.Services.BillsServices.BillsHoldingService
                 return new(new { success = false, Message = "U tablici ne može biti više od 500 računa!" });
             }
 
-            double _iznos = double.Parse(iznos);
+            decimal _iznos = decimal.Parse(iznos);
             DateTime? _datumIzdavanja = datumIzdavanja is not null ? DateTime.Parse(datumIzdavanja) : null;
 
             RacunHolding re = new()
@@ -111,13 +111,13 @@ namespace aes.Services.BillsServices.BillsHoldingService
                 else
                 {
                     IEnumerable<RacunHolding> bills = await _c.UnitOfWork.BillsHolding.GetBillsForApartment(e.StanId);
-                    e.Napomena = await _c.BillsCheckService.CheckIfExistsInPayed(e.BrojRacuna, bills);
+                    e.Napomena = _c.BillsCheckService.CheckIfExistsInPayed(e.BrojRacuna, bills);
                 }
 
                 if (e.Napomena is null)
                 {
                     IEnumerable<RacunHolding> tempBills = await _c.UnitOfWork.BillsHolding.Find(item => item.IsItTemp == true && item.CreatedByUserId == userId && item.StanId == e.StanId);
-                    e.Napomena = await _c.BillsCheckService.CheckIfExistsInTemp(e.BrojRacuna, tempBills);
+                    e.Napomena = _c.BillsCheckService.CheckIfExistsInTemp(e.BrojRacuna, tempBills);
                 }
 
                 _ = await _c.UnitOfWork.BillsHolding.Update(e);

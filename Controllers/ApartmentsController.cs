@@ -177,7 +177,7 @@ namespace aes.Controllers
         {
             IEnumerable<Stan> list = await _c.UnitOfWork.Apartment.GetApartments();
 
-            return await new DatatablesService<Stan>().GetData(Request, list,
+            return new DatatablesService<Stan>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetStanoviForDatatables);
         }
 
@@ -190,7 +190,7 @@ namespace aes.Controllers
         {
             IEnumerable<Stan> list = await _c.UnitOfWork.Apartment.GetApartmentsWithoutODSOmm();
 
-            return await new DatatablesService<Stan>().GetData(Request, list,
+            return new DatatablesService<Stan>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetStanoviForDatatables);
 
         }
@@ -204,7 +204,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunElektra> list = await _c.UnitOfWork.Ods.GetBillsForOmm<RacunElektra>(param);
 
-            return await new DatatablesService<RacunElektra>().GetData(Request, list,
+            return new DatatablesService<RacunElektra>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraForDatatables);
         }
 
@@ -214,7 +214,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunElektraRate> list = await _c.UnitOfWork.Ods.GetBillsForOmm<RacunElektraRate>(param);
 
-            return await new DatatablesService<RacunElektraRate>().GetData(Request, list,
+            return new DatatablesService<RacunElektraRate>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraRateForDatatables);
 
         }
@@ -224,7 +224,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunElektraIzvrsenjeUsluge> list = await _c.UnitOfWork.Ods.GetBillsForOmm<RacunElektraIzvrsenjeUsluge>(param);
 
-            return await new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
+            return new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacunElektraIzvrsenjeUslugeForDatatables);
         }
 
@@ -234,7 +234,7 @@ namespace aes.Controllers
         {
             IEnumerable<RacunHolding> list = await _c.UnitOfWork.BillsHolding.GetBillsForApartment(param);
 
-            return await new DatatablesService<RacunHolding>().GetData(Request, list,
+            return new DatatablesService<RacunHolding>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniHoldingForDatatables);
         }
     }

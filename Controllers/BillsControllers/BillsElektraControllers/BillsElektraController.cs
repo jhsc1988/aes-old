@@ -1,6 +1,7 @@
 ﻿using aes.CommonDependecies;
 using aes.Controllers.IControllers;
 using aes.Data;
+using aes.Models;
 using aes.Models.Racuni;
 using aes.Services;
 using aes.Services.BillsServices.BillsElektraServices.BillsElektra.Is;
@@ -406,7 +407,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
                 ? await _billsElektraService.GetList(_billsElektraService.ParseCaseFile(klasa), _billsElektraService.ParseLetter(urbroj))
                 : await _billsElektraService.GetCreateBills(_c.Service.GetUid(User));
 
-            return await new DatatablesService<RacunElektra>().GetData(Request, list,
+            return new DatatablesService<RacunElektra>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraForDatatables);
         }
 
@@ -422,7 +423,7 @@ namespace aes.Controllers.BillsControllers.BillsElektraControllers
         {
             IEnumerable<ObracunPotrosnje> list = await _c.UnitOfWork.ObracunPotrosnje.GetObracunPotrosnjeForBill(billId);
 
-            return await new DatatablesService<ObracunPotrosnje>().GetData(Request, list,
+            return new DatatablesService<ObracunPotrosnje>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetObracunPotrosnjeDatatables);
         }
 
