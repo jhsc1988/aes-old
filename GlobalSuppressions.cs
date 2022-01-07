@@ -6,3 +6,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.BillsControllers.BillsElektraControllers.BillsElektraController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.BillsControllers.BillsElektraControllers.BillsElektraAdvancesController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.BillsControllers.BillsElektraControllers.BillsElektraServicesController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
