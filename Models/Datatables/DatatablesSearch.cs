@@ -107,7 +107,7 @@ namespace aes.Models.Datatables
                         || x.Naziv.Contains(Params.SearchValue));
         }
 
-        public IEnumerable<ElektraKupac> GetElektraCustomersForDatatables(IEnumerable<ElektraKupac> ElektraKupacList, DTParams Params )
+        public IEnumerable<ElektraKupac> GetElektraCustomersForDatatables(IEnumerable<ElektraKupac> ElektraKupacList, DTParams Params)
         {
             return ElektraKupacList
                 .Where(
@@ -123,7 +123,7 @@ namespace aes.Models.Datatables
                     || (x.Napomena != null && x.Napomena.ToLower().Contains(Params.SearchValue.ToLower())));
         }
 
-        public IEnumerable<Dopis> GetLettersForDatatables(IEnumerable<Dopis> DopisList, DTParams Params )
+        public IEnumerable<Dopis> GetLettersForDatatables(IEnumerable<Dopis> DopisList, DTParams Params)
         {
             return DopisList
                 .Where(
