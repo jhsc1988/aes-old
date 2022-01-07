@@ -18,7 +18,7 @@ namespace aes.Repository
 
         public async Task<IEnumerable<Stan>> GetApartments()
         {
-            // HACK: apartment id: dummy entity
+            // HACK: dummy entity
             return await _unitOfWork.Apartment.Find(e => e.Id != 25265);
         }
 

@@ -11,9 +11,13 @@ namespace aes.Repository
     {
         public CaseFileRepository(ApplicationDbContext context) : base(context) { }
 
+        /// <summary>
+        /// only casefiles for payed bills ordered by VrijemeUnosa
+        /// </summary>
+        /// <param name="bills"></param>
+        /// <returns></returns>
         public IEnumerable<Predmet> GetCaseFilefForAllPayedBills(IEnumerable<Racun> bills)
         {
-            // only casefiles for payed bills ordered by VrijemeUnosa
             return bills
                 .Select(e => e.Dopis.Predmet)
                 .OrderByDescending(e => e.VrijemeUnosa)
