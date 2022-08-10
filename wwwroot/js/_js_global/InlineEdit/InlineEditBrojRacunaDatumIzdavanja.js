@@ -10,7 +10,7 @@ $(document).mousedown(function (e) {
 
         // Broj Racuna
         //if (!$(e.target).is('#racun_input_clicked') && !$(e.target).is("#racun_td_clicked")) {
-        //    $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='BillsElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
+        //    $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='RacuniElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
         //    if (racunUpdated) {
         //        updateDb(1, racunBr);
         //        racunUpdated = false;
@@ -51,7 +51,7 @@ $("#IndexTable").on('mousedown', 'tr td', function (e) {
 
         // Broj racuna
         //if ($(e.target).is('td:nth-child(2)') && !$(e.target).is("#racun_td_clicked")) {
-        //    $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='BillsElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
+        //    $("#racun_td_clicked").not(e.target).replaceWith("<td><a href='RacuniElektra/Details/" + racunId + "'>" + racunBr + "</a></td>"); // reset input
         //    if (racunUpdated) {
         //        updateDb(1, racunBr);
         //        racunUpdated = false;

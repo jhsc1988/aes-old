@@ -6,7 +6,7 @@ namespace aes.Models.Racuni
     public class RacunHolding : Racun
     {
         [Required]
-        [Remote(action: "BrojRacunaValidation", controller: "BillsHolding")]
+        [Remote(action: "BrojRacunaValidation", controller: "RacuniHolding")]
         [Display(Name = "Broj računa")]
         [MaxLength(20)]
         public override string BrojRacuna { get; set; }

@@ -1,0 +1,39 @@
+﻿<div class="content-bg">
+    <div class="head-bg">
+        <p class="pf08">Stanovi - pregled</p>
+    </div>
+    <table class="display nowrap w-100" id="indexTable">
+        <thead>
+            <tr>
+                <th>Stan ID</th>
+                <th>Šifra objekta</th>
+                <th>Adresa</th>
+                <th>Kat</th>
+                <th>Broj stana</th>
+                <th>Četvrt</th>
+                <th>Površina</th>
+                <th>Korisnik</th>
+                <th>Status</th>
+                <th>Vlasništvo</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@*todo: preimenovati u Upload.js*@
+<script>
+    const uploadActionUrl ="/Stanovi/Upload";
+</script>
+<script src="~/js/Datatables/Create/RacuniUpload.js"></script>
+<script src="~/js/_js_global/ExcelExportAction.js"></script>
+<script src="~/js/Datatables/Index/StanoviDatatable.js"></script>
+<script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+<script src=~/js/alertify/alertify.min.js></script>
+<link rel=stylesheet href=~/js/alertify/css/alertify.css>
+<script>
+    $(document).ready(function () {
+        const input = $('#indexTable_filter input[type="search"]');
+        const filter = $('#indexTable_filter');
+        setStyle(input, filter);
+    });
+</script>

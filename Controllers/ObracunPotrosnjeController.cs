@@ -118,7 +118,7 @@ namespace aes.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", "BillsElektra", new { id = obracunPotrosnje.RacunElektraId });
+                return RedirectToAction("Details", "RacuniElektra", new { id = obracunPotrosnje.RacunElektraId });
             }
 
             ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", obracunPotrosnje.RacunElektraId);

@@ -5,16 +5,16 @@ using aes.Repository;
 using aes.Repository.IRepository;
 using aes.Repository.UnitOfWork;
 using aes.Services;
-using aes.Services.BillsServices;
-using aes.Services.BillsServices.BillsElektraServices.BillsElektra;
-using aes.Services.BillsServices.BillsElektraServices.BillsElektra.Is;
-using aes.Services.BillsServices.BillsElektraServices.BillsElektraAdvances;
-using aes.Services.BillsServices.BillsElektraServices.BillsElektraAdvances.Is;
-using aes.Services.BillsServices.BillsElektraServices.BillsElektraServices;
-using aes.Services.BillsServices.BillsElektraServices.BillsElektraServices.Is;
-using aes.Services.BillsServices.BillsHoldingService;
-using aes.Services.BillsServices.BillsHoldingService.IService;
-using aes.Services.BillsServices.IBillsService;
+using aes.Services.RacuniServices;
+using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektra;
+using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektra.Is;
+using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektraRate;
+using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektraRate.Is;
+using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektraIzvrsenjeUsluge;
+using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektraIzvrsenjeUsluge.Is;
+using aes.Services.RacuniServices.RacuniHoldingService;
+using aes.Services.RacuniServices.RacuniHoldingService.IService;
+using aes.Services.RacuniServices.IRacuniService;
 using aes.Services.IServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,43 +53,43 @@ namespace aes
             // datatables
             _ = services.AddScoped<IDatatablesSearch, DatatablesSearch>();
             _ = services.AddScoped<IDatatablesGenerator, DatatablesGenerator>();
-            _ = services.AddScoped<IBillsInlineEditorService, BillsInlineEditorService>();
+            _ = services.AddScoped<IRacuniInlineEditorService, RacuniInlineEditorService>();
 
 
 
-            // bills services
-            _ = services.AddScoped<IBillsHoldingService, BillsHoldingService>();
+            // Racuni services
+            _ = services.AddScoped<IRacuniHoldingService, RacuniHoldingService>();
 
-            // bills elektra services
-            _ = services.AddScoped<IBillsElektraService, BillsElektraService>();
-            _ = services.AddScoped<IBillsElektraAdvancesService, BillsElektraAdvancesService>();
-            _ = services.AddScoped<IBillsElektraServicesService, BillsElektraServicesService>();
+            // Racuni elektra services
+            _ = services.AddScoped<IRacuniElektraService, RacuniElektraService>();
+            _ = services.AddScoped<IRacuniElektraRateService, RacuniElektraRateService>();
+            _ = services.AddScoped<IRacuniElektraIzvrsenjeUslugeService, RacuniElektraIzvrsenjeUslugeService>();
 
-            // bills temp create
-            _ = services.AddScoped<IBillsHoldingTempCreateService, BillsHoldingTempCreateService>();
-            _ = services.AddScoped<IBillsElektraAdvancesTempCreateService, BillsElektraAdvancesTempCreateService>();
-            _ = services.AddScoped<IBillsElektraTempCreateService, BillsElektraTempCreateService>();
-            _ = services.AddScoped<IBillsTempEditorService, BillsTempEditorService>();
-            _ = services.AddScoped<IBillsElektraServicesTempCreateService, BillsElektraServicesTempCreateService>();
+            // Racuni temp create
+            _ = services.AddScoped<IRacuniHoldingTempCreateService, RacuniHoldingTempCreateService>();
+            _ = services.AddScoped<IRacuniElektraRateTempCreateService, RacuniElektraRateTempCreateService>();
+            _ = services.AddScoped<IRacuniElektraTempCreateService, RacuniElektraTempCreateService>();
+            _ = services.AddScoped<IRacuniTempEditorService, RacuniTempEditorService>();
+            _ = services.AddScoped<IRacuniElektraIzvrsenjeUslugeTempCreateService, RacuniElektraIzvrsenjeUslugeTempCreateService>();
 
-            // bills upload services
-            _ = services.AddScoped<IBillsElektraUploadService, BillsElektraUploadService>();
-            _ = services.AddScoped<IBillsElektraAdvancesUploadService, BillsElektraAdvancesUploadService>();
-            _ = services.AddScoped<IBillsHoldingUploadService, BillsHoldingUploadService>();
+            // Racuni upload services
+            _ = services.AddScoped<IRacuniElektraUploadService, RacuniElektraUploadService>();
+            _ = services.AddScoped<IRacuniElektraRateUploadService, RacuniElektraRateUploadService>();
+            _ = services.AddScoped<IRacuniHoldingUploadService, RacuniHoldingUploadService>();
 
-            // bills common services
-            _ = services.AddScoped<IBillsCheckService, BillsCheckService>();
+            // Racuni common services
+            _ = services.AddScoped<IRacuniCheckService, RacuniCheckService>();
 
 
 
             // other services
-            _ = services.AddScoped<ICaseFileService, CaseFileService>();
+            _ = services.AddScoped<IPredmetiervice, Predmetiervice>();
             _ = services.AddScoped<IService, Service>();
-            _ = services.AddScoped<ILetterService, LetterService>();
+            _ = services.AddScoped<IDopisiervice, Dopisiervice>();
             _ = services.AddScoped<IOdsService, OdsService>();
-            _ = services.AddScoped<IApartmentUploadService, ApartmentUploadService>();
+            _ = services.AddScoped<IStanUploadService, StanUploadService>();
 
-            _ = services.AddScoped<IApartmentUpdateRepository, ApartmentUpdateRepository>();
+            _ = services.AddScoped<IStanUpdateRepository, StanUpdateRepository>();
 
 
 
@@ -100,7 +100,7 @@ namespace aes
 
             // common dependecies
             _ = services.AddScoped<ICommonDependencies, CommonDependencies>();
-            _ = services.AddScoped<IBillsCommonDependecies, BillsCommonDependecies>();
+            _ = services.AddScoped<IRacuniCommonDependecies, RacuniCommonDependecies>();
 
 
 
@@ -152,7 +152,7 @@ namespace aes
 
                   _ = endpoints.MapControllerRoute(
                       name: "default",
-                      pattern: "{controller=Apartments}/{action=Index}/{id?}");
+                      pattern: "{controller=Stanovi}/{action=Index}/{id?}");
                   _ = endpoints.MapRazorPages();
               });
         }

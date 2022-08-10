@@ -30,13 +30,13 @@
             {
                 "data": null, "name": "StanId",
                 "render": function (data) {
-                    return '<a href="Apartments/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
+                    return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.stanId + '</a>';
                 }
             },
             {
                 "data": null, "name": "Stan.SifraObjekta",
                 "render": function (data) {
-                    return '<a href="Apartments/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
+                    return '<a href="Stanovi/Details/' + data.stan.id + '">' + data.stan.sifraObjekta + '</a>';
                 }
             },
             { "data": "stan.adresa", "name": "stan.adresa" },

@@ -1,0 +1,47 @@
+﻿@model aes.Models.Predmet
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08">Klasa: @Model.Klasa Naziv: @Model.Naziv</p>
+        <button class="button-add-new" id="aAddNew">
+            <i class="bi bi-plus"></i>unos novog
+        </button>
+    </div>
+    <table class="display nowrap w-100" id="DopisTable">
+        <thead>
+            <tr>
+                <th>Datum dopisa</th>
+                <th>URBROJ</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="AddNew" style="display:none;">
+        @* inline style for jQuery show/hide *@
+        <partial name="_DopisiAddNew" />
+    </div>
+    <hr />
+    <div>
+        <button onclick="location.href='@Url.Action("Index", "Predmeti")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+        <button onclick="location.href='@Url.Action("Edit", "Predmeti", new {id= Model.Id})'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  uredi</button>
+        <button onclick="location.href='@Url.Action("Delete", "Predmeti", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-x"></i>  briši</button>
+    </div>
+</div>
+
+<script>
+const predmetId = @Model.Id;
+</script>
+@*<script src="~/js/_js_global/ExcelExportAction.js"></script>*@
+<script src="~/js/Datatables/Details/DopisiTable.js"></script>
+<script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+<script src="~/js/_js_global/_addNewHideUnhide.js"></script>
+<script src="~/js/alertify/alertify.min.js"></script>
+<link rel="stylesheet" href=~/js/alertify/css/alertify.css>
+<script>
+    $(document).ready(function () {
+        const input = $('#DopisTable_filter input[type="search"]');
+        const filter = $('#DopisTable_filter');
+        setStyle(input, filter);
+    });
+</script>

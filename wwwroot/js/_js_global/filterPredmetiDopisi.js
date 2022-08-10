@@ -20,7 +20,7 @@ $(document).ready(function () {
     function GetPredmetiData() {
         $.ajax({
             type: "POST",
-            url: GetCaseFilesDataForFilterUrl,
+            url: GetPredmetiDataForFilterUrl,
             success: function (predmeti) {
                 predmetiForFilter = predmeti;
                 drawSelectPredmetOptions();
@@ -54,7 +54,7 @@ $(document).ready(function () {
     function GetDopisiData() {
         $.ajax({
             type: "POST",
-            url: GetLettersDataForFilterUrl,
+            url: GetDopisiDataForFilterUrl,
             data: {
                 predmetId: $('#selectPredmet').val(), // in val is PredmetId
             },

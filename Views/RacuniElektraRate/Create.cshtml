@@ -1,0 +1,61 @@
+﻿@using aes.Models.Racuni
+@model IEnumerable<RacunElektraRate>
+@{
+    ViewData["Title"] = "Create";
+
+    ViewBag.plch = "Razdoblje";
+    ViewBag.inputType = "month";
+}
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="pf08">Elektra - rate</p>
+    </div>
+    <div class="container">
+        <div>
+            <partial name="_RacuniAddNew" />
+        </div>
+    </div>
+    <div class="space-10-10">
+        <div id="ind">
+            <table class="display nowrap w-100" id="IndexTable">
+                <thead>
+                    <tr>
+                        <th>Redni broj</th>
+                        <th>Broj računa</th>
+                        <th>Stan ID</th>
+                        <th>Adresa</th>
+                        <th>Korisnik</th>
+                        <th>Vlasništvo</th>
+                        <th>Status</th>
+                        <th>Razdoblje</th>
+                        <th>Iznos</th>
+                        <th>Napomena</th>
+                        <th>Akcija</th>
+                    </tr>
+                </thead>
+            </table>
+            <br />
+        </div>
+        <div>
+            <partial name="_SaveDeleteBottomCreate" />
+        </div>
+        <hr />
+        <div>
+            <button onclick="location.href='@Url.Action("Index", "RacuniElektraRate")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const GetCustomersDataUrl = "/RacuniElektraRate/GetCustomers";
+    const GetPredmetiDataForFilterUrl = "/RacuniElektraRate/GetPredmetiForCreate";
+    const GetDopisiDataForFilterUrl = "/RacuniElektraRate/GetDopisiDataForCreate";
+    const uploadActionUrl ="/RacuniElektraRate/Upload";
+</script>
+<script src="~/js/Datatables/Create/addRowRacuni.js"></script>
+<script src="~/js/Datatables/Create/addNewRacuni.js"></script>
+<script src="~/js/Datatables/Create/RacuniUpload.js"></script>
+<script src="~/js/Datatables/Create/RacuniElektraRateTable.js"></script>
+<script src=~/js/_js_global/notificationBuilder/GlobalVariables.js></script>
+<script src=~/js/_js_global/notificationBuilder/NotificationBuilder.js></script>
+<div> <partial name="Scripts/_CreateScripts" /> </div>

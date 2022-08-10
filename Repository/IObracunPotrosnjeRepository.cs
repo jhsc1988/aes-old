@@ -7,8 +7,8 @@ namespace aes.Repository
 {
     public interface IObracunPotrosnjeRepository : IRepository<ObracunPotrosnje>
     {
-        Task<ObracunPotrosnje> GetLastForRacunId(int billId);
+        Task<ObracunPotrosnje> GetLastForRacunId(int RacunId);
         Task<IEnumerable<ObracunPotrosnje>> GetObracunForUgovorniRacun(long ugovorniRacun);
-        Task<IEnumerable<ObracunPotrosnje>> GetObracunPotrosnjeForBill(int billId);
+        Task<IEnumerable<ObracunPotrosnje>> GetObracunPotrosnjeForRacun(int RacunId);
     }
 }

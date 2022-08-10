@@ -8,7 +8,7 @@ namespace aes.Repository.IRepository
     public interface IODSRepository : IRepository<Ods>
     {
         Task<IEnumerable<Ods>> GetAllOds();
-        Task<IEnumerable<TBill>> GetBillsForOmm<TBill>(int stanId) where TBill : Elektra;
+        Task<IEnumerable<TRacun>> GetRacuniForOmm<TRacun>(int stanId) where TRacun : Elektra;
         Task<Ods> IncludeAppartment(Ods ods);
     }
 }

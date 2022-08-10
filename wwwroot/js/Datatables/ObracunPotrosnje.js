@@ -5,10 +5,10 @@ $(document).ready(function () {
 
         dom: 'rt',
         "ajax": {
-            "url": "/BillsElektra/GetObracunPotrosnjeForBill",
+            "url": "/RacuniElektra/GetObracunPotrosnjeForRacun",
             "type": "POST",
             "datatype": "json",
-            "data": { billId: billId },
+            "data": { RacunId: RacunId },
         },
         "columns": [
             { "data": "brojBrojila", "name": "brojBrojila" },

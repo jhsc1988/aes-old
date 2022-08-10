@@ -7,7 +7,7 @@ namespace aes.Models.Racuni
     public class RacunElektraRate : Elektra
     {
         [Required]
-        [Remote(action: "BrojRacunaValidation", controller: "BillsElektraAdvances")]
+        [Remote(action: "BrojRacunaValidation", controller: "RacuniElektraRate")]
         [Display(Name = "Broj računa")]
         [MaxLength(19)]
         public override string BrojRacuna { get; set; }

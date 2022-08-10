@@ -7,7 +7,7 @@ namespace aes.Models
     {
         [Required]
         [Display(Name = "Ugovorni račun")]
-        [Remote(action: "UgovorniRacunValidation", controller: "ElektraCustomers")]
+        [Remote(action: "UgovorniRacunValidation", controller: "ElektraKupci")]
         public long UgovorniRacun { get; set; }
 
         public Ods Ods { get; set; }

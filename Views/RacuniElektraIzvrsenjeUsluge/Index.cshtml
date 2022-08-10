@@ -1,0 +1,54 @@
+﻿<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="col-sm-10 pf08">Pregled računa - HEP - Elektra - izvršenje usluge</p>
+        <a class="link-head" asp-controller="RacuniElektraIzvrsenjeUsluge" asp-action="Create">
+            <i class="bi bi-plus"></i>unos novih
+        </a>
+    </div>
+    <div>
+        <partial name="_PredmetiDopisiFilter" />
+    </div>
+    <table class="display nowrap w-100" id="IndexTable">
+        <thead>
+            <tr>
+                <th>id</th> @* invisible *@
+
+                <th>Redni broj</th> @* seen in editor *@
+
+                <th>Broj računa</th>
+                <th>Ugovorni račun</th>
+                <th>Datum izdavanja</th>
+                <th>Datum izvršenja</th>
+                <th>Usluga</th>
+                <th>Iznos</th>
+                <th>Klasa plaćanja</th>
+                <th>Datum potvrde</th>
+                <th>Napomena</th>
+
+                <th>stan_id</th> @* invisible - for excel*@
+                <th>adresa</th> @* invisible - for excel*@
+                <th>kat</th> @* invisible - for excel*@
+                <th>broj_stana</th> @* invisible - for excel*@
+                <th>povrsina</th> @* invisible - for excel*@
+
+                <th>Akcija</th> @* seen in editor *@
+            </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    let excelButton;
+    let tableColumn;
+    const updateDbUrl = "/RacuniElektraIzvrsenjeUsluge/updateDbForInline";
+    const GetPredmetiDataForFilterUrl = "/RacuniElektraIzvrsenjeUsluge/GetPredmetiDataForFilter";
+    const GetDopisiDataForFilterUrl = "/RacuniElektraIzvrsenjeUsluge/GetDopisiDataForFilter";
+    const inputType ="date";
+</script>
+<script src="~/js/Datatables/RacuniIndex/RacuniElektraIzvrsenjeUslugeTable.js"></script>
+<div> <partial name="Scripts/Racuni/_Services" /> </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        excelButton.disable();
+    });
+</script>

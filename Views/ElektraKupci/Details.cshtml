@@ -1,0 +1,119 @@
+﻿@model aes.Models.ElektraKupac
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08"><strong>Detalji:</strong> Ugovorni račun: @Model.UgovorniRacun</p>
+    </div>
+    <div>
+        <strong> OMM: </strong>
+        <a href="/Ods/Details/@Model.OdsId">@Model.Ods.Omm</a>
+        <strong> ID: </strong>
+        <a href="/Stanovi/Details/@Model.Ods.Stan.Id">@Model.Ods.Stan.StanId</a>
+        <strong> Adresa: </strong> @Model.Ods.Stan.Adresa
+        <strong> Kat: </strong> @Model.Ods.Stan.Kat
+        <strong> Broj stana: </strong>@Model.Ods.Stan.BrojSTana
+        <strong> Četvrt: </strong>@Model.Ods.Stan.Četvrt
+        <strong> Površina: </strong>@Model.Ods.Stan.Površina.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR")) m2
+        <strong> Status korištenja: </strong>@Model.Ods.Stan.StatusKorištenja
+        <strong> Vlasništvo: </strong> @Model.Ods.Stan.Vlasništvo
+    </div><hr />
+    <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="true">Računi - elektra</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-rate-tab" data-toggle="tab" href="#racuni-elektra-rate" role="tab" aria-controls="racuni-elektra-rate" aria-selected="false">Računi - elektra - rate</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-izvrsenje-usluge-tab" data-toggle="tab" href="#racuni-elektra-izvrsenje-usluge" role="tab" aria-controls="racuni-elektra-izvrsenje-usluge" aria-selected="false">Računi Elektra - izvršenje usluge</a>
+        </li>
+    </ul>
+
+    <div class="tab-content nav-content-box" id="myTabContent">
+        <div class="tab-pane fade space-10-10 show active" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
+            <table class="display nowrap w-100 " id="RacunElektraTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
+            <table class="display nowrap w-100" id="RacunElektraRateTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Razdoblje</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
+            <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Datum izvršenja</th>
+                        <th>Usluga</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="space-10-10">
+        <button onclick="location.href='@Url.Action("Index", "ElektraKupci")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+        <button onclick="location.href='@Url.Action("Edit", "ElektraKupci", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  uredi</button>
+        <button onclick="location.href='@Url.Action("Delete", "ElektraKupci", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-x"></i>  briši</button>
+    </div>
+</div>
+<script>
+    const racuniUrl = "/ElektraKupci/GetRacuniElektraForElektraKupac";
+    const racuniRateUrl = "/ElektraKupci/GetRacuniElektraRateForElektraKupac";
+    const uslugeUrl = "/ElektraKupci/GetRacuniElektraIzvrsenjeUslugeForElektraKupac";
+    const param = @Model.Id;
+</script>
+<script src="~/js/_js_global/ExcelExportAction.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/DatatablesAdjust.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniElektraRateTable.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniElektraTable.js" asp-append-version="true"></script>
+<script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+<script>
+    $(document).ready(function () {
+        stanDetailsDatatablesAdjust();
+
+        // ************************************ search in Datatables in Details styling ************************************ //
+
+        let input = $('#RacunElektraTable_filter input[type="search"]');
+        let filter = $('#RacunElektraTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraRateTable_filter input[type="search"]');
+        filter = $('#RacunElektraRateTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
+        filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+        setStyle(input, filter);
+    });
+</script>

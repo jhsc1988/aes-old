@@ -12,8 +12,8 @@ namespace aes.Models.Datatables
         IEnumerable<Stan> GetStanoviForDatatables(IEnumerable<Stan> stanList, DTParams dtParams);
         IEnumerable<Ods> GetStanoviOdsForDatatables(IEnumerable<Ods> OdsList, DTParams dtParams);
         IEnumerable<Predmet> GetPredmetiForDatatables(IEnumerable<Predmet> predmetList, DTParams Params);
-        IEnumerable<Dopis> GetLettersForDatatables(IEnumerable<Dopis> DopisList, DTParams Params);
-        IEnumerable<ElektraKupac> GetElektraCustomersForDatatables(IEnumerable<ElektraKupac> ElektraKupacList, DTParams Params);
+        IEnumerable<Dopis> GetDopisiForDatatables(IEnumerable<Dopis> DopisList, DTParams Params);
+        IEnumerable<ElektraKupac> GetElektraKupciForDatatables(IEnumerable<ElektraKupac> ElektraKupacList, DTParams Params);
         IEnumerable<ObracunPotrosnje> GetObracunPotrosnjeDatatables(IEnumerable<ObracunPotrosnje> list, DTParams Params);
     }
 }

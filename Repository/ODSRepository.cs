@@ -19,9 +19,9 @@ namespace aes.Repository
                 .Where(e => e.Id != 5402) // HACK: dummy entity
                 .ToListAsync();
         }
-        public async Task<IEnumerable<TBill>> GetBillsForOmm<TBill>(int stanId) where TBill : Elektra
+        public async Task<IEnumerable<TRacun>> GetRacuniForOmm<TRacun>(int stanId) where TRacun : Elektra
         {
-            return await _context.Set<TBill>()
+            return await _context.Set<TRacun>()
                 .Include(e => e.ElektraKupac)
                 .Include(e => e.ElektraKupac.Ods)
                 .Where(e => e.ElektraKupac.Ods.StanId == stanId && e.IsItTemp != true)

@@ -1,0 +1,31 @@
+﻿<table class="display nowrap w-100" id="OdsTable">
+    <thead>
+        <tr>
+            <th>Mjerno mjesto</th>
+            <th>Stan ID</th>
+            <th>Šifra objekta</th>
+            <th>Adresa</th>
+            <th>Kat</th>
+            <th>Broj stana</th>
+            <th>Četvrt</th>
+            <th>Površina</th>
+
+            <th>Napomena</th>
+            <th>Akcija</th>
+
+            <th>Vrijeme unosa</th> @*invisible, used for ordering*@
+
+        </tr>
+    </thead>
+</table>
+<script src="~/js/_js_global/ExcelExportAction.js"></script>
+<script src="~/js/Datatables/Create/ElektraKupciTable.js"></script>
+<script>
+    function getDataForKupci(id, stanid) {
+        $('#OId').val(id);
+        $('#OMM').val(stanid);
+
+        GetStanDataForKupci(id); // poziv ajax f-je za notification builder
+    };
+</script>
+

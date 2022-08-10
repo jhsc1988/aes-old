@@ -32,7 +32,7 @@ namespace aes.Services
                     });
             }
 
-            Stan stan = await _c.UnitOfWork.Apartment.Get(idInt);
+            Stan stan = await _c.UnitOfWork.Stan.Get(idInt);
             return new JsonResult(stan);
         }
 

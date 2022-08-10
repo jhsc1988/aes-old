@@ -1,0 +1,39 @@
+﻿@model aes.Models.Dopis
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="pf08"><strong>Detalji:</strong> URBROJ: @Model.Urbroj</p>
+    </div>
+    <hr />
+    <h4>Jeste li sigurni da želite obrisati ovaj dopis ?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Predmet)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/Predmeti/Details/@Model.PredmetId">@Html.DisplayFor(model => model.Predmet.Klasa)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Urbroj)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/Dopisi/Details/@Model.Id">@Html.DisplayFor(model => model.Urbroj)</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Datum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Datum)
+        </dd>
+    </dl>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button onclick="location.href='@Url.Action("Details", "Dopisi", new { id = Model.Id })'" type='button' class='button-back'><i class='bi bi-arrow-left'></i>  povratak na detalje</button>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
+</div>

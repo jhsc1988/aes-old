@@ -101,7 +101,7 @@ namespace aes.Controllers
 
             }
 
-            ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Apartment.GetAll(), "Id", "Adresa", ods.StanId);
+            ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Stan.GetAll(), "Id", "Adresa", ods.StanId);
             return View(ods);
         }
 
@@ -142,7 +142,7 @@ namespace aes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Apartment.GetAll(), "Id", "Adresa", ods.StanId);
+            ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Stan.GetAll(), "Id", "Adresa", ods.StanId);
             return View(ods);
         }
 

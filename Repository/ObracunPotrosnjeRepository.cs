@@ -11,20 +11,20 @@ namespace aes.Repository
     {
         public ObracunPotrosnjeRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<ObracunPotrosnje>> GetObracunPotrosnjeForBill(int billId)
+        public async Task<IEnumerable<ObracunPotrosnje>> GetObracunPotrosnjeForRacun(int RacunId)
         {
             return await _context.ObracunPotrosnje.
-                Where(e => e.RacunElektraId == billId)
+                Where(e => e.RacunElektraId == RacunId)
                 .Include(e => e.TarifnaStavka)
                 .ToListAsync();
         }
 
-        public async Task<ObracunPotrosnje> GetLastForRacunId(int billId)
+        public async Task<ObracunPotrosnje> GetLastForRacunId(int RacunId)
         {
-            if (_context.ObracunPotrosnje.Where(e => e.RacunElektraId == billId).Count() > 1)
+            if (_context.ObracunPotrosnje.Where(e => e.RacunElektraId == RacunId).Count() > 1)
             {
                 ObracunPotrosnje obracun = await _context.ObracunPotrosnje
-                    .Where(e => e.RacunElektraId == billId)
+                    .Where(e => e.RacunElektraId == RacunId)
                     .OrderBy(e => e.Id)
                     .Reverse()
                     .Skip(1) // one before last
@@ -40,7 +40,7 @@ namespace aes.Repository
             else
             {
                 return await _context.ObracunPotrosnje
-                    .Where(e => e.RacunElektraId == billId)
+                    .Where(e => e.RacunElektraId == RacunId)
                     .FirstOrDefaultAsync();
             }
         }

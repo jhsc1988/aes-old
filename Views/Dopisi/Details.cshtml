@@ -1,0 +1,36 @@
+﻿@model aes.Models.Dopis
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+    </div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Predmet)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Predmet.Klasa)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Urbroj)
+        </dt>
+        <dd class="col-sm-10">
+            <a href="/Dopisi/Details/@Model.Id">@Html.DisplayFor(model => model.Urbroj)</a>
+        </dd>
+        <dt class="col-sm-2">
+            Datum dopisa
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Datum)
+        </dd>
+    </dl>
+    <hr />
+    <div>
+        <button onclick="location.href='@Url.Action("Details", "Predmeti", new { id = Model.PredmetId})'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+        <button onclick="location.href='@Url.Action("Edit", "Dopisi", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-pencil-fill"></i>  uredi</button>
+        <button onclick="location.href='@Url.Action("Delete", "Dopisi", new { id = Model.Id })'" type='button' class='button-back' id='remove'><i class="bi bi-x"></i>  briši</button>
+    </div>
+</div>

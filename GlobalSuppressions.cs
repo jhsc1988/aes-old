@@ -5,6 +5,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.BillsControllers.BillsElektraControllers.BillsElektraController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.BillsControllers.BillsElektraControllers.BillsElektraAdvancesController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.BillsControllers.BillsElektraControllers.BillsElektraServicesController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.RacuniControllers.RacuniElektraControllers.RacuniElektraController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.RacuniControllers.RacuniElektraControllers.RacuniElektraRateController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:aes.Controllers.RacuniControllers.RacuniElektraControllers.RacuniElektraIzvrsenjeUslugeController.SaveToDB(System.String)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.JsonResult}")]

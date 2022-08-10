@@ -17,41 +17,10 @@ namespace aes.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("aes.Models.ApartmentUpdate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("DateOfData")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExecutedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Interrupted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdateBegan")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("UpdateComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdateEnded")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApartmentUpdate");
-                });
 
             modelBuilder.Entity("aes.Models.Dopis", b =>
                 {
@@ -132,6 +101,44 @@ namespace aes.Migrations
                     b.HasIndex("ElektraKupacId");
 
                     b.ToTable("ElektraKupacEdit");
+                });
+
+            modelBuilder.Entity("aes.Models.ObracunPotrosnje", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<long>("BrojBrojila")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DatumDo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DatumOd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RacunElektraId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("StanjeDo")
+                        .HasColumnType("float");
+
+                    b.Property<double>("StanjeOd")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TarifnaStavkaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RacunElektraId");
+
+                    b.HasIndex("TarifnaStavkaId");
+
+                    b.ToTable("ObracunPotrosnje");
                 });
 
             modelBuilder.Entity("aes.Models.Ods", b =>
@@ -220,44 +227,6 @@ namespace aes.Migrations
                     b.ToTable("Predmet");
                 });
 
-            modelBuilder.Entity("aes.Models.Racuni.ObracunPotrosnje", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<long>("BrojBrojila")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("DatumDo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DatumOd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RacunElektraId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("StanjeDo")
-                        .HasColumnType("float");
-
-                    b.Property<double>("StanjeOd")
-                        .HasColumnType("float");
-
-                    b.Property<int>("TarifnaStavkaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RacunElektraId");
-
-                    b.HasIndex("TarifnaStavkaId");
-
-                    b.ToTable("ObracunPotrosnje");
-                });
-
             modelBuilder.Entity("aes.Models.Racuni.RacunElektra", b =>
                 {
                     b.Property<int>("Id")
@@ -290,7 +259,7 @@ namespace aes.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Iznos")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("KlasaPlacanja")
                         .HasMaxLength(20)
@@ -374,7 +343,7 @@ namespace aes.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Iznos")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("KlasaPlacanja")
                         .HasMaxLength(20)
@@ -459,7 +428,7 @@ namespace aes.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Iznos")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("KlasaPlacanja")
                         .HasMaxLength(20)
@@ -540,7 +509,7 @@ namespace aes.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Iznos")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("KlasaPlacanja")
                         .HasMaxLength(20)
@@ -590,22 +559,6 @@ namespace aes.Migrations
                     b.HasIndex("RacunHoldingId");
 
                     b.ToTable("RacunHoldingEdit");
-                });
-
-            modelBuilder.Entity("aes.Models.Racuni.TarifnaStavka", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Naziv")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TarifnaStavka");
                 });
 
             modelBuilder.Entity("aes.Models.Stan", b =>
@@ -680,6 +633,53 @@ namespace aes.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Stan");
+                });
+
+            modelBuilder.Entity("aes.Models.StanUpdate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateOfData")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExecutedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Interrupted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdateBegan")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("UpdateComplete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdateEnded")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StanUpdate");
+                });
+
+            modelBuilder.Entity("aes.Models.TarifnaStavka", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TarifnaStavka");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -915,6 +915,25 @@ namespace aes.Migrations
                     b.Navigation("ElektraKupac");
                 });
 
+            modelBuilder.Entity("aes.Models.ObracunPotrosnje", b =>
+                {
+                    b.HasOne("aes.Models.Racuni.RacunElektra", "RacunElektra")
+                        .WithMany()
+                        .HasForeignKey("RacunElektraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("aes.Models.TarifnaStavka", "TarifnaStavka")
+                        .WithMany()
+                        .HasForeignKey("TarifnaStavkaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RacunElektra");
+
+                    b.Navigation("TarifnaStavka");
+                });
+
             modelBuilder.Entity("aes.Models.Ods", b =>
                 {
                     b.HasOne("aes.Models.Stan", "Stan")
@@ -933,25 +952,6 @@ namespace aes.Migrations
                         .HasForeignKey("OdsId");
 
                     b.Navigation("Ods");
-                });
-
-            modelBuilder.Entity("aes.Models.Racuni.ObracunPotrosnje", b =>
-                {
-                    b.HasOne("aes.Models.Racuni.RacunElektra", "RacunElektra")
-                        .WithMany()
-                        .HasForeignKey("RacunElektraId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("aes.Models.Racuni.TarifnaStavka", "TarifnaStavka")
-                        .WithMany()
-                        .HasForeignKey("TarifnaStavkaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RacunElektra");
-
-                    b.Navigation("TarifnaStavka");
                 });
 
             modelBuilder.Entity("aes.Models.Racuni.RacunElektra", b =>

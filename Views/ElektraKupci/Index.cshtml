@@ -1,0 +1,41 @@
+﻿<div class="content-bg">
+    <div class="row head-bg justify-content-between">
+        <p class="col-sm-10 pf08">Pregled kupaca - HEP Elektra</p>
+        <a class="link-head" asp-controller="ElektraKupci" asp-action="Create">
+            <i class="bi bi-plus"></i>unos novog
+        </a>
+    </div>
+    <table class="display nowrap w-100" id="ElektraKupacTable">
+        <thead>
+            <tr>
+                <th>Ugovorni račun</th>
+                <th>Mjerno mjesto</th>
+                <th>Stan ID</th>
+                <th>Šifra objekta</th>
+                <th>Adresa</th>
+                <th>Kat</th>
+                <th>Broj stana</th>
+                <th>Četvrt</th>
+                <th>Površina</th>
+
+                <th>Korisnik</th> @* invisible - for excel*@
+                <th>Status</th> @* invisible - for excel*@
+
+                <th>Napomena (kupac)</th>
+
+                <th>Vrijeme unosa</th> @* seen in editor *@
+
+            </tr>
+        </thead>
+    </table>
+</div>
+<script src="~/js/_js_global/ExcelExportAction.js"></script>
+<script src="~/js/Datatables/Index/ElektraKupciDatatable.js"></script>
+<script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+<script>
+    $(document).ready(function () {
+        const input = $('#ElektraKupacTable_filter input[type="search"]');
+        const filter = $('#ElektraKupacTable_filter');
+        setStyle(input, filter);
+    });
+</script>

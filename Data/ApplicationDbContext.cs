@@ -22,7 +22,7 @@ namespace aes.Data
         public DbSet<RacunElektraRateEdit> RacunElektraRateEdit { get; set; }
         public DbSet<RacunHolding> RacunHolding { get; set; }
         public DbSet<RacunHoldingEdit> RacunHoldingEdit { get; set; }
-        public DbSet<ApartmentUpdate> ApartmentUpdate { get; set; }
+        public DbSet<StanUpdate> StanUpdate { get; set; }
         public DbSet<TarifnaStavka> TarifnaStavka { get; set; }
         public DbSet<ObracunPotrosnje> ObracunPotrosnje { get; set; }
         public DbSet<OdsEdit> OdsEdit { get; set; }

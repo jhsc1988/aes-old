@@ -16,7 +16,7 @@
         //],
 
         "ajax": {
-            "url": "/Apartments/GetListFiltered", // filtirana lista - lista stanova za koje ne postoje mjerna mjesta
+            "url": "/Stanovi/GetListFiltered", // filtirana lista - lista stanova za koje ne postoje mjerna mjesta
             "type": "POST",
             "datatype": "json"
         },
@@ -24,13 +24,13 @@
             {
                 "data": null, "name": "StanId",
                 "render": function (data, type, row, meta) {
-                    return '<a href="../../../Apartments/Details/' + data.id + '">' + data.stanId + '</a>';
+                    return '<a href="../../../Stanovi/Details/' + data.id + '">' + data.stanId + '</a>';
                 }
             },
             {
                 "data": null, "name": "SifraObjekta",
                 "render": function (data, type, row, meta) {
-                    return '<a href="../../../Apartments/Details/' + data.id + '">' + data.sifraObjekta + '</a>';
+                    return '<a href="../../../Stanovi/Details/' + data.id + '">' + data.sifraObjekta + '</a>';
                 }
             },
             { "data": "adresa", "name": "Adresa" },

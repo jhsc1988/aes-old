@@ -3,19 +3,19 @@
 @using aes.Controllers
 @using aes.Repository.IRepository
 
-@inject IApartmentUpdateRepository apartmentUpdateRepository;
+@inject IStanUpdateRepository StanUpdateRepository;
 @{
-    ApartmentUpdate apartmentUpdateData = apartmentUpdateRepository.GetLatest();
+    StanUpdate StanUpdateData = StanUpdateRepository.GetLatest();
 
     string dateOfData = null;
-    string apartmentUpdateDataUpdateBegan = null;
-    string apartmentUpdateDataUpdateEnded = null;
+    string StanUpdateDataUpdateBegan = null;
+    string StanUpdateDataUpdateEnded = null;
 
-    if (apartmentUpdateData is not null)
+    if (StanUpdateData is not null)
     {
-        dateOfData = apartmentUpdateRepository.GetLatestSuccessfulUpdate().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
-        apartmentUpdateDataUpdateBegan = apartmentUpdateData.UpdateBegan.ToString("dd.MM.yyyy HH:mm:ss");
-        apartmentUpdateDataUpdateEnded = apartmentUpdateData.UpdateEnded != null ? ((DateTime)apartmentUpdateData.UpdateEnded).ToString("dd.MM.yyyy HH:mm:ss") : null;
+        dateOfData = StanUpdateRepository.GetLatestSuccessfulUpdate().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
+        StanUpdateDataUpdateBegan = StanUpdateData.UpdateBegan.ToString("dd.MM.yyyy HH:mm:ss");
+        StanUpdateDataUpdateEnded = StanUpdateData.UpdateEnded != null ? ((DateTime)StanUpdateData.UpdateEnded).ToString("dd.MM.yyyy HH:mm:ss") : null;
     }
 }
 
@@ -78,13 +78,13 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark h6" asp-area="" asp-controller="Apartments" asp-action="">Stanovi</a>
+                                <a class="nav-link text-dark h6" asp-area="" asp-controller="Stanovi" asp-action="">Stanovi</a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kupci<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="ElektraCustomers" asp-action="">Kupci - Elektra</a>
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="ElektraKupci" asp-action="">Kupci - Elektra</a>
                                     </li>
                                     <li class="dropdown-divider"></li>
                                     <li class="nav-item">
@@ -96,22 +96,22 @@
                                 <a href="#" class="dropdown-toggle nav-link text-dark h6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Računi<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsElektra" asp-action="">Elektra - obračuni</a>
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniElektra" asp-action="">Elektra - obračuni</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsElektraAdvances" asp-action="">Elektra - rate</a>
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniElektraRate" asp-action="">Elektra - rate</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsElektraServices" asp-action="">Elektra - izvršenja usluge</a>
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniElektraIzvrsenjeUsluge" asp-action="">Elektra - izvršenja usluge</a>
                                     </li>
                                     <li class="dropdown-divider"></li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="BillsHolding" asp-action="">Holding</a>
+                                        <a class="nav-link text-dark h6" asp-area="" asp-controller="RacuniHolding" asp-action="">Holding</a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark h6" asp-area="" asp-controller="CaseFiles" asp-action="">Predmeti</a>
+                                <a class="nav-link text-dark h6" asp-area="" asp-controller="Predmeti" asp-action="">Predmeti</a>
                             </li>
                         </ul>
                         <partial name="_LoginPartial" />
@@ -122,14 +122,14 @@
         <footer class="border-top footer text-muted">
             <div class="d-flex row container justify-content-between align-items-center">
                 &copy; 2021 - aes - Jasmin Husić
-                @if (apartmentUpdateData is not null)
+                @if (StanUpdateData is not null)
                 {
                     <div style="font-size: 0.7rem;">
                         <div class="row">
                             <div class=" col d-flex "><strong>stanje podataka:</strong> @dateOfData,</div>
-                            <div class=" col d-flex "><strong>update start:</strong> @apartmentUpdateDataUpdateBegan,</div>
-                            <div class=" col d-flex "><strong>end:</strong> @apartmentUpdateDataUpdateEnded,</div>
-                            <div class=" col d-flex "><strong>init by:</strong> @apartmentUpdateData.ExecutedBy</div>
+                            <div class=" col d-flex "><strong>update start:</strong> @StanUpdateDataUpdateBegan,</div>
+                            <div class=" col d-flex "><strong>end:</strong> @StanUpdateDataUpdateEnded,</div>
+                            <div class=" col d-flex "><strong>init by:</strong> @StanUpdateData.ExecutedBy</div>
                         </div>
                     </div>
                 }

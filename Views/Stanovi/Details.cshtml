@@ -1,0 +1,146 @@
+﻿@model Stan
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="content-bg">
+    <div class="head-bg">
+        <p class="pf08">id: @Model.StanId šo: @Model.SifraObjekta adresa: @Model.Adresa kat: @Model.Kat stan: @Model.BrojSTana</p>
+    </div>
+    <div>
+        <strong> ID: </strong> @Model.StanId
+        <strong> Šifra objekta: </strong> @Model.SifraObjekta
+        <strong> Vrsta: </strong> @Model.Vrsta
+        <strong> Adresa: </strong> @Model.Adresa
+        <strong> Kat: </strong> @Model.Kat
+        <strong> Broj stana: </strong>@Model.BrojSTana
+        <strong> Naselje: </strong>@Model.Naselje
+        <strong> Četvrt: </strong>@Model.Četvrt
+        <strong> Površina: </strong>@Model.Površina.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("hr-HR")) m2
+        <strong> Status korištenja: </strong>@Model.StatusKorištenja
+        <strong> Korisnik: </strong>@Model.Korisnik
+        <strong> Vlasništvo: </strong> @Model.Vlasništvo
+        <strong> Dio nekretnine: </strong> @Model.DioNekretnine
+        <strong> Sektor: </strong> @Model.Sektor
+        <strong> Status: </strong> @Model.Status
+    </div><hr />
+    <ul class="nav nav-tabs nav-tabs-style" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="racuni-elektra-tab" data-toggle="tab" href="#racuni-elektra" role="tab" aria-controls="racuni-elektra" aria-selected="true">Računi - elektra</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-rate-tab" data-toggle="tab" href="#racuni-elektra-rate" role="tab" aria-controls="racuni-elektra-rate" aria-selected="false">Računi - elektra - rate</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="racuni-elektra-izvrsenje-usluge-tab" data-toggle="tab" href="#racuni-elektra-izvrsenje-usluge" role="tab" aria-controls="racuni-elektra-izvrsenje-usluge" aria-selected="false">Računi Elektra - izvršenje usluge</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="holding-tab" data-toggle="tab" href="#holding" role="tab" aria-controls="holding" aria-selected="false">Računi - holding</a>
+        </li>
+    </ul>
+    <div class="tab-content nav-content-box" id="myTabContent">
+        <div class="tab-pane fade show active space-10-10" id="racuni-elektra" role="tabpanel" aria-labelledby="racuni-elektra-tab">
+            <table class="display nowrap w-100 " id="RacunElektraTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-rate" role="tabpanel" aria-labelledby="racuni-elektra-rate-tab">
+            <table class="display nowrap w-100" id="RacunElektraRateTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Razdoblje</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="racuni-elektra-izvrsenje-usluge" role="tabpanel" aria-labelledby="racuni-elektra-izvrsenje-usluge-tab">
+            <table class="display nowrap w-100" id="RacunElektraIzvrsenjeUslugeTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Ugovorni račun</th>
+                        <th>Datum izdavanja</th>
+                        <th>Datum izvršenja</th>
+                        <th>Usluga</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade space-10-10" id="holding" role="tabpanel" aria-labelledby="holding-tab">
+            <table class="display nowrap w-100" id="RacunHoldingTable">
+                <thead>
+                    <tr>
+                        <th>Broj računa</th>
+                        <th>Datum izdavanja</th>
+                        <th>Iznos</th>
+                        <th>Klasa plaćanja</th>
+                        <th>Datum potvrde</th>
+                        <th>Napomena</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="space-10-10">
+        <button onclick="location.href='@Url.Action("Index", "Stanovi")'" type='button' class='button-back' id='remove'><i class='bi bi-arrow-left'></i>  povratak</button>
+    </div>
+</div>
+<script>
+    //let excelButton;
+    const racuniUrl = "/Stanovi/GetRacuniElektraForStan";
+    const racuniRateUrl = "/Stanovi/GetRacuniElektraRateForStan";
+    const uslugeUrl = "/Stanovi/GetRacuniElektraIzvrsenjeUslugeForStan";
+    const holdingUrl = "/Stanovi/GetRacuniHoldingForStan";
+    const param = @Model.Id; // Stan id (primarni ključ)
+</script>
+<script src="~/js/_js_global/ExcelExportAction.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/DatatablesAdjust.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniElektraIzvrsenjeUslugeTable.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniElektraRateTable.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniElektraTable.js" asp-append-version="true"></script>
+<script src="~/js/Datatables/Details/Racuni/RacuniHoldingTable.js" asp-append-version="true"></script>
+<script src="~/js/_js_global/DatatablesSearchStyle.js"></script>
+<script>
+    $(document).ready(function () {
+
+        stanDetailsDatatablesAdjust();
+        //excelButton.disable();
+
+        // ************************************ search in Datatables in Details styling ************************************ //
+
+        let input = $('#RacunElektraTable_filter input[type="search"]');
+        let filter = $('#RacunElektraTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraRateTable_filter input[type="search"]');
+        filter = $('#RacunElektraRateTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunHoldingTable_filter input[type="search"]');
+        filter = $('#RacunHoldingTable_filter');
+        setStyle(input, filter);
+
+        input = $('#RacunElektraIzvrsenjeUslugeTable_filter input[type="search"]');
+        filter = $('#RacunElektraIzvrsenjeUslugeTable_filter');
+        setStyle(input, filter);
+    });
+</script>

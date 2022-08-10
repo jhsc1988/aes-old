@@ -1,0 +1,46 @@
+﻿<div class="row side-padding-10">
+    <div class="col-md-6">
+        <form class="row g-3 d-flex justify-content-start">
+            <div class="col-md-4">
+                <label hidden class="control-label"></label>
+                <input id="klasa" class="form-control form-control-sm" placeholder="Klasa" />
+            </div>
+            <div class="col-md-4">
+                <label hidden class="control-label"></label>
+                <input id="naziv" class="form-control form-control-sm" placeholder="Naziv" />
+            </div>
+            <div class="col-md-2">
+                <button type="button" value="Spremi" class="btn btn-dark" id="btnSave">Spremi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let hidden = true;
+    $("#btnSave").on("click", function () {
+        $.ajax({
+            type: "POST",
+            url: "/Predmeti/SaveToDB",
+            data: {
+                klasa: $("#klasa").val(),
+                naziv: $("#naziv").val(),
+            },
+            success: function (r) {
+                if (r.success) {
+                    alertify.success(r.message);
+                } else {
+                    alertify.error(r.message);
+                }
+                table.ajax.reload(null, false); // user paging is not reset on reload(callback, resetPaging)
+            },
+            error: function (r) {
+                alertify.error(r.message);
+                table.ajax.reload(null, false);
+            }
+        });
+        $("#AddNew").hide("slow");
+        $("#klasa").val("");
+        $("#naziv").val("");
+    })
+</script>
