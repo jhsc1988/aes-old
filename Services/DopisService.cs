@@ -1,4 +1,4 @@
-﻿using aes.CommonDependecies;
+﻿using aes.CommonDependecies.ICommonDependencies;
 using aes.Models;
 using aes.Models.Datatables;
 using aes.Services.IServices;
@@ -37,11 +37,12 @@ namespace aes.Services
 
         public async Task<JsonResult> SaveToDB(string predmetId, string urbroj, string datumDopisa)
         {
-            Dopis dTemp = new();
-
-            dTemp.PredmetId = int.Parse(predmetId);
-            dTemp.Urbroj = urbroj;
-            dTemp.Datum = DateTime.Parse(datumDopisa);
+            Dopis dTemp = new()
+            {
+                PredmetId = int.Parse(predmetId),
+                Urbroj = urbroj,
+                Datum = DateTime.Parse(datumDopisa)
+            };
 
             _c.UnitOfWork.Dopis.Add(dTemp);
 

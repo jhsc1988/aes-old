@@ -69,8 +69,10 @@ namespace aes.Services
                 FileStream fs;
                 TextFieldParser reader;
                 string fileName = _webHostEnvironment.WebRootPath + $@"\Uploaded\{file.FileName}";
+                string ff = file.ContentType;
 
-                if (!file.ContentType.Equals("application/vnd.ms-excel"))
+                //if (!file.ContentType.Equals("application/vnd.ms-excel"))                
+                if (!file.ContentType.Equals("text/csv"))
                 {
                     string message = "not .csv file";
                     _logger.Information(_loggerTemplate + message);

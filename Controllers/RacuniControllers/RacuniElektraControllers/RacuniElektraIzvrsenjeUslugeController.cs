@@ -1,8 +1,8 @@
-﻿using aes.CommonDependecies;
+﻿using aes.CommonDependecies.ICommonDependencies;
 using aes.Controllers.IControllers;
-using aes.Models.Racuni;
+using aes.Models.Racuni.Elektra;
 using aes.Services;
-using aes.Services.RacuniServices.RacuniElektraIzvrsenjeUsluge.RacuniElektraIzvrsenjeUsluge.Is;
+using aes.Services.RacuniServices.Elektra.RacuniElektraIzvrsenjeUsluge.Is;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

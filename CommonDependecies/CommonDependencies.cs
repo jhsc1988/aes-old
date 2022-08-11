@@ -3,7 +3,7 @@ using aes.Repository.UnitOfWork;
 
 namespace aes.CommonDependecies
 {
-    public class CommonDependencies : ICommonDependencies
+    public class CommonDependencies : ICommonDependencies.ICommonDependencies
     {
         public IDatatablesGenerator DatatablesGenerator { get; }
         public IDatatablesSearch DatatablesSearch { get; }
