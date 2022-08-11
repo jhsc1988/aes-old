@@ -1,5 +1,5 @@
-﻿using aes.CommonDependecies;
-using aes.Models.Racuni;
+﻿using aes.CommonDependecies.ICommonDependencies;
+using aes.Models.Racuni.Holding;
 using aes.Services.RacuniServices.RacuniHoldingService.IService;
 using System.Collections.Generic;
 using System.Threading.Tasks;

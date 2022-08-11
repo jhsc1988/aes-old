@@ -53,7 +53,9 @@ namespace aes.Services.RacuniServices.RacuniHoldingService
                 FileStream fs;
                 StreamReader reader;
                 string fileName = _webHostEnvironment.WebRootPath + $@"\Uploaded\{file.FileName}";
-                if (!file.ContentType.Equals("application/vnd.ms-excel"))
+
+                //if (!file.ContentType.Equals("application/vnd.ms-excel"))
+                if (!file.ContentType.Equals("text/csv"))
                 {
                     string message = "not .csv file";
                     _logger.Information(_loggerTemplate + message);

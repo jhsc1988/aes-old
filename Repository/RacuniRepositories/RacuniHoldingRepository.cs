@@ -1,6 +1,6 @@
 ﻿using aes.Data;
 using aes.Models;
-using aes.Models.Racuni;
+using aes.Models.Racuni.Holding;
 using aes.Repository.RacuniRepositories.IRacuniRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -52,7 +52,7 @@ namespace aes.Repository.RacuniRepositories
                                     .ToListAsync();
         }
 
-        public async Task<Stan> GetStanBySifraObjekta(long SifraObjekta)
+        public async Task<Models.Stan> GetStanBySifraObjekta(long SifraObjekta)
         {
             return await _context.Stan.FirstOrDefaultAsync(e => e.SifraObjekta == SifraObjekta);
         }

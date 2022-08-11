@@ -1,5 +1,5 @@
 ﻿using aes.Data;
-using aes.Models.Racuni;
+using aes.Models.Racuni.Holding;
 using aes.Repository.RacuniRepositories.IRacuniRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

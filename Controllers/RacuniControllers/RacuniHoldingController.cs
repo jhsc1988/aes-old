@@ -1,6 +1,6 @@
-﻿using aes.CommonDependecies;
+﻿using aes.CommonDependecies.ICommonDependencies;
 using aes.Controllers.IControllers;
-using aes.Models.Racuni;
+using aes.Models.Racuni.Holding;
 using aes.Services;
 using aes.Services.RacuniServices.RacuniHoldingService.IService;
 using Microsoft.AspNetCore.Authorization;

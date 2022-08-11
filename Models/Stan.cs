@@ -63,6 +63,5 @@ namespace aes.Models
 
         [Display(Name = "Vrijeme unosa")]
         public DateTime? VrijemeUnosa { get; set; }
-#nullable disable
     }
 }

@@ -1,12 +1,11 @@
-﻿using aes.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace aes.Repository.IRepository
 {
-    public interface IStanRepository : IRepository<Stan>
+    public interface IStanRepository : IRepository<Models.Stan>
     {
-        Task<IEnumerable<Stan>> GetStanovi();
-        Task<IEnumerable<Stan>> GetStanoviWithoutODSOmm();
+        Task<IEnumerable<Models.Stan>> GetStanovi();
+        Task<IEnumerable<Models.Stan>> GetStanoviWithoutODSOmm();
     }
 }

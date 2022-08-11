@@ -1,4 +1,4 @@
-﻿using aes.CommonDependecies;
+﻿using aes.CommonDependecies.ICommonDependencies;
 using aes.Controllers.IControllers;
 using aes.Models;
 using aes.Services;

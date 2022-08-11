@@ -1,5 +1,7 @@
 ﻿using aes.Models;
-using aes.Models.Racuni;
+using aes.Models.HEP;
+using aes.Models.Racuni.Elektra;
+using aes.Models.Racuni.Holding;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

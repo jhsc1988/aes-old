@@ -1,4 +1,4 @@
-﻿using aes.CommonDependecies;
+﻿using aes.CommonDependecies.ICommonDependencies;
 using aes.Models;
 using aes.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +16,11 @@ namespace aes.Services
 
         public async Task<JsonResult> SaveToDB(string klasa, string naziv)
         {
-            Predmet pTemp = new();
-
-            pTemp.Klasa = klasa;
-            pTemp.Naziv = naziv;
+            Predmet pTemp = new()
+            {
+                Klasa = klasa,
+                Naziv = naziv
+            };
 
             _c.UnitOfWork.Predmet.Add(pTemp);
 

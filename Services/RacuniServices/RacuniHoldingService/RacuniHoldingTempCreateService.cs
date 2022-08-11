@@ -1,5 +1,5 @@
-﻿using aes.CommonDependecies;
-using aes.Models.Racuni;
+﻿using aes.CommonDependecies.ICommonDependencies;
+using aes.Models.Racuni.Holding;
 using aes.Services.RacuniServices.RacuniHoldingService.IService;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -45,10 +45,7 @@ namespace aes.Services.RacuniServices.RacuniHoldingService
             if (re.BrojRacuna.Length >= 8)
             {
                 re.Stan = await _c.UnitOfWork.Stan.FindExact(e => e.SifraObjekta == int.Parse(re.BrojRacuna.Substring(0, 8)));
-                if (re.Stan == null)
-                {
-                    re.Stan = await _c.UnitOfWork.Stan.FindExact(e => e.Id == 25265);
-                }
+                re.Stan ??= await _c.UnitOfWork.Stan.FindExact(e => e.Id == 25265);
             }
             else
             {
@@ -90,10 +87,7 @@ namespace aes.Services.RacuniServices.RacuniHoldingService
                 if (e.StanId == 25265 && e.BrojRacuna.Length >= 8)
                 {
                     e.Stan = await _c.UnitOfWork.RacuniHolding.GetStanBySifraObjekta(int.Parse(e.BrojRacuna[..8]));
-                    if (e.Stan == null)
-                    {
-                        e.Stan = await _c.UnitOfWork.Stan.FindExact(e => e.Id == 25265);
-                    }
+                    e.Stan ??= await _c.UnitOfWork.Stan.FindExact(e => e.Id == 25265);
                 }
             }
             await RacuniElektraNotesBuild(userId, tempRacuni);
