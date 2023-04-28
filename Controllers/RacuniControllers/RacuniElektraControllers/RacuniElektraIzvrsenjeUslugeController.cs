@@ -67,20 +67,18 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,DatumIzvrsenja,Usluga,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa, Napomena")] RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge)
+        public async Task Create([Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,DatumIzvrsenja,Usluga,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa, Napomena")] RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge)
         {
             if (ModelState.IsValid)
             {
                 racunElektraIzvrsenjeUsluge.VrijemeUnosa = DateTime.Now;
                 _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Add(racunElektraIzvrsenjeUsluge);
                 _ = await _c.UnitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                RedirectToAction(nameof(Index));
             }
 
             ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj", racunElektraIzvrsenjeUsluge.DopisId);
             ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id", racunElektraIzvrsenjeUsluge.ElektraKupacId);
-
-            return View(racunElektraIzvrsenjeUsluge);
         }
 
         // GET: RacuniElektraIzvrsenjeUsluge/Edit/5
