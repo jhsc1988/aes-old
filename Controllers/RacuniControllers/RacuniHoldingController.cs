@@ -71,18 +71,17 @@ namespace aes.Controllers.RacuniControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,BrojRacuna,StanId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunHolding racunHolding)
+        public async Task Create([Bind("Id,BrojRacuna,StanId,DatumIzdavanja,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa")] RacunHolding racunHolding)
         {
             if (ModelState.IsValid)
             {
                 racunHolding.VrijemeUnosa = DateTime.Now;
                 _c.UnitOfWork.RacuniHolding.Add(racunHolding);
-                _ = _c.UnitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                _ = _c.UnitOfWork.Complete(); 
+                RedirectToAction(nameof(Index));
             }
             ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj", racunHolding.DopisId);
             ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Stan.GetAll(), "Id", "Adresa", racunHolding.StanId);
-            return View(racunHolding);
         }
 
         // GET: RacuniHolding/Edit/5

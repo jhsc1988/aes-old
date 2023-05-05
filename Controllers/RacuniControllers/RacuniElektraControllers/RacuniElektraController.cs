@@ -428,17 +428,16 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         }
 
         [Authorize]
-        public async Task<IActionResult> CreateObracunPotrosnje([Bind("Id,RacunElektraId,BrojBrojila,TarifnaStavkaId,DatumOd,DatumDo,StanjeOd,StanjeDo")] ObracunPotrosnje obracunPotrosnje)
+        public async Task CreateObracunPotrosnje([Bind("Id,RacunElektraId,BrojBrojila,TarifnaStavkaId,DatumOd,DatumDo,StanjeOd,StanjeDo")] ObracunPotrosnje obracunPotrosnje)
         {
             if (ModelState.IsValid)
             {
                 _ = _context.Add(obracunPotrosnje);
                 _ = await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = obracunPotrosnje.RacunElektraId });
+                RedirectToAction("Details", new { id = obracunPotrosnje.RacunElektraId });
             }
             ViewData["RacunElektraId"] = new SelectList(_context.RacunElektra, "Id", "BrojRacuna", obracunPotrosnje.RacunElektraId);
             ViewData["TarifnaStavkaId"] = new SelectList(_context.TarifnaStavka, "Id", "Id", obracunPotrosnje.TarifnaStavkaId);
-            return View(obracunPotrosnje);
         }
 
 

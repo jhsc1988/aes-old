@@ -72,16 +72,15 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,BrojRacuna,ElektraKupacId,Razdoblje,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa, Napomena")] RacunElektraRate racunElektraRate)
+        public async Task Create([Bind("Id,BrojRacuna,ElektraKupacId,Razdoblje,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa, Napomena")] RacunElektraRate racunElektraRate)
         {
             if (ModelState.IsValid)
             {
                 racunElektraRate.VrijemeUnosa = DateTime.Now;
                 _c.UnitOfWork.RacuniElektraRate.Add(racunElektraRate);
-                _ = await _c.UnitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                _ = await _c.UnitOfWork.Complete(); 
+                RedirectToAction(nameof(Index));
             }
-            return View(racunElektraRate);
         }
 
         // GET: RacuniElektraRate/Edit/5
