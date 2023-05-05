@@ -189,7 +189,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<JsonResult> GetListFiltered()
         {
-            IEnumerable<Stan> list = await _c.UnitOfWork.Stan.GetStanoviWithoutODSOmm();
+            IEnumerable<Stan> list = await _c.UnitOfWork.Stan.GetStanoviWithoutOdsOmm();
 
             return new DatatablesService<Stan>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetStanoviForDatatables);

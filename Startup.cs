@@ -2,9 +2,9 @@ using aes.CommonDependecies;
 using aes.CommonDependecies.ICommonDependencies;
 using aes.Data;
 using aes.Models.Datatables;
-using aes.Repository.IRepository;
-using aes.Repository.Stan;
-using aes.Repository.UnitOfWork;
+using aes.Repositories.IRepository;
+using aes.Repositories.Stan;
+using aes.Repositories.UnitOfWork;
 using aes.Services;
 using aes.Services.IServices;
 using aes.Services.RacuniServices;
@@ -28,7 +28,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Globalization;
-using System.Threading.Tasks;
 
 namespace aes
 {
@@ -44,8 +43,6 @@ namespace aes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
 
             /******************************** Dependency Injection ********************************/
 

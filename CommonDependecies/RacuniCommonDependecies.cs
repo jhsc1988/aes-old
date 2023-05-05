@@ -1,6 +1,6 @@
 ﻿using aes.CommonDependecies.ICommonDependencies;
 using aes.Models.Datatables;
-using aes.Repository.UnitOfWork;
+using aes.Repositories.UnitOfWork;
 using aes.Services.RacuniServices.IRacuniService;
 using aes.Services.RacuniServices.IServices;
 

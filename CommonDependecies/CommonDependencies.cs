@@ -1,5 +1,5 @@
 ﻿using aes.Models.Datatables;
-using aes.Repository.UnitOfWork;
+using aes.Repositories.UnitOfWork;
 
 namespace aes.CommonDependecies
 {
