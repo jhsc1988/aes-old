@@ -5,6 +5,6 @@
     /// </summary>
     public enum Columns
     {
-        racun = 1, datumIzdavanja = 2, iznos = 3, klasa = 4, datumPotvrde = 5, napomena = 6, datumIzvrsenja = 7, usluga = 8
+        Racun = 1, DatumIzdavanja = 2, Iznos = 3, Klasa = 4, DatumPotvrde = 5, Napomena = 6, DatumIzvrsenja = 7, Usluga = 8
     }
 }
