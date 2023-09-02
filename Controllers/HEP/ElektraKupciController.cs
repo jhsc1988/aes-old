@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace aes.Controllers.HEP
 {
@@ -127,7 +124,7 @@ namespace aes.Controllers.HEP
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ElektraKupacExists(elektraKupac.Id))
+                    if (!await ElektraKupacExists(elektraKupac.Id))
                     {
                         return NotFound();
                     }
@@ -174,9 +171,9 @@ namespace aes.Controllers.HEP
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ElektraKupacExists(int id)
+        private async Task<bool> ElektraKupacExists(int id)
         {
-            return _c.UnitOfWork.ElektraKupac.Any(e => e.Id == id);
+            return await _c.UnitOfWork.ElektraKupac.Any(e => e.Id == id);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
