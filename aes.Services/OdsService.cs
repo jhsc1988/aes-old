@@ -15,7 +15,7 @@ namespace aes.Services
             _c = c;
         }
 
-        public async Task<JsonResult> GetStanData(string sid)
+        public async Task<JsonResult> GetStanData(string? sid)
         {
             int idInt;
             if (sid is not null)
@@ -36,7 +36,7 @@ namespace aes.Services
             return new JsonResult(stan);
         }
 
-        public async Task<JsonResult> GetStanDataForOmm(string odsId)
+        public async Task<JsonResult> GetStanDataForOmm(string? odsId)
         {
             int odsIdInt;
             if (odsId is not null)
