@@ -1,7 +1,6 @@
 ﻿using aes.Data;
 using aes.Models;
 using aes.Repository.IRepository;
-using System.Linq;
 
 namespace aes.Repository.Stan
 {
@@ -9,16 +8,25 @@ namespace aes.Repository.Stan
     {
         public StanUpdateRepository(ApplicationDbContext context) : base(context) { }
 
-        public StanUpdate GetLatest()
+        /// <summary>
+        /// Gets the latest StanUpdate based on when the update began.
+        /// </summary>
+        /// <returns>The most recently started StanUpdate.</returns>
+        public StanUpdate GetLatestAsync()
         {
-            return _context.StanUpdate
+            return Context.StanUpdate
                     .OrderByDescending(e => e.UpdateBegan)
                     .FirstOrDefault();
         }
 
-        public StanUpdate GetLatestSuccessfulUpdate()
+        /// <summary>
+        /// Gets the latest 'successful' StanUpdate based on DateOfData.
+        /// A successful update here is assumed to be the latest by DateOfData.
+        /// </summary>
+        /// <returns>The StanUpdate with the most recent DateOfData.</returns>
+        public StanUpdate GetLatestSuccessfulUpdateAsync()
         {
-            return _context.StanUpdate
+            return Context.StanUpdate
                 .OrderByDescending(e => e.DateOfData)
                 .FirstOrDefault();
         }
