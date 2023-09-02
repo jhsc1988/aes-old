@@ -9,26 +9,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
 {
     public class RacuniElektraIzvrsenjeUslugeController : Controller, IRacuniController
     {
-        private readonly IRacuniElektraIzvrsenjeUslugeTempCreateService _RacuniElektraIzvrsenjeUslugeTempCreateService;
-        private readonly IRacuniElektraIzvrsenjeUslugeService _RacuniElektraIzvrsenjeUslugeService;
+        private readonly IRacuniElektraIzvrsenjeUslugeTempCreateService _racuniElektraIzvrsenjeUslugeTempCreateService;
+        private readonly IRacuniElektraIzvrsenjeUslugeService _racuniElektraIzvrsenjeUslugeService;
         private readonly IRacuniCommonDependecies _c;
         private readonly ILogger _logger;
 
-        public RacuniElektraIzvrsenjeUslugeController(IRacuniElektraIzvrsenjeUslugeTempCreateService RacuniElektraIzvrsenjeUslugeTempCreateService, IRacuniElektraIzvrsenjeUslugeService RacuniElektraIzvrsenjeUslugeService,
+        public RacuniElektraIzvrsenjeUslugeController(
+            IRacuniElektraIzvrsenjeUslugeTempCreateService racuniElektraIzvrsenjeUslugeTempCreateService,
+            IRacuniElektraIzvrsenjeUslugeService racuniElektraIzvrsenjeUslugeService,
             IRacuniCommonDependecies c, ILogger logger)
         {
             _c = c;
-            _RacuniElektraIzvrsenjeUslugeTempCreateService = RacuniElektraIzvrsenjeUslugeTempCreateService;
-            _RacuniElektraIzvrsenjeUslugeService = RacuniElektraIzvrsenjeUslugeService;
+            _racuniElektraIzvrsenjeUslugeTempCreateService = racuniElektraIzvrsenjeUslugeTempCreateService;
+            _racuniElektraIzvrsenjeUslugeService = racuniElektraIzvrsenjeUslugeService;
             _logger = logger;
         }
 
@@ -47,7 +45,8 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 return NotFound();
             }
 
-            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.IncludeAll((int)id);
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge =
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.IncludeAll((int)id);
 
             return racunElektraIzvrsenjeUsluge == null ? NotFound() : View(racunElektraIzvrsenjeUsluge);
         }
@@ -67,18 +66,23 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task Create([Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,DatumIzvrsenja,Usluga,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa, Napomena")] RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge)
+        public async Task Create(
+            [Bind(
+                "Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,DatumIzvrsenja,Usluga,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa, Napomena")]
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge)
         {
             if (ModelState.IsValid)
             {
                 racunElektraIzvrsenjeUsluge.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Add(racunElektraIzvrsenjeUsluge);
-                _ = await _c.UnitOfWork.Complete(); 
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Add(racunElektraIzvrsenjeUsluge);
+                _ = await _c.UnitOfWork.Complete();
                 RedirectToAction(nameof(Index));
             }
 
-            ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj", racunElektraIzvrsenjeUsluge.DopisId);
-            ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id", racunElektraIzvrsenjeUsluge.ElektraKupacId);
+            ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj",
+                racunElektraIzvrsenjeUsluge.DopisId);
+            ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id",
+                racunElektraIzvrsenjeUsluge.ElektraKupacId);
         }
 
         // GET: RacuniElektraIzvrsenjeUsluge/Edit/5
@@ -90,7 +94,8 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 return NotFound();
             }
 
-            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.IncludeAll((int)id);
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge =
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.IncludeAll((int)id);
 
             if (racunElektraIzvrsenjeUsluge == null)
             {
@@ -99,7 +104,6 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
 
             try
             {
-
                 RacunElektraIzvrsenjeUslugeEdit racunElektraIzvrsenjeUslugeEdit = new()
                 {
                     RacunElektraIzvrsenjeUsluge = racunElektraIzvrsenjeUsluge,
@@ -108,16 +112,18 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                     EditTime = DateTime.Now,
                 };
 
-                _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.Add(racunElektraIzvrsenjeUslugeEdit);
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.Add(racunElektraIzvrsenjeUslugeEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
             catch (Exception)
             {
-
+                // ignored
             }
 
-            ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj", racunElektraIzvrsenjeUsluge.DopisId);
-            ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id", racunElektraIzvrsenjeUsluge.ElektraKupacId);
+            ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj",
+                racunElektraIzvrsenjeUsluge.DopisId);
+            ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id",
+                racunElektraIzvrsenjeUsluge.ElektraKupacId);
             return View(racunElektraIzvrsenjeUsluge);
         }
 
@@ -127,7 +133,10 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,DatumIzvrsenja,Usluga,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa,Napomena, IsItTemp, CreatedByUserId")] RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge)
+        public async Task<IActionResult> Edit(int id,
+            [Bind(
+                "Id,BrojRacuna,ElektraKupacId,DatumIzdavanja,DatumIzvrsenja,Usluga,Iznos,DopisId,RedniBroj,KlasaPlacanja,DatumPotvrde,VrijemeUnosa,Napomena, IsItTemp, CreatedByUserId")]
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge)
         {
             if (id != racunElektraIzvrsenjeUsluge.Id)
             {
@@ -139,7 +148,6 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 try
                 {
                     _ = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Update(racunElektraIzvrsenjeUsluge);
-
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -154,15 +162,21 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 }
                 finally
                 {
-                    _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.RemoveRange(await _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.Find(e => e.EditingByUserId.Equals(_c.Service.GetUid(User))));
+                    _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.RemoveRange(
+                        await _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.Find(e =>
+                            e.EditingByUserId.Equals(_c.Service.GetUid(User))));
                     _ = await _c.UnitOfWork.Complete();
                 }
 
-                return racunElektraIzvrsenjeUsluge.IsItTemp == true ? RedirectToAction("Create") : RedirectToAction(nameof(Index));
+                return racunElektraIzvrsenjeUsluge.IsItTemp == true
+                    ? RedirectToAction("Create")
+                    : RedirectToAction(nameof(Index));
             }
 
-            ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj", racunElektraIzvrsenjeUsluge.DopisId);
-            ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id", racunElektraIzvrsenjeUsluge.ElektraKupacId);
+            ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj",
+                racunElektraIzvrsenjeUsluge.DopisId);
+            ViewData["ElektraKupacId"] = new SelectList(await _c.UnitOfWork.ElektraKupac.GetAll(), "Id", "Id",
+                racunElektraIzvrsenjeUsluge.ElektraKupacId);
             return View(racunElektraIzvrsenjeUsluge);
         }
 
@@ -175,7 +189,8 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 return NotFound();
             }
 
-            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.IncludeAll((int)id);
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge =
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.IncludeAll((int)id);
 
             return racunElektraIzvrsenjeUsluge == null ? NotFound() : View(racunElektraIzvrsenjeUsluge);
         }
@@ -186,7 +201,8 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Get(id);
+            RacunElektraIzvrsenjeUsluge racunElektraIzvrsenjeUsluge =
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Get(id);
             _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Remove(racunElektraIzvrsenjeUsluge);
             _ = await _c.UnitOfWork.Complete();
 
@@ -203,7 +219,9 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpGet]
         public async Task<IActionResult> BrojRacunaValidation(string brojRacuna)
         {
-            RacunElektraIzvrsenjeUslugeEdit racunElektraUslugeEdit = await _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.GetLastRacunElektraServiceEdit(_c.Service.GetUid(User));
+            RacunElektraIzvrsenjeUslugeEdit racunElektraUslugeEdit =
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUslugeEdit.GetLastRacunElektraServiceEdit(
+                    _c.Service.GetUid(User));
 
             if (brojRacuna.Length is not 19
                 || brojRacuna[10] is not '-'
@@ -214,13 +232,19 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 return Json($"Broj računa nije ispravan");
             }
 
-            if (brojRacuna.Length >= 10 && !brojRacuna[..10].Equals(racunElektraUslugeEdit.RacunElektraIzvrsenjeUsluge.BrojRacuna[..10]))
+            if (racunElektraUslugeEdit != null && brojRacuna.Length >= 10 && !brojRacuna[..10]
+                    .Equals(racunElektraUslugeEdit.RacunElektraIzvrsenjeUsluge.BrojRacuna[..10]))
             {
                 return Json($"Ugovorni račun unutar broja računa ne smije se razlikovati");
             }
 
-            RacunElektraIzvrsenjeUsluge db = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.FindExact(x => x.BrojRacuna.Equals(brojRacuna));
-            return (db != null && db.IsItTemp != true && !racunElektraUslugeEdit.RacunElektraIzvrsenjeUsluge.BrojRacuna.Equals(brojRacuna)) ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
+            RacunElektraIzvrsenjeUsluge db =
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.FindExact(x => x.BrojRacuna.Equals(brojRacuna));
+            return racunElektraUslugeEdit != null && (db != null && db.IsItTemp != true &&
+                                                      !racunElektraUslugeEdit.RacunElektraIzvrsenjeUsluge.BrojRacuna
+                                                          .Equals(brojRacuna))
+                ? Json($"Račun {brojRacuna} već postoji.")
+                : Json(true);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +254,9 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         public async Task<JsonResult> GetDopisiDataForFilter(int predmetId)
         {
-            return Json(await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.GetDopisiForPayedRacuniElektraIzvrsenjeUsluge(predmetId));
+            return Json(
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.GetDopisiForPayedRacuniElektraIzvrsenjeUsluge(
+                    predmetId));
         }
 
         [Authorize]
@@ -251,12 +277,14 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         public async Task<JsonResult> UpdateDbForInline(string id, string updatedColumn, string x)
         {
-            return await _c.RacuniInlineEditorService.UpdateDbForInline<RacunElektraIzvrsenjeUsluge>(await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.FindExact(e => e.Id == int.Parse(id)), updatedColumn, x);
+            return await _c.RacuniInlineEditorService.UpdateDbForInline<RacunElektraIzvrsenjeUsluge>(
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.FindExact(e => e.Id == int.Parse(id)), updatedColumn,
+                x);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> SaveToDB(string _dopisId)
+        public async Task<JsonResult> SaveToDB(string dopisId)
         {
             if ((await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.TempList(_c.Service.GetUid(User))).Count() is 0)
             {
@@ -267,25 +295,30 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 });
             }
 
-            return await _RacuniElektraIzvrsenjeUslugeTempCreateService.CheckTempTableForRacuniWithousElectraCustomer(_c.Service.GetUid(User)) != 0
+            return await _racuniElektraIzvrsenjeUslugeTempCreateService.CheckTempTableForRacuniWithousElectraCustomer(
+                _c.Service.GetUid(User)) != 0
                 ? (new(new { success = false, Message = "U tablici postoje računi bez kupca!" }))
-                : await _c.RacuniTempEditorService.SaveToDb<RacunElektraIzvrsenjeUsluge>(await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge
-                .Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User))), _dopisId);
+                : await _c.RacuniTempEditorService.SaveToDb<RacunElektraIzvrsenjeUsluge>(await _c.UnitOfWork
+                    .RacuniElektraIzvrsenjeUsluge
+                    .Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User))), dopisId);
         }
 
         [Authorize]
         [HttpPost]
         public async Task<JsonResult> RemoveRow(string racunId)
         {
-            _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Remove(await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.FindExact(e => e.Id == int.Parse(racunId)));
+            _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Remove(
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.FindExact(e => e.Id == int.Parse(racunId)));
             _ = await _c.UnitOfWork.Complete();
 
-            IEnumerable<RacunElektraIzvrsenjeUsluge> list = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User)));
+            IEnumerable<RacunElektraIzvrsenjeUsluge> list = await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Find(e =>
+                e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User)));
             int rbr = 1;
             foreach (RacunElektraIzvrsenjeUsluge e in list)
             {
                 e.RedniBroj = rbr++;
             }
+
             return await _c.Service.TrySave(true);
         }
 
@@ -302,47 +335,61 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 });
             }
 
-            _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.RemoveRange(await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User))));
+            _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.RemoveRange(
+                await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.Find(e =>
+                    e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User))));
             return await _c.Service.TrySave(true);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja, string usluga, string dopisId)
+        public async Task<JsonResult> AddNewTemp(string brojRacuna, string iznos, string date, string datumIzvrsenja,
+            string usluga, string dopisId)
         {
-            string _loggerTemplate = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName + ", " + "User: " + User.Identity.Name + ", " + "msg: ";
-
-            if (brojRacuna is null)
+            var declaringType = System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType;
+            if (declaringType != null)
             {
-                string message = "brojRacuna ne može biti prazan";
-
-                _logger.Information(_loggerTemplate + message);
-
-                return new(new
+                if (User.Identity != null)
                 {
-                    success = false,
-                    message
-                });
+                    string loggerTemplate =
+                        declaringType?.FullName + ", " + "User: " + User.Identity.Name + ", " + "msg: ";
+
+                    if (brojRacuna is null)
+                    {
+                        string message = "brojRacuna ne može biti prazan";
+
+                        _logger.Information(loggerTemplate + message);
+
+                        return new(new
+                        {
+                            success = false,
+                            message
+                        });
+                    }
+                }
             }
 
-            return await _RacuniElektraIzvrsenjeUslugeTempCreateService.AddNewTemp(brojRacuna, iznos, date, datumIzvrsenja, usluga, dopisId, _c.Service.GetUid(User));
+            return await _racuniElektraIzvrsenjeUslugeTempCreateService.AddNewTemp(brojRacuna, iznos, date,
+                datumIzvrsenja, usluga, dopisId, _c.Service.GetUid(User));
         }
 
         [Authorize]
         [HttpPost]
         public async Task<JsonResult> GetPredmetiDataForFilter()
         {
-            return Json(_c.UnitOfWork.Predmet.GetPredmetForAllPaidRacuni(await _c.UnitOfWork.RacuniElektraIzvrsenjeUsluge.GetRacuniElektraIzvrsenjeUslugeWithDopisiAndPredmeti()));
+            return Json(_c.UnitOfWork.Predmet.GetPredmetForAllPaidRacuni(await _c.UnitOfWork
+                .RacuniElektraIzvrsenjeUsluge.GetRacuniElektraIzvrsenjeUslugeWithDopisiAndPredmeti()));
         }
 
         [Authorize]
         [HttpPost]
         public async Task<JsonResult> GetList(bool isFilteredForIndex, string klasa, string urbroj)
         {
-
             IEnumerable<RacunElektraIzvrsenjeUsluge> list = isFilteredForIndex
-                ? await _RacuniElektraIzvrsenjeUslugeService.GetList(_RacuniElektraIzvrsenjeUslugeService.ParsePredmet(klasa), _RacuniElektraIzvrsenjeUslugeService.ParseDopis(urbroj))
-                : await _RacuniElektraIzvrsenjeUslugeService.GetCreateRacuni(_c.Service.GetUid(User));
+                ? await _racuniElektraIzvrsenjeUslugeService.GetList(
+                    _racuniElektraIzvrsenjeUslugeService.ParsePredmet(klasa),
+                    _racuniElektraIzvrsenjeUslugeService.ParseDopis(urbroj))
+                : await _racuniElektraIzvrsenjeUslugeService.GetCreateRacuni(_c.Service.GetUid(User));
 
             return new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacunElektraIzvrsenjeUslugeForDatatables);
@@ -359,7 +406,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         public async Task<JsonResult> RefreshCustomers()
         {
-            return await _RacuniElektraIzvrsenjeUslugeTempCreateService.RefreshCustomers(_c.Service.GetUid(User));
+            return await _racuniElektraIzvrsenjeUslugeTempCreateService.RefreshCustomers(_c.Service.GetUid(User));
         }
     }
 }
