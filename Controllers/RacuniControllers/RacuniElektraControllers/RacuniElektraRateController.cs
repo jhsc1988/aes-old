@@ -145,7 +145,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RacunElektraRateExists(racunElektraRate.Id))
+                    if (!await RacunElektraRateExists(racunElektraRate.Id))
                     {
                         return NotFound();
                     }
@@ -195,9 +195,9 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RacunElektraRateExists(int id)
+        private async Task<bool> RacunElektraRateExists(int id)
         {
-            return _c.UnitOfWork.RacuniElektraRate.Any(e => e.Id == id);
+            return await _c.UnitOfWork.RacuniElektraRate.Any(e => e.Id == id);
         }
 
         // validation
@@ -251,7 +251,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         public async Task<JsonResult> GetDopisiDataForCreate(int predmetId)
         {
-            return Json(await _c.UnitOfWork.Dopis.GetOnlyEmptyDopisi(predmetId));
+            return Json(await _c.UnitOfWork.Dopis.GetOnlyEmptyDopisiAsync(predmetId));
         }
 
         [Authorize]
@@ -351,7 +351,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
         [HttpPost]
         public async Task<JsonResult> GetPredmetiDataForFilter()
         {
-            return Json(_c.UnitOfWork.Predmet.GetPredmetfForAllPayedRacuni(await _c.UnitOfWork.RacuniElektraRate.GetRacuniElektraRateWithDopisiAndPredmeti()));
+            return Json(_c.UnitOfWork.Predmet.GetPredmetForAllPaidRacuni(await _c.UnitOfWork.RacuniElektraRate.GetRacuniElektraRateWithDopisiAndPredmeti()));
         }
 
         [Authorize]
