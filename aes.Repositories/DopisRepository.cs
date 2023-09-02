@@ -1,11 +1,7 @@
 ﻿using aes.Data;
 using aes.Models;
-using aes.Models.Racuni;
 using aes.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Repository
 {
@@ -13,36 +9,37 @@ namespace aes.Repository
     {
         public DopisRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<Dopis>> GetOnlyEmptyDopisi(int predmetId)
+        public async Task<IEnumerable<Dopis>> GetOnlyEmptyDopisiAsync(int predmetId)
         {
-            IEnumerable<Dopis> Dopisi = await Find(e => e.PredmetId == predmetId);
+            IEnumerable<Dopis> dopisi = await Find(e => e.PredmetId == predmetId);
 
-            List<Racun> AllRacuni = new();
+            var racuniElektraDopisIds = await Context.RacunElektra.Select(e => e.DopisId).Where(id => id.HasValue).Select(id => id.Value).ToListAsync();
+            var racuniElektraRateDopisIds = await Context.RacunElektraRate.Select(e => e.DopisId).Where(id => id.HasValue).Select(id => id.Value).ToListAsync();
+            var racuniElektraIzvrsenjeUslugeDopisIds = await Context.RacunElektraIzvrsenjeUsluge.Select(e => e.DopisId).Where(id => id.HasValue).Select(id => id.Value).ToListAsync();
+            var racuniHoldingDopisIds = await Context.RacunHolding.Select(e => e.DopisId).Where(id => id.HasValue).Select(id => id.Value).ToListAsync();
 
-            AllRacuni.AddRange(_context.RacunElektra.Include(e => e.Dopis));
-            AllRacuni.AddRange(_context.RacunElektraRate.Include(e => e.Dopis));
-            AllRacuni.AddRange(_context.RacunElektraIzvrsenjeUsluge.Include(e => e.Dopis));
-            AllRacuni.AddRange(_context.RacunHolding.Include(e => e.Dopis));
+            var allRacuniDopisIds = new HashSet<int>(racuniElektraDopisIds
+                .Concat(racuniElektraRateDopisIds)
+                .Concat(racuniElektraIzvrsenjeUslugeDopisIds)
+                .Concat(racuniHoldingDopisIds));
 
-            IEnumerable<Dopis> DopisiForPayedRacuni = AllRacuni.Select(e => e.Dopis).Distinct();
-
-            // returns only empty Dopisi
-            return Dopisi.Except(DopisiForPayedRacuni).OrderByDescending(e => e.Datum);
+            return dopisi.Where(d => !allRacuniDopisIds.Contains(d.Id))
+                .OrderByDescending(d => d.Datum);
         }
 
         public async Task<IEnumerable<Dopis>> GetDopisiForPredmet(int predmetId)
         {
-            return await _context.Dopis
+            return await Context.Dopis
                 .Include(e => e.Predmet)
                 .Where(e => e.PredmetId == predmetId)
                 .OrderBy(e => e.Datum)
                 .ToListAsync();
         }
 
-        public async Task<Dopis> IncludePredmet(Dopis Dopis)
+        public async Task<Dopis> IncludePredmetAsync(Dopis dopis)
         {
-            Dopis.Predmet = await _context.Predmet.FirstOrDefaultAsync(e => e.Id == Dopis.PredmetId);
-            return Dopis;
+            dopis.Predmet = await Context.Predmet.FirstOrDefaultAsync(e => e.Id == dopis.PredmetId);
+            return dopis;
         }
     }
 }
