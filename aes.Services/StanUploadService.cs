@@ -32,7 +32,7 @@ namespace aes.Services
             string _loggerTemplate = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName + ", " + "User: " + userName + ", " + "msg: ";
 
             {
-                StanUpdate StanUpdate = _unitOfWork.StanUpdate.GetLatest();
+                StanUpdate StanUpdate = _unitOfWork.StanUpdate.GetLatestAsync();
                 if (StanUpdate is not null && StanUpdate.UpdateComplete == false && StanUpdate.Interrupted == false)
                 {
 
@@ -118,7 +118,7 @@ namespace aes.Services
                             txt = reader.ReadFields(); // skip 12 lines
                         }
 
-                        StanUpdate lastSuccessful = _unitOfWork.StanUpdate.GetLatestSuccessfulUpdate();
+                        StanUpdate lastSuccessful = _unitOfWork.StanUpdate.GetLatestSuccessfulUpdateAsync();
                         DateTime? dateTimeOfData = DateTime.TryParse(txt[4], culture, dateStyle, out DateTime date) ? date : null;
                         DateTime now = DateTime.Now;
 
