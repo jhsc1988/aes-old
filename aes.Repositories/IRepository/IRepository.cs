@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace aes.Repository.IRepository
 {
@@ -10,14 +7,12 @@ namespace aes.Repository.IRepository
         Task<TEntity> Get(int id);
         Task<IEnumerable<TEntity>> GetAll();
         Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate);
-
-        void Add(TEntity entitity);
-        void AddRange(IEnumerable<TEntity> entities);
-
+        Task Add(TEntity entity);
+        Task AddRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
         Task<int> Update(TEntity entity);
-        bool Any(Expression<Func<TEntity, bool>> predicate);
+        Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> FindExact(Expression<Func<TEntity, bool>> predicate);
     }
 }
