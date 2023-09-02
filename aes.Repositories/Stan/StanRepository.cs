@@ -10,6 +10,7 @@ namespace aes.Repository.Stan
     public class StanRepository : Repository<Models.Stan>, IStanRepository
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public StanRepository(ApplicationDbContext context, IUnitOfWork unitOfWork) : base(context)
         {
             _unitOfWork = unitOfWork;
@@ -21,13 +22,11 @@ namespace aes.Repository.Stan
             return await _unitOfWork.Stan.Find(e => e.Id != 25265);
         }
 
-        public async Task<IEnumerable<Models.Stan>> GetStanoviWithoutODSOmm()
+        public async Task<IEnumerable<Models.Stan>> GetStanoviWithoutOdsOmm()
         {
-            IEnumerable<Models.Stan> StanList = await _context.Stan
-                .FromSqlRaw("select * from Stan where Id not in (select StanId from Ods)")
+            return await Context.Stan
+                .Where(s => !Context.Ods.Any(o => o.StanId == s.Id))
                 .ToListAsync();
-
-            return StanList;
         }
     }
 }
