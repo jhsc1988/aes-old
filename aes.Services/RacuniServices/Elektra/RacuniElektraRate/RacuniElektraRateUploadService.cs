@@ -88,7 +88,7 @@ namespace aes.Services.RacuniServices.Elektra.RacuniElektraRate
                         while (!reader.EndOfStream)
                         {
                             string line = reader.ReadLine();
-                            if (line.Contains("HRK"))
+                            if (line.Contains("EUR"))
                             {
                                 iznos = double.Parse(reader.ReadLine()) / 100;
                                 for (int i = 0; i < 3; i++) // skipping 7 lines
