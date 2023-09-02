@@ -117,7 +117,7 @@ namespace aes.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StanExists(stan.Id))
+                    if (!await StanExists(stan.Id))
                     {
                         return NotFound();
                     }
@@ -154,10 +154,11 @@ namespace aes.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StanExists(int id)
+        private async Task<bool> StanExists(int id)
         {
-            return _c.UnitOfWork.Stan.Any(e => e.Id == id);
+            return await _c.UnitOfWork.Stan.Any(e => e.Id == id);
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Upload
@@ -189,7 +190,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<JsonResult> GetListFiltered()
         {
-            IEnumerable<Stan> list = await _c.UnitOfWork.Stan.GetStanoviWithoutODSOmm();
+            IEnumerable<Stan> list = await _c.UnitOfWork.Stan.GetStanoviWithoutOdsOmm();
 
             return new DatatablesService<Stan>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetStanoviForDatatables);
