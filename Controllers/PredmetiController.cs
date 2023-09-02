@@ -6,20 +6,17 @@ using aes.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
     public class PredmetiController : Controller, IPredmetiController
     {
         private readonly ICommonDependencies _c;
-        private readonly IPredmetiervice _Predmetiervice;
+        private readonly IPredmetiervice _predmetiservice;
 
-        public PredmetiController(IPredmetiervice Predmetiervice, ICommonDependencies c)
+        public PredmetiController(IPredmetiervice predmetiservice, ICommonDependencies c)
         {
-            _Predmetiervice = Predmetiervice;
+            _predmetiservice = predmetiservice;
             _c = c;
         }
 
@@ -101,7 +98,7 @@ namespace aes.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PredmetExists(predmet.Id))
+                    if (!await PredmetExists(predmet.Id))
                     {
                         return NotFound();
                     }
@@ -140,9 +137,9 @@ namespace aes.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PredmetExists(int id)
+        private async Task<bool> PredmetExists(int id)
         {
-            return _c.UnitOfWork.Predmet.Any(e => e.Id == id);
+            return await _c.UnitOfWork.Predmet.Any(e => e.Id == id);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,7 +149,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<JsonResult> SaveToDB(string klasa, string naziv)
         {
-            return await _Predmetiervice.SaveToDB(klasa, naziv);
+            return await _predmetiservice.SaveToDB(klasa, naziv);
         }
 
         [Authorize]
