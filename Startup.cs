@@ -93,9 +93,9 @@ namespace aes
             services.AddScoped<IRacuniCheckService, RacuniCheckService>();
 
             // other services
-            services.AddScoped<IPredmetiervice, Predmetiervice>();
+            services.AddScoped<IPredmetiervice, PredmetiService>();
             services.AddScoped<IService, Service>();
-            services.AddScoped<IDopisiervice, Dopisiervice>();
+            services.AddScoped<IDopisiervice, DopisiService>();
             services.AddScoped<IOdsService, OdsService>();
             services.AddScoped<IStanUploadService, StanUploadService>();
             services.AddScoped<IStanUpdateRepository, StanUpdateRepository>();

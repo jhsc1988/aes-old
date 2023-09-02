@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace aes.Services
 {
-    public class Dopisiervice : IDopisiervice
+    public class DopisiService : IDopisiervice
     {
         private readonly ICommonDependencies _c;
 
-        public Dopisiervice(ICommonDependencies c)
+        public DopisiService(ICommonDependencies c)
         {
             _c = c;
         }
