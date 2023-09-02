@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
 
 namespace aes
 {
@@ -39,10 +38,7 @@ namespace aes
         {
             return Host.CreateDefaultBuilder(args)
                 .UseSerilog() //Uses Serilog instead of default .NET Logger
-                .ConfigureWebHostDefaults(webBuilder =>
-{
-    _ = webBuilder.UseStartup<Startup>();
-});
+                .ConfigureWebHostDefaults(webBuilder => { _ = webBuilder.UseStartup<Startup>(); });
         }
     }
 }
