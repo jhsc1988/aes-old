@@ -4,7 +4,7 @@ namespace aes.Repository.IRepository
 {
     public interface IStanUpdateRepository : IRepository<StanUpdate>
     {
-        StanUpdate GetLatest();
-        StanUpdate GetLatestSuccessfulUpdate();
+        StanUpdate GetLatestAsync();
+        StanUpdate GetLatestSuccessfulUpdateAsync();
     }
 }
