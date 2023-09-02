@@ -47,7 +47,7 @@ namespace aes
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection") ?? string.Empty));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -57,7 +57,7 @@ namespace aes
             services.AddApplicationInsightsTelemetry();
         }
 
-        private void RegisterServices(IServiceCollection services)
+        private static void RegisterServices(IServiceCollection services)
         {
             // unit of work
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
