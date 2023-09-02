@@ -1,4 +1,5 @@
 ﻿using aes.Data;
+using aes.Repository;
 using aes.Repository.HEP.Elektra;
 using aes.Repository.HEP.ODS;
 using aes.Repository.IRepository;
@@ -8,10 +9,9 @@ using aes.Repository.RacuniRepositories.Elektra;
 using aes.Repository.RacuniRepositories.IRacuniRepository;
 using aes.Repository.RacuniRepositories.IRacuniRepository.Elektra;
 using aes.Repository.Stan;
-using System;
-using System.Threading.Tasks;
+using aes.Repository.UnitOfWork;
 
-namespace aes.Repository.UnitOfWork
+namespace aes.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -44,7 +44,7 @@ namespace aes.Repository.UnitOfWork
             RacuniHolding = new RacuniHoldingRepository(_context);
             ElektraKupac = new ElektraKupacRepository(_context);
             Stan = new StanRepository(_context, this);
-            Ods = new ODSRepository(_context);
+            Ods = new OdsRepository(_context);
             Predmet = new PredmetRepository(_context);
             Dopis = new DopisRepository(_context);
             StanUpdate = new StanUpdateRepository(_context);
