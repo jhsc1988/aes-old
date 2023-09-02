@@ -12,7 +12,7 @@ namespace aes.Repository.Stan
         /// Gets the latest StanUpdate based on when the update began.
         /// </summary>
         /// <returns>The most recently started StanUpdate.</returns>
-        public StanUpdate GetLatestAsync()
+        public StanUpdate? GetLatestAsync()
         {
             return Context.StanUpdate
                     .OrderByDescending(e => e.UpdateBegan)
@@ -24,7 +24,7 @@ namespace aes.Repository.Stan
         /// A successful update here is assumed to be the latest by DateOfData.
         /// </summary>
         /// <returns>The StanUpdate with the most recent DateOfData.</returns>
-        public StanUpdate GetLatestSuccessfulUpdateAsync()
+        public StanUpdate? GetLatestSuccessfulUpdateAsync()
         {
             return Context.StanUpdate
                 .OrderByDescending(e => e.DateOfData)

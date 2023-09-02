@@ -2,8 +2,6 @@
 using aes.Models.Racuni.Elektra;
 using aes.Repository.RacuniRepositories.IRacuniRepository.Elektra;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Repository.RacuniRepositories.Elektra;
 

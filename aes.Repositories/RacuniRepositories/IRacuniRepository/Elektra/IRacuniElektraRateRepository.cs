@@ -9,6 +9,6 @@ public interface IRacuniElektraRateRepository : IElektraRepository<RacunElektraR
     Task<IEnumerable<RacunElektraRate>> GetRacuniElektraRateWithDopisiAndPredmeti();
     Task<IEnumerable<Dopis>> GetDopisiForPayedRacuniElektraRate(int predmetId);
     Task<IEnumerable<RacunElektraRate>> GetRacuniForCustomer(int kupacId);
-    Task<RacunElektraRate> IncludeAll(int id);
+    Task<RacunElektraRate?> IncludeAll(int id);
     Task<IEnumerable<RacunElektraRate>> TempList(string userId);
 }

@@ -2,8 +2,6 @@
 using aes.Models.Racuni.Elektra;
 using aes.Repository.RacuniRepositories.IRacuniRepository.Elektra;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Repository.RacuniRepositories.Elektra;
 
@@ -11,7 +9,7 @@ public class RacuniElektraRateEditRepository : Repository<RacunElektraRateEdit>,
 {
     public RacuniElektraRateEditRepository(ApplicationDbContext context) : base(context) { }
 
-    public async Task<RacunElektraRateEdit> GetLastRacunElektraRateEdit(string userId)
+    public async Task<RacunElektraRateEdit?> GetLastRacunElektraRateEdit(string userId)
     {
         return await Context.RacunElektraRateEdit
             .Include(e => e.RacunElektraRate)

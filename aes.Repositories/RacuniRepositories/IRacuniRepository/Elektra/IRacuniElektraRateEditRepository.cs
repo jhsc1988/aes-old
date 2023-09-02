@@ -5,5 +5,5 @@ namespace aes.Repository.RacuniRepositories.IRacuniRepository.Elektra;
 
 public interface IRacuniElektraRateEditRepository : IRepository<RacunElektraRateEdit>
 {
-    Task<RacunElektraRateEdit> GetLastRacunElektraRateEdit(string userId);
+    Task<RacunElektraRateEdit?> GetLastRacunElektraRateEdit(string userId);
 }

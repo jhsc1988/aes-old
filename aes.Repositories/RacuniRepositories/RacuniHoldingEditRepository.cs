@@ -9,7 +9,7 @@ public class RacuniHoldingEditRepository : Repository<RacunHoldingEdit>, IRacuni
 {
     public RacuniHoldingEditRepository(ApplicationDbContext context) : base(context) { }
 
-    public async Task<RacunHoldingEdit> GetLastRacunHoldingEdit(string userId)
+    public async Task<RacunHoldingEdit?> GetLastRacunHoldingEdit(string userId)
     {
         return await Context.RacunHoldingEdit
             .Include(e => e.RacunHolding)

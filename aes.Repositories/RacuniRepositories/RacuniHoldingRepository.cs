@@ -51,7 +51,7 @@ public class RacuniHoldingRepository : Repository<RacunHolding>, IRacuniHoldingR
                     .ToListAsync();
     }
 
-    public async Task<Models.Stan> GetStanBySifraObjekta(long sifraObjekta)
+    public async Task<Models.Stan?> GetStanBySifraObjekta(long sifraObjekta)
     {
         return await Context.Stan.FirstOrDefaultAsync(e => e.SifraObjekta == sifraObjekta);
     }
@@ -66,7 +66,7 @@ public class RacuniHoldingRepository : Repository<RacunHolding>, IRacuniHoldingR
             .Distinct();
     }
 
-    public async Task<RacunHolding> IncludeAll(int id)
+    public async Task<RacunHolding?> IncludeAll(int id)
     {
         return await Context.RacunHolding
             .Include(r => r.Stan)

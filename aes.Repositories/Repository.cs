@@ -61,7 +61,7 @@ namespace aes.Repository
             return await Context.Set<TEntity>().AnyAsync(predicate);
         }
 
-        public async Task<TEntity> FindExact(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity?> FindExact(Expression<Func<TEntity, bool>> predicate)
         {
             return await Context.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }

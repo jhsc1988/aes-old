@@ -13,6 +13,6 @@ namespace aes.Repository.IRepository
         void RemoveRange(IEnumerable<TEntity> entities);
         Task<int> Update(TEntity entity);
         Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
-        Task<TEntity> FindExact(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity?> FindExact(Expression<Func<TEntity, bool>> predicate);
     }
 }

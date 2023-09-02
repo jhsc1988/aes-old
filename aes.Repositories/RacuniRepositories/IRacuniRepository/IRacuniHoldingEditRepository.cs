@@ -5,5 +5,5 @@ namespace aes.Repository.RacuniRepositories.IRacuniRepository;
 
 public interface IRacuniHoldingEditRepository : IRepository<RacunHoldingEdit>
 {
-    Task<RacunHoldingEdit> GetLastRacunHoldingEdit(string userId);
+    Task<RacunHoldingEdit?> GetLastRacunHoldingEdit(string userId);
 }

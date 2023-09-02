@@ -32,7 +32,7 @@ public class RacuniElektraRateRepository : ElektraRepository<RacunElektraRate>, 
             .Distinct();
     }
 
-    public async Task<RacunElektraRate> IncludeAll(int id)
+    public async Task<RacunElektraRate?> IncludeAll(int id)
     {
         return await Context.RacunElektraRate
             .Include(r => r.ElektraKupac)
