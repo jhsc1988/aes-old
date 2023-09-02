@@ -2,26 +2,27 @@
 using aes.Models;
 using aes.Models.Racuni;
 using aes.Repository.IRepository;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace aes.Repository
 {
     public class PredmetRepository : Repository<Predmet>, IPredmetRepository
     {
-        public PredmetRepository(ApplicationDbContext context) : base(context) { }
+        public PredmetRepository(ApplicationDbContext context) : base(context)
+        {
+        }
 
         /// <summary>
-        /// only Predmeti for payed Racuni ordered by VrijemeUnosa
+        /// Retrieves only Predmeti for paid Racuni, ordered by VrijemeUnosa.
         /// </summary>
-        /// <param name="Racuni"></param>
-        /// <returns></returns>
-        public IEnumerable<Predmet> GetPredmetfForAllPayedRacuni(IEnumerable<Racun> Racuni)
+        /// <param name="racuni">The collection of Racun objects to query.</param>
+        /// <returns>An ordered, distinct list of Predmet objects.</returns>
+        public IEnumerable<Predmet> GetPredmetForAllPaidRacuni(IEnumerable<Racun> racuni)
         {
-            return Racuni
+            return racuni
                 .Select(e => e.Dopis.Predmet)
                 .OrderByDescending(e => e.VrijemeUnosa)
                 .Distinct();
         }
+
     }
 }
