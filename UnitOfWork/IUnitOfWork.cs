@@ -13,7 +13,7 @@ namespace aes.Repository.UnitOfWork
         IRacuniElektraRateRepository RacuniElektraRate { get; }
         IRacuniElektraIzvrsenjeUslugeRepository RacuniElektraIzvrsenjeUsluge { get; }
         IStanRepository Stan { get; }
-        IODSRepository Ods { get; }
+        IOdsRepository Ods { get; }
         IPredmetRepository Predmet { get; }
         IRacuniHoldingRepository RacuniHolding { get; }
         IDopisRepository Dopis { get; }
