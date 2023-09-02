@@ -27,7 +27,7 @@ namespace aes.UnitOfWork
         public IRacuniHoldingEditRepository RacuniHoldingEdit { get; private set; }
         public IElektraKupacRepository ElektraKupac { get; private set; }
         public IStanRepository Stan { get; private set; }
-        public IODSRepository Ods { get; private set; }
+        public IOdsRepository Ods { get; private set; }
         public IPredmetRepository Predmet { get; private set; }
         public IDopisRepository Dopis { get; private set; }
         public IStanUpdateRepository StanUpdate { get; private set; }
