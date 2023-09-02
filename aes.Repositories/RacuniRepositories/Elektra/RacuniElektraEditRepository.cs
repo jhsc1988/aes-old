@@ -5,19 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace aes.Repository.RacuniRepositories.Elektra
-{
-    public class RacuniElektraEditRepository : Repository<RacunElektraEdit>, IRacuniElektraEditRepository
-    {
-        public RacuniElektraEditRepository(ApplicationDbContext context) : base(context) { }
+namespace aes.Repository.RacuniRepositories.Elektra;
 
-        public async Task<RacunElektraEdit> GetLastRacunElektraEdit(string userId)
-        {
-            return await _context.RacunElektraEdit
-                .Include(e => e.RacunElektra)
-                .Where(e => e.EditingByUserId == userId)
-                .OrderByDescending(e => e.EditTime)
-                .FirstOrDefaultAsync();
-        }
+public class RacuniElektraEditRepository : Repository<RacunElektraEdit>, IRacuniElektraEditRepository
+{
+    public RacuniElektraEditRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<RacunElektraEdit?> GetLastRacunElektraEdit(string userId)
+    {
+        return await Context.RacunElektraEdit
+            .Include(e => e.RacunElektra)
+            .Where(e => e.EditingByUserId == userId)
+            .OrderByDescending(e => e.EditTime)
+            .FirstOrDefaultAsync();
     }
 }
