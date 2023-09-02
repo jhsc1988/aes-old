@@ -2,9 +2,6 @@
 using aes.Models.HEP;
 using aes.Repository.IRepository.HEP;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Repository.HEP.Elektra
 {
@@ -12,20 +9,20 @@ namespace aes.Repository.HEP.Elektra
     {
         public ObracunPotrosnjeRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<ObracunPotrosnje>> GetObracunPotrosnjeForRacun(int RacunId)
+        public async Task<IEnumerable<ObracunPotrosnje>> GetObracunPotrosnjeForRacun(int racunId)
         {
-            return await _context.ObracunPotrosnje.
-                Where(e => e.RacunElektraId == RacunId)
+            return await Context.ObracunPotrosnje.
+                Where(e => e.RacunElektraId == racunId)
                 .Include(e => e.TarifnaStavka)
                 .ToListAsync();
         }
 
-        public async Task<ObracunPotrosnje> GetLastForRacunId(int RacunId)
+        public async Task<ObracunPotrosnje> GetLastForRacunId(int racunId)
         {
-            if (_context.ObracunPotrosnje.Where(e => e.RacunElektraId == RacunId).Count() > 1)
+            if (Context.ObracunPotrosnje.Count(e => e.RacunElektraId == racunId) > 1)
             {
-                ObracunPotrosnje obracun = await _context.ObracunPotrosnje
-                    .Where(e => e.RacunElektraId == RacunId)
+                ObracunPotrosnje obracun = await Context.ObracunPotrosnje
+                    .Where(e => e.RacunElektraId == racunId)
                     .OrderBy(e => e.Id)
                     .Reverse()
                     .Skip(1) // one before last
@@ -40,15 +37,15 @@ namespace aes.Repository.HEP.Elektra
             }
             else
             {
-                return await _context.ObracunPotrosnje
-                    .Where(e => e.RacunElektraId == RacunId)
+                return await Context.ObracunPotrosnje
+                    .Where(e => e.RacunElektraId == racunId)
                     .FirstOrDefaultAsync();
             }
         }
 
         public async Task<IEnumerable<ObracunPotrosnje>> GetObracunForUgovorniRacun(long ugovorniRacun)
         {
-            return await _context.ObracunPotrosnje
+            return await Context.ObracunPotrosnje
                 .Include(e => e.RacunElektra)
                 .Include(e => e.RacunElektra.ElektraKupac)
                 .Where(e => e.RacunElektra.ElektraKupac.UgovorniRacun == ugovorniRacun)
