@@ -40,7 +40,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmet(await _c.UnitOfWork.Dopis.Get((int)id));
+            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(await _c.UnitOfWork.Dopis.Get((int)id));
             return dopis == null ? NotFound() : View(dopis);
         }
 
@@ -79,7 +79,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmet(await _c.UnitOfWork.Dopis.Get((int)id));
+            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(await _c.UnitOfWork.Dopis.Get((int)id));
             if (dopis == null)
             {
                 return NotFound();
@@ -105,12 +105,12 @@ namespace aes.Controllers
             {
                 try
                 {
-                    dopis = await _c.UnitOfWork.Dopis.IncludePredmet(dopis);
+                    dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(dopis);
                     _ = await _c.UnitOfWork.Dopis.Update(dopis);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DopisExists(dopis.Id))
+                    if (!await DopisExists(dopis.Id))
                     {
                         return NotFound();
                     }
@@ -133,7 +133,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmet(await _c.UnitOfWork.Dopis.Get((int)id));
+            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(await _c.UnitOfWork.Dopis.Get((int)id));
             return dopis == null ? NotFound() : View(dopis);
         }
 
@@ -149,9 +149,9 @@ namespace aes.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DopisExists(int id)
+        private async Task<bool> DopisExists(int id)
         {
-            return _c.UnitOfWork.Dopis.Any(e => e.Id == id);
+            return await _c.UnitOfWork.Dopis.Any(e => e.Id == id);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
