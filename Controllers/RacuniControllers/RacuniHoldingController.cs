@@ -146,7 +146,7 @@ namespace aes.Controllers.RacuniControllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RacunHoldingExists(racunHolding.Id))
+                    if (!await RacunHoldingExists(racunHolding.Id))
                     {
                         return NotFound();
                     }
@@ -196,9 +196,9 @@ namespace aes.Controllers.RacuniControllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RacunHoldingExists(int id)
+        private async Task<bool> RacunHoldingExists(int id)
         {
-            return _c.UnitOfWork.RacuniHolding.Any(e => e.Id == id);
+            return await _c.UnitOfWork.RacuniHolding.Any(e => e.Id == id);
         }
 
         // validation
@@ -250,7 +250,7 @@ namespace aes.Controllers.RacuniControllers
         [HttpPost]
         public async Task<JsonResult> GetDopisiDataForCreate(int predmetId)
         {
-            return Json(await _c.UnitOfWork.Dopis.GetOnlyEmptyDopisi(predmetId));
+            return Json(await _c.UnitOfWork.Dopis.GetOnlyEmptyDopisiAsync(predmetId));
         }
 
         [Authorize]
@@ -349,7 +349,7 @@ namespace aes.Controllers.RacuniControllers
         [HttpPost]
         public async Task<JsonResult> GetPredmetiDataForFilter()
         {
-            return Json(_c.UnitOfWork.Predmet.GetPredmetfForAllPayedRacuni(await _c.UnitOfWork.RacuniHolding.GetRacuniHoldingWithDopisiAndPredmeti()));
+            return Json(_c.UnitOfWork.Predmet.GetPredmetForAllPaidRacuni(await _c.UnitOfWork.RacuniHolding.GetRacuniHoldingWithDopisiAndPredmeti()));
         }
 
         [Authorize]
