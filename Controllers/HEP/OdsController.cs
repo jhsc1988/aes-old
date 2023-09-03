@@ -95,7 +95,7 @@ namespace aes.Controllers.HEP
             }
             catch (Exception)
             {
-
+                // ignored
             }
 
             ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Stan.GetAll(), "Id", "Adresa", ods.StanId);
@@ -208,9 +208,9 @@ namespace aes.Controllers.HEP
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> GetStanDataForOmm(string OdsId)
+        public async Task<JsonResult> GetStanDataForOmm(string odsId)
         {
-            return await _odsService.GetStanDataForOmm(OdsId);
+            return await _odsService.GetStanDataForOmm(odsId);
         }
 
         [Authorize]

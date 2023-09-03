@@ -9,10 +9,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Controllers.RacuniControllers
 {
@@ -20,19 +16,19 @@ namespace aes.Controllers.RacuniControllers
     {
 
         private readonly IRacuniHoldingService _racunHoldingService;
-        private readonly IRacuniHoldingTempCreateService _RacuniHoldingTempCreateService;
-        private readonly IRacuniHoldingUploadService _RacuniHoldingUploadService;
+        private readonly IRacuniHoldingTempCreateService _racuniHoldingTempCreateService;
+        private readonly IRacuniHoldingUploadService _racuniHoldingUploadService;
         private readonly IRacuniCommonDependecies _c;
         private readonly ILogger _logger;
 
 
-        public RacuniHoldingController(IRacuniHoldingService racunHoldingService, IRacuniHoldingTempCreateService RacuniHoldingTempCreateService,
-            IRacuniCommonDependecies c, IRacuniHoldingUploadService RacuniHoldingUploadService, ILogger logger)
+        public RacuniHoldingController(IRacuniHoldingService racunHoldingService, IRacuniHoldingTempCreateService racuniHoldingTempCreateService,
+            IRacuniCommonDependecies c, IRacuniHoldingUploadService racuniHoldingUploadService, ILogger logger)
         {
             _c = c;
             _racunHoldingService = racunHoldingService;
-            _RacuniHoldingTempCreateService = RacuniHoldingTempCreateService;
-            _RacuniHoldingUploadService = RacuniHoldingUploadService;
+            _racuniHoldingTempCreateService = racuniHoldingTempCreateService;
+            _racuniHoldingUploadService = racuniHoldingUploadService;
             _logger = logger;
         }
 
@@ -76,7 +72,7 @@ namespace aes.Controllers.RacuniControllers
             if (ModelState.IsValid)
             {
                 racunHolding.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.RacuniHolding.Add(racunHolding);
+                await _c.UnitOfWork.RacuniHolding.Add(racunHolding);
                 _ = _c.UnitOfWork.Complete(); 
                 RedirectToAction(nameof(Index));
             }
@@ -112,12 +108,12 @@ namespace aes.Controllers.RacuniControllers
                     EditTime = DateTime.Now,
                 };
 
-                _c.UnitOfWork.RacuniHoldingEdit.Add(racunHoldingEdit);
+                await _c.UnitOfWork.RacuniHoldingEdit.Add(racunHoldingEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
             catch (Exception)
             {
-
+                // ignored
             }
 
             ViewData["DopisId"] = new SelectList(await _c.UnitOfWork.Dopis.GetAll(), "Id", "Urbroj", racunHolding.DopisId);
@@ -217,13 +213,13 @@ namespace aes.Controllers.RacuniControllers
                 return Json($"Broj računa nije ispravan");
             }
 
-            if (brojRacuna.Length >= 8 && !brojRacuna[..8].Equals(racunHoldingEdit.RacunHolding.BrojRacuna[..8]))
+            if (racunHoldingEdit != null && brojRacuna.Length >= 8 && !brojRacuna[..8].Equals(racunHoldingEdit.RacunHolding.BrojRacuna[..8]))
             {
                 return Json($"Šifra objekta unutar broja računa ne smije se razlikovati");
             }
 
             RacunHolding db = await _c.UnitOfWork.RacuniHolding.FindExact(x => x.BrojRacuna.Equals(brojRacuna));
-            return (db != null && db.IsItTemp != true && !racunHoldingEdit.RacunHolding.BrojRacuna.Equals(brojRacuna)) ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
+            return racunHoldingEdit != null && (db != null && db.IsItTemp != true && !racunHoldingEdit.RacunHolding.BrojRacuna.Equals(brojRacuna)) ? Json($"Račun {brojRacuna} već postoji.") : Json(true);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +229,7 @@ namespace aes.Controllers.RacuniControllers
         [HttpPost]
         public async Task<IActionResult> Upload()
         {
-            return await _RacuniHoldingUploadService.Upload(Request, _c.Service.GetUid(User));
+            return await _racuniHoldingUploadService.Upload(Request, _c.Service.GetUid(User));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,7 +272,7 @@ namespace aes.Controllers.RacuniControllers
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> SaveToDB(string _dopisId)
+        public async Task<JsonResult> SaveToDB(string dopisId)
         {
             return (await _c.UnitOfWork.RacuniHolding.TempList(_c.Service.GetUid(User))).Count() is 0
                 ? (new(new
@@ -284,9 +280,9 @@ namespace aes.Controllers.RacuniControllers
                     success = false,
                     Message = "U tablici nema podataka"
                 }))
-                : await _RacuniHoldingTempCreateService.CheckTempTableForRacuniWithouCustomer(_c.Service.GetUid(User)) != 0
+                : await _racuniHoldingTempCreateService.CheckTempTableForRacuniWithouCustomer(_c.Service.GetUid(User)) != 0
                 ? (new(new { success = false, Message = "U tablici postoje računi bez kupca!" }))
-                : await _c.RacuniTempEditorService.SaveToDb<RacunHolding>(await _c.UnitOfWork.RacuniHolding.Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User))), _dopisId);
+                : await _c.RacuniTempEditorService.SaveToDb<RacunHolding>(await _c.UnitOfWork.RacuniHolding.Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User))), dopisId);
         }
 
         [Authorize]
@@ -297,9 +293,9 @@ namespace aes.Controllers.RacuniControllers
             _c.UnitOfWork.RacuniHolding.Remove(await _c.UnitOfWork.RacuniHolding.FindExact(e => e.Id == int.Parse(racunId)));
             _ = await _c.UnitOfWork.Complete();
 
-            IEnumerable<RacunHolding> Racuni = await _c.UnitOfWork.RacuniHolding.Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User)));
+            IEnumerable<RacunHolding> racuni = await _c.UnitOfWork.RacuniHolding.Find(e => e.IsItTemp == true && e.CreatedByUserId.Equals(_c.Service.GetUid(User)));
             int rbr = 1;
-            foreach (RacunHolding e in Racuni)
+            foreach (RacunHolding e in racuni)
             {
                 e.RedniBroj = rbr++;
             }
@@ -327,22 +323,29 @@ namespace aes.Controllers.RacuniControllers
         [HttpPost]
         public async Task<JsonResult> AddNewTemp(string brojRacuna, string iznos, string date)
         {
-            string _loggerTemplate = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName + ", " + "User: " + User.Identity.Name + ", " + "msg: ";
-
-            if (brojRacuna is null)
+            var declaringType = System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType;
+            if (declaringType != null)
             {
-                string message = "brojRacuna ne može biti prazan";
-
-                _logger.Information(_loggerTemplate + message);
-
-                return new(new
+                if (User.Identity != null)
                 {
-                    success = false,
-                    message
-                });
+                    string loggerTemplate = declaringType.FullName + ", " + "User: " + User.Identity.Name + ", " + "msg: ";
+
+                    if (brojRacuna is null)
+                    {
+                        string message = "brojRacuna ne može biti prazan";
+
+                        _logger.Information(loggerTemplate + message);
+
+                        return new(new
+                        {
+                            success = false,
+                            message
+                        });
+                    }
+                }
             }
 
-            return await _RacuniHoldingTempCreateService.AddNewTemp(brojRacuna, iznos, date, _c.Service.GetUid(User));
+            return await _racuniHoldingTempCreateService.AddNewTemp(brojRacuna, iznos, date, _c.Service.GetUid(User));
         }
 
         [Authorize]
@@ -368,7 +371,7 @@ namespace aes.Controllers.RacuniControllers
         [HttpPost]
         public async Task<JsonResult> RefreshCustomers()
         {
-            return await _RacuniHoldingTempCreateService.RefreshCustomers(_c.Service.GetUid(User));
+            return await _racuniHoldingTempCreateService.RefreshCustomers(_c.Service.GetUid(User));
         }
     }
 }

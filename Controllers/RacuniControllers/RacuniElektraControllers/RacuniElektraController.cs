@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using aes.CommonDependecies.ICommonDependencies;
 using aes.Controllers.IControllers;
 using aes.Data;
@@ -119,7 +120,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
             if (ModelState.IsValid)
             {
                 _ = await _racuniElektraTempCreateService.AddNewTemp(racunElektra.BrojRacuna,
-                    racunElektra.Iznos.ToString(), racunElektra.DatumIzdavanja?.ToString(), _c.Service.GetUid(User));
+                    racunElektra.Iznos.ToString(CultureInfo.CurrentCulture), racunElektra.DatumIzdavanja?.ToString(), _c.Service.GetUid(User));
             }
 
             ModelState.Clear();

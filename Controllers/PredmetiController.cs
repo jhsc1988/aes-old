@@ -12,11 +12,11 @@ namespace aes.Controllers
     public class PredmetiController : Controller, IPredmetiController
     {
         private readonly ICommonDependencies _c;
-        private readonly IPredmetiervice _predmetiservice;
+        private readonly IPredmetiervice _predmetiService;
 
-        public PredmetiController(IPredmetiervice predmetiservice, ICommonDependencies c)
+        public PredmetiController(IPredmetiervice predmetiService, ICommonDependencies c)
         {
-            _predmetiservice = predmetiservice;
+            _predmetiService = predmetiService;
             _c = c;
         }
 
@@ -57,7 +57,7 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 predmet.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.Predmet.Add(predmet);
+                await _c.UnitOfWork.Predmet.Add(predmet);
                 _ = await _c.UnitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -149,7 +149,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<JsonResult> SaveToDB(string klasa, string naziv)
         {
-            return await _predmetiservice.SaveToDB(klasa, naziv);
+            return await _predmetiService.SaveToDB(klasa, naziv);
         }
 
         [Authorize]

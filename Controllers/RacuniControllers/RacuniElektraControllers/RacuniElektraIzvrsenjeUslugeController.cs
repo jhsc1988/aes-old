@@ -352,7 +352,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 if (User.Identity != null)
                 {
                     string loggerTemplate =
-                        declaringType?.FullName + ", " + "User: " + User.Identity.Name + ", " + "msg: ";
+                        declaringType.FullName + ", " + "User: " + User.Identity.Name + ", " + "msg: ";
 
                     if (brojRacuna is null)
                     {

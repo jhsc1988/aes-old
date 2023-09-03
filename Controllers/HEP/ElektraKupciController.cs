@@ -58,7 +58,7 @@ namespace aes.Controllers.HEP
             if (ModelState.IsValid)
             {
                 elektraKupac.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.ElektraKupac.Add(elektraKupac);
+                await _c.UnitOfWork.ElektraKupac.Add(elektraKupac);
                 _ = await _c.UnitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -91,12 +91,12 @@ namespace aes.Controllers.HEP
                     EditTime = DateTime.Now,
                 };
 
-                _c.UnitOfWork.ElektraKupacEdit.Add(elektraKupacEdit);
+                await _c.UnitOfWork.ElektraKupacEdit.Add(elektraKupacEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
             catch (Exception)
             {
-
+                // ignored
             }
 
             ViewData["OdsId"] = new SelectList(await _c.UnitOfWork.Ods.GetAll(), "Id", "Id", elektraKupac.OdsId);

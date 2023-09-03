@@ -7,20 +7,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
     public class DopisiController : Controller, IDopisiController
     {
-        private readonly IDopisiervice _Dopisiervice;
+        private readonly IDopisiervice _dopisiService;
         private readonly ICommonDependencies _c;
 
-        public DopisiController(IDopisiervice Dopisiervice, ICommonDependencies c)
+        public DopisiController(IDopisiervice dopisiService, ICommonDependencies c)
         {
-            _Dopisiervice = Dopisiervice;
+            _dopisiService = dopisiService;
             _c = c;
         }
 
@@ -62,7 +59,7 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 dopis.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.Dopis.Add(dopis);
+                await _c.UnitOfWork.Dopis.Add(dopis);
                 _ = await _c.UnitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -171,7 +168,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<JsonResult> SaveToDB(string predmetId, string urbroj, string datumDopisa)
         {
-            return await _Dopisiervice.SaveToDB(predmetId, urbroj, datumDopisa);
+            return await _dopisiService.SaveToDB(predmetId, urbroj, datumDopisa);
 
         }
     }
