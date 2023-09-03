@@ -9,7 +9,6 @@ using aes.Repository.RacuniRepositories.Elektra;
 using aes.Repository.RacuniRepositories.IRacuniRepository;
 using aes.Repository.RacuniRepositories.IRacuniRepository.Elektra;
 using aes.Repository.Stan;
-using aes.Repository.UnitOfWork;
 
 namespace aes.UnitOfWork
 {
