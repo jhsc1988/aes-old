@@ -1,11 +1,11 @@
-﻿using aes.Repository.IRepository;
+﻿using aes.Data;
+using aes.Repository.IRepository;
 using aes.Repository.IRepository.HEP;
 using aes.Repository.RacuniRepositories.IRacuniRepository;
 using aes.Repository.RacuniRepositories.IRacuniRepository.Elektra;
-using System;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace aes.Repository.UnitOfWork
+namespace aes.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
