@@ -120,7 +120,8 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
             if (ModelState.IsValid)
             {
                 _ = await _racuniElektraTempCreateService.AddNewTemp(racunElektra.BrojRacuna,
-                    racunElektra.Iznos.ToString(CultureInfo.CurrentCulture), racunElektra.DatumIzdavanja?.ToString(), _c.Service.GetUid(User));
+                    racunElektra.Iznos.ToString(CultureInfo.CurrentCulture), racunElektra.DatumIzdavanja?.ToString(),
+                    _c.Service.GetUid(User));
             }
 
             ModelState.Clear();
@@ -193,7 +194,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                 {
                     _ = await _c.UnitOfWork.RacuniElektra.Update(racunElektra);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (!await RacunElektraExists(racunElektra.Id))
                     {
@@ -201,6 +202,7 @@ namespace aes.Controllers.RacuniControllers.RacuniElektraControllers
                     }
                     else
                     {
+                        _logger.Error(ex, "An error occurred while updating the Stan");
                         throw;
                     }
                 }
