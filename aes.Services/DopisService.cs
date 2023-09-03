@@ -22,7 +22,7 @@ namespace aes.Services
 
         public async Task<JsonResult> GetList(int predmetId, HttpRequest Request)
         {
-            DTParams dTParams = _c.DatatablesGenerator.GetParams(Request);
+            DtParams dTParams = _c.DatatablesGenerator.GetParams(Request);
 
             IEnumerable<Dopis> DopisList = await _c.UnitOfWork.Dopis.GetDopisiForPredmet(predmetId);
 
