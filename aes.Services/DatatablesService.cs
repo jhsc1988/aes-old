@@ -10,18 +10,25 @@ namespace aes.Services
 {
     public class DatatablesService<TEntity> : IDatatablesService<TEntity> where TEntity : class
     {
-        public JsonResult GetData(HttpRequest Request, IEnumerable<TEntity> list,
-            IDatatablesGenerator datatablesGenerator, Func<IEnumerable<TEntity>, DTParams, IEnumerable<TEntity>> dtData)
+        public JsonResult GetData(HttpRequest request, IEnumerable<TEntity> list,
+            IDatatablesGenerator datatablesGenerator, Func<IEnumerable<TEntity>, DtParams, IEnumerable<TEntity>> dtData)
         {
-            DTParams dTParams = datatablesGenerator.GetParams(Request);
+            DtParams dTParams = datatablesGenerator.GetParams(request);
+    
+            var dataList = list as IList<TEntity> ?? list.ToList();
+    
+            int totalRows = dataList.Count;
 
-            int totalRows = list.Count();
-
-            if (!string.IsNullOrEmpty(dTParams.SearchValue))
+            if (string.IsNullOrEmpty(dTParams.SearchValue))
             {
-                list = dtData(list, dTParams);
+                return datatablesGenerator.SortingPaging(dataList, dTParams, request, totalRows, totalRows);
             }
-            return datatablesGenerator.SortingPaging(list, dTParams, Request, totalRows, list.Count());
+
+            var filteredData = dtData(dataList, dTParams).ToList();
+            int filteredRows = filteredData.Count;
+
+            return datatablesGenerator.SortingPaging(filteredData, dTParams, request, totalRows, filteredRows);
         }
+
     }
 }

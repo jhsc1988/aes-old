@@ -1,42 +1,52 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace aes.Models.Datatables
 {
     public class DatatablesGenerator : IDatatablesGenerator
     {
-        public DTParams GetParams(HttpRequest request)
+        public DtParams GetParams(HttpRequest request)
         {
+            var form = request.Form;
 
-            DTParams dtParams = new()
+            var startStr = form["start"].FirstOrDefault();
+            var lengthStr = form["length"].FirstOrDefault();
+            var sortColumnIndex = form["order[0][column]"].FirstOrDefault();
+
+            if (int.TryParse(startStr, out int start) && int.TryParse(lengthStr, out int length))
             {
-                Start = int.Parse(request.Form["start"].FirstOrDefault()),
-                Length = int.Parse(request.Form["length"].FirstOrDefault()),
-                SearchValue = request.Form["search[value]"].FirstOrDefault(),
-                SortColumnName = request.Form["columns[" + request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault(),
-                SortDirection = request.Form["order[0][dir]"].FirstOrDefault(),
-            };
+                return new DtParams
+                {
+                    Start = start,
+                    Length = length,
+                    SearchValue = form["search[value]"].FirstOrDefault(),
+                    SortColumnName = form[$"columns[{sortColumnIndex}][name]"].FirstOrDefault(),
+                    SortDirection = form["order[0][dir]"].FirstOrDefault(),
+                };
+            }
 
-            return dtParams;
+            // You could throw an exception here or handle this case appropriately.
+            return null;
         }
-        public JsonResult SortingPaging<T>(IEnumerable<T> data, DTParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering)
+
+        public JsonResult SortingPaging<T>(IEnumerable<T> data, DtParams Params, HttpRequest request, int totalRows,
+            int totalRowsAfterFiltering)
         {
-            // TODO: if(Params.SortDirection) - da maknem ovaj AsQueryable dependency
-            data = data.AsQueryable().OrderBy(Params.SortColumnName + " " + Params.SortDirection); // sorting
-            data = data.Skip(Convert.ToInt32(Params.Start)).Take(Convert.ToInt32(Params.Length)); // paging
+            var queryableData = data as IQueryable<T> ?? data.AsQueryable();
+
+            var sortedData = queryableData.OrderBy($"{Params.SortColumnName} {Params.SortDirection}");
+            var pagedData = sortedData.Skip(Params.Start).Take(Params.Length);
+
+            var draw = int.TryParse(request.Form["draw"].FirstOrDefault(), out var drawInt) ? drawInt : 0;
 
             return new JsonResult(new
             {
-                data,
-                draw = Convert.ToInt32(request.Form["draw"].FirstOrDefault()),
+                data = pagedData,
+                draw,
                 recordsTotal = totalRows,
                 recordsFiltered = totalRowsAfterFiltering
             });
         }
     }
 }
-
