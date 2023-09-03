@@ -4,7 +4,6 @@ using aes.Data;
 using aes.Models.Datatables;
 using aes.Repository.IRepository;
 using aes.Repository.Stan;
-using aes.Repository.UnitOfWork;
 using aes.Services;
 using aes.Services.IServices;
 using aes.Services.RacuniServices;
@@ -28,6 +27,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Globalization;
+using aes.UnitOfWork;
 
 namespace aes
 {
