@@ -26,7 +26,7 @@ $("#btnSave").on("click", function () {
         type: "POST",
         url: "SaveToDB",
         data: {
-            _dopisid: data_dopis,
+            dopisId: data_dopis,
         },
         success: function (r) {
             if (r.success) {

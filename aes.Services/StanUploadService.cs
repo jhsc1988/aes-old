@@ -60,6 +60,12 @@ namespace aes.Services
                 });
             }
 
+            string folderPath = _webHostEnvironment.WebRootPath + @"\Uploaded";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
             foreach (IFormFile file in files)
             {
 
