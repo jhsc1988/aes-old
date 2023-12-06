@@ -1,6 +1,6 @@
 ﻿namespace aes.Models.Datatables
 {
-    public class DTParams
+    public class DtParams
     {
         public int Start { get; set; }
         public int Length { get; set; }

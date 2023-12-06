@@ -5,7 +5,7 @@ namespace aes.Services.IServices
 {
     public interface IOdsService
     {
-        Task<JsonResult> GetStanData(string sid);
-        Task<JsonResult> GetStanDataForOmm(string OdsId);
+        Task<JsonResult> GetStanData(string? sid);
+        Task<JsonResult> GetStanDataForOmm(string? OdsId);
     }
 }

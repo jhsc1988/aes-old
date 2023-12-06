@@ -6,7 +6,7 @@ namespace aes.Models.Datatables
 {
     public interface IDatatablesGenerator
     {
-        DTParams GetParams(HttpRequest request);
-        JsonResult SortingPaging<T>(IEnumerable<T> data, DTParams Params, HttpRequest request, int totalRows, int totalRowsAfterFiltering);
+        DtParams GetParams(HttpRequest request);
+        JsonResult SortingPaging<T>(IEnumerable<T> data, DtParams @params, HttpRequest request, int totalRows, int totalRowsAfterFiltering);
     }
 }

@@ -2,14 +2,14 @@
 using aes.Models;
 using aes.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace aes.Services
 {
-    public class Predmetiervice : IPredmetiervice
+    public class PredmetiService : IPredmetiervice
     {
         private readonly ICommonDependencies _c;
-        public Predmetiervice(ICommonDependencies c)
+
+        public PredmetiService(ICommonDependencies c)
         {
             _c = c;
         }
@@ -22,7 +22,7 @@ namespace aes.Services
                 Naziv = naziv
             };
 
-            _c.UnitOfWork.Predmet.Add(pTemp);
+            await _c.UnitOfWork.Predmet.Add(pTemp);
 
             int numOfSaved = await _c.UnitOfWork.Complete();
             return numOfSaved == 0

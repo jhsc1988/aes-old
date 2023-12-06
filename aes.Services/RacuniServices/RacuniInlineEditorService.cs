@@ -23,7 +23,7 @@ namespace aes.Services.RacuniServices
 
             switch (column)
             {
-                case Columns.racun:
+                case Columns.Racun:
                     if (x.Length < 10)
                     {
                         return new(new { success = false, Message = "Broj računa nije ispravan!" });
@@ -36,14 +36,14 @@ namespace aes.Services.RacuniServices
 
                     RacunToUpdate.BrojRacuna = x;
                     break;
-                case Columns.datumIzdavanja:
+                case Columns.DatumIzdavanja:
                     RacunToUpdate.DatumIzdavanja = x == null ? null : DateTime.Parse(x);
                     break;
-                case Columns.iznos:
+                case Columns.Iznos:
                     string iznosNumeric = new(x.Where(char.IsDigit).ToArray());
                     RacunToUpdate.Iznos = decimal.Parse(iznosNumeric);
                     break;
-                case Columns.klasa:
+                case Columns.Klasa:
                     RacunToUpdate.KlasaPlacanja = x;
                     RacunToUpdate.DatumPotvrde = DateTime.Now;
                     //if (racunToUpdate.KlasaPlacanja is null && racunToUpdate.DatumPotvrde is not null)
@@ -52,7 +52,7 @@ namespace aes.Services.RacuniServices
                     //}
 
                     break;
-                case Columns.datumPotvrde:
+                case Columns.DatumPotvrde:
                     //if (racunToUpdate.KlasaPlacanja is null)
                     //{
                     //    return new(new { success = false, Message = "Ne mogu evidentirati datum potvrde bez klase plaćanja!" });
@@ -62,13 +62,13 @@ namespace aes.Services.RacuniServices
                         RacunToUpdate.DatumPotvrde = x == null ? null : DateTime.Parse(x);
                     }
                     break;
-                case Columns.napomena:
+                case Columns.Napomena:
                     RacunToUpdate.Napomena = x;
                     break;
-                case Columns.datumIzvrsenja:
+                case Columns.DatumIzvrsenja:
                     (await _unitOfWork.RacuniElektraIzvrsenjeUsluge.Get(RacunToUpdate.Id)).DatumIzvrsenja = DateTime.Parse(x);
                     break;
-                case Columns.usluga:
+                case Columns.Usluga:
                     (await _unitOfWork.RacuniElektraIzvrsenjeUsluge.Get(RacunToUpdate.Id)).Usluga = x;
                     break;
                 default:

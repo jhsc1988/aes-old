@@ -3,8 +3,6 @@ using aes.Models.HEP;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace aes.Controllers.HEP
 {
@@ -143,7 +141,7 @@ namespace aes.Controllers.HEP
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             ObracunPotrosnje obracunPotrosnje = await _context.ObracunPotrosnje.FindAsync(id);
-            _ = _context.ObracunPotrosnje.Remove(obracunPotrosnje);
+            _ = _context.ObracunPotrosnje.Remove(obracunPotrosnje!);
             _ = await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

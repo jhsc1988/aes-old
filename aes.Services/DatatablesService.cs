@@ -14,14 +14,15 @@ namespace aes.Services
             IDatatablesGenerator datatablesGenerator, Func<IEnumerable<TEntity>, DTParams, IEnumerable<TEntity>> dtData)
         {
             DTParams dTParams = datatablesGenerator.GetParams(Request);
-
+    
             int totalRows = list.Count();
-
+    
             if (!string.IsNullOrEmpty(dTParams.SearchValue))
             {
                 list = dtData(list, dTParams);
             }
             return datatablesGenerator.SortingPaging(list, dTParams, Request, totalRows, list.Count());
         }
+
     }
 }

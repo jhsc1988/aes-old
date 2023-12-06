@@ -5,31 +5,21 @@ using aes.Models.Racuni.Elektra;
 using aes.Models.Racuni.Holding;
 using aes.Services;
 using aes.Services.IServices;
-using aes.Services.RacuniServices.RacuniHoldingService.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
     public class StanoviController : Controller, IStanoviController
     {
-        private readonly IRacuniHoldingService _RacuniHoldingService;
         private readonly ICommonDependencies _c;
-        private readonly IStanUploadService _StanUploadService;
-        private readonly ILogger _logger;
+        private readonly IStanUploadService _stanUploadService;
 
-        public StanoviController(IRacuniHoldingService RacuniHoldingService,
-            ICommonDependencies c, IStanUploadService StanUploadService, ILogger logger)
+        public StanoviController(ICommonDependencies c, IStanUploadService stanUploadService)
         {
             _c = c;
-            _RacuniHoldingService = RacuniHoldingService;
-            _StanUploadService = StanUploadService;
-            _logger = logger;
+            _stanUploadService = stanUploadService;
         }
 
         [Authorize]
@@ -72,7 +62,7 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 stan.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.Stan.Add(stan);
+                await _c.UnitOfWork.Stan.Add(stan);
                 _ = await _c.UnitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -117,14 +107,17 @@ namespace aes.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StanExists(stan.Id))
+                    if (!await StanExists(stan.Id))
                     {
                         return NotFound();
                     }
+
                     throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(stan);
         }
 
@@ -154,10 +147,11 @@ namespace aes.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StanExists(int id)
+        private async Task<bool> StanExists(int id)
         {
-            return _c.UnitOfWork.Stan.Any(e => e.Id == id);
+            return await _c.UnitOfWork.Stan.Any(e => e.Id == id);
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Upload
@@ -166,7 +160,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload()
         {
-            return await _StanUploadService.Upload(Request, User.Identity.Name);
+            return await _stanUploadService.Upload(Request, User.Identity?.Name);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +187,6 @@ namespace aes.Controllers
 
             return new DatatablesService<Stan>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetStanoviForDatatables);
-
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,13 +210,14 @@ namespace aes.Controllers
 
             return new DatatablesService<RacunElektraRate>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacuniElektraRateForDatatables);
-
         }
+
         [Authorize]
         [HttpPost]
         public async Task<JsonResult> GetRacuniElektraIzvrsenjeUslugeForStan(int param)
         {
-            IEnumerable<RacunElektraIzvrsenjeUsluge> list = await _c.UnitOfWork.Ods.GetRacuniForOmm<RacunElektraIzvrsenjeUsluge>(param);
+            IEnumerable<RacunElektraIzvrsenjeUsluge> list =
+                await _c.UnitOfWork.Ods.GetRacuniForOmm<RacunElektraIzvrsenjeUsluge>(param);
 
             return new DatatablesService<RacunElektraIzvrsenjeUsluge>().GetData(Request, list,
                 _c.DatatablesGenerator, _c.DatatablesSearch.GetRacunElektraIzvrsenjeUslugeForDatatables);

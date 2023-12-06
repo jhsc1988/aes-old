@@ -5,7 +5,7 @@
 
 @inject IStanUpdateRepository StanUpdateRepository;
 @{
-    StanUpdate StanUpdateData = StanUpdateRepository.GetLatest();
+    StanUpdate StanUpdateData = StanUpdateRepository.GetLatestAsync();
 
     string dateOfData = null;
     string StanUpdateDataUpdateBegan = null;
@@ -13,7 +13,7 @@
 
     if (StanUpdateData is not null)
     {
-        dateOfData = StanUpdateRepository.GetLatestSuccessfulUpdate().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
+        dateOfData = StanUpdateRepository.GetLatestSuccessfulUpdateAsync().DateOfData.ToString("dd.MM.yyyy HH:mm:ss");
         StanUpdateDataUpdateBegan = StanUpdateData.UpdateBegan.ToString("dd.MM.yyyy HH:mm:ss");
         StanUpdateDataUpdateEnded = StanUpdateData.UpdateEnded != null ? ((DateTime)StanUpdateData.UpdateEnded).ToString("dd.MM.yyyy HH:mm:ss") : null;
     }

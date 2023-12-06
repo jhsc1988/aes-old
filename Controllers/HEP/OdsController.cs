@@ -7,10 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace aes.Controllers.HEP
 {
@@ -39,7 +36,7 @@ namespace aes.Controllers.HEP
                 return NotFound();
             }
 
-            Ods ods = await _c.UnitOfWork.Ods.IncludeAppartment(await _c.UnitOfWork.Ods.Get((int)id));
+            Ods ods = await _c.UnitOfWork.Ods.IncludeApartment(await _c.UnitOfWork.Ods.Get((int)id));
             return ods == null ? NotFound() : View(ods);
         }
 
@@ -61,7 +58,7 @@ namespace aes.Controllers.HEP
             if (ModelState.IsValid)
             {
                 ods.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.Ods.Add(ods);
+                await _c.UnitOfWork.Ods.Add(ods);
                 _ = await _c.UnitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -77,7 +74,7 @@ namespace aes.Controllers.HEP
                 return NotFound();
             }
 
-            Ods ods = await _c.UnitOfWork.Ods.IncludeAppartment(await _c.UnitOfWork.Ods.Get((int)id));
+            Ods ods = await _c.UnitOfWork.Ods.IncludeApartment(await _c.UnitOfWork.Ods.Get((int)id));
 
             if (ods == null)
             {
@@ -93,12 +90,12 @@ namespace aes.Controllers.HEP
                     EditTime = DateTime.Now,
                 };
 
-                _c.UnitOfWork.OdsEdit.Add(odsEdit);
+                await _c.UnitOfWork.OdsEdit.Add(odsEdit);
                 _ = await _c.UnitOfWork.Complete();
             }
             catch (Exception)
             {
-
+                // ignored
             }
 
             ViewData["StanId"] = new SelectList(await _c.UnitOfWork.Stan.GetAll(), "Id", "Adresa", ods.StanId);
@@ -126,7 +123,7 @@ namespace aes.Controllers.HEP
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OdsExists(ods.Id))
+                    if (!await OdsExists(ods.Id))
                     {
                         return NotFound();
                     }
@@ -155,7 +152,7 @@ namespace aes.Controllers.HEP
                 return NotFound();
             }
 
-            Ods ods = await _c.UnitOfWork.Ods.IncludeAppartment(await _c.UnitOfWork.Ods.Get((int)id));
+            Ods ods = await _c.UnitOfWork.Ods.IncludeApartment(await _c.UnitOfWork.Ods.Get((int)id));
             return ods == null ? NotFound() : View(ods);
         }
 
@@ -171,9 +168,9 @@ namespace aes.Controllers.HEP
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OdsExists(int id)
+        private async Task<bool> OdsExists(int id)
         {
-            return _c.UnitOfWork.Ods.Any(e => e.Id == id);
+            return await _c.UnitOfWork.Ods.Any(e => e.Id == id);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -211,9 +208,9 @@ namespace aes.Controllers.HEP
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> GetStanDataForOmm(string OdsId)
+        public async Task<JsonResult> GetStanDataForOmm(string odsId)
         {
-            return await _odsService.GetStanDataForOmm(OdsId);
+            return await _odsService.GetStanDataForOmm(odsId);
         }
 
         [Authorize]

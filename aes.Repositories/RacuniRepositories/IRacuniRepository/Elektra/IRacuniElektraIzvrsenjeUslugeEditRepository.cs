@@ -3,8 +3,8 @@ using aes.Repositories.IRepository;
 
 namespace aes.Repositories.RacuniRepositories.IRacuniRepository.Elektra
 {
-    public interface IRacuniElektraIzvrsenjeUslugeEditRepository : IRepository<RacunElektraIzvrsenjeUslugeEdit>
-    {
-        Task<RacunElektraIzvrsenjeUslugeEdit?> GetLastRacunElektraServiceEdit(string userId);
-    }
+public interface IRacuniElektraIzvrsenjeUslugeEditRepository : IRepository<RacunElektraIzvrsenjeUslugeEdit>
+{
+    Task<RacunElektraIzvrsenjeUslugeEdit?> GetLastRacunElektraServiceEdit(string userId);
+}
 }

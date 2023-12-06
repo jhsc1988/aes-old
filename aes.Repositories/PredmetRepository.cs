@@ -7,10 +7,12 @@ namespace aes.Repositories
 {
     public class PredmetRepository : Repository<Predmet>, IPredmetRepository
     {
-        public PredmetRepository(ApplicationDbContext context) : base(context) { }
+        public PredmetRepository(ApplicationDbContext context) : base(context)
+        {
+        }
 
         /// <summary>
-        /// only Predmeti for payed Racuni ordered by VrijemeUnosa
+        /// Retrieves only Predmeti for paid Racuni, ordered by VrijemeUnosa.
         /// </summary>
         /// <param name="racuni"></param>
         /// <returns></returns>
@@ -21,5 +23,6 @@ namespace aes.Repositories
                 .OrderByDescending(e => e.VrijemeUnosa)
                 .Distinct();
         }
+
     }
 }

@@ -3,8 +3,8 @@ using aes.Repositories.IRepository;
 
 namespace aes.Repositories.RacuniRepositories.IRacuniRepository
 {
-    public interface IRacuniHoldingEditRepository : IRepository<RacunHoldingEdit>
-    {
-        Task<RacunHoldingEdit?> GetLastRacunHoldingEdit(string userId);
-    }
+public interface IRacuniHoldingEditRepository : IRepository<RacunHoldingEdit>
+{
+    Task<RacunHoldingEdit?> GetLastRacunHoldingEdit(string userId);
+}
 }

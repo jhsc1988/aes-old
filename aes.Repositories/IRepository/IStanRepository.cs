@@ -1,7 +1,11 @@
 ﻿namespace aes.Repositories.IRepository;
 
-public interface IStanRepository : IRepository<Models.Stan>
+namespace aes.Repository.IRepository
 {
-    Task<IEnumerable<Models.Stan>> GetStanovi();
-    Task<IEnumerable<Models.Stan>> GetStanoviWithoutOdsOmm();
+    public interface IStanRepository : IRepository<Models.Stan>
+    {
+        ApplicationDbContext Context { get; }
+        Task<IEnumerable<Models.Stan>> GetStanovi();
+        Task<IEnumerable<Models.Stan>> GetStanoviWithoutOdsOmm();
+    }
 }

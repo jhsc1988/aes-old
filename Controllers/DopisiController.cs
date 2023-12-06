@@ -7,20 +7,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace aes.Controllers
 {
     public class DopisiController : Controller, IDopisiController
     {
-        private readonly IDopisiervice _Dopisiervice;
+        private readonly IDopisiervice _dopisiService;
         private readonly ICommonDependencies _c;
 
-        public DopisiController(IDopisiervice Dopisiervice, ICommonDependencies c)
+        public DopisiController(IDopisiervice dopisiService, ICommonDependencies c)
         {
-            _Dopisiervice = Dopisiervice;
+            _dopisiService = dopisiService;
             _c = c;
         }
 
@@ -40,7 +37,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmet(await _c.UnitOfWork.Dopis.Get((int)id));
+            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(await _c.UnitOfWork.Dopis.Get((int)id));
             return dopis == null ? NotFound() : View(dopis);
         }
 
@@ -62,7 +59,7 @@ namespace aes.Controllers
             if (ModelState.IsValid)
             {
                 dopis.VrijemeUnosa = DateTime.Now;
-                _c.UnitOfWork.Dopis.Add(dopis);
+                await _c.UnitOfWork.Dopis.Add(dopis);
                 _ = await _c.UnitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -79,7 +76,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmet(await _c.UnitOfWork.Dopis.Get((int)id));
+            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(await _c.UnitOfWork.Dopis.Get((int)id));
             if (dopis == null)
             {
                 return NotFound();
@@ -105,12 +102,12 @@ namespace aes.Controllers
             {
                 try
                 {
-                    dopis = await _c.UnitOfWork.Dopis.IncludePredmet(dopis);
+                    dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(dopis);
                     _ = await _c.UnitOfWork.Dopis.Update(dopis);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DopisExists(dopis.Id))
+                    if (!await DopisExists(dopis.Id))
                     {
                         return NotFound();
                     }
@@ -133,7 +130,7 @@ namespace aes.Controllers
                 return NotFound();
             }
 
-            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmet(await _c.UnitOfWork.Dopis.Get((int)id));
+            Dopis dopis = await _c.UnitOfWork.Dopis.IncludePredmetAsync(await _c.UnitOfWork.Dopis.Get((int)id));
             return dopis == null ? NotFound() : View(dopis);
         }
 
@@ -149,9 +146,9 @@ namespace aes.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DopisExists(int id)
+        private async Task<bool> DopisExists(int id)
         {
-            return _c.UnitOfWork.Dopis.Any(e => e.Id == id);
+            return await _c.UnitOfWork.Dopis.Any(e => e.Id == id);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +168,7 @@ namespace aes.Controllers
         [HttpPost]
         public async Task<JsonResult> SaveToDB(string predmetId, string urbroj, string datumDopisa)
         {
-            return await _Dopisiervice.SaveToDB(predmetId, urbroj, datumDopisa);
+            return await _dopisiService.SaveToDB(predmetId, urbroj, datumDopisa);
 
         }
     }

@@ -84,7 +84,7 @@ namespace aes.Services.RacuniServices
                         while (!reader.EndOfStream)
                         {
                             string line = reader.ReadLine();
-                            if (line.Contains("HRK"))
+                            if (line.Contains("EUR"))
                             {
                                 iznos = double.Parse(reader.ReadLine()) / 100;
                                 for (int i = 0; i < 3; i++) // skipping 7 lines

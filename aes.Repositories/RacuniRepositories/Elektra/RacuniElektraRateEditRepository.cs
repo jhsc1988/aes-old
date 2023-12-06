@@ -6,15 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace aes.Repositories.RacuniRepositories.Elektra
 {
-    public class RacuniElektraRateEditRepository : Repository<RacunElektraRateEdit>, IRacuniElektraRateEditRepository
-    {
-        public RacuniElektraRateEditRepository(ApplicationDbContext context) : base(context) { }
+public class RacuniElektraRateEditRepository : Repository<RacunElektraRateEdit>, IRacuniElektraRateEditRepository
+{
+    public RacuniElektraRateEditRepository(ApplicationDbContext context) : base(context) { }
 
         public async Task<RacunElektraRateEdit?> GetLastRacunElektraRateEdit(string userId) =>
             await Context.RacunElektraRateEdit
-                .Include(e => e.RacunElektraRate)
-                .Where(e => e.EditingByUserId == userId)
-                .OrderByDescending(e => e.EditTime)
-                .FirstOrDefaultAsync();
+            .Include(e => e.RacunElektraRate)
+            .Where(e => e.EditingByUserId == userId)
+            .OrderByDescending(e => e.EditTime)
+            .FirstOrDefaultAsync();
     }
 }

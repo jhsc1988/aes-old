@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace aes.Services
 {
-    public class Dopisiervice : IDopisiervice
+    public class DopisiService : IDopisiervice
     {
         private readonly ICommonDependencies _c;
 
-        public Dopisiervice(ICommonDependencies c)
+        public DopisiService(ICommonDependencies c)
         {
             _c = c;
         }
 
         public async Task<JsonResult> GetList(int predmetId, HttpRequest Request)
         {
-            DTParams dTParams = _c.DatatablesGenerator.GetParams(Request);
+            DtParams dTParams = _c.DatatablesGenerator.GetParams(Request);
 
             IEnumerable<Dopis> DopisList = await _c.UnitOfWork.Dopis.GetDopisiForPredmet(predmetId);
 

@@ -3,7 +3,6 @@ using aes.Models;
 using aes.Models.HEP;
 using aes.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace aes.Services
 {
@@ -16,7 +15,7 @@ namespace aes.Services
             _c = c;
         }
 
-        public async Task<JsonResult> GetStanData(string sid)
+        public async Task<JsonResult> GetStanData(string? sid)
         {
             int idInt;
             if (sid is not null)
@@ -37,12 +36,12 @@ namespace aes.Services
             return new JsonResult(stan);
         }
 
-        public async Task<JsonResult> GetStanDataForOmm(string OdsId)
+        public async Task<JsonResult> GetStanDataForOmm(string? odsId)
         {
-            int OdsIdInt;
-            if (OdsId is not null)
+            int odsIdInt;
+            if (odsId is not null)
             {
-                OdsIdInt = int.Parse(OdsId);
+                odsIdInt = int.Parse(odsId);
             }
             else
             {
@@ -54,7 +53,7 @@ namespace aes.Services
                     });
             }
 
-            Ods ods = await _c.UnitOfWork.Ods.IncludeAppartment(await _c.UnitOfWork.Ods.Get(OdsIdInt));
+            Ods ods = await _c.UnitOfWork.Ods.IncludeApartment(await _c.UnitOfWork.Ods.Get(odsIdInt));
             return new JsonResult(ods);
         }
     }

@@ -20,19 +20,20 @@ namespace aes.Repositories.HEP.Elektra
                     .ToListAsync()
                 : dopisId is 0
                     ? await Context.Set<T>()
-                        .Include(e => e.ElektraKupac)
-                        .Include(e => e.ElektraKupac.Ods)
-                        .Include(e => e.ElektraKupac.Ods.Stan)
-                        .Include(e => e.Dopis)
-                        .Where(e => e.Dopis.PredmetId == predmetId)
-                        .ToListAsync()
+                                    .Include(e => e.ElektraKupac)
+                                    .Include(e => e.ElektraKupac.Ods)
+                                    .Include(e => e.ElektraKupac.Ods.Stan)
+                                    .Include(e => e.Dopis)
+                                    .Where(e => e.Dopis.PredmetId == predmetId)
+                                    .ToListAsync()
                     : await Context.Set<T>()
-                        .Include(e => e.ElektraKupac)
-                        .Include(e => e.ElektraKupac.Ods)
-                        .Include(e => e.ElektraKupac.Ods.Stan)
-                        .Include(e => e.Dopis)
-                        .Where(e => e.DopisId == dopisId && e.Dopis.PredmetId == predmetId)
-                        .ToListAsync();
+                                    .Include(e => e.ElektraKupac)
+                                    .Include(e => e.ElektraKupac.Ods)
+                                    .Include(e => e.ElektraKupac.Ods.Stan)
+                                    .Include(e => e.Dopis)
+                                    .Where(e => e.DopisId == dopisId && e.Dopis.PredmetId == predmetId)
+                                    .ToListAsync();
+        }
 
         public async Task<IEnumerable<T>> GetRacuniTemp(string userId) => await Find(e => e.CreatedByUserId.Equals(userId) && e.IsItTemp == true);
 
@@ -41,5 +42,6 @@ namespace aes.Repositories.HEP.Elektra
                 .Include(e => e.Ods)
                 .Include(e => e.Ods.Stan)
                 .FirstOrDefaultAsync(e => e.UgovorniRacun == uRacun);
+        }
     }
 }
